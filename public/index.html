@@ -1,0 +1,63 @@
+<!doctype html>
+
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>blur</title>
+
+	<!--
+	<script src="/js/lib/platform/platform.js"></script>
+	<script src="/js/lib/polymer/polymer.js"></script>
+	-->
+	<script src="/js/main.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+</head>
+<body>
+
+
+	<group id="sweeper">
+
+		<audio-knob default="85" min="0" max="200" output="gen1.freq"></audio-knob><!-- main gen freq -->
+		<knob default="0.5" max="2" output="sweep.freq"></knob><!-- sweep speed -->
+		<knob default="40" max="100" output="mult1.gain"></knob><!-- sweep depth -->
+		<knob default="xx" max="100" output="add1"></knob><!-- filter center freq -->
+		<knob default="xx" max="100" output=""></knob><!-- filter Q -->
+
+		<oscillator type="saw" id="gen1" output="filt1">
+			<knob data="freq"></knob>
+		</oscillator>
+
+		<oscillator type="saw" id="sweep" output="mult1">
+			<knob data="freq"></knob>
+		</oscillator>
+
+		<gain id="mult1" output="add1">
+			<knob data="gain" default="40"><!-- sweep depth --></knob>
+		</gain>
+
+		<gain id="add1" output="filt1.freq">
+		</gain>
+
+		<filter type="bandpass" id="filt1" output="del1">
+			<knob data="freq"></knob>
+			<knob data="Q"></knob>
+		</filter>
+
+		<delay id="del1" output="comp1">
+			<knob data="time"></knob>
+			<knob data="feedback" max="0.99"></knob>
+		</delay>
+
+	</group>
+
+
+	<compressor id="comp1" output="masterOut">
+		<knob data="gain">
+	</compressor>
+
+
+</body>
+</html>
