@@ -1,122 +1,190 @@
 var context = window.webkitAudioContext && (new window.webkitAudioContext());
 var masterOut = context.destination;
-
-var audio = {};
-
-	audio.ui = {};
-	audio.fx = {};
-	audio.gen = {};
-
+var patch = angular.module("audio", []);
 
 if (!context) {
 	alert('Your crappy browser does not support webAudio');
 	return;
 }
 
-if (! 'registerElement' in document) {
-	alert('Your browser does not support the fancy new Web Component API');
-}
+//--------------------------------------------------------------//
 
 
 
-//------------------------------------------------
-//   KNOB
-// -----------------------------------------------
 
-audio.ui.knob = document.registerElement('audio-knob', { prototype: Object.create (
+/*
 
-	HTMLElement.prototype, {
-
-		createdCallback: {
-			value: function() {
-				// "this" is the actual <audio-knob> element
-				// -------------------------------
-
-				var notch = document.createElement('div');		// the 'notch'
-				var val   = document.createElement('span');		// the int 'val'
-
-				// var minRotation = -70,
-				// 		maxRotation = 250,
-
-				var rotation = -70,
-						min = parseInt(this.attributes.min.nodeValue || 0),
-						max = parseInt(this.attributes.max.nodeValue || 100),
-						startY,
-						startVal,
-						value = 0,
-						mouseDown = false;
-
-
-				this.appendChild(notch);
-				this.appendChild(val);
-
-				this.addEventListener('mousedown', function(e) {
-					mouseDown = true;
-					startY = e.clientY;
-					startVal = value;
-				});
-				document.addEventListener('mouseup', function(e) {
-					mouseDown = false;
-				});
-				document.addEventListener('mousemove', function(e) {
-					if (mouseDown) {
-
-						value = parseInt(startVal + (startY - e.clientY));
-
-						if (value < min) { value = min; }
-						else if (value > max) { value = max; }
-
-						rotation = 320 * (value / max) - 70;		// 320 is 250 - (-70)
-
-						setRotationDegrees(rotation);
-						val.innerHTML = value;
-
-					}
-				});
-
-				function setRotationDegrees (degree) {
-					notch.style.webkitTransform = 'rotate('+degree+'deg)';
-				}
+patch.directive("knob", function(){
+	return {
+		'restrict': 'E',
+		'controller': function($scope, $elem, $attrs){
+			var data = $attrs.data;
+			if (!data) {
+				console.log('Knob: nothing to control', $elem);
+				return;
 			}
-			// writable: false,
-			// enumerable: true
-		}
 
-	})
+			$scope.data = '';
 
+		},
+    'link': function(scope, elem, attrs, controller) {
+
+	    var dial = elem.find('.dial');
+      var notch = elem.find('.notch');
+
+      // options. TODO overwrite these on init(), or move to Controller
+      var dialOffsetLow = -70,
+        	dialOffsetHigh = 250,
+        	maxDegreeShift = 320,
+        	dialSpeed = 0.5;
+      //   onAdjust: function (percentage) {}
+      //   //==>this.node.frequency.value = percentage * 300
+
+
+	    //  this.node.connect(context.destination);
+	    //  this.node.noteOn(0);
+
+
+      // Get the correct degree shift based on dial speed
+      maxDegreeShift = maxDegreeShift * dialSpeed;
+
+      var rotationValue = dialOffsetLow;
+      var value = 0,
+          startValue;
+
+      // Vars
+      var clientY = 0,
+      		clientYDown = 0,
+      		clientYUp = 0,
+      		rotationValue,
+      		percentage = 0;
+
+      // Switch
+      var mouseDown = false;
+
+      // Event to update degree
+      elem.mousedown(function (e) {
+        mouseDown = true;
+        rotationValue = self.getRotationDegrees();
+        clientYDown = e.clientY;
+        startValue = value;
+      });
+
+      $(window).mouseup(function (e) {
+        mouseDown = false;
+        clientYUp = e.clientY;
+      });
+
+      $(window).mousemove(function (e) {
+
+        if (mouseDown) {
+
+          // Difference between starting Y and current Y
+          clientYDiff = e.clientY - clientYDown;
+
+          // Set value of dial based on the position of it previous to this mousedown/move event
+          value = startValue - clientYDiff;
+
+          // Min
+          if (value <= 0) {
+            value = 0;
+          }
+          // Max
+          else if (value > maxDegreeShift) {
+            value = maxDegreeShift;
+          }
+
+          // For every dialSpeed moved by mouse, we move a degree
+          rotationValue = ((value / dialSpeed) + dialOffsetLow);
+
+          // Only rotate within our boundaries
+          if (rotationValue > dialOffsetLow && rotationValue < dialOffsetHigh) {
+            self.setRotationDegrees(rotationValue);
+          }
+
+          self.percentage = (value / maxDegreeShift) * 100;
+
+          // self.options.onAdjust(self.percentage);
+          scope.data = self.percentage;
+
+        }
+
+      });
+
+
+
+        /*
+        getRotationDegrees: function () {
+
+          var matrix =
+          	  this.notch.css("-webkit-transform") ||
+              this.notch.css("-moz-transform")    ||
+              this.notch.css("-ms-transform")     ||
+              this.notch.css("-o-transform")      ||
+              this.notch.css("transform");
+
+          if (matrix !== 'none') {
+            var values = matrix.split('(')[1].split(')')[0].split(',');
+            var a = values[0];
+            var b = values[1];
+            var angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+          }
+          else {
+            var angle = 0;
+          }
+
+          return angle;
+
+        },
+
+        setRotationDegrees: function (degree) {
+
+          this.selectors.notch.css('-webkit-transform', 'rotate(' + degree + 'deg)');
+
+        }
+        /* * /
+
+
+
+
+      scope.knob = new dial(this, options);
+
+
+
+
+
+		},
+		'scope': {},
+		'templateUrl': 'partials/knob.html'
+	}
 });
 
-audio.ui.slider = {};
+*/
+
 
 
 //------------------------------------------------
 //   OSCILLATOR
 // -----------------------------------------------
+patch.directive("oscillator", function(){
+	return {
+		'restrict': 'E',
+		'controller': function($scope, $element, $attrs){
+      var type = $scope.type || 'sine';
+      var freq = $scope.freq || '440';
+      var output = $scope.output || 'masterOut';
 
-audio.gen.osc = document.registerElement('audio-oscillator', { prototype: Object.create (
+			this.osc = context.createOscillator();
+      this.osc.type = type;
+      this.osc.frequency.value = freq;
 
-	HTMLElement.prototype, {
+      // create an input
+      // this.input = context.createGainNode();
 
-		osc: (function() {
-			var x =	context.createOscillator();
-					x.type = 'sine';
-					x.frequency.value = 440;
-			return x;
-		})(),
+      // call it vars(?). Maybe makes more sense, in this context
+      this.vars = $scope;
 
-		freq: function(f) {
-			this.osc.frequency.value = f;
 		},
-
-		type: function(t) {
-			this.osc.type = t;
-		}
-
-	})
-
-});
-
-/*
     'link': function(scope, elem, attrs, controller) {
       scope.$watch('output', function(output){
         if (output == 'masterOut') {
@@ -134,16 +202,24 @@ audio.gen.osc = document.registerElement('audio-oscillator', { prototype: Object
 
       });
 
-*/
+    },
+    'scope': {
+    	'type': '@',
+    	'freq': '@',
+    	'output': '@'
+    }
+	}
+});
+
+
 
 //------------------------------------------------
 //   FILTER
 // -----------------------------------------------
-
-audio.filter = document.registerElement('audio-filter', { prototype: Object.create (
-
-	HTMLElement.prototype, {
-		/*
+patch.directive("filter", function(){
+  return {
+    'restrict': 'E',
+    'controller': function($scope, $element, $attrs){
       var type = $scope.type || 'lowpass';
       var freq = $scope.freq || '440';
       var Q = $scope.Q || '1';
@@ -169,8 +245,8 @@ audio.filter = document.registerElement('audio-filter', { prototype: Object.crea
 
       $element[0].input = this.input;
 
-			// -------------------------------
-
+    },
+    'link': function(scope, elem, attrs, controller) {
       scope.$watch('output', function(output){
 
         if (output == 'masterOut') {
@@ -186,9 +262,14 @@ audio.filter = document.registerElement('audio-filter', { prototype: Object.crea
 
       });
 
-		*/
-	})
-
+    },
+    'scope': {
+      'type': '@',
+      'freq': '@',
+      'Q': '@',
+      'output': '@'
+    }
+  }
 });
 
 
@@ -196,12 +277,11 @@ audio.filter = document.registerElement('audio-filter', { prototype: Object.crea
 //------------------------------------------------
 //   DELAY
 // -----------------------------------------------
-
-audio.delay = document.registerElement('audio-delay', { prototype: Object.create (
-
-	HTMLElement.prototype, {
-		/*
-	    var time = $scope.time || '100';
+patch.directive("delay", function(){
+  return {
+    'restrict': 'E',
+    'controller': function($scope, $element, $attrs){
+      var time = $scope.time || '100';
       var feedback = $scope.freq || '0';
       var output = $scope.output || 'masterOut';
 
@@ -231,7 +311,9 @@ audio.delay = document.registerElement('audio-delay', { prototype: Object.create
       // store a reference to the input on the element itself
       $element[0].input = this.input;
 
-			// ---------------------------------
+    },
+    'link': function(scope, elem, attrs, controller) {
+      scope.$watch('output', function(output){
 
         if (output == 'masterOut') {
           controller.comp.connect(masterOut);
@@ -243,9 +325,16 @@ audio.delay = document.registerElement('audio-delay', { prototype: Object.create
             console.log('"%s" not found or is not an audio node', output);
           }
         }
-		*/
-	})
 
+      });
+
+    },
+    'scope': {
+      'time': '@',
+      'feedback': '@',
+      'output': '@'
+    }
+  }
 });
 
 
@@ -253,10 +342,10 @@ audio.delay = document.registerElement('audio-delay', { prototype: Object.create
 //------------------------------------------------
 //   COMPRESSOR
 // -----------------------------------------------
-audio.compressor = document.registerElement('audio-compressor', { prototype: Object.create (
-
-	HTMLElement.prototype, {
-		/*
+patch.directive("compressor", function(){
+  return {
+    'restrict': 'E',
+    'controller': function($scope, $element, $attrs){
       var threshold = $scope.threshold || '-24';
       var knee      = $scope.threshold || '30';
       var ratio     = $scope.threshold || '12';
@@ -283,8 +372,11 @@ audio.compressor = document.registerElement('audio-compressor', { prototype: Obj
       // store a reference to the input on the element itself
       $element[0].input = this.input;
 
+    },
+    'link': function(scope, elem, attrs, controller) {
+      scope.$watch('output', function(output){
 
-			// ---------------------------------------------
+// console.log('No output for audio node "%s". Routing to masterOut', elem[0].id);
 
         if (output == 'masterOut') {
           controller.comp.connect(masterOut);
@@ -298,10 +390,25 @@ audio.compressor = document.registerElement('audio-compressor', { prototype: Obj
         }
 
       });
-		*/
-	})
 
+    },
+    'scope': {
+      'threshold': '@',
+      'knee': '@',
+      'ratio': '@',
+      'reduction': '@',
+      'attack': '@',
+      'release': '@',
+      'output': '@'
+    }
+  }
 });
+
+
+
+
+
+
 
 
 
