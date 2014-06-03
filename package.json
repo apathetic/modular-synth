@@ -1,0 +1,15 @@
+{
+  "name": "audio",
+  "version": "0.0.1",
+  "description": "Modular Audio Thing",
+  "main": "index.js",
+  "dependencies": {
+    "harp": "~0.11.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wes Hatch",
+  "license": "BSD-2-Clause"
+}
