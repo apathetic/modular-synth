@@ -40,11 +40,9 @@
 				// Here are the interfaces available to control the oscillator:
 				// Update Frequency (@ control rate)
 				$scope.$watch('freq', function(f) {
-					console.log('dad', f);
+					console.log('f', f);
 					$scope.osc.frequency.value = f;
 				});
-
-
 
 			},
 			'link': function(scope, elem, attrs) {
@@ -97,7 +95,7 @@
 				var freq = $scope.freq || '440';
 				var Q = $scope.Q || '1';
 				var output = $scope.output || 'masterOut';
-
+				/*
 				// create an input
 				this.input = context.createGainNode();
 
@@ -112,22 +110,47 @@
 
 				// call it vars(?). Maybe makes more sense, in this context
 				this.vars = $scope;
-
+				*/
 				// store a reference to the audioNode on the element itself
 				// $element.audioNode = this;
 
-				$element[0].input = this.input;
+				// $element[0].input = this.input;
+
+
+
+
+
+
+				// create an input
+				$scope.input = context.createGainNode();
+
+				// create the filter
+				$scope.filter = context.createBiquadFilter();
+				$scope.filter.type = type;
+				$scope.filter.frequency.value = freq;
+				$scope.filter.Q.value = Q;
+
+				// our input is now connected to our filter
+				$scope.input.connect($scope.filter);
+
+
+
+
+
+
+
+
 
 			 },
 			'link': function(scope, elem, attrs, controller) {
 				scope.$watch('output', function(output){
 
 					if (output == 'masterOut') {
-						controller.comp.connect(masterOut);
+						scope.filter.connect(masterOut);
 					} else {
 						var destination = document.querySelector('#'+output);
 						if (destination.input) {
-							controller.filt.connect(destination.input);
+							scope.filter.connect(destination.input);
 						} else {
 							console.log('"%s" not found or is not an audio node', output);
 						}
