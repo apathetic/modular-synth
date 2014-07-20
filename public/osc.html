@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html ng-app="audio">
+<head>
+	<title>blur</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="css/maladjusted.css">
+
+	<script src="lib/angular.min.js"></script>
+
+<!--
+	<script src="js/audio/knob.js"></script>
+	<script src="js/audio/oscillator.js"></script>
+	<script src="js/audio/waveshaper.js"></script>
+	<script src="js/audio/wavetable.js"></script>
+-->
+
+
+
+	<script src="js/main.js"></script>
+	<script src="js/audio.js"></script>
+	<script src="js/interface.js"></script>
+
+</head>
+<body>
+
+	<oscillator type="saw" output="masterOut">
+		<knob param="freq" default="440" max="2000"></knob>
+	</oscillator>
+
+
+
+</body>
+</html>
