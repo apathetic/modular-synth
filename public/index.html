@@ -3,7 +3,6 @@
 <head>
 	<title>blur</title>
 	<meta charset="utf-8">
-	<meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
 	<link rel="stylesheet" href="css/maladjusted.css">
 
 	<script src="lib/angular.min.js"></script>
@@ -11,13 +10,15 @@
 <!--
 	<script src="js/audio/knob.js"></script>
 	<script src="js/audio/oscillator.js"></script>
--->
-
 	<script src="js/audio/waveshaper.js"></script>
 	<script src="js/audio/wavetable.js"></script>
+-->
+
 
 
 	<script src="js/main.js"></script>
+	<script src="js/audio.js"></script>
+	<script src="js/interface.js"></script>
 
 </head>
 <body>
@@ -25,37 +26,32 @@
 
 	<group id="sweeper">
 
-		<knob default="85" max="200" output="gen1.freq"></knob><!-- main gen freq -->
-		<knob default="0.5" max="2" output="sweep.freq"></knob><!-- sweep speed -->
-		<knob default="40" max="100" output="mult1.gain"></knob><!-- sweep depth -->
-		<knob default="xx" max="100" output="add1"></knob><!-- filter center freq -->
-		<knob default="xx" max="100" output=""></knob><!-- filter Q -->
+		<filter id="filt" type="bandpass" output="del">
+			<knob data="Q"><!-- filter Q --></knob>
+			<!-- <knob data="freq"></knob> -->
+			<control data="freq">
+				<gain id="add" output="filt.freq">
+					<knob default="xx" max="100"><!-- filter center freq --></knob>
 
-		<oscillator type="saw" id="gen1" output="filt1">
-			<knob data="freq"></knob>
-		</oscillator>
+					<gain id="mult" output="add">
+						<knob data="gain" default="40" max="100"><!-- sweep depth --></knob>
 
-		<oscillator type="saw" id="sweep" output="mult1">
-			<knob data="freq"></knob>
-		</oscillator>
+						<oscillator id="sweep" type="saw" output="mult">
+							<knob data="freq" default="0.5" max="2"><!-- sweep speed --></knob>
+						</oscillator>
+					</gain>
+				</gain>
+			</control>
 
-		<gain id="mult1" output="add1">
-			<knob data="gain" default="40"><!-- sweep depth --></knob>
-		</gain>
-
-		<gain id="add1" output="filt1.freq">
-		</gain>
-
-		<filter type="bandpass" id="filt1" output="del1">
-			<knob data="freq"></knob>
-			<knob data="Q"></knob>
+			<oscillator id="gen" type="saw" output="filt">
+				<knob data="freq" default="85" max="200"><!-- main gen freq --></knob>
+			</oscillator>
 		</filter>
 
-		<delay id="del1" output="comp1">
+		<delay id="del" output="comp1">
 			<knob data="time"></knob>
 			<knob data="feedback" max="0.99"></knob>
 		</delay>
-
 	</group>
 
 

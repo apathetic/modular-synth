@@ -22,15 +22,12 @@
 }
 
 .notch {
-
-  width: 25px;
-  height: 2px;
-
-  position: relative;
-  top: 50%;
-  background: red;
-
-  -webkit-transform-origin: right center;
-  -webkit-transform: rotate(-70deg);
-
+	width: 2px;
+	height: 25px;
+	position: relative;
+	left: 50%;
+	background: red;
+	-webkit-transform-origin: center bottom;
+	-webkit-transform: rotate(-160deg);		// note "0" is 12:00
+	margin-left: -1px;
 }
