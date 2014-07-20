@@ -19,15 +19,24 @@
 
   box-shadow: 0px 0px 3px #000;
 
-}
 
-.notch {
-	width: 2px;
-	height: 25px;
-	position: relative;
-	left: 50%;
-	background: red;
-	-webkit-transform-origin: center bottom;
-	-webkit-transform: rotate(-160deg);		// note "0" is 12:00
-	margin-left: -1px;
+	.notch {
+		width: 2px;
+		height: 25px;
+		position: relative;
+		left: 50%;
+		background: red;
+		-webkit-transform-origin: center bottom;
+		-webkit-transform: rotate(-160deg);		// note "0" is 12:00
+		margin-left: -1px;
+	}
+
+	span {
+		font-family: sans-serif;
+		text-align: center;
+		width: 100%;
+		display: inline-block;
+		color: #fff;
+		font-size: 11px;
+	}
 }

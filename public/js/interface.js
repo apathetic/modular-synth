@@ -33,8 +33,8 @@
 
 			// knob UI vars
 			var notch = elem[0].querySelector('.notch'),
-				minValue = attrs.min || 0,
-				maxValue = attrs.max || 100,
+				minValue = parseInt(attrs.min || 0),
+				maxValue = parseInt(attrs.max || 100),
 				range = maxValue - minValue,
 				tempValue,
 				clientYDown = 0,
@@ -80,13 +80,13 @@
 
 					// update the scope value using the knob's
 					scope.$apply(function(){
-						scope.value = (value/100 * range) + minValue;
-						// scope.value = value;
+						scope.value = (value/100.0 * range) + minValue;
 					});
 
 				}
 			});
 		},
+		scope: { 'param': '@' },
 		'templateUrl': 'partials/knob.html'
 		// // 'templateUrl': '<div class="knob"><div class="notch"></div></div>'
 	}

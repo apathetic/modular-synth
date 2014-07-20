@@ -6,6 +6,17 @@ body {
 .container {
   margin: 0 auto; }
 
+
+/* ---------------------------------------
+  Elements
+--------------------------------------- */
+oscillator, filter {
+	display:inline-block;
+	padding: 20px;
+	border:1px solid #fff;
+}
+
+
 /* ---------------------------------------
   Knob
 --------------------------------------- */
@@ -31,3 +42,13 @@ body {
   background: red;
   -webkit-transform-origin: center bottom;
   -webkit-transform: rotate(-160deg); }
+
+.knob span {
+  font:11px sans-serif;
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+  color: #fff;
+}
+
+
