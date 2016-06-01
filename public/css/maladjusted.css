@@ -6,6 +6,40 @@ body {
 .container {
   margin: 0 auto; }
 
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  }
+
+input[type="range"] {
+  -webkit-appearance: slider-vertical;
+  -webkit-appearance: none;
+  background: #aaa;
+
+  /*width: 10px;*/
+  /*height: 200px;*/
+  width: 200px;
+  height: 10px;
+  -webkit-transform: rotate(-90deg);
+
+  position:absolute;
+  bottom:200px;
+  right: 0;
+  }
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: rgba(128,128,128, 0.5);
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  /*z-index: 1111;*/
+  }
+
 
 /* ---------------------------------------
   Elements
@@ -14,7 +48,7 @@ oscillator, filter {
 	display:inline-block;
 	padding: 20px;
 	border:1px solid #fff;
-}
+	}
 
 
 /* ---------------------------------------
@@ -31,7 +65,8 @@ oscillator, filter {
   background: -o-radial-gradient center, ellipse cover, white 0%, rgba(40, 40, 40, 0.4) 100%;
   background: -ms-radial-gradient center, ellipse cover, white 0%, rgba(40, 40, 40, 0.4) 100%;
   background: radial-gradient(ellipse at center, white 0%, rgba(40, 40, 40, 0.4) 100%);
-  box-shadow: 0px 0px 3px #000; }
+  box-shadow: 0px 0px 3px #000;
+  }
 
 .notch {
   height: 25px;
@@ -49,6 +84,14 @@ oscillator, filter {
   width: 100%;
   display: inline-block;
   color: #fff;
-}
+  }
+
+
+
+
+
+
+
+
 
 
