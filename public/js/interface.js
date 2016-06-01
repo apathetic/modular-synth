@@ -43,6 +43,7 @@
 
 			// watch for changes the knob's value and update the value on the parent scope accordingly
 			scope.$watch('value', function(x){
+				console.log(param, x);
 				scope[param] = x;		// scope is shared with the parent, here
 			});
 
