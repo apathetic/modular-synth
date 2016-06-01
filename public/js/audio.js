@@ -15,15 +15,8 @@
 			'controller': function($scope, $element, $attrs){
 
 				/*
-				this.osc = context.createOscillator();
-				this.osc.type = type;
-				this.osc.frequency.value = freq;
-
-				// create an input
+				// create an input (if we wish to modulate the frequency)
 				// this.input = context.createGainNode();
-
-				// call it vars(?). Maybe makes more sense, in this context
-				this.vars = $scope;
 				*/
 
 				// Our lovely webAudio Oscillator.
@@ -47,25 +40,47 @@
 			},
 			'link': function(scope, elem, attrs) {
 
-				console.log('osc link');
+
+
+				// NOTE ---------------------
+				// this method for hooking up nodes is used throughout
+				// abstract out of here and generalize FTW
+				// *****************************************
 
 				// we hook up everything in the link function -- ie. after all
 				// webAudio audio nodes have been successfully instantiated
 				scope.$watch('output', function(output){
-					if (output && output == 'masterOut') {
-						scope.osc.connect(masterOut);
-					} else {
-						var destination = document.querySelector('#'+output);
-						if (destination.input) {
-							// connect the osc's output to the referenced input
-							scope.osc.connect(destination.input);
-						} else if (1) {
-							// hook up the node to its parent
-							// TODO
+					if (output) {
+						if (output == 'masterOut') {
+							console.log('Routing %s to MasterOut', elem);
+							scope.osc.connect(masterOut);
 						} else {
-							console.log('"%s" not found or is not an audio node', output);
+							var destination = document.querySelector('#'+output);
+							if (destination.input) {
+								// connect the osc's output to the referenced input
+								console.log('Routing %s to %s', elem, destination.input);
+								scope.osc.connect(destination.input);
+							} else {
+								console.log('"%s" not found or is not an audio node', output);
+							}
 						}
+					} else {
+						// hook up the node to its parent
+						var parent = elem.parent();
+						console.log('Routing %s to its parent: %s', elem[0].nodeName, parent[0].nodeName);
+
+						// console.log(parent);
+
+						// access parent scope somehow to connect this?
+						// 	a) through a directive?
+						// 	b) via the elem reference?
+						// scope.osc.connect(parent.input);
 					}
+
+				// *****************************************
+
+
+
 
 					// ENGAGE OSCILLATOR
 					scope.osc.start();
@@ -97,7 +112,7 @@
 				var output = $scope.output || 'masterOut';
 				/*
 				// create an input
-				this.input = context.createGainNode();
+				this.input = context.createGain();
 
 				// create the filter
 				this.filt = context.createBiquadFilter();
@@ -122,7 +137,7 @@
 
 
 				// create an input
-				$scope.input = context.createGainNode();
+				$scope.input = context.createGain();
 
 				// create the filter
 				$scope.filter = context.createBiquadFilter();
@@ -143,6 +158,9 @@
 
 			 },
 			'link': function(scope, elem, attrs, controller) {
+
+				console.log('********', scope, elem);
+
 				scope.$watch('output', function(output){
 
 					if (output == 'masterOut') {
