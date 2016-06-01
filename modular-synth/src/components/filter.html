@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html ng-app="audio">
+<head>
+	<title>FILT</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="css/maladjusted.css">
+	<script src="lib/angular.min.js"></script>
+</head>
+<body>
+
+	<filter type="bandpass" output="masterOut">
+
+		<!-- Filter Controls -->
+		<knob param="Q" default="0.8" min="0.1" max="2.0"></knob>
+		<knob param="f" default="440" min="100" max="5000"></knob>
+		<!-- <knob param="gain" default="0.8" max="1.0"></knob> -->
+
+		<!-- Inputs -->
+		<oscillator type="saw">
+			<knob param="freq" default="440" max="2000"></knob>
+		</oscillator>
+
+		<oscillator type="sine">
+			<knob param="freq" default="85" max="2000"></knob>
+		</oscillator>
+
+	</filter>
+
+
+	<script src="js/main.js"></script>
+	<script src="js/audio.js"></script>
+	<script src="js/interface.js"></script>
+
+</body>
+</html>

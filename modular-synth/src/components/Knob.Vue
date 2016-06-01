@@ -1,3 +1,12 @@
+<template>
+  <div class="knob">
+    <div class="notch"></div>
+    <span>{{ param }}</span>
+  </div>
+</template>
+
+
+<script>
 
 
     (function ($) {
@@ -161,3 +170,46 @@
     });
 
 
+</script>
+
+<style type="sass">
+  .knob {
+
+    width: 50px;
+    height: 50px;
+
+    border: 3px #ddd solid;
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    background:-moz-radial-gradient    (center, ellipse cover, rgba(255,255,255,1) 0%, rgba(40,40,40,0.4) 100%);
+    background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(40,40,40,0.4) 100%);
+    background: -o-radial-gradient     (center, ellipse cover, rgba(255,255,255,1) 0%, rgba(40,40,40,0.4) 100%);
+    background: -ms-radial-gradient    (center, ellipse cover, rgba(255,255,255,1) 0%, rgba(40,40,40,0.4) 100%);
+    background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%,rgba(40,40,40,0.4) 100%);
+
+    box-shadow: 0px 0px 3px #000;
+
+
+    .notch {
+      width: 2px;
+      height: 25px;
+      position: relative;
+      left: 50%;
+      background: red;
+      -webkit-transform-origin: center bottom;
+      -webkit-transform: rotate(-160deg);   // note "0" is 12:00
+      margin-left: -1px;
+    }
+
+    span {
+      font-family: sans-serif;
+      text-align: center;
+      width: 100%;
+      display: inline-block;
+      color: #fff;
+      font-size: 11px;
+    }
+  }
+</style>
