@@ -2,58 +2,49 @@
 //  OSCILLATOR
 // -----------------------------------------------
 
-<template>
+// http://webaudio.github.io/web-audio-api/#idl-def-OscillatorNode
+//
 
-  <div>
+<template>
+  <div class="node">
     <p>freq {{ freq }}</p>
     <p>type {{ type }}</p>
-    <p>out  {{ out }}</p>
+    <knob :value.sync="freq"></knob>
   </div>
-<!--   <oscillator type="saw" output="masterOut">
-    <knob param="freq" default="455" min="220" max="880"></knob>
-  </oscillator>
- -->
 </template>
 
-
-
 <script>
+import Knob from './Knob';
+
 export default {
+  components: {
+    Knob
+  },
+
+  // propsData: [
+  //   'freq',
+  //   'type'
+  // ],
+
   data() {
     return {
       freq: 440,
-      type: 'sine',
-      output: 'masterOut'
+      type: 'sine'	// "square", "sawtooth", "triangle", "custom"
       // min 220?
       // max 880 ?
     };
   },
+
   created() {
-    console.log(this);
-
-
     // Our lovely webAudio Oscillator.
     this.osc = this.context.createOscillator();
-    this.osc.type = this.type || 'sine';
-    this.osc.frequency.value = this.freq || '440';
+    this.osc.type = this.type;
+    this.osc.frequency.value = this.freq;
 
-    this.input = this.context.createGainNode();
-    this.output = this.context.createGainNode();
-
-    this.input.connect(this.osc);
+    this.output = this.context.createGain();
     this.osc.connect(this.output);
 
-    // Here are the interfaces available to control the oscillator:
-    // Update Frequency (@ control rate)
-    this.$watch('freq', function(f) {
-      console.log('f', f);
-      this.osc.frequency.value = f;
-    });
 
-
-
-    // we hook up everything in the link function -- ie. after all
-    // webAudio audio nodes have been successfully instantiated
     // if (output) {
     //   if (output == 'masterOut') {
     //     console.log('Routing %s to MasterOut', elem);
@@ -73,14 +64,21 @@ export default {
     //   var parent = elem.parent();
     //   console.log('Routing %s to its parent: %s', elem[0].nodeName, parent[0].nodeName);
     // }
-
-
-    // OSCILLATOR-IFY
-    this.osc.start();
   },
   methods: {
+    /**
+     * k-rate control of the Oscillator frequency
+     * @param  {Float} f frequency
+     */
     freq(f) {
       this.freq = f;
+      this.osc.frequency.value = f;
+    },
+    start() {
+      this.osc.start();
+    },
+    stop() {
+      this.osc.stop();
     }
   }
 };
