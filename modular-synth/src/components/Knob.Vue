@@ -1,196 +1,154 @@
 <template>
-  <div class="knob">
-    <div class="notch"></div>
+knob
+  <div class="knob" v-on:click="knobStart">
+    <div v-el:notch class="notch"></div>
     <span>{{ param }}</span>
   </div>
 </template>
 
 
 <script>
+export default {
+  prop: ['value'],
+
+  data() {
+    return {
+      percentage: 0,
+      mouseDown: false,
+      rotationValue: 0,
+      clientYDown: null,
+      startValue: null
+    };
+  },
+
+  created() {
+    let dialOffsetLow = -70;
+    let dialOffsetHigh = 250;
+    let maxDegreeShift = 320;
+    let dialSpeed = 0.5;
 
 
-    (function ($) {
-
-      var defaults = {
-        dialOffsetLow: -70,
-        dialOffsetHigh: 250,
-        maxDegreeShift: 320,
-        dialSpeed: 0.5,
-        onAdjust: function (percentage) {}
-      };
-
-      // The actual plugin constructor
-      var dial = function (element, options) {
-
-        this.element = element;
-
-        this.selectors = {
-          notch: $(this.element).find('.notch')
-        };
-
-        this.options = $.extend({}, defaults, options);
-
-        this.init();
-
-        this.options.onInit();
-
-      }
-
-      dial.prototype = {
-
-        percentage: 0,
-
-        init: function () {
-
-          var self = this;
-
-          // Get the correct degree shift based on dial speed
-          self.options.maxDegreeShift = self.options.maxDegreeShift * self.options.dialSpeed;
-
-          var rotationValue = self.options.dialOffsetLow;
-
-          var value = 0,
-            startValue;
-
-          // Vars
-          var clientY = 0, clientYDown = 0, clientYUp = 0, rotationValue, percentage = 0;
-
-          // Switch
-          var mouseDown = false;
-
-          // Event to update degree
-          $(self.element).mousedown(function (e) {
-            mouseDown = true;
-            rotationValue = self.getRotationDegrees();
-            clientYDown = e.clientY;
-            startValue = value;
-          });
-
-          $(window).mouseup(function (e) {
-            mouseDown = false;
-            clientYUp = e.clientY;
-          });
-
-          $(window).mousemove(function (e) {
-
-            if (mouseDown) {
-
-              // Difference between starting Y and current Y
-              clientYDiff = e.clientY - clientYDown;
-
-              // Set value of dial based on the position of it previous to this mousedown/move event
-              value = startValue - clientYDiff;
-
-              // Min
-              if (value <= 0) {
-                value = 0;
-              }
-              // Max
-              else if (value > self.options.maxDegreeShift) {
-                value = self.options.maxDegreeShift;
-              }
-
-              // For every dialSpeed moved by mouse, we move a degree
-              rotationValue = ((value / self.options.dialSpeed) + self.options.dialOffsetLow);
-
-              // Only rotate within our boundaries
-              if (rotationValue > self.options.dialOffsetLow && rotationValue < self.options.dialOffsetHigh) {
-
-                self.setRotationDegrees(rotationValue);
-
-              }
-
-              self.percentage = (value / self.options.maxDegreeShift) * 100;
-
-              self.options.onAdjust(self.percentage);
-
-            }
-
-          });
-
-        },
-
-        getRotationDegrees: function () {
-
-          var matrix =  this.selectors.notch.css("-webkit-transform") ||
-                  this.selectors.notch.css("-moz-transform")    ||
-                  this.selectors.notch.css("-ms-transform")     ||
-                  this.selectors.notch.css("-o-transform")      ||
-                  this.selectors.notch.css("transform");
-
-          if (matrix !== 'none') {
-            var values = matrix.split('(')[1].split(')')[0].split(',');
-            var a = values[0];
-            var b = values[1];
-            var angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
-          }
-          else {
-            var angle = 0;
-          }
-
-          return angle;
-
-        },
-
-        setRotationDegrees: function (degree) {
-
-          this.selectors.notch.css('-webkit-transform', 'rotate(' + degree + 'deg)');
-
-        }
-
-      }
-
-      // Bind into jQuery.
-      $.fn.dial = function (options) {
-
-        // For each instance of the selector, create the plugin
-        return this.each(function () {
-
-          if (!$.data(this, 'plugin_dial')) {
-            $.data(this, 'plugin_dial', new dial(this, options));
-          }
-
-        });
-      }
-
-    })(jQuery);
+    var rotationValue = dialOffsetLow;
+    // var value = 0;
+    var startValue;
+    var clientYDown = 0;
+    var mouseDown = false;
 
 
-    var context = new webkitAudioContext();
+    // Get the correct degree shift based on dial speed
+    maxDegreeShift = maxDegreeShift * dialSpeed;
 
-    $('#osc .dial').dial({
-      node: context.createOscillator(),
-      onInit: function () {
-        this.node.connect(context.destination);
-        this.node.noteOn(0);
-      },
-      onAdjust: function (percentage) {
-        this.node.frequency.value = percentage * 300;
-      }
+
+    // Event to update degree
+    window.addEventListener('mouseup', function(e) {
+      mouseDown = false;
     });
 
+    window.addEventListener('mousemove', function(e) {
+      if (mouseDown) {
+        // Difference between starting Y and current Y
+        let clientYDiff = e.clientY - clientYDown;
+
+        // Set value of dial based on the position of it previous to this mousedown/move event
+        this.value = startValue - clientYDiff;
+
+        // Min
+        if (this.value <= 0) {
+          this.value = 0;
+        } else if (this.value > maxDegreeShift) {
+          this.value = maxDegreeShift;
+        }
+
+        // For every dialSpeed moved by mouse, we move a degree
+        rotationValue = ((this.value / dialSpeed) + dialOffsetLow);
+
+        // Only rotate within our boundaries
+        if (rotationValue > dialOffsetLow && rotationValue < dialOffsetHigh) {
+          this.setRotationDegrees(rotationValue);
+        }
+
+        this.percentage = (this.value / maxDegreeShift) * 100;
+
+        // this.onAdjust(self.percentage);
+      }
+    });
+  },
+
+  methods: {
+    knobStart(e) {
+      this.mouseDown = true;
+      this.rotationValue = this.getRotationDegrees();
+      this.clientYDown = e.clientY;
+      this.startValue = this.value;
+    },
+
+    // onAdjust(percentage) {
+    //   //
+    // },
+
+    getRotationDegrees() {
+      var matrix = this.$els.notch.style['transform'];
+      var angle;
+
+      if (matrix !== '') {
+        let values = matrix.split('(')[1].split(')')[0].split(',');
+        let a = values[0];
+        let b = values[1];
+        angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+      } else {
+        angle = 0;
+      }
+
+      return angle;
+    },
+
+    setRotationDegrees(degree) {
+      this.$els.notch.style['transform'] = 'rotate(' + degree + 'deg)';
+    }
+  }
+
+
+    //   // Bind into jQuery.
+    //   $.fn.dial = function (options) {
+
+    //     // For each instance of the selector, create the plugin
+    //     return this.each(function () {
+
+    //       if (!$.data(this, 'plugin_dial')) {
+    //         $.data(this, 'plugin_dial', new dial(this, options));
+    //       }
+
+    //     });
+    //   }
+
+    // })(jQuery);
+
+
+    // var context = new webkitAudioContext();
+
+    // $('#osc .dial').dial({
+    //   node: context.createOscillator(),
+    //   onInit: function () {
+    //     this.node.connect(context.destination);
+    //     this.node.noteOn(0);
+    //   },
+    //   onAdjust: function (percentage) {
+    //     this.node.frequency.value = percentage * 300;
+    //   }
+    // });
+};
 
 </script>
 
-<style type="sass">
+<style lang="scss">
   .knob {
-
     width: 50px;
     height: 50px;
-
     border: 3px #ddd solid;
     border-radius: 30px;
-
     cursor: pointer;
-
-    background:-moz-radial-gradient    (center, ellipse cover, rgba(255,255,255,1) 0%, rgba(40,40,40,0.4) 100%);
-    background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(40,40,40,0.4) 100%);
-    background: -o-radial-gradient     (center, ellipse cover, rgba(255,255,255,1) 0%, rgba(40,40,40,0.4) 100%);
-    background: -ms-radial-gradient    (center, ellipse cover, rgba(255,255,255,1) 0%, rgba(40,40,40,0.4) 100%);
     background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%,rgba(40,40,40,0.4) 100%);
-
     box-shadow: 0px 0px 3px #000;
-
 
     .notch {
       width: 2px;
@@ -198,8 +156,8 @@
       position: relative;
       left: 50%;
       background: red;
-      -webkit-transform-origin: center bottom;
-      -webkit-transform: rotate(-160deg);   // note "0" is 12:00
+      transform-origin: center bottom;
+      transform: rotate(-160deg);
       margin-left: -1px;
     }
 
