@@ -1,20 +1,22 @@
+html {
+  height: 100%;
+}
+
 body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
   margin: 0;
   padding: 0;
   background-color: #eee;
 
-/*
-  * {
-    display:inline-block;
-    padding:16px;
-    height:32px;
-    border:1px solid #999;
-    border-radius:6px;
-  }
- */
+  font-family: Source Sans Pro, Helvetica, sans-serif;
+
 }
 
 .container {
-  margin:0 auto;
+  margin: 0 auto;
 }
 
