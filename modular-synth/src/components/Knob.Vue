@@ -1,64 +1,47 @@
 <template>
   <div v-on:mousedown="knobStart" class="knob">
     <div v-el:notch class="notch"></div>
-    <span>{{ param }}</span>
+    <span>{{ value }}</span>
   </div>
 </template>
 
 
 <script>
 export default {
-  prop: ['value'],
+  prop: [
+    'value'
+  ],
 
   data() {
     return {
-      percentage: 0,
+      value: 0,
       active: false,    // to distinguish between multiple knobs
-      rotationValue: 0,
-      // clientYDown: null,
-      startValue: null
+      startValue: null,
+      startClientY: null
     };
   },
 
   created() {
-    let dialOffsetLow = -70;
-    let dialOffsetHigh = 250;
-    let maxDegreeShift = 320;
-    let dialSpeed = 0.5;
-    let rotationValue = dialOffsetLow;
-
-    // Get the correct degree shift based on dial speed
-    maxDegreeShift = maxDegreeShift * dialSpeed;
-
     var self = this;
 
     window.addEventListener('mouseup', (e) => {
       window.mouseDown = false;
       self.active = false;
+
+      document.body.style.webkitUserSelect = 'auto';
+      document.body.style.userSelect = 'auto';
     });
 
     window.addEventListener('mousemove', (e) => {
       if (window.mouseDown && self.active) {
-        // Difference between starting Y and current Y
-        let clientYDiff = e.clientY - self.startValue;
+        let change = self.startClientY - e.clientY;
+        // let dialSpeed = 1; change *= dialSpeed;
+        let value = self.startValue + change;
 
-        // Set value of dial based on the position of it previous to this mousedown/move event
-        self.value = self.startValue - clientYDiff;
-        self.value = Math.min(maxDegreeShift, Math.max(0, self.value));
+        value = Math.min(100, Math.max(0, value));
 
-        // For every dialSpeed moved by mouse, we move a degree
-        rotationValue = ((self.value / dialSpeed) + dialOffsetLow);
-
-        // Only rotate within our boundaries
-        if (rotationValue > dialOffsetLow && rotationValue < dialOffsetHigh) {
-          self.setRotationDegrees(rotationValue);
-        }
-
-        self.percentage = (self.value / maxDegreeShift) * 100;
-
-        console.log(self.percentage, rotationValue);
-
-        // this.onAdjust(self.percentage);
+        self.value = Math.round(value);
+        self.setRotationDegrees(value);
       }
     });
   },
@@ -67,70 +50,26 @@ export default {
     knobStart(e) {
       window.mouseDown = true;
       this.active = true;
-      this.rotationValue = this.getRotationDegrees();
-      this.startValue = e.clientY;
+      this.startValue = this.value;
+      this.startClientY = e.clientY;
 
-      window
+      document.body.style.webkitUserSelect = 'none';
+      document.body.style.userSelect = 'none';
     },
 
-    // onAdjust(percentage) {
-    //   //
-    // },
+    setRotationDegrees(value) {
+      let dialOffsetLow = -160;
+      let dialOffsetHigh = 160;
+      let maxDegreeShift = dialOffsetHigh - dialOffsetLow;
+      let rotationValue = ((value * maxDegreeShift) / 100) + dialOffsetLow;
 
-    getRotationDegrees() {
-      var matrix = this.$els.notch.style['transform'];
-      var angle;
-
-      if (matrix !== '') {
-        let values = matrix.split('(')[1].split(')')[0].split(',');
-        let a = values[0];
-        let b = values[1];
-        angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
-      } else {
-        angle = 0;
-      }
-
-      return angle;
-    },
-
-    setRotationDegrees(degree) {
-      console.log(degree);
-      this.$els.notch.style['transform'] = 'rotate(' + degree + 'deg)';
+      this.$els.notch.style['transform'] = 'rotate(' + rotationValue + 'deg)';
     }
   }
-
-
-    //   // Bind into jQuery.
-    //   $.fn.dial = function (options) {
-
-    //     // For each instance of the selector, create the plugin
-    //     return this.each(function () {
-
-    //       if (!$.data(this, 'plugin_dial')) {
-    //         $.data(this, 'plugin_dial', new dial(this, options));
-    //       }
-
-    //     });
-    //   }
-
-    // })(jQuery);
-
-
-    // var context = new webkitAudioContext();
-
-    // $('#osc .dial').dial({
-    //   node: context.createOscillator(),
-    //   onInit: function () {
-    //     this.node.connect(context.destination);
-    //     this.node.noteOn(0);
-    //   },
-    //   onAdjust: function (percentage) {
-    //     this.node.frequency.value = percentage * 300;
-    //   }
-    // });
 };
 
 </script>
+
 
 <style lang="scss">
   .knob {
@@ -158,8 +97,11 @@ export default {
       text-align: center;
       width: 100%;
       display: inline-block;
-      color: #fff;
       font-size: 11px;
+
+      top: 2.5em;
+      position: relative;
+      color: black;
     }
   }
 </style>
