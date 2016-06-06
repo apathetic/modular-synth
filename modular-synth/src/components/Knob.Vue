@@ -1,6 +1,5 @@
 <template>
-knob
-  <div class="knob" v-on:click="knobStart">
+  <div v-on:mousedown="knobStart" class="knob">
     <div v-el:notch class="notch"></div>
     <span>{{ param }}</span>
   </div>
@@ -14,9 +13,9 @@ export default {
   data() {
     return {
       percentage: 0,
-      mouseDown: false,
+      active: false,    // to distinguish between multiple knobs
       rotationValue: 0,
-      clientYDown: null,
+      // clientYDown: null,
       startValue: null
     };
   },
@@ -26,48 +25,38 @@ export default {
     let dialOffsetHigh = 250;
     let maxDegreeShift = 320;
     let dialSpeed = 0.5;
-
-
-    var rotationValue = dialOffsetLow;
-    // var value = 0;
-    var startValue;
-    var clientYDown = 0;
-    var mouseDown = false;
-
+    let rotationValue = dialOffsetLow;
 
     // Get the correct degree shift based on dial speed
     maxDegreeShift = maxDegreeShift * dialSpeed;
 
+    var self = this;
 
-    // Event to update degree
-    window.addEventListener('mouseup', function(e) {
-      mouseDown = false;
+    window.addEventListener('mouseup', (e) => {
+      window.mouseDown = false;
+      self.active = false;
     });
 
-    window.addEventListener('mousemove', function(e) {
-      if (mouseDown) {
+    window.addEventListener('mousemove', (e) => {
+      if (window.mouseDown && self.active) {
         // Difference between starting Y and current Y
-        let clientYDiff = e.clientY - clientYDown;
+        let clientYDiff = e.clientY - self.startValue;
 
         // Set value of dial based on the position of it previous to this mousedown/move event
-        this.value = startValue - clientYDiff;
-
-        // Min
-        if (this.value <= 0) {
-          this.value = 0;
-        } else if (this.value > maxDegreeShift) {
-          this.value = maxDegreeShift;
-        }
+        self.value = self.startValue - clientYDiff;
+        self.value = Math.min(maxDegreeShift, Math.max(0, self.value));
 
         // For every dialSpeed moved by mouse, we move a degree
-        rotationValue = ((this.value / dialSpeed) + dialOffsetLow);
+        rotationValue = ((self.value / dialSpeed) + dialOffsetLow);
 
         // Only rotate within our boundaries
         if (rotationValue > dialOffsetLow && rotationValue < dialOffsetHigh) {
-          this.setRotationDegrees(rotationValue);
+          self.setRotationDegrees(rotationValue);
         }
 
-        this.percentage = (this.value / maxDegreeShift) * 100;
+        self.percentage = (self.value / maxDegreeShift) * 100;
+
+        console.log(self.percentage, rotationValue);
 
         // this.onAdjust(self.percentage);
       }
@@ -76,10 +65,12 @@ export default {
 
   methods: {
     knobStart(e) {
-      this.mouseDown = true;
+      window.mouseDown = true;
+      this.active = true;
       this.rotationValue = this.getRotationDegrees();
-      this.clientYDown = e.clientY;
-      this.startValue = this.value;
+      this.startValue = e.clientY;
+
+      window
     },
 
     // onAdjust(percentage) {
@@ -103,6 +94,7 @@ export default {
     },
 
     setRotationDegrees(degree) {
+      console.log(degree);
       this.$els.notch.style['transform'] = 'rotate(' + degree + 'deg)';
     }
   }
