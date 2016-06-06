@@ -1,5 +1,5 @@
 <template>
-  <div v-on:mousedown="knobStart" class="knob">
+  <div v-on:mousedown="start" class="knob">
     <div v-el:notch class="notch"></div>
     <span>{{ value }}</span>
   </div>
@@ -8,17 +8,22 @@
 
 <script>
 export default {
-  prop: [
-    'value'
-  ],
+  props: {
+    'value': 0,
+    'min': 0,
+    'max': 100
+  },
 
   data() {
     return {
-      value: 0,
       active: false,    // to distinguish between multiple knobs
       startValue: null,
       startClientY: null
     };
+  },
+
+  ready() {
+    this.setRotationDegrees();
   },
 
   created() {
@@ -38,16 +43,16 @@ export default {
         // let dialSpeed = 1; change *= dialSpeed;
         let value = self.startValue + change;
 
-        value = Math.min(100, Math.max(0, value));
+        value = Math.min(self.max, Math.max(self.min, value));
 
         self.value = Math.round(value);
-        self.setRotationDegrees(value);
+        self.setRotationDegrees();
       }
     });
   },
 
   methods: {
-    knobStart(e) {
+    start(e) {
       window.mouseDown = true;
       this.active = true;
       this.startValue = this.value;
@@ -57,11 +62,19 @@ export default {
       document.body.style.userSelect = 'none';
     },
 
-    setRotationDegrees(value) {
+    adjust(e) {},
+    end(e) {},
+
+
+    /**
+     * Set the knob's notch position
+     */
+    setRotationDegrees() {
       let dialOffsetLow = -160;
       let dialOffsetHigh = 160;
       let maxDegreeShift = dialOffsetHigh - dialOffsetLow;
-      let rotationValue = ((value * maxDegreeShift) / 100) + dialOffsetLow;
+      let value = (this.value - this.min) / (this.max - this.min);
+      let rotationValue = (value * maxDegreeShift) + dialOffsetLow;
 
       this.$els.notch.style['transform'] = 'rotate(' + rotationValue + 'deg)';
     }
