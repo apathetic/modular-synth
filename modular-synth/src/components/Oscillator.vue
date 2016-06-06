@@ -9,7 +9,7 @@
   <div class="node">
     <p>freq {{ freq }}</p>
     <p>type {{ type }}</p>
-    <knob :value.sync="freq"></knob>
+    <knob :value.sync="freq" :min="220" :max="880"></knob>
   </div>
 </template>
 
@@ -20,11 +20,6 @@ export default {
   components: {
     Knob
   },
-
-  // propsData: [
-  //   'freq',
-  //   'type'
-  // ],
 
   data() {
     return {
