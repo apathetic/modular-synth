@@ -59,7 +59,18 @@ export default {
     //   var parent = elem.parent();
     //   console.log('Routing %s to its parent: %s', elem[0].nodeName, parent[0].nodeName);
     // }
+
+
+    // $vm.output.connect($vm.context.destination)
+
+
+    this.$watch('freq', function(f) {
+      this.osc.frequency.value = f;
+    });
   },
+
+  computed: {},
+
   methods: {
     /**
      * k-rate control of the Oscillator frequency
@@ -67,11 +78,14 @@ export default {
      */
     freq(f) {
       this.freq = f;
+      console.log('setting f', f, this);
       this.osc.frequency.value = f;
     },
+
     start() {
       this.osc.start();
     },
+
     stop() {
       this.osc.stop();
     }
