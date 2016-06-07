@@ -1,19 +1,21 @@
 <template>
+  <section>
     <oscillator></oscillator>
-    <aside>
-      <master-out></master-out>
-    </aside>
-  </main>
+  </section>
+
+  <aside>
+    <master-out></master-out>
+  </aside>
 </template>
 
 <script>
-import Knob from './components/Knob';
 import Oscillator from './components/Oscillator';
+import MasterOut from './components/MasterOut';
 
 export default {
   components: {
-    Knob,
-    Oscillator
+    Oscillator,
+    MasterOut
   }
 };
 </script>

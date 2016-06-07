@@ -76,7 +76,7 @@ export default {
      * @param  {Float} f frequency
      */
     setFreq(f) {
-      console.log('setting freq: ', f);
+      // console.log('setting freq: ', f);
       this.osc.frequency.value = f;
     },
 
@@ -85,7 +85,7 @@ export default {
      * @param  {String} t One of the pre-defined oscillator wave types
      */
     setType(t) {
-      console.log('setting wave type: ', t);
+      // console.log('setting wave type: ', t);
       this.osc.type = t;
     },
 
