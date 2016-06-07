@@ -1,5 +1,4 @@
 <template>
-  Oscillator...?
   <oscillator></oscillator>
 </template>
 
