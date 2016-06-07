@@ -2,9 +2,9 @@ import Vue from 'vue';
 import App from './App';
 
 var context = window.AudioContext && (new window.AudioContext());
-var masterOut = context.createGain();
+// var masterOut = context.createGain();
 
-masterOut.connect(context.destination);
+// masterOut.connect(context.destination);
 
 Vue.mixin({
   data: function() {
@@ -20,6 +20,6 @@ Vue.mixin({
 
 /* eslint-disable no-new */
 new Vue({
-  el: 'body',
+  el: 'main',
   components: { App }
 });
