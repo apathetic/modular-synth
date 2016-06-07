@@ -1,5 +1,9 @@
 <template>
-  <oscillator></oscillator>
+    <oscillator></oscillator>
+    <aside>
+      <master-out></master-out>
+    </aside>
+  </main>
 </template>
 
 <script>
@@ -14,4 +18,4 @@ export default {
 };
 </script>
 
-
+<style src="assets/scss/styles.scss" lang="scss"></style>
