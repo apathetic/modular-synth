@@ -7,8 +7,9 @@
 
 <template>
   <div class="node">
-    <p>freq {{ freq }}</p>
-    <p>type {{ type }}</p>
+    <select v-model="type">
+      <option v-for="type in types" v-bind:value="type">{{ type }}</option>
+    </select>
     <knob :value.sync="freq" :min="220" :max="880"></knob>
   </div>
 </template>
@@ -24,16 +25,15 @@ export default {
   data() {
     return {
       freq: 440,
-      type: 'sine'	// "square", "sawtooth", "triangle", "custom"
-      // min 220?
-      // max 880 ?
+      type: 'sine',
+      types: ['sine', 'square', 'sawtooth', 'triangle', 'custom']
     };
   },
 
   created() {
     // Our lovely webAudio Oscillator.
     this.osc = this.context.createOscillator();
-    this.osc.type = this.type;
+    this.osc.type = this.t;
     this.osc.frequency.value = this.freq;
 
     this.output = this.context.createGain();
@@ -64,9 +64,8 @@ export default {
     // $vm.output.connect($vm.context.destination)
 
 
-    this.$watch('freq', function(f) {
-      this.osc.frequency.value = f;
-    });
+    this.$watch('freq', this.setFreq);
+    this.$watch('type', this.setType);
   },
 
   computed: {},
@@ -76,10 +75,18 @@ export default {
      * k-rate control of the Oscillator frequency
      * @param  {Float} f frequency
      */
-    freq(f) {
-      this.freq = f;
-      console.log('setting f', f, this);
+    setFreq(f) {
+      console.log('setting freq: ', f);
       this.osc.frequency.value = f;
+    },
+
+    /**
+     * Update wave type
+     * @param  {String} t One of the pre-defined oscillator wave types
+     */
+    setType(t) {
+      console.log('setting wave type: ', t);
+      this.osc.type = t;
     },
 
     start() {
