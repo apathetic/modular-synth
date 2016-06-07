@@ -3,7 +3,6 @@
   user-select: none;
 }
 
-
 html {
   height: 100%;
 }
@@ -19,7 +18,6 @@ body {
   background-color: #eee;
 
   font-family: Source Sans Pro, Helvetica, sans-serif;
-
 }
 
 .container {
@@ -30,7 +28,13 @@ body {
   padding: 1em;
   border-radius: 50%;
   border: 1px solid #ddd;
+  display: inline-block;
 }
+
+select {
+  margin-bottom: 1em;
+}
+
 
 // input[type="range"] {
 //   -webkit-appearance: slider-vertical;
