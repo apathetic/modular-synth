@@ -1,0 +1,9 @@
+<template>
+  <input id="masterOut1" type="range" min="0.0" max="1.0" step="0.1" value="0.0" />
+  <input id="masterOut2" type="range" min="0.0" max="1.0" step="0.1" value="0.0" />
+</template>
+
+<script>
+export default {
+};
+</script>

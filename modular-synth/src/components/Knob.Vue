@@ -91,8 +91,8 @@ export default {
     border: 3px #ddd solid;
     border-radius: 30px;
     cursor: pointer;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%,rgba(40,40,40,0.4) 100%);
-    box-shadow: 0px 0px 3px #000;
+    background: radial-gradient(ellipse at center 45%, rgba(255,255,255,1) 25%,rgba(40,40,40,0.3) 100%);
+    box-shadow: 0px 3px 2px #666;
 
     .notch {
       width: 2px;
