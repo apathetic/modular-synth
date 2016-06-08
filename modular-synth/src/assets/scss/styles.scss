@@ -1,4 +1,4 @@
-// @import "scss/common";
+@import "nodes";
 // @import "scss/knob";
 
 * {
@@ -25,6 +25,8 @@ body {
 
 header {
   flex-basis: 80px;
+  width: 100%;
+  background-color: #333;
 }
 
 footer {
@@ -40,9 +42,14 @@ main {
   // padding-right: 200px;
 }
 
+svg {
+  width: 100%;
+  height: 100%;
+}
+
 section {
   padding: 2em;
-  flex: 1;
+  flex: 0 1 50px;
 }
 
 aside {
@@ -58,6 +65,12 @@ aside {
 }
 
 
+.rack {
+  padding: 2em;
+  flex: 1;
+  height: 600px;
+  background-color: #f4f4f4;
+}
 
 
 
