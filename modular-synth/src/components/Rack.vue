@@ -1,35 +1,20 @@
 <template>
-  <section id="modules" v-el:modules></section>
-  <svg id="connections" v-el:connections></svg>
-  <aside id="controls">
-    <button>EDIT / PLAY</button>
-
-    <div>
-      selected Component details / info ? debug?
-    </div>
-
-    <button>Audio On</button>
-    <!-- <master-out></master-out> -->
-    <input id="masterOut1" type="range" min="0.0" max="1.0" step="0.1" value="0.0" />
-    <input id="masterOut2" type="range" min="0.0" max="1.0" step="0.1" value="0.0" />
-
-  </aside>
+  <div id="rack"></div>
+  <svg id="connections" xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
 </template>
 
+
 <script>
-// import Rack from './components/Rack';
-import Oscillator from './components/Oscillator';
-import Node from './components/Node';
+import Node from './Node';
 
 var dragObj = {
   zIndex: 0,
   lastLit: null
 };
 
+// This should be a Singleton [TODO] add logic to enforce.... UPDATE this should be <App>
 export default {
   components: {
-    // Rack,
-    Oscillator,
     Node
   },
 
@@ -479,7 +464,16 @@ export default {
   }
 };
 
-</script>};
 </script>
 
-<style src="assets/scss/styles.scss" lang="scss"></style>
+
+<style lang='scss'>
+  #connections {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+</style>
