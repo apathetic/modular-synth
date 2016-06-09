@@ -14,23 +14,6 @@ Vue.mixin({
   }
 });
 
-/* * /
-// Create Audio Input mixin
-// CREATE MIXIN from Node.vue?  AudioInput / ControlInputs / ...
-var inputs = {
-  methods: {
-    addInput: function() {
-      console.log('hello from mixin!');
-    }
-  }
-};
-console.log(inputs);
-// var Component = Vue.extend({
-//   mixins: [inputs, outputs,...]
-// })
-/* */
-
-
 /* eslint-disable no-new */
 new Vue({
   el: 'main',

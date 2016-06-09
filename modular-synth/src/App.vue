@@ -1,27 +1,16 @@
 <template>
   <section id="modules" :class="editing ? 'edit-mode': 'play-mode'" v-el:modules>
-
-    <!--
-    <node v-for="node in nodes"
-      :type="type"
-      :idx="node"
-      :v-ref="idx"
-      track-by="$index">  <!-- track-by="idx" - - >
-      {{ $index }}
-    </node>
-    -->
-
     <component v-for="node in nodes"
       :is="node.type"
       :type="node.type"
       :idx="node.idx"
       track-by="$index">
     </component>
-    {{ $data }}
-
   </section>
+
   <svg id="connections" v-el:connections></svg>
-  <aside id="controls">
+
+  <aside id="controls" v-el:controls>
     <button @click="toggleEditMode">{{ editing ? 'Play Mode' : 'Edit mode' }}</button>
     <button @click="newNode('Node')">add Node</button>
     <button @click="newNode('Oscillator')">add osc</button>
