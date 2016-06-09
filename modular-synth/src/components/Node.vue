@@ -16,19 +16,22 @@
 
 
 <script>
-var dragObj = {
-  zIndex: 0,
-  lastLit: null
-};
+// var dragObj = {
+//   zIndex: 0,
+//   lastLit: null
+// };
+
+import {draggable} from '../mixins';
 
 export default {
+  mixins: [draggable],
+
   props: {
     type: null,
     idx: null,
     inputs: [],
     outputs: []
   },
-  // props: ['data'],
 
   data() {
     return {
@@ -50,8 +53,8 @@ export default {
     e.id = 'module' + this.idX;
     e.style.left = '200px';
     e.style.top = '200px';
-  },
-
+  }
+  /*
   methods: {
     startDraggingNode(event) {
       var el;
@@ -336,6 +339,7 @@ export default {
       dragObj.connectorShape = null;
     }
   }
+  */
 };
 
 </script>
