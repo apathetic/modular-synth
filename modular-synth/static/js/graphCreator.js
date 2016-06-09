@@ -1,3 +1,4 @@
+// https://github.com/cjrd/directed-graph-creator/blob/master/index.html
 import d3 from 'd3/d3.js';
 
 const consts = {
@@ -130,22 +131,6 @@ var GraphCreator = function(container, nodes, edges) {
   // window.onresize = function() { thisGraph.updateWindow(svg); };
 };
 
-// GraphCreator.prototype.setIdCt = function(idct) {
-//   this.idct = idct;
-// };
-
-// GraphCreator.prototype.consts = {
-//   selectedClass: 'selected',
-//   connectClass: 'connect-node',
-//   circleGClass: 'conceptG',
-//   graphClass: 'graph',
-//   activeEditId: 'active-editing',
-//   BACKSPACE_KEY: 8,
-//   DELETE_KEY: 46,
-//   ENTER_KEY: 13,
-//   nodeRadius: 50
-// };
-
 GraphCreator.prototype.dragmove = function(d) {
   var thisGraph = this;
   if (thisGraph.state.shiftNodeDrag) {
@@ -156,68 +141,6 @@ GraphCreator.prototype.dragmove = function(d) {
     thisGraph.updateGraph();
   }
 };
-
-// GraphCreator.prototype.deleteGraph = function(skipPrompt) {
-//   var thisGraph = this;
-//   var doDelete = true;
-//   if (!skipPrompt) {
-//     doDelete = window.confirm('Press OK to delete this graph');
-//   }
-//   if (doDelete) {
-//     thisGraph.nodes = [];
-//     thisGraph.edges = [];
-//     thisGraph.updateGraph();
-//   }
-// };
-
-/* place editable text on node in place of svg text */
-// GraphCreator.prototype.changeTextOfNode = function(d3node, d) {
-//   var thisGraph = this;
-//   var consts = thisGraph.consts;
-//   var htmlEl = d3node.node();
-//   d3node.selectAll('text').remove();
-//   var nodeBCR = htmlEl.getBoundingClientRect();
-//   var curScale = nodeBCR.width / consts.nodeRadius;
-//   var placePad = 5 * curScale;
-//   var useHW = curScale > 1 ? nodeBCR.width * 0.71 : consts.nodeRadius * 1.42;
-//   // replace with editableconent text
-//   var d3txt = thisGraph.svg.selectAll('foreignObject')
-//         .data([d])
-//         .enter()
-//         .append('foreignObject')
-//         .attr('x', nodeBCR.left + placePad)
-//         .attr('y', nodeBCR.top + placePad)
-//         .attr('height', 2 * useHW)
-//         .attr('width', useHW)
-//         .append('xhtml:p')
-//         .attr('id', consts.activeEditId)
-//         .attr('contentEditable', 'true')
-//         .text(d.title)
-//         .on('mousedown', function(d) {
-//           d3.event.stopPropagation();
-//         })
-//         .on('keydown', function(d) {
-//           d3.event.stopPropagation();
-//           if (d3.event.keyCode === consts.ENTER_KEY && !d3.event.shiftKey) {
-//             this.blur();
-//           }
-//         })
-//         .on('blur', function(d) {
-//           d.title = this.textContent;
-//           thisGraph.insertTitleLinebreaks(d3node, d.title);
-//           d3.select(this.parentElement).remove();
-//         });
-//   return d3txt;
-// };
-
-/* select all text in element: taken from http://stackoverflow.com/questions/6139107/programatically-select-text-in-a-contenteditable-html-element */
-// GraphCreator.prototype.selectElementContents = function(el) {
-//   var range = document.createRange();
-//   range.selectNodeContents(el);
-//   var sel = window.getSelection();
-//   sel.removeAllRanges();
-//   sel.addRange(range);
-// };
 
 /* insert svg line breaks: taken from http://stackoverflow.com/questions/13241475/how-do-i-include-newlines-in-labels-in-d3-charts */
 GraphCreator.prototype.insertTitleLinebreaks = function(gEl, title) {
@@ -235,8 +158,6 @@ GraphCreator.prototype.insertTitleLinebreaks = function(gEl, title) {
   }
 };
 
-
-// remove edges associated with a node
 GraphCreator.prototype.spliceLinksForNode = function(node) {
   var thisGraph = this;
   var toSplice = thisGraph.edges.filter(function(l) {
@@ -439,10 +360,8 @@ GraphCreator.prototype.svgKeyUp = function() {
   this.state.lastKeyDown = -1;
 };
 
-// call to propagate changes to graph
 GraphCreator.prototype.updateGraph = function() {
   var thisGraph = this;
-  // var consts = thisGraph.consts;
   var state = thisGraph.state;
 
   thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d) {
@@ -537,3 +456,15 @@ GraphCreator.prototype.zoomed = function() {
 
 export default GraphCreator;
 
+//
+//
+//
+//
+//
+// Example usage:
+
+// import GraphCreator from '../../../static/js/graphCreator.js';
+
+// var graph;
+// graph = new GraphCreator(this.$el, this.nodes, this.edges);
+// graph.updateGraph();

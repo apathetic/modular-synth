@@ -42,40 +42,38 @@ main {
   // padding-right: 200px;
 }
 
-svg {
-  width: 100%;
-  height: 100%;
-}
-
-section {
-  padding: 2em;
-  flex: 0 1 50px;
-}
-
-aside {
-  // position: absolute;
-  // right: 0;
-  // top: 0;
-  flex-basis: 200px;
-  background-color: #999;
-}
 
 .container {
   margin: 0 auto;
 }
 
 
-.rack {
+// .rack {
+//   padding: 2em;
+//   flex: 1;
+//   height: 600px;
+//   background-color: #f4f4f4;
+// }
+
+
+#modules {
   padding: 2em;
   flex: 1;
-  height: 600px;
-  background-color: #f4f4f4;
 }
 
+#connections {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
 
-
-
-
+#controls {
+  flex-basis: 200px;
+  background-color: #999;
+}
 
 
 
