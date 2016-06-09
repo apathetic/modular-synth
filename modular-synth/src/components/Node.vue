@@ -3,7 +3,7 @@
     class="module {{ nodeType }}"
     @mousedown="startDraggingNode"
     >
-    <h3>{{ type }}</h3>
+    <h3>{{ type }}{{ idx }}</h3>
     <span click="deleteNode">X</span>
     {{ temp }}
     <span v-for="input in inputs" @mousedown="startDraggingConnector">=</span>
@@ -28,6 +28,7 @@ export default {
     inputs: [],
     outputs: []
   },
+  // props: ['data'],
 
   data() {
     return {

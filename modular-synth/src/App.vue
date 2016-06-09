@@ -1,23 +1,30 @@
 <template>
-  <section id="modules" v-el:modules>
+  <section id="modules" :class="editing ? 'edit-mode': 'play-mode'" v-el:modules>
 
+    <!--
     <node v-for="node in nodes"
       :type="type"
-      :idx="idx"
+      :idx="node"
       :v-ref="idx"
-      track-by="$index">  <!-- track-by="idx" -->
+      track-by="$index">  <!-- track-by="idx" - - >
       {{ $index }}
     </node>
+    -->
 
-    {{ nodes }}
-
-    <component v-for="node in nodes" :is="node.type" track-by="$index"></component>
+    <component v-for="node in nodes"
+      :is="node.type"
+      :type="node.type"
+      :idx="node.idx"
+      track-by="$index">
+    </component>
+    {{ $data }}
 
   </section>
   <svg id="connections" v-el:connections></svg>
   <aside id="controls">
-    <button>EDIT / PLAY</button>
-    <button @click="newNode('Oscillator')">test add</button>
+    <button @click="toggleEditMode">{{ editing ? 'Play Mode' : 'Edit mode' }}</button>
+    <button @click="newNode('Node')">add Node</button>
+    <button @click="newNode('Oscillator')">add osc</button>
     <div>
       selected Component details / info ? debug?
     </div>
@@ -34,7 +41,7 @@
 // https://github.com/cwilso/WebAudio
 // https://github.com/idflood/ThreeNodes.js
 
-import Vue from 'vue';
+// import Vue from 'vue';
 import Oscillator from './components/Oscillator';
 import Node from './components/Node';
 
@@ -46,14 +53,15 @@ var dragObj = {
 
 export default {
   components: {
-    // Rack,
     Oscillator,
     Node
   },
 
   data() {
     return {
-      nodes: []
+      editing: true,
+      nodes: [],
+      type: 'aaaa'
     };
   },
 
@@ -61,20 +69,27 @@ export default {
   },
 
   methods: {
+    toggleEditMode() {
+      this.editing = !this.editing;
+    },
+
     newNode(type) {
       // [TODO] use v-ref instead of idX
-      var N = Vue.extend({
-        el: this.$el,
-        props: {'type': type, idx: idx++},
-        data: () => ({'type': type, 'idx': idx++})
-      });
+      // var N = Vue.extend({
+      //   // props: {'type': type, idx: idx++},
+      //   data: () => ({'type': type, 'idx': idx++})
+      // });
 
-      var m = new N();
+      // var m = new N();
 
-      console.log(N);
-      console.log(m);
+      // console.log(N);
+      // console.log(m);
       // add to UI
-      this.nodes.push(N);
+
+      this.nodes.push({
+        type: type,
+        idx: idx++
+      });
 
 
       // var o = new Node({
