@@ -1,4 +1,4 @@
-@import "nodes";
+// @import "nodes";
 // @import "scss/knob";
 
 * {
@@ -30,7 +30,9 @@ header {
 }
 
 footer {
-  flex-basis: 80px;
+  display: none;
+  flex-basis: 40px;
+  width: 100%;
   background-color: #999;
 }
 
@@ -59,6 +61,7 @@ main {
 #modules {
   padding: 2em;
   flex: 1;
+  overflow: auto;
 }
 
 #connections {
@@ -71,7 +74,7 @@ main {
 }
 
 #controls {
-  flex-basis: 200px;
+  flex-basis: 150px;
   background-color: #999;
 }
 
