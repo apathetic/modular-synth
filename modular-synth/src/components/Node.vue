@@ -1,18 +1,21 @@
 <template>
   <div class="module {{ nodeType }}" @mousedown="startDraggingNode">
-    <h3>{{ type }}{{ idx }}</h3>
-    <span click="deleteNode">X</span>
-    {{ temp }}
-    <span v-for="input in inputs" @mousedown="startDraggingConnector" class="input">+</span>
-    <slot></slot>
-    <span v-for="output in outputs" @mousedown="startDraggingConnector" class="output">/</span>
+    <div class="module-interface">
+      <h3>{{ type }}{{ idx }}</h3>
+      {{ temp }}
+    </div>
 
+    <span click="deleteNode">X</span>
+    <div class="connectors">
+      <span v-for="input in inputs" @mousedown="startDraggingConnector" class="input">+</span>
+      <span v-for="output in outputs" @mousedown="startDraggingConnector" class="output">/</span>
+    </div>
   </div>
 
 </template>
 
 
-<script>
+ <script>
 // var dragObj = {
 //   zIndex: 0,
 //   lastLit: null
@@ -25,15 +28,15 @@ export default {
 
   props: {
     type: null,
-    idx: null,
-    inputs: [1, 2, 3, 4],
-    outputs: [55, 55]
+    idx: null
   },
 
   data() {
     return {
       x: 0,
       y: 0,
+      inputs: ['1', '2', '3', '4'],
+      outputs: [55, 55],
       temp: null
     };
   },
@@ -345,9 +348,12 @@ export default {
 <style lang="scss">
   .module {
     display: inline-block;
-    padding: 1em;
     background: #eef;
     border: 1px solid #000;
+
+    &-interface {
+      padding: 1em;
+    }
 
     &:hover {
       background: #eff;
@@ -355,6 +361,33 @@ export default {
 
     &.dragging {
       cursor: move;
+    }
+
+    .connectors {
+      position: absolute;
+      width: 100%;
+      top: 0;
+
+      span {
+        position: absolute;
+        display: block;
+        width: 5px;
+        height: 10px;
+        background: #111;
+
+        // we provide for the case of <= 4 inputs/outputs
+        &:nth-child(1) { top: 10px; }
+        &:nth-child(2) { top: 25px; }
+        &:nth-child(3) { top: 40px; }
+        &:nth-child(4) { top: 55px; }
+      }
+    }
+
+    .input {
+      left: 0px;
+    }
+    .output {
+      right: 0;
     }
   }
 </style>
