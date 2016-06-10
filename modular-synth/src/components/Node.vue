@@ -1,14 +1,11 @@
 <template>
-  <div
-    class="module {{ nodeType }}"
-    @mousedown="startDraggingNode"
-    >
+  <div class="module {{ nodeType }}" @mousedown="startDraggingNode">
     <h3>{{ type }}{{ idx }}</h3>
     <span click="deleteNode">X</span>
     {{ temp }}
-    <span v-for="input in inputs" @mousedown="startDraggingConnector">=</span>
+    <span v-for="input in inputs" @mousedown="startDraggingConnector" class="input">+</span>
     <slot></slot>
-    <span v-for="output in outputs" @mousedown="startDraggingConnector">=</span>
+    <span v-for="output in outputs" @mousedown="startDraggingConnector" class="output">/</span>
 
   </div>
 
@@ -29,8 +26,8 @@ export default {
   props: {
     type: null,
     idx: null,
-    inputs: [],
-    outputs: []
+    inputs: [1, 2, 3, 4],
+    outputs: [55, 55]
   },
 
   data() {

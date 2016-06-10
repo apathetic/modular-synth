@@ -49,8 +49,7 @@ export default {
   data() {
     return {
       editing: true,
-      nodes: [],
-      type: 'aaaa'
+      nodes: []
     };
   },
 
@@ -69,25 +68,10 @@ export default {
       //   data: () => ({'type': type, 'idx': idx++})
       // });
 
-      // var m = new N();
-
-      // console.log(N);
-      // console.log(m);
-      // add to UI
-
       this.nodes.push({
         type: type,
         idx: idx++
       });
-
-
-      // var o = new Node({
-      //   data: {'type': type, idx: idx++}
-      // }).$mount();
-      // console.log(o);
-      // this.nodes.push(o);
-
-      // new Node({props: {'type': type, idX: idX++}, 'parent': this}).$mount().$appendTo('#modules');
     },
 
     /**
