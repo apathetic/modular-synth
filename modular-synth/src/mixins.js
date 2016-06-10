@@ -19,6 +19,12 @@ var dragObj = {
   lastLit: null
 };
 
+/**
+ * Draggable.
+ * This mixin enables dragging of a Component. A position Object is updated in the Component's
+ * data, and any/all connections to any inputs/outputs are also updated and redrawn.
+ * @type {Object}
+ */
 export const draggable = {
   methods: {
     startDraggingNode(event) {
