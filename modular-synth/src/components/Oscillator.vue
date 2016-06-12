@@ -4,10 +4,13 @@
 
 <template>
   <div class="module" @mousedown="startDraggingNode">
-    <select v-model="type">
-      <option v-for="type in types" v-bind:value="type">{{ type }}</option>
-    </select>
-    <knob :value.sync="freq" :min="220" :max="880"></knob>
+    <inputs></inputs>
+    <div class="interface">
+      <select v-model="type">
+        <option v-for="type in types" v-bind:value="type">{{ type }}</option>
+      </select>
+      <knob :value.sync="freq" :min="220" :max="880"></knob>
+    </div>
   </div>
 </template>
 
