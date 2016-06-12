@@ -1,14 +1,24 @@
 <template>
-  <div class="module {{ nodeType }}" @mousedown="startDraggingNode">
+  <div
+    class="module"
+    :class="[type, dragging ? 'dragging' : '']"
+    :style="position"
+    @mousedown="startDraggingNode"
+    >
     <div class="module-interface">
-      <h3>{{ type }}{{ idx }}</h3>
-      {{ temp }}
+      <h3>{{ type }}-{{ idx }}</h3>
+      x:{{ position.left }}
+      y:{{ position.top }}
+      {{ dragging }}
     </div>
-
-    <span click="deleteNode">X</span>
-    <div class="connectors">
-      <span v-for="input in inputs" @mousedown="startDraggingConnector" class="input">+</span>
-      <span v-for="output in outputs" @mousedown="startDraggingConnector" class="output">/</span>
+    <!-- <span click="deleteNode">X</span> -->
+    <div class="module-connectors">
+      <div class="inputs">
+        <span v-for="input in inputs" class="input">{{ input }}</span>
+      </div>
+      <div class="inputs">
+        <span v-for="output in outputs" @mousedown="startDraggingConnector" class="output">{{ output }}</span>
+      </div>
     </div>
   </div>
 
@@ -33,26 +43,38 @@ export default {
 
   data() {
     return {
-      x: 0,
-      y: 0,
-      inputs: ['1', '2', '3', '4'],
-      outputs: [55, 55],
-      temp: null
+      // position: {
+      //   top: 0,
+      //   left: 0
+      // },
+      // dragging: false,
+      // x: 0,
+      // y: 0,
+      inputs: ['freq', 'gain', 'range'],
+      outputs: ['Audio 1', 'Audio 2']
     };
-  },
-  computed: {
-    temp: function() {
-      return JSON.stringify(this.$data);
-    }
   },
 
   ready() {
+    // dummy outlet for test
+    this.output = this.context.createGain();
+
     console.log(this.type);
     var e = this.$el;
     // e.className = 'module ' + this.type;
-    e.id = 'module' + this.idX;
+    e.id = 'module-' + this.idx;
     e.style.left = '200px';
     e.style.top = '200px';
+  },
+
+  methods: {
+    startDraggingConnector(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      let node = this;
+      let outlet = event.target;
+      this.$dispatch('connector:start', node, outlet);
+    }
   }
   /*
   methods: {
@@ -347,13 +369,10 @@ export default {
 
 <style lang="scss">
   .module {
+    position: absolute;
     display: inline-block;
     background: #eef;
     border: 1px solid #000;
-
-    &-interface {
-      padding: 1em;
-    }
 
     &:hover {
       background: #eff;
@@ -363,31 +382,38 @@ export default {
       cursor: move;
     }
 
-    .connectors {
+    &-interface {
+      padding: 1em;
+    }
+
+    &-connectors {
       position: absolute;
       width: 100%;
       top: 0;
+      font-size: 10px;
+      text-indent: 1em;
 
       span {
         position: absolute;
         display: block;
-        width: 5px;
-        height: 10px;
+        width: 7px;
+        height: 14px;
         background: #111;
+        cursor: pointer;
 
         // we provide for the case of <= 4 inputs/outputs
         &:nth-child(1) { top: 10px; }
-        &:nth-child(2) { top: 25px; }
-        &:nth-child(3) { top: 40px; }
-        &:nth-child(4) { top: 55px; }
+        &:nth-child(2) { top: 30px; }
+        &:nth-child(3) { top: 50px; }
+        &:nth-child(4) { top: 70px; }
       }
     }
 
     .input {
-      left: 0px;
+      left: -4px;
     }
     .output {
-      right: 0;
+      right: -4px;
     }
   }
 </style>
