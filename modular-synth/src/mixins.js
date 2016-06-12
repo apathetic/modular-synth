@@ -16,7 +16,12 @@ console.log(inputs);
 
 var dragObj = {
   zIndex: 0,
-  lastLit: null
+  lastLit: null,
+  // elNode: null,
+  cursorStartX: null,
+  cursorStartY: null,
+  elStartLeft: null,
+  elStartTop: null
 };
 
 /**
@@ -26,37 +31,29 @@ var dragObj = {
  * @type {Object}
  */
 export const draggable = {
+  data() {
+    return {
+      position: {
+        top: 0,
+        left: 0
+      },
+      dragging: false
+    };
+  },
   methods: {
     startDraggingNode(event) {
-      var el = event.target;
-      var x, y;
-
-      if (el.tagName === 'SELECT') return;
-
-      // if (el.nodeType === 3) el = el.parentNode; // if it's a text node
-      // if (el.classList.contains('module-title')) el = el.parentNode;
-      // if (el.classList.contains('content')) el = el.parentNode;
-      if (!el.classList.contains('module')) return;
-
-      dragObj.elNode = el;
-
-      el.classList.add('dragging');
-
-      // Get cursor position with respect to the page.
-      x = event.clientX + window.scrollX;
-      y = event.clientY + window.scrollY;
+      var el = this.$el;  // event.target;
+      // dragObj.elNode = el;
+      this.dragging = true;
 
       // Save starting positions of cursor and element.
-      dragObj.cursorStartX = x;
-      dragObj.cursorStartY = y;
-      dragObj.elStartLeft = parseInt(dragObj.elNode.style.left, 10);
-      dragObj.elStartTop = parseInt(dragObj.elNode.style.top, 10);
-
-      if (isNaN(dragObj.elStartLeft)) dragObj.elStartLeft = 0;
-      if (isNaN(dragObj.elStartTop)) dragObj.elStartTop = 0;
+      dragObj.cursorStartX = event.clientX; // + window.scrollX;
+      dragObj.cursorStartY = event.clientY; // + window.scrollY;
+      dragObj.elStartLeft = el.offsetLeft || 0;
+      dragObj.elStartTop = el.offsetTop || 0;
 
       // Update element's z-index.
-      dragObj.elNode.style.zIndex = ++dragObj.zIndex;
+      el.style.zIndex = ++dragObj.zIndex;
 
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDraggingNode);
@@ -67,21 +64,12 @@ export const draggable = {
 
     whileDraggingNode(event) {
       var off;
-      var x, y;
-      var e = dragObj.elNode;   // this.$el
-      var c;
+      var x = event.clientX; // + window.scrollX;
+      var y = event.clientY; // + window.scrollY;
+      var e = this.$el; // dragObj.elNode;
 
-      // Get cursor position with respect to the page.
-      x = event.clientX + window.scrollX;
-      y = event.clientY + window.scrollY;
-
-      // Move drag element by the same amount the cursor has moved.
-      e.style.left = (dragObj.elStartLeft + x - dragObj.cursorStartX) + 'px';
-      e.style.top = (dragObj.elStartTop + y - dragObj.cursorStartY) + 'px';
-
-      this.x = e.style.left;
-      this.y = e.style.top;
-
+      this.position.left = (dragObj.elStartLeft + x - dragObj.cursorStartX) + 'px';
+      this.position.top = (dragObj.elStartTop + y - dragObj.cursorStartY) + 'px';
 
       if (e.inputConnections) { // update any lines that point in here.
         off = e.inputs;
@@ -94,7 +82,7 @@ export const draggable = {
           off = off.offsetParent;
         }
 
-        for (c = 0; c < e.inputConnections.length; c++) {
+        for (let c = 0; c < e.inputConnections.length; c++) {
           e.inputConnections[c].line.setAttributeNS(null, 'x1', x);
           e.inputConnections[c].line.setAttributeNS(null, 'y1', y);
         }
@@ -111,7 +99,7 @@ export const draggable = {
           off = off.offsetParent;
         }
 
-        for (c = 0; c < e.outputConnections.length; c++) {
+        for (let c = 0; c < e.outputConnections.length; c++) {
           e.outputConnections[c].line.setAttributeNS(null, 'x2', x);
           e.outputConnections[c].line.setAttributeNS(null, 'y2', y);
         }
@@ -123,13 +111,18 @@ export const draggable = {
     stopDraggingNode(event) {
       document.removeEventListener('mousemove', this.whileDraggingNode);
       document.removeEventListener('mouseup', this.stopDraggingNode);
-      this.$el.classList.remove('dragging');
-    },
+      this.dragging = false;
+    }
+  }
+};
 
+/*
+export const connectify = {
+  methods: {
     startDraggingConnector(event) {
       // var el;
       var x, y;
-
+      console.log(this, event);
       dragObj.elNode = event.target;
 
       // If this is a text node, use its parent element.
@@ -311,172 +304,176 @@ export const draggable = {
       // Otherwise, delete the line
       dragObj.connectorShape.parentNode.removeChild(dragObj.connectorShape);
       dragObj.connectorShape = null;
-    }
-  }
-};
+    },
 
 
-export const connections = {
-  /**
-   * Make a connection between two connection point elements.
-   * The src and dst params are connection point elems, NOT
-   * the node elems themselves.
-   * @param  {[type]} src The source connection point elem
-   * @param  {[type]} dst The destination connection point elem
-   * @return {[type]}     [description]
-   */
-  connectNodes(src, dst) {
-    var connectorShape = dragObj.connectorShape;
-    var connector = {};
+    //
 
-    src.className += ' connected';
-    dst.className += ' connected';
 
-    // We want to be dealing with the audio node elements from here on
-    src = src.parentNode;
-    dst = dst.parentNode;
+    /**
+     * Make a connection between two connection point elements.
+     * The src and dst params are connection point elems, NOT
+     * the node elems themselves.
+     * @param  {[type]} src The source connection point elem
+     * @param  {[type]} dst The destination connection point elem
+     * @return {[type]}     [description]
+     * /
+    connectNodes(src, dst) {
+      var connectorShape = dragObj.connectorShape;
+      var connector = {};
 
-    // Put an entry into the source's outputs
-    if (!src.outputConnections) {
-      src.outputConnections = [];
-    }
+      src.className += ' connected';
+      dst.className += ' connected';
 
-    connector.line = connectorShape;
-    connector.destination = dst;
-    src.outputConnections.push(connector);
+      // We want to be dealing with the audio node elements from here on
+      src = src.parentNode;
+      dst = dst.parentNode;
 
-    // Make sure the connector line points go from src->dest (x1->x2)
-    if (!dragObj.originIsInput) { // need to flip
-      var shape = connectorShape;
-      var x = shape.getAttributeNS(null, 'x2');
-      var y = shape.getAttributeNS(null, 'y2');
-      shape.setAttributeNS(null, 'x2', shape.getAttributeNS(null, 'x1'));
-      shape.setAttributeNS(null, 'y2', shape.getAttributeNS(null, 'y1'));
-      shape.setAttributeNS(null, 'x1', x);
-      shape.setAttributeNS(null, 'y1', y);
-    }
-    // Put an entry into the destinations's inputs
-    if (!dst.inputConnections) {
-      dst.inputConnections = [];
-    }
-
-    connector = {
-      line: connectorShape,
-      source: src,
-      destination: dst
-    };
-    dst.inputConnections.push(connector);
-
-    // if the source has an audio node, connect them up.
-    // AudioBufferSourceNodes may not have an audio node yet.
-    if (src.audioNode) {
-      src.audioNode.connect(dst.audioNode);
-    }
-
-    if (dst.onConnectInput) {
-      dst.onConnectInput();
-    }
-
-    connectorShape.inputConnection = connector;
-    connectorShape.destination = dst;
-    connectorShape.onclick = this.deleteConnection;
-
-    connectorShape = null;
-  },
-
-  deleteConnection() {
-    var connections = this.destination.inputConnections;
-    this.breakSingleInputConnection(connections, connections.indexOf(this.inputConnection));
-  },
-
-  deleteNode() {
-    var moduleElement = this.parentNode;
-
-    // First disconnect the audio
-    this.disconnectNode(moduleElement);
-    // Then delete the visual element
-    moduleElement.parentNode.removeChild(moduleElement);
-  },
-
-  breakSingleInputConnection(connections, index) {
-    var connector = connections[index];
-    var src = connector.source;
-
-    // delete us from their .outputConnections,
-    src.outputConnections.splice(src.outputConnections.indexOf(connector.destination), 1);
-    if (src.audioNode) {  // they may not have an audioNode, if they're a BSN or an Oscillator
-      // call disconnect() on the src,
-      src.audioNode.disconnect();
-      // if there's anything left in their outputConnections, re.connect() those nodes.
-      // TODO: again, this will break due to src resetting.
-      for (let j = 0; j < src.outputConnections.length; j++) {
-        src.audioNode.connect(src.outputConnections[j].destination.audioNode);
+      // Put an entry into the source's outputs
+      if (!src.outputConnections) {
+        src.outputConnections = [];
       }
-    }
 
-    // and delete the line
-    connector.line.parentNode.removeChild(connector.line);
+      connector.line = connectorShape;
+      connector.destination = dst;
+      src.outputConnections.push(connector);
 
-    // finally, remove us from the line.
-    connections.splice(index, 1);
-  },
-
-  /**
-   * Disconnect a node from all other nodes connecting to it, or that it connects to.
-   * @param  {[type]} nodeElement [description]
-   * @return {[type]}             [description]
-   */
-  disconnectNode(nodeElement) {
-    var connections;
-    var connector;
-    var src;
-
-    // for all nodes we connect to,
-    if (nodeElement.outputConnections) {
-      for (let i = 0; i < nodeElement.outputConnections.length; i++) {
-        connector = nodeElement.outputConnections[i];
-        // find each dstElement and remove us from the dst.inputConnections,
-        connections = connector.destination.inputConnections;
-        connections.splice(connections.indexOf(nodeElement), 1);
-        // and delete the line
-        connector.line.parentNode.removeChild(connector.line);
+      // Make sure the connector line points go from src->dest (x1->x2)
+      if (!dragObj.originIsInput) { // need to flip
+        var shape = connectorShape;
+        var x = shape.getAttributeNS(null, 'x2');
+        var y = shape.getAttributeNS(null, 'y2');
+        shape.setAttributeNS(null, 'x2', shape.getAttributeNS(null, 'x1'));
+        shape.setAttributeNS(null, 'y2', shape.getAttributeNS(null, 'y1'));
+        shape.setAttributeNS(null, 'x1', x);
+        shape.setAttributeNS(null, 'y1', y);
       }
-      // empty our outputConnections
-      nodeElement.outputConnections = null;
-    }
+      // Put an entry into the destinations's inputs
+      if (!dst.inputConnections) {
+        dst.inputConnections = [];
+      }
 
-    // then call disconnect() on our audioNode to clear all outbound connections
-    // (this is what clear the audio connection, for all outbound connections at once)
-    if (nodeElement.audioNode) { // we may not have an audioNode, if we're a BSN or an Oscillator
-      nodeElement.audioNode.disconnect();
-    }
+      connector = {
+        line: connectorShape,
+        source: src,
+        destination: dst
+      };
+      dst.inputConnections.push(connector);
 
-    // for all nodes connecting to us - (aka in us.inputConnections)
-    if (nodeElement.inputConnections) {
-      for (let i = 0; i < nodeElement.inputConnections.length; i++) {
-        connector = nodeElement.inputConnections[i];
-        // this is trickier, because we'll have to destroy all their outbound connections.
-        // TODO: this will suck for source nodes.
-        src = connector.source;
-        connections = src.outputConnections;
-        // delete us from their .outputConnections,
-        connections.splice(connections.indexOf(nodeElement), 1);
+      // if the source has an audio node, connect them up.
+      // AudioBufferSourceNodes may not have an audio node yet.
+      if (src.audioNode) {
+        src.audioNode.connect(dst.audioNode);
+      }
 
-        if (src.audioNode) {  // they may not have an audioNode, if they're a BSN or an Oscillator
-          // call disconnect() on the src,
-          src.audioNode.disconnect();
-          // if there's anything in their outputConnections, re.connect() those nodes.
-          // TODO: again, this will break due to src resetting.
-          for (let j = 0; j < connections.length; j++) {
-            src.audioNode.connect(connections[i].destination.audioNode);
-          }
+      if (dst.onConnectInput) {
+        dst.onConnectInput();
+      }
+
+      connectorShape.inputConnection = connector;
+      connectorShape.destination = dst;
+      connectorShape.onclick = this.deleteConnection;
+
+      connectorShape = null;
+    },
+
+    deleteConnection() {
+      var connections = this.destination.inputConnections;
+
+      var index = connections.indexOf(this.inputConnection);
+      // this.breakSingleInputConnection(connections, connections.indexOf(this.inputConnection));
+    // },
+
+    // breakSingleInputConnection(connections, index) {
+      var connector = connections[index];
+      var src = connector.source;
+
+      // delete us from their .outputConnections,
+      src.outputConnections.splice(src.outputConnections.indexOf(connector.destination), 1);
+      if (src.audioNode) {  // they may not have an audioNode, if they're a BSN or an Oscillator
+        // call disconnect() on the src,
+        src.audioNode.disconnect();
+        // if there's anything left in their outputConnections, re.connect() those nodes.
+        // TODO: again, this will break due to src resetting.
+        for (let j = 0; j < src.outputConnections.length; j++) {
+          src.audioNode.connect(src.outputConnections[j].destination.audioNode);
         }
-
-        // and delete the line
-        connector.line.parentNode.removeChild(connector.line);
       }
-      // empty inputConnections
-      nodeElement.inputConnections = null;
+
+      // and delete the line
+      connector.line.parentNode.removeChild(connector.line);
+
+      // finally, remove us from the line.
+      connections.splice(index, 1);
+    },
+
+    deleteNode() {
+      var moduleElement = this.parentNode;
+
+      // First disconnect the audio
+      this.disconnectNode(moduleElement);
+      // Then delete the visual element
+      moduleElement.parentNode.removeChild(moduleElement);
+    },
+
+    /**
+     * Disconnect a node from all other nodes connecting to it, or that it connects to.
+     * @param  {[type]} nodeElement [description]
+     * @return {[type]}             [description]
+     * /
+    disconnectNode(nodeElement) {
+      var connections;
+      var connector;
+      var src;
+
+      // for all nodes we connect to,
+      if (nodeElement.outputConnections) {
+        for (let i = 0; i < nodeElement.outputConnections.length; i++) {
+          connector = nodeElement.outputConnections[i];
+          // find each dstElement and remove us from the dst.inputConnections,
+          connections = connector.destination.inputConnections;
+          connections.splice(connections.indexOf(nodeElement), 1);
+          // and delete the line
+          connector.line.parentNode.removeChild(connector.line);
+        }
+        // empty our outputConnections
+        nodeElement.outputConnections = null;
+      }
+
+      // then call disconnect() on our audioNode to clear all outbound connections
+      // (this is what clear the audio connection, for all outbound connections at once)
+      if (nodeElement.audioNode) { // we may not have an audioNode, if we're a BSN or an Oscillator
+        nodeElement.audioNode.disconnect();
+      }
+
+      // for all nodes connecting to us - (aka in us.inputConnections)
+      if (nodeElement.inputConnections) {
+        for (let i = 0; i < nodeElement.inputConnections.length; i++) {
+          connector = nodeElement.inputConnections[i];
+          // this is trickier, because we'll have to destroy all their outbound connections.
+          // TODO: this will suck for source nodes.
+          src = connector.source;
+          connections = src.outputConnections;
+          // delete us from their .outputConnections,
+          connections.splice(connections.indexOf(nodeElement), 1);
+
+          if (src.audioNode) {  // they may not have an audioNode, if they're a BSN or an Oscillator
+            // call disconnect() on the src,
+            src.audioNode.disconnect();
+            // if there's anything in their outputConnections, re.connect() those nodes.
+            // TODO: again, this will break due to src resetting.
+            for (let j = 0; j < connections.length; j++) {
+              src.audioNode.connect(connections[i].destination.audioNode);
+            }
+          }
+
+          // and delete the line
+          connector.line.parentNode.removeChild(connector.line);
+        }
+        // empty inputConnections
+        nodeElement.inputConnections = null;
+      }
     }
   }
 };
+*/

@@ -1,3 +1,7 @@
+//------------------------------------------------
+//  APPLICATION
+// -----------------------------------------------
+
 <template>
   <section id="modules" :class="editing ? 'edit-mode': 'play-mode'" v-el:modules>
     <component v-for="node in nodes"
@@ -29,7 +33,8 @@
 // Note: much of this code inspired by:
 // https://github.com/cwilso/WebAudio
 // https://github.com/idflood/ThreeNodes.js
-
+// https://github.com/gre/zound-live
+//
 // import Vue from 'vue';
 import Oscillator from './components/Oscillator';
 import Node from './components/Node';
@@ -49,11 +54,15 @@ export default {
   data() {
     return {
       editing: true,
-      nodes: []
+      nodes: [],
+      connections: []      // TODO let VUE manage the svg connections
     };
   },
 
   ready() {
+    this.connections = this.$els.connections;
+
+    this.$on('connector:start', this.startDraggingConnector);
   },
 
   methods: {
@@ -73,6 +82,211 @@ export default {
         idx: idx++
       });
     },
+
+
+    //
+
+
+    // startDraggingConnector(event) {
+    startDraggingConnector(node, outlet) {
+      // var node = this;
+      // console.log('connect', node, outlet);
+      // var event = '';
+      var x, y;
+      console.log('in app', this, node, outlet);
+
+      dragObj.elNode = node.$el;
+
+      // dragObj.elNode = event.target;
+
+      // // If this is a text node, use its parent element.
+      // if (dragObj.elNode.nodeType === 3) {
+      //   dragObj.elNode = dragObj.elNode.parentNode;
+      // }
+
+      // // if this is the green or red button, use its parent.
+      // if (dragObj.elNode.classList.contains('node-button')) {
+      //   dragObj.elNode = dragObj.elNode.parentNode;
+      // }
+
+
+      // Get the position of the originating connector with respect to the page.
+      x = outlet.offsetLeft + node.$el.offsetLeft; // outlet.getBoundingClientRect().left;
+      y = outlet.offsetTop + node.$el.offsetTop; // outlet.getBoundingClientRect().top;
+
+      console.log(y);
+      console.log(node.$el.offsetTop);
+      console.log(outlet.getBoundingClientRect().top);
+
+      // Save starting positions of cursor and element.
+      dragObj.cursorStartX = x;
+      dragObj.cursorStartY = y;
+
+      // remember if this is an input or output node, so we can match
+      dragObj.originIsInput = dragObj.elNode.classList.contains('node-input');
+
+      dragObj.elNode.unlitClassname = dragObj.elNode.className;
+      dragObj.elNode.className += ' canConnect';
+
+      // Create a connector visual line
+      var svgns = 'http://www.w3.org/2000/svg';
+
+      var shape = document.createElementNS(svgns, 'line');
+      shape.setAttributeNS(null, 'x1', x);
+      shape.setAttributeNS(null, 'y1', y);
+      shape.setAttributeNS(null, 'x2', x);
+      shape.setAttributeNS(null, 'y2', y);
+      shape.setAttributeNS(null, 'stroke', 'black');
+      shape.setAttributeNS(null, 'stroke-width', '3');
+      dragObj.connectorShape = shape;
+
+
+      // TODO THIS:::
+      document.getElementById('connections').appendChild(shape);
+      // console.log(this.$root);
+      // this.$root.$els.connections.appendChild(shape);
+      // this.$data.connections.push(shape);
+
+
+      // Capture mousemove and mouseup events on the page.
+      document.addEventListener('mousemove', this.whileDraggingConnector);
+      document.addEventListener('mouseup', this.stopDraggingConnector); // .bind(this)
+      // event.preventDefault();
+      // event.stopPropagation();
+    },
+
+    whileDraggingConnector(event) {
+      var x, y;
+      var toElem = event.toElement;
+
+      // Get cursor position with respect to the page.
+      x = event.clientX + window.scrollX;
+      y = event.clientY + window.scrollY;
+
+      // Move connector visual line
+      dragObj.connectorShape.setAttributeNS(null, 'x2', x);
+      dragObj.connectorShape.setAttributeNS(null, 'y2', y);
+
+      // If this is a text node, use its parent element.
+      if (toElem.nodeType === 3) {
+        toElem = toElem.parentNode;
+      }
+
+      if (toElem.classList) { // if we don't have class, we're not a node.
+        // if this is the green or red button, use its parent.
+        if (toElem.classList.contains('node-button')) {
+          toElem = toElem.parentNode;
+        }
+
+        // if we're over our originating node, do nothing.
+        if (toElem === dragObj.elemNode) {
+          return;
+        }
+
+        // If we used to be lighting up a node, but we're not over it anymore,
+        // unlight it.
+        if (dragObj.lastLit && (dragObj.lastLit !== toElem)) {
+          dragObj.lastLit.className = dragObj.lastLit.unlitClassname;
+          dragObj.lastLit = null;
+        }
+
+        // light up connector point underneath, if any
+        if (toElem.classList.contains('node')) {
+          if (!dragObj.lastLit || (dragObj.lastLit !== toElem)) {
+            if (dragObj.originIsInput) {
+              if (toElem.classList.contains('node-output')) {
+                toElem.unlitClassname = toElem.className;
+                toElem.className += ' canConnect';
+                dragObj.lastLit = toElem;
+              }
+            } else {  // first node was an output, so we're looking for an input
+              if (toElem.classList.contains('node-input')) {
+                toElem.unlitClassname = toElem.className;
+                toElem.className += ' canConnect';
+                dragObj.lastLit = toElem;
+              }
+            }
+          }
+        }
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+    },
+
+    stopDraggingConnector(event) {
+      var x;
+      var y;
+      var off;
+      var toElem;
+
+      // Stop capturing mousemove and mouseup events.
+      document.removeEventListener('mousemove', this.whileDraggingConnector); // .bind(this)
+      document.removeEventListener('mouseup', this.stopDraggingConnector);    // .bind(this)
+
+      if (dragObj.lastLit) {
+        dragObj.lastLit.className = dragObj.lastLit.unlitClassname;
+        dragObj.lastLit = null;
+      }
+
+      dragObj.elNode.className = dragObj.elNode.unlitClassname;
+
+      toElem = event.toElement || event.target;
+
+      // If this is a text node, use its parent element.
+      if (toElem.nodeType === 3) {
+        toElem = toElem.parentNode;
+      }
+
+       // if we don't have class, we're not a node.
+      if (toElem.classList) {
+        // if this is the green or red button, use its parent.
+        if (toElem.classList.contains('node-button')) {
+          toElem = toElem.parentNode;
+        }
+
+        // Get the position of the originating connector with respect to the page.
+        off = toElem;
+        x = window.scrollX + 12;
+        y = window.scrollY + 12;
+
+        while (off) {
+          x += off.offsetLeft;
+          y += off.offsetTop;
+          off = off.offsetParent;
+        }
+
+        dragObj.connectorShape.setAttributeNS(null, 'x2', x);
+        dragObj.connectorShape.setAttributeNS(null, 'y2', y);
+
+        // var str = '' + toElem.className;
+
+        // If we're over a connection point, make the connection
+        if (dragObj.originIsInput) {
+          if (toElem.classList.contains('node-output')) {
+            // can connect!
+            this.connectNodes(toElem, dragObj.elNode);
+            return;
+          }
+        } else {  // first node was an output, so we're looking for an input
+          if (toElem.classList.contains('node-input')) {
+            // can connect!
+            // TODO: first: swap the line endpoints so they're consistently x1->x2
+            // That makes updating them when we drag nodes around easier.
+            this.connectNodes(dragObj.elNode, toElem);
+            return;
+          }
+        }
+      }
+
+      // Otherwise, delete the line
+      dragObj.connectorShape.parentNode.removeChild(dragObj.connectorShape);
+      dragObj.connectorShape = null;
+    },
+
+
+    //
+
 
     /**
      * Make a connection between two connection point elements.
@@ -143,19 +357,12 @@ export default {
 
     deleteConnection() {
       var connections = this.destination.inputConnections;
-      this.breakSingleInputConnection(connections, connections.indexOf(this.inputConnection));
-    },
 
-    deleteNode() {
-      var moduleElement = this.parentNode;
+      var index = connections.indexOf(this.inputConnection);
+      // this.breakSingleInputConnection(connections, connections.indexOf(this.inputConnection));
+      // },
 
-      // First disconnect the audio
-      this.disconnectNode(moduleElement);
-      // Then delete the visual element
-      moduleElement.parentNode.removeChild(moduleElement);
-    },
-
-    breakSingleInputConnection(connections, index) {
+      // breakSingleInputConnection(connections, index) {
       var connector = connections[index];
       var src = connector.source;
 
@@ -176,6 +383,15 @@ export default {
 
       // finally, remove us from the line.
       connections.splice(index, 1);
+    },
+
+    deleteNode() {
+      var moduleElement = this.parentNode;
+
+      // First disconnect the audio
+      this.disconnectNode(moduleElement);
+      // Then delete the visual element
+      moduleElement.parentNode.removeChild(moduleElement);
     },
 
     /**
