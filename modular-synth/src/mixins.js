@@ -20,8 +20,8 @@ var dragObj = {
   // elNode: null,
   cursorStartX: null,
   cursorStartY: null,
-  elStartLeft: null,
-  elStartTop: null
+  startX: null,
+  startY: null
 };
 
 /**
@@ -33,6 +33,8 @@ var dragObj = {
 export const draggable = {
   data() {
     return {
+      x: 0,
+      y: 0,
       position: {
         top: 0,
         left: 0
@@ -49,8 +51,8 @@ export const draggable = {
       // Save starting positions of cursor and element.
       dragObj.cursorStartX = event.clientX; // + window.scrollX;
       dragObj.cursorStartY = event.clientY; // + window.scrollY;
-      dragObj.elStartLeft = el.offsetLeft || 0;
-      dragObj.elStartTop = el.offsetTop || 0;
+      dragObj.startX = el.offsetLeft || 0; // el.getBoundingClientRect().left; //
+      dragObj.startY = el.offsetTop || 0; // el.getBoundingClientRect().top;  //
 
       // Update element's z-index.
       el.style.zIndex = ++dragObj.zIndex;
@@ -63,47 +65,47 @@ export const draggable = {
     },
 
     whileDraggingNode(event) {
-      var off;
-      var x = event.clientX; // + window.scrollX;
-      var y = event.clientY; // + window.scrollY;
-      var e = this.$el; // dragObj.elNode;
+      // var off;
+      // var el = this.$el; // dragObj.elNode;
+      var cursorX = event.clientX; // + window.scrollX;
+      var cursorY = event.clientY; // + window.scrollY;
+      let x = dragObj.startX + cursorX - dragObj.cursorStartX;
+      let y = dragObj.startY + cursorY - dragObj.cursorStartY;
 
-      this.position.left = (dragObj.elStartLeft + x - dragObj.cursorStartX) + 'px';
-      this.position.top = (dragObj.elStartTop + y - dragObj.cursorStartY) + 'px';
+      this.x = x;
+      this.y = y;
+      this.position.left = x + 'px';
+      this.position.top = y + 'px';
 
-      if (e.inputConnections) { // update any lines that point in here.
-        off = e.inputs;
-        x = window.scrollX + 12;
-        y = window.scrollY + 12;
+      // update any lines that point in here.
+      this.$dispatch('connection:update', this);
+      if (1) return;
 
-        while (off) {
-          x += off.offsetLeft;
-          y += off.offsetTop;
-          off = off.offsetParent;
-        }
+      // update any lines that point in here.
+      let inputs = this.connections.in;
+      inputs.forEach(function(input) {
+        let x = input.port.getBoundingClientRect().left;
+        let y = input.port.getBoundingClientRect().top;
+        input.line.x1 = x;
+        input.line.y1 = y;
+      });
 
-        for (let c = 0; c < e.inputConnections.length; c++) {
-          e.inputConnections[c].line.setAttributeNS(null, 'x1', x);
-          e.inputConnections[c].line.setAttributeNS(null, 'y1', y);
-        }
-      }
+      // if (el.outputConnections) {  // update any lines that point out of herel.
+      //   off = el.outputs;
+      //   x = window.scrollX + 12;
+      //   y = window.scrollY + 12;
 
-      if (e.outputConnections) {  // update any lines that point out of here.
-        off = e.outputs;
-        x = window.scrollX + 12;
-        y = window.scrollY + 12;
+      //   while (off) {
+      //     x += off.offsetLeft;
+      //     y += off.offsetTop;
+      //     off = off.offsetParent;
+      //   }
 
-        while (off) {
-          x += off.offsetLeft;
-          y += off.offsetTop;
-          off = off.offsetParent;
-        }
-
-        for (let c = 0; c < e.outputConnections.length; c++) {
-          e.outputConnections[c].line.setAttributeNS(null, 'x2', x);
-          e.outputConnections[c].line.setAttributeNS(null, 'y2', y);
-        }
-      }
+      //   for (let c = 0; c < el.outputConnections.length; c++) {
+      //     el.outputConnections[c].line.setAttributeNS(null, 'x2', x);
+      //     el.outputConnections[c].line.setAttributeNS(null, 'y2', y);
+      //   }
+      // }
 
       event.preventDefault();
     },

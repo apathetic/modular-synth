@@ -7,30 +7,43 @@
     >
     <div class="module-interface">
       <h3>{{ type }}-{{ idx }}</h3>
-      x:{{ position.left }}
-      y:{{ position.top }}
+      <!-- x:{{ x }} -->
+      <!-- y:{{ y }} -->
+      <!-- {{ inlets | json }} -->
       {{ dragging }}
     </div>
     <!-- <span click="deleteNode">X</span> -->
-    <div class="module-connectors">
+    <div class="module-connections">
+
+
       <div class="inputs">
-        <span v-for="input in inputs"
-          data-label="{{ input }}"
+        <inlet v-for="inlet in inlets"
+          :label="inlet.label"
+          :x.sync="inlet.x"
+          :y.sync="inlet.y"
+          :nodex="x"
+          :nodey="y">
+        </inlet>
+
+
+    <!--
+        <span v-for="inlet in inlets"
+          data-label="{{ inlet.label }}"
           class="input">
-          <!-- {{ input }} -->
         </span>
+    -->
+
       </div>
+
       <div class="outputs">
-        <span v-for="output in outputs"
-          @mousedown="startDraggingConnector"
-          data-label="{{ output }}"
+        <span v-for="output in outlets"
+          @mousedown.prevent.stop="startDraggingConnector($event, output)"
+          data-label="{{ output.label }}"
           class="output">
-          <!-- {{ output }} -->
         </span>
       </div>
     </div>
   </div>
-
 </template>
 
 
@@ -47,36 +60,89 @@ export default {
 
   data() {
     return {
-      inputs: ['freq', 'gain', 'range'],
-      outputs: ['Audio 1', 'Audio 2'],
+      // inputs: ['freq', 'gain', 'range'],
+      // outputs: ['Audio 1', 'Audio 2'],
 
-      inputConnections: [],
-      outputConnections: []
+      inlets: [{
+        x: 0,
+        y: 0,
+        label: 'freq',
+        connections: []
+      }, {
+        x: 1,
+        y: 1,
+        label: 'gain',
+        connections: []
+      }, {
+        x: 2,
+        y: 2,
+        label: 'range',
+        connections: []
+      }],
+
+      outlets: [{
+        x: 3,
+        y: 3,
+        label: 'outputL',
+        connections: []
+      }, {
+        x: 4,
+        y: 4,
+        label: 'outputR',
+        connections: []
+      }],
+
+      connections: {
+        in: [],
+        out: []
+      }
+      // x: 0,
+      // y: 0
+      // position: {
+      //   top: 0,
+      //   left: 0
+      // },
+      // dragging: false
     };
+  },
+
+  components: {
+    'inlet': {
+      template: '<span data-label="{{ label }}" class="input"></span>',
+      props: {
+        label: '',
+        x: 0,
+        y: 0,
+        nodey: 0,
+        nodex: 0
+      },
+      computed: {
+        x: function() { return this.nodex; },
+        y: function() { return this.nodey + this.$el.offsetTop; }
+      }
+    }
   },
 
   ready() {
     // dummy outlet for test
     this.input = this.context.createGain();
-    this.output = this.context.createGain();
+    this.outputL = this.context.createGain();
+    this.outputR = this.context.createGain();
 
-    console.log(this.type);
     var e = this.$el;
-    // e.className = 'module ' + this.type;
+
     e.id = 'module-' + this.idx;
     e.style.left = '200px';
     e.style.top = '200px';
   },
 
   methods: {
-    startDraggingConnector(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      // let node = this.output;
-      // let outlet = event.target;
-      this.$dispatch('connector:start', {
-        connector: event.target,
-        output: this.output
+    startDraggingConnector(event, outlet) {
+      this.$dispatch('connection:start', {
+        port: event.target,
+        output: this.output,
+        outlet: outlet,
+        node: this
       });
     }
   }
@@ -101,10 +167,10 @@ export default {
     }
 
     &-interface {
-      padding: 1em;
+      padding: 1em 4em;
     }
 
-    &-connectors {
+    &-connections {
       position: absolute;
       width: 100%;
       top: 0;
