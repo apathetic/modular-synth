@@ -279,7 +279,7 @@ export default {
       // We want to be dealing with the audio node elements from here on
       // source = source.parentNode;
       // destination = destination.parentNode;
-      source = source.ouput;
+      source = source.output;
       destination = destination.input;
 
       // Put an entry into the source's outputs
@@ -287,20 +287,20 @@ export default {
         source.outputConnections = [];
       }
 
-      connector.line = connectorShape;
-      connector.destination = destination;
+      // connector.line = connectorShape;
+      // connector.destination = destination;
       source.outputConnections.push(connector);
 
       // Make sure the connector line points go from source->dest (x1->x2)
-      if (!dragObj.originIsInput) { // need to flip
-        var shape = connectorShape;
-        var x = shape.getAttributeNS(null, 'x2');
-        var y = shape.getAttributeNS(null, 'y2');
-        shape.setAttributeNS(null, 'x2', shape.getAttributeNS(null, 'x1'));
-        shape.setAttributeNS(null, 'y2', shape.getAttributeNS(null, 'y1'));
-        shape.setAttributeNS(null, 'x1', x);
-        shape.setAttributeNS(null, 'y1', y);
-      }
+      // if (!dragObj.originIsInput) { // need to flip
+      //   var shape = connectorShape;
+      //   var x = shape.getAttributeNS(null, 'x2');
+      //   var y = shape.getAttributeNS(null, 'y2');
+      //   shape.setAttributeNS(null, 'x2', shape.getAttributeNS(null, 'x1'));
+      //   shape.setAttributeNS(null, 'y2', shape.getAttributeNS(null, 'y1'));
+      //   shape.setAttributeNS(null, 'x1', x);
+      //   shape.setAttributeNS(null, 'y1', y);
+      // }
       // Put an entry into the destinations's inputs
       if (!destination.inputConnections) {
         destination.inputConnections = [];
