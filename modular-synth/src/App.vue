@@ -273,12 +273,14 @@ export default {
 
       // source.className += ' connected';
       // destination.className += ' connected';
-      source.classList.add('connected');
-      destination.classList.add('connected');
+      source.connector.classList.add('connected');
+      destination.connector.classList.add('connected');
 
       // We want to be dealing with the audio node elements from here on
-      source = source.parentNode;
-      destination = destination.parentNode;
+      // source = source.parentNode;
+      // destination = destination.parentNode;
+      source = source.ouput;
+      destination = destination.input;
 
       // Put an entry into the source's outputs
       if (!source.outputConnections) {
