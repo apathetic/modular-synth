@@ -65,7 +65,22 @@ main {
   background-color: #999;
 }
 
+button {
+  -webkit-appearance: none;
+  outline: none;
+  border: none;
+  border-radius: 3px;
+  padding: 0.5em 1em;
+  background-color: green;
+  color: white;
+  display: inline-block;
+  margin-bottom: 1em;
 
+  &:hover {
+    background-color: #696;
+    cursor: pointer;
+  }
+}
 
 
 

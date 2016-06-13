@@ -156,7 +156,7 @@ export default {
 
     stopDraggingConnector(event) {
       var toElem = event.toElement || event.relatedTarget || event.target || false;
-      let input = 'input';  // toElem.getAttribute('data-connects');
+      // let input = 'input';  // toElem.getAttribute('data-connects');
       let x;
       let y;
       let BCR = toElem.getBoundingClientRect();
@@ -181,16 +181,16 @@ export default {
           return node.$el.contains(toElem);
         });
 
-        input = destNode.inlets[1];         // TEMP testing
 
         let source = dragObj.source;    // port, node, output - from original event
-        let destination = {
-          port: toElem,
-          input: input,
-          node: destNode
-        };
+        // input = destNode.inlets[1];         // TEMP testing
+        // let destination = {
+        //   port: toElem,
+        //   input: input,
+        //   node: destNode
+        // };
 
-        this.connectNodes(source, 'outputL', destination, 'freq');
+        this.connectNodes(source.node, 'outputL', destNode, 'freq');
         //
       } else {
         // Otherwise, delete the line
@@ -208,8 +208,8 @@ export default {
      */
     connectNodes(sourceNode, outletName, destNode, inletName) {
       let line = dragObj.line;
-      let outlet = sourceNode.$get('outlets'); // .label == outletName;
-      let inlet = destNode.$get('inlets'); // .label == inletName;
+      let outlet = sourceNode.outlets.find(function(outlet) { return outlet.label === outletName; });
+      let inlet = destNode.inlets.find(function(inlet) { return inlet.label === inletName; });
       let audioOut = sourceNode[outletName] || false;
       let audioIn = destNode[inletName] || false;
 
@@ -218,18 +218,19 @@ export default {
       inlet.connections.push(line);
 
       // functional
-      audioOut.connect(audioIn);
+      if (audioOut && audioIn) {
+        audioOut.connect(audioIn);
+      }
     },
 
 
 
     updateConnections(node) {
       node.inlets.forEach(function(inlet) {
-        //   input.line.x1 = input.x;
-        //   input.line.y1 = input.y;
-        if (inlet.connections.length) {
-          console.log(inlet.connections);
-        }
+        inlet.connections.forEach(function(line) {
+          line.x2 = inlet.x;
+          line.y2 = inlet.y;
+        });
       });
 
       node.outlets.forEach(function(outlet) {
