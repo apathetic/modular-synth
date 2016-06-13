@@ -14,10 +14,19 @@
     <!-- <span click="deleteNode">X</span> -->
     <div class="module-connectors">
       <div class="inputs">
-        <span v-for="input in inputs" class="input">{{ input }}</span>
+        <span v-for="input in inputs"
+          data-label="{{ input }}"
+          class="input">
+          <!-- {{ input }} -->
+        </span>
       </div>
-      <div class="inputs">
-        <span v-for="output in outputs" @mousedown="startDraggingConnector" class="output">{{ output }}</span>
+      <div class="outputs">
+        <span v-for="output in outputs"
+          @mousedown="startDraggingConnector"
+          data-label="{{ output }}"
+          class="output">
+          <!-- {{ output }} -->
+        </span>
       </div>
     </div>
   </div>
@@ -57,6 +66,7 @@ export default {
 
   ready() {
     // dummy outlet for test
+    this.input = this.context.createGain();
     this.output = this.context.createGain();
 
     console.log(this.type);
@@ -71,9 +81,12 @@ export default {
     startDraggingConnector(event) {
       event.preventDefault();
       event.stopPropagation();
-      let node = this;
-      let outlet = event.target;
-      this.$dispatch('connector:start', node, outlet);
+      // let node = this.output;
+      // let outlet = event.target;
+      this.$dispatch('connector:start', {
+        connector: event.target,
+        output: this.output
+      });
     }
   }
   /*
@@ -391,15 +404,27 @@ export default {
       width: 100%;
       top: 0;
       font-size: 10px;
-      text-indent: 1em;
 
       span {
         position: absolute;
         display: block;
-        width: 7px;
+        width: 5px;
         height: 14px;
         background: #111;
         cursor: pointer;
+
+        // text-indent: 1em;
+
+        &:hover {
+          background: orange;
+        }
+
+        &:after {
+          content: attr(data-label);
+          width: 5em;
+          position: absolute;
+          // pointer-events: none;
+        }
 
         // we provide for the case of <= 4 inputs/outputs
         &:nth-child(1) { top: 10px; }
@@ -410,10 +435,20 @@ export default {
     }
 
     .input {
-      left: -4px;
+      left: -5px;
+
+      &:after {
+        left: 1em;
+      }
     }
+
     .output {
-      right: -4px;
+      right: -5px;
+
+      &:after {
+        right: 1em;
+        text-align: right;
+      }
     }
   }
 </style>
