@@ -8,8 +8,7 @@
     <div class="module-interface">
       <h3>{{ type }}-{{ idx }}</h3>
       <!-- x:{{ x }} -->
-      <!-- y:{{ y }} -->
-      <!-- {{ inlets | json }} -->
+      y:{{ y }}
       {{ dragging }}
     </div>
     <!-- <span click="deleteNode">X</span> -->
@@ -60,9 +59,6 @@ export default {
 
   data() {
     return {
-      // inputs: ['freq', 'gain', 'range'],
-      // outputs: ['Audio 1', 'Audio 2'],
-
       inlets: [{
         x: 0,
         y: 0,
@@ -90,12 +86,9 @@ export default {
         y: 4,
         label: 'outputR',
         connections: []
-      }],
+      }]
 
-      connections: {
-        in: [],
-        out: []
-      }
+
       // x: 0,
       // y: 0
       // position: {
@@ -108,7 +101,7 @@ export default {
 
   components: {
     'inlet': {
-      template: '<span data-label="{{ label }}" class="input"></span>',
+      template: '<span data-label="{{ label }}" class="input">{{y}}</span>',
       props: {
         label: '',
         x: 0,
@@ -118,7 +111,7 @@ export default {
       },
       computed: {
         x: function() { return this.nodex; },
-        y: function() { return this.nodey + this.$el.offsetTop; }
+        y: function() { return this.nodey + this.$el.offsetTop + 7; } // 7 is 1/2 the height of the port
       }
     }
   },
