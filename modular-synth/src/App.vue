@@ -237,7 +237,7 @@ export default {
         //   input.line.x1 = input.x;
         //   input.line.y1 = input.y;
         if (outlet.connections.length) {
-          console.log(outlet.connections);
+          // console.log(outlet.connections);
         }
       });
     },
