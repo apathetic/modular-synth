@@ -3,18 +3,26 @@
 // -----------------------------------------------
 
 <template>
-  <section id="modules" :class="editing ? 'edit-mode': 'play-mode'" v-el:modules>
+  <section id="modules" :class="editing ? 'edit-mode': 'play-mode'">
     <component v-for="node in nodes"
       :is="node.type"
       :type="node.type"
       :idx="node.idx"
+      :inlets.sync="test"
       track-by="$index">
     </component>
   </section>
 
-  <svg id="connections" v-el:connections>
-    <!-- <line x1="460.28125" y1="270" x2="572" y2="359" stroke="black" stroke-width="3"></line> -->
-    <line :coords="coords" stroke="black" stroke-width="3"></line>
+  <svg id="connections">
+    <line v-for="line in connections"
+      @click="deleteConnection"
+      :x1="line.x1"
+      :y1="line.y1"
+      :x2="line.x2"
+      :y2="line.y2"
+      stroke="black"
+      stroke-width="3">
+    </line>
   </svg>
 
   <aside id="controls" v-el:controls>
@@ -65,14 +73,13 @@ export default {
     return {
       editing: true,
       nodes: [],
-      connections: []      // TODO let VUE manage the svg connections
+      connections: []
     };
   },
 
   ready() {
-    this.connections = this.$els.connections;
-
-    this.$on('connector:start', this.startDraggingConnector);
+    this.$on('connection:start', this.startDraggingConnector);
+    this.$on('connection:update', this.updateConnections);
   },
 
   methods: {
@@ -97,19 +104,12 @@ export default {
     //
 
 
-    startDraggingConnector(node) {
-      const svgns = 'http://www.w3.org/2000/svg';
+    startDraggingConnector(source) {
       let x;
       let y;
-      let shape;
-      let outlet = node.connector;
-      let BCR = outlet.getBoundingClientRect();
+      let BCR = source.port.getBoundingClientRect();
 
-      dragObj.node = node;
-
-      // Get the position of the originating connector with respect to the UI.
-      // x = outlet.offsetLeft + node.$el.offsetLeft;
-      // y = outlet.offsetTop + node.$el.offsetTop;
+      dragObj.source = source;
 
       // Get the position of the originating connector with respect to the page.
       x = BCR.left;
@@ -121,95 +121,34 @@ export default {
       dragObj.cursorStartX = x;
       dragObj.cursorStartY = y;
 
-      // Create a connector visual line
-      shape = document.createElementNS(svgns, 'line');
-
-      shape.setAttributeNS(null, 'x1', x);
-      shape.setAttributeNS(null, 'y1', y);
-      shape.setAttributeNS(null, 'x2', x);
-      shape.setAttributeNS(null, 'y2', y);
-      shape.setAttributeNS(null, 'stroke', 'black');
-      shape.setAttributeNS(null, 'stroke-width', '3');
-      dragObj.connectorShape = shape;
-
-
-      // TODO THIS:::
-      document.getElementById('connections').appendChild(shape);
-      // VS:
-
-      // let line = {
-      //   x1: x,
-      //   y1: y,
-      //   x2: x,
-      //   y2: y
-      // }
-      // this.connections.push(line);
-
+      let line = {
+        x1: x,
+        y1: y,
+        x2: x,
+        y2: y
+      };
+      this.connections.push(line);
+      dragObj.line = line;
 
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDraggingConnector);
-      document.addEventListener('mouseup', this.stopDraggingConnector); // .bind(this)
+      document.addEventListener('mouseup', this.stopDraggingConnector);
       // event.preventDefault();
       // event.stopPropagation();
     },
 
+    /**
+     * Update the connector's position.
+     * @param  {Event} event: The mousemove Event.
+     * @return {Void}
+     */
     whileDraggingConnector(event) {
-      var x, y;
-      // var toElem = e.toElement;
-      // var toElem = event.toElement || event.relatedTarget || event.target || false;
-
-      // Get cursor position with respect to the page.
-      x = event.clientX; // + window.scrollX;
-      y = event.clientY; // + window.scrollY;
+      let x = event.clientX;
+      let y = event.clientY;
 
       // Move connector visual line
-      dragObj.connectorShape.setAttributeNS(null, 'x2', x);
-      dragObj.connectorShape.setAttributeNS(null, 'y2', y);
-
-      // If this is a text node, use its parent element.
-      // if (toElem.nodeType === 3) {
-      //   toElem = toElem.parentNode;
-      // }
-
-      /*
-      if (toElem.classList) { // if we don't have class, we're not a node.
-        // if this is the green or red button, use its parent.
-        if (toElem.classList.contains('node-button')) {
-          toElem = toElem.parentNode;
-        }
-
-        // if we're over our originating node, do nothing.
-        if (toElem === dragObj.elemNode) {
-          return;
-        }
-
-        // If we used to be lighting up a node, but we're not over it anymore,
-        // unlight it.
-        // if (dragObj.lastLit && (dragObj.lastLit !== toElem)) {
-        //   dragObj.lastLit.className = dragObj.lastLit.unlitClassname;
-        //   dragObj.lastLit = null;
-        // }
-
-        // light up connector point underneath, if any
-        // if (toElem.classList.contains('node')) {
-        //   if (!dragObj.lastLit || (dragObj.lastLit !== toElem)) {
-        //     if (dragObj.originIsInput) {
-        //       if (toElem.classList.contains('node-output')) {
-        //         // toElem.unlitClassname = toElem.className;
-        //         toElem.className += ' canConnect';
-        //         dragObj.lastLit = toElem;
-        //       }
-        //     } else {  // first node was an output, so we're looking for an input
-        //       if (toElem.classList.contains('node-input')) {
-        //         // toElem.unlitClassname = toElem.className;
-        //         toElem.className += ' canConnect';
-        //         dragObj.lastLit = toElem;
-        //       }
-        //     }
-        //   }
-        // }
-      }
-      */
+      dragObj.line.x2 = x;
+      dragObj.line.y2 = y;
 
       event.preventDefault();
       event.stopPropagation();
@@ -217,6 +156,7 @@ export default {
 
     stopDraggingConnector(event) {
       var toElem = event.toElement || event.relatedTarget || event.target || false;
+      let input = 'input';  // toElem.getAttribute('data-connects');
       let x;
       let y;
       let BCR = toElem.getBoundingClientRect();
@@ -232,103 +172,78 @@ export default {
         x += 1 + BCR.width / 2;   // TODO move into computed props
         y += 1 + BCR.height / 2;
 
-        dragObj.connectorShape.setAttributeNS(null, 'x2', x);
-        dragObj.connectorShape.setAttributeNS(null, 'y2', y);
+        dragObj.line.x2 = x;
+        dragObj.line.y2 = y;
 
         // TODO
         // find the node that contains the inlet we want to connect to
         let destNode = this.$children.find(function(node) {
-          // node.$el "is parent" of toElem
           return node.$el.contains(toElem);
         });
 
-        this.connectNodes(dragObj.node, {
-          connector: toElem,
-          input: destNode
-        });
+        input = destNode.inlets[1];         // TEMP testing
+
+        let source = dragObj.source;    // port, node, output - from original event
+        let destination = {
+          port: toElem,
+          input: input,
+          node: destNode
+        };
+
+        this.connectNodes(source, 'outputL', destination, 'freq');
+        //
       } else {
         // Otherwise, delete the line
-        dragObj.connectorShape.parentNode.removeChild(dragObj.connectorShape);
-        dragObj.connectorShape = null;
+        this.connections.splice(-1);
       }
+    },
+
+    /**
+     * Connect two Audio Nodes
+     * @param  {Vue Component} sourceNode: The source Vue Component / Audio Node
+     * @param  {String} outletName: the name of the outlet to connect from
+     * @param  {Vue Component} destNode: The destination Vue Component / Audio Node
+     * @param  {String} inletName: the name of the inlet to connect in
+     * @return {Void}
+     */
+    connectNodes(sourceNode, outletName, destNode, inletName) {
+      let line = dragObj.line;
+      let outlet = sourceNode.$get('outlets'); // .label == outletName;
+      let inlet = destNode.$get('inlets'); // .label == inletName;
+      let audioOut = sourceNode[outletName] || false;
+      let audioIn = destNode[inletName] || false;
+
+      // visual
+      outlet.connections.push(line);
+      inlet.connections.push(line);
+
+      // functional
+      audioOut.connect(audioIn);
+    },
+
+
+
+    updateConnections(node) {
+      node.inlets.forEach(function(inlet) {
+        //   input.line.x1 = input.x;
+        //   input.line.y1 = input.y;
+        if (inlet.connections.length) {
+          console.log(inlet.connections);
+        }
+      });
+
+      node.outlets.forEach(function(outlet) {
+        //   input.line.x1 = input.x;
+        //   input.line.y1 = input.y;
+        if (outlet.connections.length) {
+          console.log(outlet.connections);
+        }
+      });
     },
 
 
     //
 
-
-    /**
-     * Make a connection between two connection point elements.
-     * The src and dst params are connection inputs/outputs, NOT
-     * the node elements themselves.
-     * @param  {[type]} src The source connection point
-     * @param  {[type]} dst The destination connection point
-     * @return {[type]}     [description]
-     */
-    connectNodes(source, destination) {
-      var connectorShape = dragObj.connectorShape;
-      var connector = {};
-
-      console.log('in app', this, source, destination);
-
-      // source.className += ' connected';
-      // destination.className += ' connected';
-      source.connector.classList.add('connected');
-      destination.connector.classList.add('connected');
-
-      // We want to be dealing with the audio node elements from here on
-      // source = source.parentNode;
-      // destination = destination.parentNode;
-      source = source.output;
-      destination = destination.input;
-
-      // Put an entry into the source's outputs
-      if (!source.outputConnections) {
-        source.outputConnections = [];
-      }
-
-      // connector.line = connectorShape;
-      // connector.destination = destination;
-      source.outputConnections.push(connector);
-
-      // Make sure the connector line points go from source->dest (x1->x2)
-      // if (!dragObj.originIsInput) { // need to flip
-      //   var shape = connectorShape;
-      //   var x = shape.getAttributeNS(null, 'x2');
-      //   var y = shape.getAttributeNS(null, 'y2');
-      //   shape.setAttributeNS(null, 'x2', shape.getAttributeNS(null, 'x1'));
-      //   shape.setAttributeNS(null, 'y2', shape.getAttributeNS(null, 'y1'));
-      //   shape.setAttributeNS(null, 'x1', x);
-      //   shape.setAttributeNS(null, 'y1', y);
-      // }
-      // Put an entry into the destinations's inputs
-      if (!destination.inputConnections) {
-        destination.inputConnections = [];
-      }
-
-      connector = {
-        line: connectorShape,
-        source: source,
-        destination: destination
-      };
-      destination.inputConnections.push(connector);
-
-      // if the source has an audio node, connect them up.
-      // AudioBufferSourceNodes may not have an audio node yet.
-      if (source.audioNode) {
-        source.audioNode.connect(destination.audioNode);
-      }
-
-      if (destination.onConnectInput) {
-        destination.onConnectInput();
-      }
-
-      connectorShape.inputConnection = connector;
-      connectorShape.destination = destination;
-      connectorShape.onclick = this.deleteConnection;
-
-      connectorShape = null;
-    },
 
     deleteConnection() {
       var connections = this.destination.inputConnections;
