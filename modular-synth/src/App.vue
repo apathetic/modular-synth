@@ -3,14 +3,31 @@
 // -----------------------------------------------
 
 <template>
-  <section id="modules" :class="editing ? 'edit-mode': 'play-mode'">
+  <section
+    id="modules"
+    :class="editing ? 'edit-mode': 'play-mode'"
+    v-el:modules
+    >
+    <!-- @mousemove.prevent.stop="whileDraggingConnector" -->
+    <!-- @mouseup="stopDraggingConnector" -->
+
+
+<!--
+  this.handle.addEventListener('mousedown',  (e) => this._dragStart(e));
+  this.handle.addEventListener('mousemove',  (e) => this._drag(e));
+  this.handle.addEventListener('mouseup',    (e) => this._dragEnd(e));
+  this.handle.addEventListener('mouseleave', (e) => this._dragEnd(e));
+  this.handle.addEventListener('click', (e) => {
+    if (this.dragThresholdMet) { e.preventDefault(); }
+  });
+ -->
+
     <component v-for="node in nodes"
       :is="node.type"
-      :type="node.type"
       :idx="node.idx"
-      :inlets.sync="test"
       track-by="$index">
     </component>
+
   </section>
 
   <svg id="connections">
@@ -21,7 +38,7 @@
       :x2="line.x2"
       :y2="line.y2"
       stroke="black"
-      stroke-width="3">
+      stroke-width="2">
     </line>
   </svg>
 
@@ -33,7 +50,10 @@
       selected Component details / info ? debug?
     </div>
     <button>  ► </button>
-    <button>Audio (power) On</button>
+    <button>
+      Audio (power) On
+      <img src="/static/images/reset1.svg">
+    </button>
     <!-- <master-out></master-out> -->
     <input id="masterOut1" type="range" min="0.0" max="1.0" step="0.1" value="0.0" />
     <input id="masterOut2" type="range" min="0.0" max="1.0" step="0.1" value="0.0" />
@@ -45,22 +65,23 @@
 // https://github.com/cwilso/WebAudio
 // https://github.com/idflood/ThreeNodes.js
 // https://github.com/gre/zound-live
-//
-// import Vue from 'vue';
+
 import Oscillator from './components/Oscillator';
 import Node from './components/Node';
 
 var idx = 0;
 var dragObj = {
   zIndex: 0,
-  // lastLit: null,
-  // elNode: null,
   cursorStartX: null,
   cursorStartY: null,
-  elStartLeft: null,
-  elStartTop: null,
+  source: null,
+  line: null
 
-  connectorShape: null
+  // connectorShape: null
+  // startLeft: null,
+  // startTop: null,
+  // lastLit: null,
+  // elNode: null,
 };
 
 export default {
@@ -79,7 +100,7 @@ export default {
 
   ready() {
     this.$on('connection:start', this.startDraggingConnector);
-    this.$on('connection:update', this.updateConnections);
+    // this.$on('connection:update', this.updateConnections);
   },
 
   methods: {
@@ -133,8 +154,8 @@ export default {
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDraggingConnector);
       document.addEventListener('mouseup', this.stopDraggingConnector);
-      // event.preventDefault();
-      // event.stopPropagation();
+      // this.$els.module.addEventListener('mousemove', this.whileDraggingConnector);
+      // this.$els.module.addEventListener('mouseup', this.stopDraggingConnector);
     },
 
     /**
@@ -167,6 +188,12 @@ export default {
 
       // TODO better check for this?
       if (toElem.classList.contains('input')) {
+        // TODO
+        // find the node that contains the inlet we want to connect to
+        let destNode = this.$children.find(function(node) {
+          return node.$el.contains(toElem);
+        });
+
         x = BCR.left;
         y = BCR.top;
         x += 1 + BCR.width / 2;   // TODO move into computed props
@@ -175,22 +202,12 @@ export default {
         dragObj.line.x2 = x;
         dragObj.line.y2 = y;
 
-        // TODO
-        // find the node that contains the inlet we want to connect to
-        let destNode = this.$children.find(function(node) {
-          return node.$el.contains(toElem);
-        });
+        let sourceNode = dragObj.source.node;
+        let outlet = dragObj.source.outlet;
+        let inletLabel = toElem.getAttribute('data-label');
+        let inlet = destNode.inlets.find(function(inlet) { return inlet.label === inletLabel; });
 
-
-        let source = dragObj.source;    // port, node, output - from original event
-        // input = destNode.inlets[1];         // TEMP testing
-        // let destination = {
-        //   port: toElem,
-        //   input: input,
-        //   node: destNode
-        // };
-
-        this.connectNodes(source.node, 'outputL', destNode, 'freq');
+        this.connectNodes(sourceNode, outlet, destNode, inlet);
         //
       } else {
         // Otherwise, delete the line
@@ -201,17 +218,15 @@ export default {
     /**
      * Connect two Audio Nodes
      * @param  {Vue Component} sourceNode: The source Vue Component / Audio Node
-     * @param  {String} outletName: the name of the outlet to connect from
+     * @param  {Object} outlet: the outlet to connect from.
      * @param  {Vue Component} destNode: The destination Vue Component / Audio Node
      * @param  {String} inletName: the name of the inlet to connect in
      * @return {Void}
      */
-    connectNodes(sourceNode, outletName, destNode, inletName) {
+    connectNodes(sourceNode, outlet, destNode, inlet) {
       let line = dragObj.line;
-      let outlet = sourceNode.outlets.find(function(outlet) { return outlet.label === outletName; });
-      let inlet = destNode.inlets.find(function(inlet) { return inlet.label === inletName; });
-      let audioOut = sourceNode[outletName] || false;
-      let audioIn = destNode[inletName] || false;
+      let audioOut = sourceNode[outlet.label] || false;
+      let audioIn = destNode[inlet.label] || false;
 
       // visual
       outlet.connections.push(line);
@@ -225,22 +240,22 @@ export default {
 
 
 
-    updateConnections(node) {
-      node.inlets.forEach(function(inlet) {
-        inlet.connections.forEach(function(line) {
-          line.x2 = inlet.x;
-          line.y2 = inlet.y;
-        });
-      });
+    // updateConnections(node) {
+    //   node.inlets.forEach(function(inlet) {
+    //     inlet.connections.forEach(function(line) {
+    //       line.x2 = inlet.x;
+    //       line.y2 = inlet.y;
+    //     });
+    //   });
 
-      node.outlets.forEach(function(outlet) {
-        //   input.line.x1 = input.x;
-        //   input.line.y1 = input.y;
-        if (outlet.connections.length) {
-          // console.log(outlet.connections);
-        }
-      });
-    },
+    //   node.outlets.forEach(function(outlet) {
+    //     //   input.line.x1 = input.x;
+    //     //   input.line.y1 = input.y;
+    //     if (outlet.connections.length) {
+    //       // console.log(outlet.connections);
+    //     }
+    //   });
+    // },
 
 
     //
