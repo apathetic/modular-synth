@@ -78,6 +78,8 @@ export const draggable = {
       this.position.top = y + 'px';
 
       // update any lines that point in here.
+      this.updateConnections(this);
+      /*
       this.$dispatch('connection:update', this);
       if (1) return;
 
@@ -108,11 +110,30 @@ export const draggable = {
       // }
 
       event.preventDefault();
+      */
+    },
+
+    // update any lines that point in here.
+    updateConnections(node) {
+      node.inlets.forEach(function(inlet) {
+        inlet.connections.forEach(function(line) {
+          line.x2 = inlet.x;
+          line.y2 = inlet.y;
+        });
+      });
+
+      node.outlets.forEach(function(outlet) {
+        outlet.connections.forEach(function(line, i) {
+          line.x1 = node.x + node.width + 3;
+          line.y1 = node.y + (i * 20) + 17 + 80;
+        });
+      });
     },
 
     stopDraggingNode(event) {
       document.removeEventListener('mousemove', this.whileDraggingNode);
       document.removeEventListener('mouseup', this.stopDraggingNode);
+      this.updateConnections(this);
       this.dragging = false;
     }
   }

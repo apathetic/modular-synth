@@ -1,12 +1,12 @@
 <template>
   <div
-    class="module"
-    :class="[type, dragging ? 'dragging' : '']"
+    class="node module"
+    :class="dragging ? 'dragging' : ''"
     :style="position"
-    @mousedown="startDraggingNode"
-    >
+    @mousedown="startDraggingNode">
+
     <div class="module-interface">
-      <h3>{{ type }}-{{ idx }}</h3>
+      <h3>Node - {{ idx }}</h3>
       <!-- x:{{ x }} -->
       y:{{ y }}
       {{ dragging }}
@@ -25,12 +25,12 @@
         </inlet>
 
 
-    <!--
+<!--
         <span v-for="inlet in inlets"
           data-label="{{ inlet.label }}"
           class="input">
         </span>
-    -->
+ -->
 
       </div>
 
@@ -53,7 +53,6 @@ export default {
   mixins: [draggable],
 
   props: {
-    type: null,
     idx: null
   },
 
@@ -86,9 +85,9 @@ export default {
         y: 4,
         label: 'outputR',
         connections: []
-      }]
+      }],
 
-
+      width: 0
       // x: 0,
       // y: 0
       // position: {
@@ -99,9 +98,13 @@ export default {
     };
   },
 
+  computed: {
+    width: function() { return this.$el.offsetWidth; }
+  },
+
   components: {
     'inlet': {
-      template: '<span data-label="{{ label }}" class="input">{{y}}</span>',
+      template: '<span data-label="{{ label }}" class="input"></span>',
       props: {
         label: '',
         x: 0,
@@ -110,8 +113,8 @@ export default {
         nodex: 0
       },
       computed: {
-        x: function() { return this.nodex; },
-        y: function() { return this.nodey + this.$el.offsetTop + 7; } // 7 is 1/2 the height of the port
+        x: function() { return this.nodex - 3; },
+        y: function() { return this.nodey + this.$el.offsetTop + 7 + 80; } // 7 is 1/2 the height of the port
       }
     }
   },
