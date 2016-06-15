@@ -116,9 +116,11 @@ export const draggable = {
     // update any lines that point in here.
     updateConnections(node) {
       node.inlets.forEach(function(inlet) {
-        inlet.connections.forEach(function(line) {
-          line.x2 = inlet.x;
-          line.y2 = inlet.y;
+        inlet.connections.forEach(function(line, i) {
+          // line.x2 = inlet.x;
+          // line.y2 = inlet.y;
+          line.x2 = node.x - 3;
+          line.y2 = node.y + (i * 20) + 17 + 80;  // if the inlets always maintain the same spacing...
         });
       });
 
