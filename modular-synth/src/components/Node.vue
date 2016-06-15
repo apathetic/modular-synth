@@ -16,6 +16,7 @@
 
 
       <div class="inputs">
+      <!--
         <inlet v-for="inlet in inlets"
           :label="inlet.label"
           :x.sync="inlet.x"
@@ -23,21 +24,20 @@
           :nodex="x"
           :nodey="y">
         </inlet>
+      -->
 
 
-<!--
         <span v-for="inlet in inlets"
           data-label="{{ inlet.label }}"
           class="input">
         </span>
- -->
 
       </div>
 
       <div class="outputs">
-        <span v-for="output in outlets"
-          @mousedown.prevent.stop="startDraggingConnector($event, output)"
-          data-label="{{ output.label }}"
+        <span v-for="outlet in outlets"
+          @mousedown.prevent.stop="startDraggingConnector($event, outlet)"
+          data-label="{{ outlet.label }}"
           class="output">
         </span>
       </div>
@@ -76,13 +76,10 @@ export default {
       }],
 
       outlets: [{
-        x: 3,
-        y: 3,
         label: 'outputL',
+        data: this.outputL,
         connections: []
       }, {
-        x: 4,
-        y: 4,
         label: 'outputR',
         connections: []
       }],
@@ -103,7 +100,7 @@ export default {
   },
 
   components: {
-    'inlet': {
+    'inletttt': {
       template: '<span data-label="{{ label }}" class="input"></span>',
       props: {
         label: '',
