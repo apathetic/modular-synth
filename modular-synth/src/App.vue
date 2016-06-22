@@ -46,9 +46,13 @@
     <button @click="toggleEditMode">{{ editing ? 'Play Mode' : 'Edit mode' }}</button>
     <button @click="newNode('Node')">add Node</button>
     <button @click="newNode('Oscillator')">add osc</button>
+
     <div>
-      selected Component details / info ? debug?
+      <p>selected Component details / info ? debug?</p>
+
+      <midi></midi>
     </div>
+
     <button>  ► </button>
     <button>
       Audio (power) On
@@ -68,6 +72,7 @@
 
 import Oscillator from './components/Oscillator';
 import Node from './components/Node';
+import midi from './components/system/Midi.vue';
 
 var idx = 0;
 var dragObj = {
@@ -87,7 +92,8 @@ var dragObj = {
 export default {
   components: {
     Oscillator,
-    Node
+    Node,
+    midi
   },
 
   data() {
