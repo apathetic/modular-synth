@@ -1,24 +1,24 @@
 <template>
   <h3>midi infos</h3>
-  <div id="log">{{ divLog }}</div>
+  <div id="log">{{ log }}</div>
   <div id="inputs" v-el:inputs></div>
   <div id="outputs" v-el:outputs></div>
 
   inputs:
   <select>
-    <option v-for="value in devices.inputs" v-bind:value="_uid" track-by="_uid">
+    <option v-for="value in devices.inputs" v-bind:value="value._uid" track-by="_uid">
       {{ value.name }} ({{ value.manufacturer }})
     </option>
   </select>
 
   outputs:
   <select>
-    <option v-for="value in devices.outputs" v-bind:value="_uid" track-by="_uid">
+    <option v-for="value in devices.outputs" v-bind:value="value._uid" track-by="_uid">
       {{ value.name }} ({{ value.manufacturer }})
     </option>
   </select>
 
-  {{ devices | json }}
+  <!-- {{ devices | json }} -->
 </template>
 
 
@@ -26,10 +26,12 @@
 export default {
   data() {
     return {
-      // divLog: document.getElementById('log'),
+      // log: document.getElementById('log'),
       // divInputs: document.getElementById('inputs'),
       // divOutputs: document.getElementById('outputs'),
-      divLog: '',
+      midiIn: null,
+
+      log: '',
       divInputs: '',
       divOutputs: '',
       midiAccess: null,
@@ -103,16 +105,56 @@ export default {
       }
     },
 
+    selectMIDIIn(ev) {
+      let midiIn = this.midiIn;
+      let midiAccess = this.midiAccess;
+
+      if (midiIn) {
+        midiIn.onmidimessage = null;
+      }
+      if (typeof (midiAccess.inputs) === 'function') {   // Old Skool MIDI inputs() code
+        midiIn = midiAccess.inputs()[ev.target.selectedIndex];
+      } else {
+        let id = ev.target[ev.target.selectedIndex].value;
+        midiIn = midiAccess.inputs.get(id);
+      }
+      if (midiIn) {
+        midiIn.onmidimessage = this.midiMessageReceived;
+      }
+    },
+
+    midiMessageReceived(ev) {
+      let cmd = ev.data[0] >> 4;
+      let channel = ev.data[0] & 0xf;
+      let noteNumber = ev.data[1];
+      let velocity = ev.data[2];
+
+      if (channel === 9) { return; }
+
+      if (cmd === 8 || (cmd === 9 && velocity === 0)) { // with MIDI, note on with velocity zero is the same as note off
+        this.noteOff(noteNumber);
+      } else if (cmd === 9) {
+        this.noteOn(noteNumber, velocity / 127.0);
+      } else if (cmd === 11) {
+        this.controller(noteNumber, velocity / 127.0);
+      } else if (cmd === 14) {
+        this.pitchWheel(((velocity * 128.0 + noteNumber) - 8192) / 8192.0);
+      } else if (cmd === 10) {  // poly aftertouch
+        this.polyPressure(noteNumber, velocity / 127);
+      } else {
+        this.log = ev.data[0] + ' ' + ev.data[1] + ' ' + ev.data[2];
+      }
+    },
+
+    noteOn() {},
+    noteOff() {},
+    controller() {},
+    polyPressure() {},
+
     // update the device list when devices get connected, disconnected, opened or closed
     onstatechange(e) {
       var port = e.port;
       let device = {};
-     // var div = port.type === 'input' ? divInputs : divOutputs;
-      // var listener = port.type === 'input' ? checkboxMIDIInOnChange : checkboxMIDIOutOnChange;
-      // var activePorts = port.type === 'input' ? activeInputs : activeOutputs;
-      // var checkbox = document.getElementById(port.type + port.id);
-      // var label;
-
 
       if (port.state === 'disconnected') {
         if (port.type === 'input') {
@@ -140,34 +182,6 @@ export default {
         console.log('adding output device %s', port.id);
         this.devices.outputs.push(device);
       }
-
-      // device disconnected
-      // if (port.state === 'disconnected') {
-      //   port.close();
-      //   label = checkbox.parentNode;
-      //   checkbox.nextSibling.nodeValue = port.name + ' (' + port.state + ', ' +  port.connection + ')';
-      //   checkbox.disabled = true;
-      //   checkbox.checked = false;
-      //   delete activePorts[port.type + port.id];
-
-      // // new device connected
-      // } else if (checkbox === null) {
-      //   label = document.createElement('label');
-      //   checkbox = document.createElement('input');
-      //   checkbox.type = 'checkbox';
-      //   checkbox.id = port.type + port.id;
-      //   checkbox.addEventListener('change', listener, false);
-      //   label.appendChild(checkbox);
-      //   label.appendChild(document.createTextNode(port.name + ' (' + port.state + ', ' +  port.connection + ')'));
-      //   div.appendChild(label);
-      //   div.appendChild(document.createElement('br'));
-
-      // // device opened or closed
-      // } else if (checkbox !== null) {
-      //   label = checkbox.parentNode;
-      //   checkbox.disabled = false;
-      //   checkbox.nextSibling.nodeValue = port.name + ' (' + port.state + ', ' +  port.connection + ')';
-      // }
     },
 
     inputListener(midimessageEvent) {
@@ -179,8 +193,8 @@ export default {
       let data2 = data[2];
 
       // do something graphical with the incoming midi data
-      // this.divLog.innerHTML = type + ' ' + data1 + ' ' + data2 + '<br>' + this.divLog.innerHTML;
-      this.divLog += type + ' ' + data1 + ' ' + data2 + '<br>';
+      // this.log.innerHTML = type + ' ' + data1 + ' ' + data2 + '<br>' + this.log.innerHTML;
+      this.log += type + ' ' + data1 + ' ' + data2 + '<br>';
 
       for (portId in this.activeOutputs) {
         if (this.activeOutputs.hasOwnProperty(portId)) {
