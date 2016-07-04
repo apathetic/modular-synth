@@ -2,121 +2,43 @@
 
 Experiments in WebAudio
 
-Note: much of this code inspired by:
-* https://tonejs.github.io
-* https://github.com/Theodeus/tuna
-* https://github.com/cwilso/WebAudio
-* https://github.com/idflood/Threenodes.js
 
+TODO
 
-## Build Setup
+- MIDI input
+  - pitch
+  - gate
+  - note
+  - bend
+  - velocity
+  - modwheel
+  - aftertouch
+- MIDI learn
 
-``` bash
-# install dependencies
-npm install
+- UI -- 2 modes: play / edit.
+  - play is grid (packery, gridlist)
+  - edit is draggables (dragabilly, vanillaJS)
+  - dotted line while creating a connection
+  - when a node is selected, all connections become highlighted
 
-# serve with hot reload at localhost:8080
-npm start
+- audio chain
 
-# build for production with minification
-npm run build
+- NODES:
+  - ENV
+  - OSC
+  - FILT
+  - ADSR
 
-# run all tests
-npm test
-```
+- FX
+  - reverb
+  - delay
+  - vca
+  - lfo
 
+- clock
+  - click divider
+  - quant
 
-
-
-## APPLICATION NOTES:
-
-**EVENTS**
-  - App
-    - app:load
-    - app:sort    // app:sorting:init
-  - module
-    - module:add
-    - module:remove
-  - parameters
-    - parameters:load
-  - audio
-    - audio:start
-    - audio:stop
-  - drag
-    - drag:start
-    - drag:active
-    - drag:end
-  - midi
-    - midi:noteOn
-    - midi:noteOff
-    - midi:controller
-    - midi:pitchWheel
-    - midi:polyPressure
-
-
-**ROUTING / PORT TYPES**
-  - inlets:
-    - in
-    - out
-  - data types:
-    - audioParam (a-rate)
-      - pitch / freq
-      - mod (A, B, FM?)
-    - control data (k-rate)
-      - triggers or bangs (events?):
-        - gate
-        - reset (more for sequencing)
-        - sync (ie. phase)
-
-
-**NODE ROADMAP**
-  - BASE
-    - ~~ENV~~
-    - OSC
-      - ~~simple~~
-      - fat osc
-      - pwm osc
-      - fm osc
-    - ~~LFO~~
-    - FILT
-      - ~~simple~~
-      - resonant
-      - moog
-      - comb
-    - ~~VCA~~
-      - ~~MULT (deprecated)~~
-
-
-  - FX
-    - reverb
-      - simple
-    - delay
-      - simple
-      - ping pong
-    - bitcrusher
-
-
-  - timing
-    - clock
-    - stepper / arpeggiator
-    - click divider(maybe?)
-    - quant(maybe?)
-
-
-  - routing
-    - mixer (mini)
-    - ~~audio out~~
-
-
-  - MIDI
-    - noteIn
-      - ~~pitch~~
-      - ~~gate~~
-    - bend
-    - velocity
-    - mod-wheel
-    - aftertouch
-    - MIDI learn
-
-
-  ---------------
+- routing
+  - mixer (mini)
+  - audio out
