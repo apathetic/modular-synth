@@ -16,7 +16,7 @@
 
 <script>
 import {draggable} from '../mixins';
-import Knob from './UI/Knob';
+import Knob from './UI/Knob';   // audioParam
 
 export default {
   mixins: [draggable],

@@ -1,44 +1,30 @@
 <template>
   <div
-    class="node module"
+    class="module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
     @mousedown="startDraggingNode">
 
     <div class="module-interface">
       <h3>Node - {{ idx }}</h3>
-      <!-- x:{{ x }} -->
+      x:{{ x }}
       y:{{ y }}
       {{ dragging }}
     </div>
-    <!-- <span click="deleteNode">X</span> -->
+
     <div class="module-connections">
-
-
-      <div class="inputs">
-      <!--
-        <inlet v-for="inlet in inlets"
-          :label="inlet.label"
-          :x.sync="inlet.x"
-          :y.sync="inlet.y"
-          :nodex="x"
-          :nodey="y">
-        </inlet>
-      -->
-
-
+      <div class="inlets">
         <span v-for="inlet in inlets"
           data-label="{{ inlet.label }}"
-          class="input">
+          class="inlet">
         </span>
-
       </div>
 
-      <div class="outputs">
+      <div class="outlets">
         <span v-for="outlet in outlets"
-          @mousedown.prevent.stop="startDraggingConnector($event, outlet)"
+          @mousedown.stop="createConnector($event, outlet)"
           data-label="{{ outlet.label }}"
-          class="output">
+          class="outlet">
         </span>
       </div>
     </div>
@@ -46,7 +32,7 @@
 </template>
 
 
- <script>
+<script>
 import {draggable} from '../mixins';
 
 export default {
@@ -58,62 +44,37 @@ export default {
 
   data() {
     return {
-      inlets: [{
-        x: 0,
-        y: 0,
-        label: 'freq',
-        connections: []
-      }, {
-        x: 1,
-        y: 1,
-        label: 'gain',
-        connections: []
-      }, {
-        x: 2,
-        y: 2,
-        label: 'range',
-        connections: []
-      }],
+      inlets: [
+        {
+          label: 'freq',
+          connections: []
+        }, {
+          label: 'gain',
+          connections: []
+        }, {
+          label: 'range',
+          connections: []
+        }
+      ],
 
-      outlets: [{
-        label: 'outputL',
-        data: this.outputL,
-        connections: []
-      }, {
-        label: 'outputR',
-        connections: []
-      }],
+      outlets: [
+        {
+          label: 'outputL',
+          data: this.outputL,
+          connections: []
+        }, {
+          label: 'outputR',
+          connections: []
+        }
+      ],
 
       width: 0
-      // x: 0,
-      // y: 0
-      // position: {
-      //   top: 0,
-      //   left: 0
-      // },
-      // dragging: false
+
     };
   },
 
   computed: {
     width: function() { return this.$el.offsetWidth; }
-  },
-
-  components: {
-    'inletttt': {
-      template: '<span data-label="{{ label }}" class="input"></span>',
-      props: {
-        label: '',
-        x: 0,
-        y: 0,
-        nodey: 0,
-        nodex: 0
-      },
-      computed: {
-        x: function() { return this.nodex - 3; },
-        y: function() { return this.nodey + this.$el.offsetTop + 7 + 80; } // 7 is 1/2 the height of the port
-      }
-    }
   },
 
   ready() {
@@ -130,14 +91,25 @@ export default {
   },
 
   methods: {
-    startDraggingConnector(event, outlet) {
-      this.$dispatch('connection:start', {
-        port: event.target,
-        output: this.output,
+    createConnector(event, outlet) {
+      this.$dispatch('connector:new', {
+        module: this,
         outlet: outlet,
-        node: this
+        el: event.target
       });
+    },
+
+    computePosition() {
+
     }
+    // startDraggingConnector(event, outlet) {
+    //   this.$dispatch('connection:start', {
+    //     port: event.target,
+    //     /// output: this.output,
+    //     outlet: outlet,
+    //     node: this
+    //   });
+    // }
   }
 };
 
@@ -198,7 +170,7 @@ export default {
       }
     }
 
-    .input {
+    .inlet {
       left: -5px;
 
       &:after {
@@ -206,7 +178,7 @@ export default {
       }
     }
 
-    .output {
+    .outlet {
       right: -5px;
 
       &:after {
