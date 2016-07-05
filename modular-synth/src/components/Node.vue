@@ -9,7 +9,6 @@
       <h3>Node - {{ idx }}</h3>
       x:{{ x }}
       y:{{ y }}
-      {{ dragging }}
     </div>
 
     <div class="module-connections">
@@ -50,6 +49,7 @@ export default {
           connections: []
         }, {
           label: 'gain',
+          to: this.input,
           connections: []
         }, {
           label: 'range',
@@ -60,10 +60,11 @@ export default {
       outlets: [
         {
           label: 'outputL',
-          data: this.outputL,
+          data: this.outputL,   // to: this.output?
           connections: []
         }, {
           label: 'outputR',
+          data: this.outputR,
           connections: []
         }
       ],
@@ -92,10 +93,17 @@ export default {
 
   methods: {
     createConnector(event, outlet) {
+      // this.$dispatch('connector:new', {
+      //   module: this,
+      //   outlet: outlet,
+      //   el: event.target
+      // });
       this.$dispatch('connector:new', {
+        label: outlet.label,
         module: this,
-        outlet: outlet,
-        el: event.target
+        data: outlet.data,
+        port: event.target,
+        connections: outlet.connections
       });
     },
 
