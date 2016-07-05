@@ -3,24 +3,9 @@
 // -----------------------------------------------
 
 <template>
-  <section
-    id="modules"
+  <section id="modules"
     :class="editing ? 'edit-mode': 'play-mode'"
-    v-el:modules
-    >
-    <!-- @mousemove.prevent.stop="whileDraggingConnector" -->
-    <!-- @mouseup="stopDraggingConnector" -->
-
-
-<!--
-  this.handle.addEventListener('mousedown',  (e) => this._dragStart(e));
-  this.handle.addEventListener('mousemove',  (e) => this._drag(e));
-  this.handle.addEventListener('mouseup',    (e) => this._dragEnd(e));
-  this.handle.addEventListener('mouseleave', (e) => this._dragEnd(e));
-  this.handle.addEventListener('click', (e) => {
-    if (this.dragThresholdMet) { e.preventDefault(); }
-  });
- -->
+    v-el:modules>
 
     <component v-for="module in modules"
       :is="module.type"
@@ -64,6 +49,12 @@
 // https://github.com/cwilso/WebAudio
 // https://github.com/idflood/Threenodes.js
 // https://github.com/gre/zound-live
+
+
+  // label: 'outputL',
+  // data: this.outputL,
+  // connections: []
+
 
 import Oscillator from './components/Oscillator';
 import Node from './components/Node';
@@ -125,22 +116,17 @@ export default {
       });
     },
 
-    // addConnector(line) {
-    //   this.connections.push(line);
-    // },
-
     connectModules(connector) {
       let source = connector.from.data;
       let destination = connector.to.data;
 
       console.log('connecting %s from module #%s to %s in #%s',
-        connector.from.outlet.label,
+        connector.from.label,
         connector.from.module.idx,
-        connector.to.inlet.label,
+        connector.to.label,
         connector.to.module.idx
       );
 
-      // functional.
       // TODO: assumes just audio for now. FInd a way to route control data
       if (source && destination) {
         source.connect(destination);
@@ -160,9 +146,7 @@ export default {
       this.disconnectNode(moduleElement);
 
       // Then delete the visual element
-      // moduleElement.parentNode.removeChild(moduleElement);
-      // "Vue.component remove"
-      this.$root.$delete(module);
+      // module.$destroy(true);
     }
   }
 };
