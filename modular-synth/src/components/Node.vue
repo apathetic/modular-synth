@@ -7,8 +7,8 @@
 
     <div class="module-interface">
       <h3>Node - {{ idx }}</h3>
-      x:{{ x }}
-      y:{{ y }}
+      <br />
+      <br />
     </div>
 
     <div class="module-connections">
@@ -33,6 +33,7 @@
 
 <script>
 import {draggable} from '../mixins';
+// import Connector from './system/Connector';
 
 export default {
   mixins: [draggable],
@@ -43,6 +44,7 @@ export default {
 
   data() {
     return {
+      name: 'Node',
       inlets: [
         {
           label: 'freq',
@@ -70,7 +72,6 @@ export default {
       ],
 
       width: 0
-
     };
   },
 
@@ -98,18 +99,22 @@ export default {
       //   outlet: outlet,
       //   el: event.target
       // });
-      this.$dispatch('connector:new', {
-        label: outlet.label,
+
+      // keep this "end" of the line's source of truth in this
+      // component. Then, this node can update itself and the
+      // data shared in the Connector *should* update as well.
+      let from = {
         module: this,
+        label: outlet.label,
         data: outlet.data,
         port: event.target,
         connections: outlet.connections
-      });
-    },
+      };
 
-    computePosition() {
-
+      this.$dispatch('connector:new', from);
     }
+
+
     // startDraggingConnector(event, outlet) {
     //   this.$dispatch('connection:start', {
     //     port: event.target,
