@@ -26,6 +26,7 @@
     <button @click="toggleEditMode">{{ editing ? 'Play Mode' : 'Edit mode' }}</button>
     <button @click="newModule('Node')">add Node</button>
     <button @click="newModule('Oscillator')">add osc</button>
+    <button @click="newModule('masterOut')">add masterout</button>
 
     <div>
       <p>selected Component details / info ? debug?</p>
@@ -34,7 +35,9 @@
     </div>
 
     <button>  ► </button>
-    <button>
+    <button
+      @click="togglePower"
+      :class="power ? 'on' : 'off'">
       Audio (power) On
       <img src="/static/images/reset1.svg">
     </button>
@@ -58,6 +61,7 @@
 
 import Oscillator from './components/Oscillator';
 import Node from './components/Node';
+import masterOut from './components/MasterOut';
 import connector from './components/system/Connector';
 import midi from './components/system/Midi.vue';
 
@@ -65,6 +69,7 @@ var idx = 0;
 
 export default {
   components: {
+    masterOut,
     Oscillator,
     Node,
     connector,
@@ -73,6 +78,7 @@ export default {
 
   data() {
     return {
+      power: false,
       editing: true,
       modules: [],
       connectors: [],
@@ -95,6 +101,15 @@ export default {
       this.editing = !this.editing;
     },
 
+    togglePower() {
+      this.power = !this.power;
+      if (this.power) {
+        this.$broadcast('start');
+      } else {
+        this.$broadcast('stop');
+      }
+    },
+
     newModule(type) {
       // [TODO] use v-ref instead of idX
       // var N = Vue.extend({
@@ -111,8 +126,8 @@ export default {
     //
     newConnector(from = {}, to = {}) {
       this.connectors.push({
-        'to': to,
-        'from': from
+        to: to,
+        from: from
       });
     },
 
@@ -120,11 +135,11 @@ export default {
       let source = connector.from.data;
       let destination = connector.to.data;
 
-      console.log('connecting %s from module #%s to %s in #%s',
+      console.log('connecting %s from %s --> %s in %s',
         connector.from.label,
-        connector.from.module.idx,
+        connector.from.module.name,
         connector.to.label,
-        connector.to.module.idx
+        connector.to.module.name
       );
 
       // TODO: assumes just audio for now. FInd a way to route control data

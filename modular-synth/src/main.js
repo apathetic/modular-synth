@@ -6,6 +6,7 @@ var context = window.AudioContext && (new window.AudioContext());
 // masterOut.connect(context.destination);
 
 // All Components will have access to AudioContext
+// oh.. although *now*, that includes Connectors
 Vue.mixin({
   data: function() {
     return {
