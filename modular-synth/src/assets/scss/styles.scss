@@ -57,7 +57,7 @@ main {
   position: absolute;
   top: 0;
   left: 0;
-  // z-index: -1;
+  z-index: -1;
 }
 
 #controls {
@@ -82,7 +82,9 @@ button {
   }
 }
 
-
+.on {
+  background-color: blue !important;
+}
 
 // .node {
 //   padding: 1em;
