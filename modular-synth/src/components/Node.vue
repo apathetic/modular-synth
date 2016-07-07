@@ -180,6 +180,8 @@ export default {
         &:nth-child(2) { top: 30px; }
         &:nth-child(3) { top: 50px; }
         &:nth-child(4) { top: 70px; }
+        &:nth-child(5) { top: 90px; }
+        &:nth-child(6) { top: 110px; }
       }
     }
 
