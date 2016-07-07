@@ -26,6 +26,7 @@
     <button @click="toggleEditMode">{{ editing ? 'Play Mode' : 'Edit mode' }}</button>
     <button @click="newModule('Node')">add Node</button>
     <button @click="newModule('Oscillator')">add osc</button>
+    <button @click="newModule('Mixer')">mixer</button>
     <button @click="newModule('masterOut')">add masterout</button>
 
     <div>
@@ -61,6 +62,7 @@
 
 import Oscillator from './components/Oscillator';
 import Node from './components/Node';
+import Mixer from './components/Mixer';
 import masterOut from './components/MasterOut';
 import connector from './components/system/Connector';
 import midi from './components/system/Midi.vue';
@@ -71,6 +73,7 @@ export default {
   components: {
     masterOut,
     Oscillator,
+    Mixer,
     Node,
     connector,
     midi

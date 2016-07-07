@@ -53,12 +53,12 @@ export default {
   },
 
   created() {
+    this.output = this.context.createGain();
+
     // Our lovely webAudio Oscillator.
     this.osc = this.context.createOscillator();
     this.osc.type = this.type;
     this.osc.frequency.value = this.freq;
-
-    this.output = this.context.createGain();
     this.osc.connect(this.output);
 
     this.$watch('freq', this.setFreq);
@@ -101,6 +101,7 @@ export default {
     },
 
     start() {
+      // this.osc = this.context.createOscillator();   // create a new OSC every time
       this.osc.start();
     },
 
