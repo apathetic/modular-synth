@@ -1,15 +1,12 @@
 <template>
   <div
-    class="module"
+    class="multiply module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
     @mousedown="startDraggingNode">
 
     <div class="module-interface">
-      <h3>Level</h3>
-      <Level
-
-      ></Level>
+      <h3>multiply</h3>
     </div>
 
     <div class="module-connections">
@@ -17,6 +14,12 @@
         <span v-for="inlet in inlets"
           data-label="{{ inlet.label }}"
           class="inlet">
+        </span>
+      </div>
+      <div class="outlets">
+        <span v-for="outlet in outlets"
+          data-label="{{ outlet.label }}"
+          class="outlet">
         </span>
       </div>
     </div>
@@ -35,23 +38,32 @@ export default {
       name: 'Master Out',
       inlets: [
         {
-          label: 'out-L',
-          data: this.outL,  // to
+          label: 'in 1',
+          data: this.in1,  // to
           connections: []
-        }, {
-          label: 'out-R',
-          data: this.outR,  // to
+        },
+        {
+          label: 'in 2',
+          data: this.in2,  // to
+          connections: []
+        }
+      ],
+      outlets: [
+        {
+          label: 'out',
+          data: this.out,  // to
           connections: []
         }
       ]
     };
   },
   ready() {
-    this.outL = this.context.createGain();
-    this.outR = this.context.createGain();
+    this.in1 = this.context.createGain();
+    this.in2 = this.context.createGain();
+    this.out = this.context.createGain();
 
-    this.outL.connect(this.context.destination);
-    this.outR.connect(this.context.destination);
+    this.in1.connect(this.out);
+    this.in2.connect(this.out.gain);
 
     var e = this.$el;
 
