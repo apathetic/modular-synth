@@ -1,5 +1,7 @@
 import Vue from 'vue';
+import store from './vuex/store';
 import App from './App';
+
 
 var context = window.AudioContext && (new window.AudioContext());
 // var masterOut = context.createGain();
@@ -17,6 +19,7 @@ Vue.mixin({
 
 /* eslint-disable no-new */
 new Vue({
+  store,
   el: 'main',
   components: { App }
 });
