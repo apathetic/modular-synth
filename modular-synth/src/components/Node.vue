@@ -32,11 +32,22 @@
 
 
 <script>
-import {draggable} from '../mixins';
+import { draggable } from '../mixins';
+import { increment } from '../vuex/actions';
+import { getModules } from '../vuex/getters';
+
 // import Connector from './system/Connector';
 
 export default {
   mixins: [draggable],
+  vuex: {
+    getters: {
+      modules: getModules
+    },
+    actions: {
+      increment: increment
+    }
+  },
 
   props: {
     idx: null

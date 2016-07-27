@@ -7,6 +7,8 @@
     :class="editing ? 'edit-mode': 'play-mode'"
     v-el:modules>
 
+    {{ modules|json }}
+
     <component v-for="module in modules"
       :is="module.type"
       :idx="module.idx"
@@ -54,12 +56,6 @@
 // https://github.com/idflood/Threenodes.js
 // https://github.com/gre/zound-live
 
-
-  // label: 'outputL',
-  // data: this.outputL,
-  // connections: []
-
-
 import Oscillator from './components/Oscillator';
 import Node from './components/Node';
 import Mixer from './components/Mixer';
@@ -67,9 +63,30 @@ import masterOut from './components/MasterOut';
 import connector from './components/system/Connector';
 import midi from './components/system/Midi.vue';
 
-var idx = 0;
+// import { getModules } from '../vuex/getters';
+import { newModule } from './vuex/actions';
+
+
+// var idx = 0;
 
 export default {
+  vuex: {
+    getters: {
+      modules: state => state.modules
+    },
+
+    actions: {
+      newModule: newModule,
+      plus: ({ dispatch }) => dispatch('INCREMENT')
+    }
+  },
+
+  // computed: {
+  //   modules() {
+  //     return store.state.modules
+  //   }
+  // },
+
   components: {
     masterOut,
     Oscillator,
@@ -83,7 +100,7 @@ export default {
     return {
       power: false,
       editing: true,
-      modules: [],
+      // modules: [],
       connectors: [],
       connections: []
     };
@@ -113,18 +130,18 @@ export default {
       }
     },
 
-    newModule(type) {
-      // [TODO] use v-ref instead of idX
-      // var N = Vue.extend({
-      //   // props: {'type': type, idx: idx++},
-      //   data: () => ({'type': type, 'idx': idx++})
-      // });
+    // newModule(type) {
+    //   // [TODO] use v-ref instead of idX
+    //   // var N = Vue.extend({
+    //   //   // props: {'type': type, idx: idx++},
+    //   //   data: () => ({'type': type, 'idx': idx++})
+    //   // });
 
-      this.modules.push({
-        type: type,
-        idx: idx++
-      });
-    },
+    //   this.modules.push({
+    //     type: type,
+    //     idx: idx++
+    //   });
+    // },
 
     //
     newConnector(from = {}, to = {}) {

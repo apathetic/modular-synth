@@ -5,6 +5,11 @@ Experiments in WebAudio
 
 TODO
 
+- VUEX
+  - store state of app
+  - persist to localstorage and recall
+
+
 - MIDI input
   - pitch
   - gate
