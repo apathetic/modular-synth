@@ -11,7 +11,7 @@
 
     <component v-for="module in modules"
       :is="module.type"
-      :idx="module.idx"
+      :id="module.id"
       track-by="$index">
     </component>
 
@@ -63,29 +63,17 @@ import masterOut from './components/MasterOut';
 import connector from './components/system/Connector';
 import midi from './components/system/Midi.vue';
 
-// import { getModules } from '../vuex/getters';
-import { newModule } from './vuex/actions';
-
-
-// var idx = 0;
+// import { newModule } from './vuex/actions';
+import * as actions from './vuex/actions';
 
 export default {
   vuex: {
     getters: {
-      modules: state => state.modules
+      modules: state => state.modules,
+      connections: state => state.connections
     },
-
-    actions: {
-      newModule: newModule,
-      plus: ({ dispatch }) => dispatch('INCREMENT')
-    }
+    actions: actions
   },
-
-  // computed: {
-  //   modules() {
-  //     return store.state.modules
-  //   }
-  // },
 
   components: {
     masterOut,
@@ -100,9 +88,9 @@ export default {
     return {
       power: false,
       editing: true,
+      connectors: []
       // modules: [],
-      connectors: [],
-      connections: []
+      // connections: []
     };
   },
 
@@ -130,20 +118,7 @@ export default {
       }
     },
 
-    // newModule(type) {
-    //   // [TODO] use v-ref instead of idX
-    //   // var N = Vue.extend({
-    //   //   // props: {'type': type, idx: idx++},
-    //   //   data: () => ({'type': type, 'idx': idx++})
-    //   // });
 
-    //   this.modules.push({
-    //     type: type,
-    //     idx: idx++
-    //   });
-    // },
-
-    //
     newConnector(from = {}, to = {}) {
       this.connectors.push({
         to: to,

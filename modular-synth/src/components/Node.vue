@@ -3,10 +3,11 @@
     class="module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
-    @mousedown="startDraggingNode">
+    @mousedown.prevent="startDraggingNode">
+    <!-- @mousedown.prevent="dragStart($event, this)"> -->
 
     <div class="module-interface">
-      <h3>Node - {{ idx }}</h3>
+      <h3>Node - {{ id }}</h3>
       <br />
       <br />
     </div>
@@ -19,6 +20,7 @@
         </span>
       </div>
 
+      <!-- @mousedown.stop="newConnection($event, this, outlet)" -->
       <div class="outlets">
         <span v-for="outlet in outlets"
           @mousedown.stop="createConnector($event, outlet)"
@@ -33,24 +35,23 @@
 
 <script>
 import { draggable } from '../mixins';
-import { increment } from '../vuex/actions';
-import { getModules } from '../vuex/getters';
-
+import { newConnection } from '../vuex/actions';
+// import { position } from '../vuex/getters';
 // import Connector from './system/Connector';
 
 export default {
   mixins: [draggable],
   vuex: {
-    getters: {
-      modules: getModules
-    },
+    // getters: {
+    //   position
+    // },
     actions: {
-      increment: increment
+      newConnection
     }
   },
 
   props: {
-    idx: null
+    id: null
   },
 
   data() {
@@ -87,7 +88,13 @@ export default {
   },
 
   computed: {
-    width: function() { return this.$el.offsetWidth; }
+    width: function() { return this.$el.offsetWidth; },
+    position: function() {
+      return {
+        left: this.x + 'px',
+        top: this.y + 'px'
+      };
+    }
   },
 
   ready() {
@@ -98,12 +105,17 @@ export default {
 
     var e = this.$el;
 
-    e.id = 'module-' + this.idx;
+    e.id = 'module-' + this.id;
     e.style.left = '200px';
     e.style.top = '200px';
   },
 
   methods: {
+    // test(e) {
+    //   dragStart(e);
+    //   // this.startDraggingNode(e);
+    // },
+
     createConnector(event, outlet) {
       // this.$dispatch('connector:new', {
       //   module: this,
