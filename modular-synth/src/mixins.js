@@ -13,64 +13,62 @@ var dragObj = {
  * data, and any/all connections to any inputs/outputs are also updated and redrawn.
  * @type {Object}
  */
+
+import { updatePosition } from './vuex/actions';
 export const draggable = {
+  vuex: {
+    actions: {
+      updatePosition
+    }
+  },
+
   data() {
     return {
       x: 0,
       y: 0,
-      position: {
-        top: 0,
-        left: 0
-      },
+      // position: {
+      //   top: 0,
+      //   left: 0
+      // },
       dragging: false
     };
   },
 
   methods: {
-
-    // BIND directly to on* methods? (ie. a la dragabilly):
-    // el.pointerDown
-    // el.pointerMove
-    // el.pointerUp
-
     startDraggingNode(event) {
-      var el = this.$el;  // event.target;
+      const node = this.$el;  // event.target;
 
       if (!event.target.classList.contains('module-interface')) {
         return;
       }
-
-      // this.startPoint = { x: 0, y: 0 };
-      // this.dragPoint = { x: 0, y: 0 };
 
       this.dragging = true;
 
       // Save starting positions of cursor and element.
       dragObj.cursorStartX = event.clientX; // + window.scrollX;
       dragObj.cursorStartY = event.clientY; // + window.scrollY;
-      dragObj.startX = el.offsetLeft || 0; // el.getBoundingClientRect().left; //
-      dragObj.startY = el.offsetTop || 0; // el.getBoundingClientRect().top;  //
+      dragObj.startX = this.x || node.offsetLeft;
+      dragObj.startY = this.y || node.offsetTop;
 
       // Update element's z-index.
-      el.style.zIndex = ++dragObj.zIndex;
+      node.style.zIndex = ++dragObj.zIndex;
 
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDraggingNode);
       document.addEventListener('mouseup', this.stopDraggingNode);
-
-      event.preventDefault();
     },
 
     whileDraggingNode(event) {
-      var cursorX = event.clientX; // + window.scrollX;
-      var cursorY = event.clientY; // + window.scrollY;
-      let x = dragObj.startX + cursorX - dragObj.cursorStartX;
-      let y = dragObj.startY + cursorY - dragObj.cursorStartY;
+      // var cursorX = event.clientX; // + window.scrollX;
+      // var cursorY = event.clientY; // + window.scrollY;
+      const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
+      const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
+
+      // console.log(this.id, this._uid);
+      this.updatePosition(this.id, x, y);
 
       this.x = x;
       this.y = y;
-      this.position.left = x + 'px';
-      this.position.top = y + 'px';
 
       // update any lines that point in here.
       this.updateConnections();
@@ -79,9 +77,14 @@ export const draggable = {
     stopDraggingNode(event) {
       document.removeEventListener('mousemove', this.whileDraggingNode);
       document.removeEventListener('mouseup', this.stopDraggingNode);
+      // updatePosition(this, x, y);
       this.updateConnections();
       this.dragging = false;
     },
+
+    //
+
+    //
 
     // update any connections.
     // TODO: the Connector contains a ref to both src and dest modules.
@@ -91,10 +94,6 @@ export const draggable = {
     // of a module's position updates?
     updateConnections() {
       let node = this;
-
-      console.log('update');
-      // console.log(this.connections);
-
 
       if (node.inlets) {
         node.inlets.forEach(function(inlet, i) {
@@ -275,4 +274,3 @@ export const connectable = {
 
   }
 };
-
