@@ -1,11 +1,3 @@
-export const increment = ({ dispatch }) => dispatch('INCREMENT');
-export const decrement = ({ dispatch }) => dispatch('DECREMENT');
-
-export const incrementIfOdd = ({ dispatch, state }) => {
-  if ((state.count + 1) % 2 === 0) {
-    dispatch('INCREMENT');
-  }
-};
 
 export const incrementAsync = ({ dispatch }) => {
   setTimeout(() => {
@@ -15,6 +7,10 @@ export const incrementAsync = ({ dispatch }) => {
 
 // //////////////////////////////////
 
+export const setActive = ({ dispatch }, id) => {
+  dispatch('SET_ACTIVE', id);
+};
+
 export const newModule = ({ dispatch }, type) => {
   dispatch('ADD_MODULE', type);
 };
@@ -23,58 +19,46 @@ export const removeModule = ({ dispatch }, id) => {
   dispatch('REMOVE_MODULE', id);
 };
 
-export const newConnection = ({ dispatch }, event, module, outlet) => {
-  // this.$dispatch('connector:new', {
-  //   module: this,
-  //   outlet: outlet,
-  //   el: event.target
-  // });
+export const updateConnection = ({ dispatch }, id, to) => {
+  dispatch('UPDATE_CONNECTION', id, to);
+};
 
-  // keep this "end" of the line's source of truth in this
-  // component. Then, this node can update itself and the
-  // data shared in the Connector *should* update as well.
+export const newConnection = ({ dispatch, state }, outlet) => {
+  const active = state.active;
+  const module = state.modules[active];
+  // console.log(module.id);   // ._uid?
+  // let id = module.id;
+
   const from = {
-    module: module,
-    label: outlet.label,
-    data: outlet.data,
-    port: event.target,
-    connections: outlet.connections
+    module: module,        // for line (x,y) positioning
+    // port: port, // event.target
+    port: outlet.port,
+    label: outlet.label,   // for reference
+    data: outlet.data     // for data flow
+    // connections: outlet.connections   // TODO remove this ...shouldn't be necessary
   };
 
-  console.log(from);
-  return;
-  /** /
+  const to = {    // Object.seal({
+    module: null,
+    port: null,
+    label: null,
+    data: null
+  };
 
-  const to = {}; // for now?
   dispatch('ADD_CONNECTION', to, from);
   /**/
+};
+
+
+export const removeConnection = ({ dispatch }, id) => {
+  console.log('removing connecteor', id);
+  dispatch('REMOVE_CONNECTION', id);
 };
 
 
 
 export const updatePosition = ({ dispatch }, id, x, y) => {
   dispatch('UPDATE_POSITION', id, x, y);
-
-  /* * /
-  if (module.inlets) {
-    module.inlets.forEach(function(inlet, i) {
-      inlet.connections.forEach(function(connector) {
-        connector.line.x2 = module.x - 3;
-        connector.line.y2 = module.y + (i * 20) + 17 + 80;  // if the inlets always maintain the same spacing...
-      });
-    });
-  }
-
-  if (module.outlets) {
-    module.outlets.forEach(function(outlet, i) {
-      outlet.connections.forEach(function(connector) {
-        dispatch('UPDATE_CONNECTION', connector, module);
-        // connector.line.x1 = module.x + module.width + 3;
-        // connector.line.y1 = module.y + (i * 20) + 17 + 80;
-      });
-    });
-  }
-  /* */
 
   // dispatch('UPDATE_CONNECTIONS', module);
 };

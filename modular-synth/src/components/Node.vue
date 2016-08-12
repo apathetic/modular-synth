@@ -3,9 +3,10 @@
     class="module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
+    @mouseover.stop="setActive(id)"
     @mousedown.prevent="startDraggingNode">
     <!-- @mousedown.prevent="dragStart($event, this)"> -->
-
+    {{ width }}
     <div class="module-interface">
       <h3>Node - {{ id }}</h3>
       <br />
@@ -21,9 +22,10 @@
       </div>
 
       <!-- @mousedown.stop="newConnection($event, this, outlet)" -->
+      <!-- @mousedown.stop="createConnector($event, outlet)" -->
       <div class="outlets">
         <span v-for="outlet in outlets"
-          @mousedown.stop="createConnector($event, outlet)"
+          @mousedown.stop="newConnection(outlet)"
           data-label="{{ outlet.label }}"
           class="outlet">
         </span>
@@ -35,7 +37,7 @@
 
 <script>
 import { draggable } from '../mixins';
-import { newConnection } from '../vuex/actions';
+import { setActive, newConnection } from '../vuex/actions';
 // import { position } from '../vuex/getters';
 // import Connector from './system/Connector';
 
@@ -46,6 +48,7 @@ export default {
     //   position
     // },
     actions: {
+      setActive,
       newConnection
     }
   },
@@ -60,7 +63,7 @@ export default {
       inlets: [
         {
           label: 'freq',
-          connections: []
+          connections: []   // TODO remove. use computed props
         }, {
           label: 'gain',
           to: this.input,
@@ -73,23 +76,25 @@ export default {
 
       outlets: [
         {
+          port: 0,
           label: 'outputL',
-          data: this.outputL,   // to: this.output?
-          connections: []
+          data: this.outputL   // to: this.output?
+          // connections: []
         }, {
+          port: 1,
           label: 'outputR',
-          data: this.outputR,
-          connections: []
+          data: this.outputR
+          // connections: []
         }
-      ],
-
-      width: 0
+      ]
     };
   },
 
   computed: {
-    width: function() { return this.$el.offsetWidth; },
-    position: function() {
+    // width() {
+    //   return this.$el.offsetWidth;
+    // },
+    position() {
       return {
         left: this.x + 'px',
         top: this.y + 'px'
@@ -98,16 +103,19 @@ export default {
   },
 
   ready() {
+    var module = this.$el;
+
+    this.width = '202px'; // module.$el.offsetWidth;
     // dummy outlet for test
     this.input = this.context.createGain();
     this.outputL = this.context.createGain();
     this.outputR = this.context.createGain();
 
-    var e = this.$el;
 
-    e.id = 'module-' + this.id;
-    e.style.left = '200px';
-    e.style.top = '200px';
+
+    module.id = 'module-' + this.id;
+    module.style.left = '200px';
+    module.style.top = '200px';
   },
 
   methods: {
@@ -117,12 +125,10 @@ export default {
     // },
 
     createConnector(event, outlet) {
-      // this.$dispatch('connector:new', {
-      //   module: this,
-      //   outlet: outlet,
-      //   el: event.target
-      // });
+      //
+      //
 
+      /* */
       // keep this "end" of the line's source of truth in this
       // component. Then, this node can update itself and the
       // data shared in the Connector *should* update as well.
@@ -135,6 +141,7 @@ export default {
       };
 
       this.$dispatch('connector:new', from);
+      /* */
     }
 
 
@@ -158,6 +165,7 @@ export default {
     display: inline-block;
     background: #eef;
     border: 1px solid #000;
+    z-index: 1;
 
     &:hover {
       background: #eff;

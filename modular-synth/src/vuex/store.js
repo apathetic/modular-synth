@@ -4,7 +4,8 @@ import plugins from './plugins';
 
 Vue.use(Vuex);
 
-let id = 0;
+let id = 0;   // module id
+let cid = 0;  // connector id
 
 export const STORAGE_KEY_MODULES = 'modules';
 export const STORAGE_KEY_CONNECTIONS = 'connections';
@@ -12,6 +13,7 @@ export const STORAGE_KEY_CONNECTIONS = 'connections';
 
 // Create an object to hold the initial state when the app starts up
 const state = {
+  active: 0,
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]')
 };
@@ -19,8 +21,10 @@ const state = {
 
 // Create an object storing various mutations. We will write the mutation
 const mutations = {
+  SET_ACTIVE(state, id) {
+    state.active = id;
+  },
   ADD_MODULE(state, type) {
-    // FYI vue wraps push, splice, pop, etc. to trigger vue's reactivity updates
     state.modules.push({
       id: id++,
       type: type,
@@ -37,6 +41,7 @@ const mutations = {
     // });
   },
   UPDATE_POSITION(state, id, x, y) {
+    // state.active = id;
     state.modules[id].x = x;
     state.modules[id].y = y;
     // Vue.set(state.modules[id], 'x', x);
@@ -44,12 +49,20 @@ const mutations = {
   },
   ADD_CONNECTION(state, to, from) {
     state.connections.push({
-      to: to,
-      from: from
+      id: cid++,
+      to,
+      from
     });
   },
-  REMOVE_CONNECTION(state, c) {
-    state.connections.splice(state.connections.indexOf(c), 1);
+  UPDATE_CONNECTION(state, id, to) {
+    let connection = state.connections.find((c) => { return c.id === id; });
+    connection.to = to;
+    // const connection = state.connections[id];
+    // state.connections.splice(state.connections.indexOf(id), 1);
+  },
+  REMOVE_CONNECTION(state, id) {
+    let connection = state.connections.find(c => { c.id === id; });
+    state.connections.splice(state.modules.indexOf(connection), 1);
   }
 };
 

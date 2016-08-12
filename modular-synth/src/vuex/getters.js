@@ -7,15 +7,16 @@ export function connections(state) {
 }
 
 export function position(state) {
-  const x = state.modules.???.x;
-  const y = state.modules.???.y;
+  const current = state.modules.filter(module => {
+    return module.id === state.current;
+  });
 
   return {
-    top: x + 'px',
-    left: y + 'px'
+    x: current.x,
+    y: current.y
   };
-
-  // return state.messages.filter(message => {
-  //   return message.threadID === state.currentThreadID
-  // })
+  // return {
+  //   top: x + 'px',
+  //   left: y + 'px'
+  // };
 }
