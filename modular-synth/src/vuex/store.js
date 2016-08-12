@@ -41,12 +41,13 @@ const mutations = {
     // });
   },
   UPDATE_POSITION(state, id, x, y) {
-    // state.active = id;
     state.modules[id].x = x;
     state.modules[id].y = y;
     // Vue.set(state.modules[id], 'x', x);
     // Vue.set(state.modules[id], 'y', y);
   },
+
+
   ADD_CONNECTION(state, to, from) {
     state.connections.push({
       id: cid++,
@@ -55,8 +56,14 @@ const mutations = {
     });
   },
   UPDATE_CONNECTION(state, id, to) {
+    let active = state.active;
     let connection = state.connections.find((c) => { return c.id === id; });
+
+    to.module = state.modules[active];
     connection.to = to;
+
+    console.log('updating cnx', connection, to);
+
     // const connection = state.connections[id];
     // state.connections.splice(state.connections.indexOf(id), 1);
   },
@@ -71,6 +78,6 @@ const mutations = {
 export default new Vuex.Store({
   state,
   mutations,
-  plugins,
-  strict: process.env.NODE_ENV !== 'production'
+  plugins
+  // strict: process.env.NODE_ENV !== 'production'
 });
