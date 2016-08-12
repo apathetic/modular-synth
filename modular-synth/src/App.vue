@@ -66,7 +66,6 @@ import masterOut from './components/MasterOut';
 import connector from './components/system/Connector';
 import midi from './components/system/Midi.vue';
 
-// import { newModule } from './vuex/actions';
 import * as actions from './vuex/actions';
 
 export default {
@@ -92,21 +91,13 @@ export default {
     return {
       power: false,
       editing: true
-      // connectors: []
-      // modules: [],
-      // connections: []
     };
   },
 
-  ready() {
-    // this.$on('connection:start', this.startDraggingConnector);
-    // this.$on('connection:update', this.updateConnections);
-    this.$on('connector:new', this.newConnector);
-    this.$on('connector:connect', this.connectModules);
-
-    // this.$on('connection:add', this.addConnector);
-    // this.$on('connection:remove', this.removeConnector);
-  },
+  // ready() {
+  //   this.$on('connector:new', this.newConnector);
+  //   this.$on('connector:connect', this.connectModules);
+  // },
 
   methods: {
     toggleEditMode() {
@@ -123,15 +114,15 @@ export default {
     },
 
 
-    newConnector(from, to = {}) {
-      const connector = {
-        to: to,
-        from: from
-      };
-
-      // from.connections.push(this);
-      this.connectors.push(connector);
-    },
+    // newConnector(from, to = {}) {
+    //   const connector = {
+    //     to: to,
+    //     from: from
+    //   };
+    //
+    //   // from.connections.push(this);
+    //   this.connectors.push(connector);
+    // },
 
     connectModules(connector) {
       let source = connector.from.data;
@@ -148,23 +139,23 @@ export default {
       if (source && destination) {
         source.connect(destination);
       }
-    },
-
-
-    removeConnector(line) {
-      let index = this.connections.indexOf(line);
-      this.connections.splice(index, 1);
-    },
-
-    deleteModule() {
-      var moduleElement = this.parentNode;
-
-      // First disconnect the audio
-      this.disconnectNode(moduleElement);
-
-      // Then delete the visual element
-      // module.$destroy(true);
     }
+
+
+    // removeConnector(line) {
+    //   let index = this.connections.indexOf(line);
+    //   this.connections.splice(index, 1);
+    // },
+
+    // deleteModule() {
+    //   var moduleElement = this.parentNode;
+    //
+    //   // First disconnect the audio
+    //   this.disconnectNode(moduleElement);
+    //
+    //   // Then delete the visual element
+    //   // module.$destroy(true);
+    // }
   }
 };
 
