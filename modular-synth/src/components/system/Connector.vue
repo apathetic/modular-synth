@@ -17,19 +17,34 @@ Other notes:
 
 <template>
   <line
-    @click="remove"
-    :x1="line.x1"
-    :y1="line.y1"
-    :x2="line.x2"
-    :y2="line.y2"
-    :stroke="line.stroke"
-    stroke-width="2">
+    @click="removeConnection"
+    @mouseover="highlight(1)"
+    :x1="x1"
+    :y1="y1"
+    :x2="x2"
+    :y2="y2"
+    :stroke="stroke"
+    stroke-width="4">
   </line>
 </template>
 
 <script>
+import { updateConnection, removeConnection } from '../../vuex/actions';
+
 export default {
+  vuex: {
+    getters: {
+      // position
+      active: (state) => state.modules[state.active]
+    },
+    actions: {
+      updateConnection,
+      removeConnection
+    }
+  },
+
   props: {
+    id: Number,
     to: Object,
     from: Object
   },
@@ -38,13 +53,19 @@ export default {
     return {
       uid: 1234,
 
-      line: {
-        stroke: 'black',
-        x1: '',
-        y1: '',
-        x2: '',
-        y2: ''
-      }
+      cursorX: false,
+      cursorY: false,
+      // drawing: false
+
+      stroke: 'black'
+
+      // line: {
+      //   stroke: 'black',
+      //   x1: '',
+      //   y1: '',
+      //   x2: '',
+      //   y2: ''
+      // }
     };
   },
 
@@ -55,21 +76,58 @@ export default {
   // port:
   // connections:
 
-  ready() {
-    let position = this.calculatePosition(this.from.port);
+  /**
+   * Draw a line when creating a new Connector.
+   * @return {void}
+   */
+  created() {
+    // let position = this.calculatePosition(this.from.module.$el);
 
-    this.line.x1 = position.x;
-    this.line.y1 = position.y;
-    this.line.x2 = position.x;
-    this.line.y2 = position.y;
+    // let position = this.calculatePosition(this.from.port);
+    // this.line.x1 = position.x;
+    // this.line.y1 = position.y;
+    // this.line.x2 = position.x;
+    // this.line.y2 = position.y;
 
     // store a reference to this Connector in the origin's connections []
-    this.from.connections.push(this);
+    // this.from.connections.push(this);
     // this.from.module.connections.push(this);
+
+    // this.x2 = this.x1;  // line ends at cursor, which is initially the same point
+    // this.y2 = this.y1;
+    // this.cursorX = this.from.x;  // line ends at cursor, which is initially the same point
+    // this.cursorY = this.from.y;
 
     // Capture mousemove and mouseup events on the page.
     document.addEventListener('mousemove', this.drag);
     document.addEventListener('mouseup', this.dragEnd);
+  },
+
+  computed: {
+    x1() {
+      // return this.from.module.x; // + offset/port #
+      const node = this.from.module;
+      const width = node.width || 200;    // node.width is not in state.modules
+      return node.x + width + 3;
+    },
+    y1() {
+      const i = this.from.port || 0;
+      return this.from.module.y + (i * 20) + 17 + 80;
+    },
+
+    x2() {
+      return 123;
+      // const width = 206; // ????
+      // return this.cursorX
+      //        ? this.cursorX
+      //        : this.to.module.x + width + 3;
+    },
+    y2() {
+      return 123;
+      // return this.cursorY
+      //        ? this.cursorY
+      //        : this.to.module.y + (this.to.port * 20) + 17 + 80;
+    }
   },
 
   methods: {
@@ -79,8 +137,8 @@ export default {
      * @return {Void}
      */
     drag(event) {
-      this.line.x2 = event.clientX;
-      this.line.y2 = event.clientY;
+      this._x2 = event.clientX;
+      this._y2 = event.clientY;
 
       event.preventDefault();
       event.stopPropagation();
@@ -88,51 +146,64 @@ export default {
 
     dragEnd(event) {
       console.log('dragend');
-      const App = this.$parent;      // required due to .... webpacking?
       const port = event.toElement || event.relatedTarget || event.target || false;
 
       // Stop capturing mousemove and mouseup events.
       document.removeEventListener('mousemove', this.drag);
       document.removeEventListener('mouseup', this.dragEnd);
+      this.cursorX = false;
+      this.cursorY = false;
+
 
       if (port && port.classList.contains('inlet')) {           // TODO better check for this?
-        let label = port.getAttribute('data-label');
-        let position = this.calculatePosition(port);
+        const label = port.getAttribute('data-label');
+
         // gah. modules are JS obj, *not* Vue components. ALso -- App.$children would
         // contain *all* vue components -- midi thing, svg lines, etc.
         // this.to.module = App.modules.find(function(module) {
-        let module = App.$children.find(function(m) { return m.$el.contains(port); });
-        let inlet = module.inlets.find(function(i) { return i.label === label; });
+        const App = this.$parent;      // required due to .... webpacking?
+        const Mod = App.$children.find(function(m) { return m.$el.contains(port); });
+        const inlet = Mod.inlets.find(function(i) { return i.label === label; });
 
-        if (inlet.connections.length) {
-          // do something
-        }
+        const module = this.active;
 
-        this.line.x2 = position.x;
-        this.line.y2 = position.y;
+        // if (inlet.connections.length) {
+        //   // do something
+        // }
 
-        this.to.label = label;
-        this.to.module = module;
-        this.to.data = inlet.data;
-        this.to.port = port;
-        this.to.connections = inlet.connections;
 
-        this.to.connections.push(this);
+        // const position = this.calculatePosition(port);
+        // this.x2 = position.x;
+        // this.y2 = position.y;
 
+        // this.computed.x2 = function() { return module.x + 200 + 3; }
+
+        const to = {
+          module: module,
+          // port: = inlet.port,
+          label: inlet.label
+          // data: inlet.data
+          // connections = inlet.connections;
+        };
+        this.updateConnection(this.id, to);
+
+
+        // this.to.connections.push(this);
         this.$dispatch('connector:connect', this);
       } else {
         // Otherwise, delete the line
-        this.remove();
+        // this.remove();
+        this.removeConnection(this._uid);
       }
     },
 
-    remove() {
-      // remove from src / dest node connections..???
-
-      // this.connections.splice(-1);
-      this.$dispatch('connector:remove', this);
-      this.$destroy(true);  // true is to remove the DOM (ie SVG line) element as well
-    },
+    // remove() {
+    //   // remove from src / dest node connections..???
+    //
+    //   // this.connections.splice(-1);
+    //   this.$dispatch('connector:remove', this);
+    //   this.$destroy(true);  // true is to remove the DOM (ie SVG line) element as well
+    // },
 
     calculatePosition(el) {
       let BCR = el.getBoundingClientRect();
@@ -148,10 +219,9 @@ export default {
       };
     },
 
-    highlight() {
-      this.stroke = '#8888ff';
+    highlight(active) {
+      this.stroke = active ? '#8888ff' : this.stroke;
     }
   }
 };
 </script>
-

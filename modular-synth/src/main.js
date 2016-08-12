@@ -10,11 +10,14 @@ var context = window.AudioContext && (new window.AudioContext());
 // All Components will have access to AudioContext
 // oh.. although *now*, that includes Connectors
 Vue.mixin({
-  data: function() {
+  data() {
     return {
       context: context
     };
   }
+  // ready() {
+  //   this.$on... dispatch(setACTIVE)
+  // }
 });
 
 /* eslint-disable no-new */
