@@ -7,7 +7,9 @@
     :class="editing ? 'edit-mode': 'play-mode'"
     v-el:modules>
 
-    {{ modules|json }}
+    active: {{ active|json }}<br><br>
+    modules: {{ modules|json }}<br><br>
+    conec: {{ connectors|json }}
 
     <component v-for="module in modules"
       :is="module.type"
@@ -19,6 +21,7 @@
 
   <svg id="connections">
     <connector v-for="connector in connectors"
+      :id="connector.id"
       :to="connector.to"
       :from="connector.from">
     </connector>
@@ -69,8 +72,9 @@ import * as actions from './vuex/actions';
 export default {
   vuex: {
     getters: {
+      active: state => state.active,
       modules: state => state.modules,
-      connections: state => state.connections
+      connectors: state => state.connections
     },
     actions: actions
   },
@@ -87,8 +91,8 @@ export default {
   data() {
     return {
       power: false,
-      editing: true,
-      connectors: []
+      editing: true
+      // connectors: []
       // modules: [],
       // connections: []
     };
@@ -119,22 +123,25 @@ export default {
     },
 
 
-    newConnector(from = {}, to = {}) {
-      this.connectors.push({
+    newConnector(from, to = {}) {
+      const connector = {
         to: to,
         from: from
-      });
+      };
+
+      // from.connections.push(this);
+      this.connectors.push(connector);
     },
 
     connectModules(connector) {
       let source = connector.from.data;
       let destination = connector.to.data;
 
-      console.log('connecting %s from %s --> %s in %s',
+      console.log('connecting %s from node %s --> %s in node %s',
         connector.from.label,
-        connector.from.module.name,
-        connector.to.label,
-        connector.to.module.name
+        connector.from.module.id
+        // connector.to.label,
+        // connector.to.module.id
       );
 
       // TODO: assumes just audio for now. FInd a way to route control data

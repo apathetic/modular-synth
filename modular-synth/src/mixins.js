@@ -71,14 +71,14 @@ export const draggable = {
       this.y = y;
 
       // update any lines that point in here.
-      this.updateConnections();
+      // this.updateConnections();
     },
 
     stopDraggingNode(event) {
       document.removeEventListener('mousemove', this.whileDraggingNode);
       document.removeEventListener('mouseup', this.stopDraggingNode);
       // updatePosition(this, x, y);
-      this.updateConnections();
+      // this.updateConnections();
       this.dragging = false;
     },
 
@@ -107,8 +107,8 @@ export const draggable = {
       if (node.outlets) {
         node.outlets.forEach(function(outlet, i) {
           outlet.connections.forEach(function(connector) {
-            connector.line.x1 = node.x + node.width + 3;
-            connector.line.y1 = node.y + (i * 20) + 17 + 80;
+            // connector.line.x1 = node.x + node.width + 3;
+            // connector.line.y1 = node.y + (i * 20) + 17 + 80;
           });
         });
       }
