@@ -1,5 +1,6 @@
 <template>
   <div
+    data-id="{{ id }}"
     class="module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
@@ -17,16 +18,17 @@
       <div class="inlets">
         <span v-for="inlet in inlets"
           data-label="{{ inlet.label }}"
+          data-port="{{ $index }}"
           class="inlet">
         </span>
       </div>
 
-      <!-- @mousedown.stop="newConnection($event, this, outlet)" -->
       <!-- @mousedown.stop="createConnector($event, outlet)" -->
       <div class="outlets">
         <span v-for="outlet in outlets"
           @mousedown.stop="newConnection(outlet)"
           data-label="{{ outlet.label }}"
+          data-port="{{ outlet.port }}"
           class="outlet">
         </span>
       </div>
@@ -38,15 +40,10 @@
 <script>
 import { draggable } from '../mixins';
 import { setActive, newConnection } from '../vuex/actions';
-// import { position } from '../vuex/getters';
-// import Connector from './system/Connector';
 
 export default {
   mixins: [draggable],
   vuex: {
-    // getters: {
-    //   position
-    // },
     actions: {
       setActive,
       newConnection
@@ -60,6 +57,7 @@ export default {
   data() {
     return {
       name: 'Node',
+
       inlets: [
         {
           label: 'freq',
@@ -91,9 +89,6 @@ export default {
   },
 
   computed: {
-    // width() {
-    //   return this.$el.offsetWidth;
-    // },
     position() {
       return {
         left: this.x + 'px',
@@ -106,6 +101,7 @@ export default {
     var module = this.$el;
 
     this.width = '202px'; // module.$el.offsetWidth;
+
     // dummy outlet for test
     this.input = this.context.createGain();
     this.outputL = this.context.createGain();
@@ -123,26 +119,26 @@ export default {
     //   dragStart(e);
     //   // this.startDraggingNode(e);
     // },
-
-    createConnector(event, outlet) {
-      //
-      //
-
-      /* */
-      // keep this "end" of the line's source of truth in this
-      // component. Then, this node can update itself and the
-      // data shared in the Connector *should* update as well.
-      let from = {
-        module: this,
-        label: outlet.label,
-        data: outlet.data,
-        port: event.target,
-        connections: outlet.connections
-      };
-
-      this.$dispatch('connector:new', from);
-      /* */
-    }
+    //
+    // createConnector(event, outlet) {
+    //   //
+    //   //
+    //
+    //   /* */
+    //   // keep this "end" of the line's source of truth in this
+    //   // component. Then, this node can update itself and the
+    //   // data shared in the Connector *should* update as well.
+    //   let from = {
+    //     module: this,
+    //     label: outlet.label,
+    //     data: outlet.data,
+    //     port: event.target,
+    //     connections: outlet.connections
+    //   };
+    //
+    //   this.$dispatch('connector:new', from);
+    //   /* */
+    // }
 
 
     // startDraggingConnector(event, outlet) {

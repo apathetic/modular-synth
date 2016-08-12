@@ -1,5 +1,5 @@
 
-var dragObj = {
+let dragObj = {
   zIndex: 0,
   cursorStartX: null,
   cursorStartY: null,
@@ -13,8 +13,8 @@ var dragObj = {
  * data, and any/all connections to any inputs/outputs are also updated and redrawn.
  * @type {Object}
  */
-
 import { updatePosition } from './vuex/actions';
+
 export const draggable = {
   vuex: {
     actions: {
@@ -26,10 +26,6 @@ export const draggable = {
     return {
       x: 0,
       y: 0,
-      // position: {
-      //   top: 0,
-      //   left: 0
-      // },
       dragging: false
     };
   },
@@ -64,7 +60,6 @@ export const draggable = {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
-      // console.log(this.id, this._uid);
       this.updatePosition(this.id, x, y);
 
       this.x = x;
@@ -80,7 +75,9 @@ export const draggable = {
       // updatePosition(this, x, y);
       // this.updateConnections();
       this.dragging = false;
-    },
+    }
+  }
+};
 
     //
 
@@ -92,37 +89,35 @@ export const draggable = {
     // each of those modules, is it not better to allow the Connector
     // to update itself?  However, how to broadcast / notify Connector
     // of a module's position updates?
-    updateConnections() {
-      let node = this;
+    // updateConnections() {
+    //   let node = this;
+    //
+    //   if (node.inlets) {
+    //     node.inlets.forEach(function(inlet, i) {
+    //       inlet.connections.forEach(function(connector) {
+    //         connector.line.x2 = node.x - 3;
+    //         connector.line.y2 = node.y + (i * 20) + 17 + 80;  // if the inlets always maintain the same spacing...
+    //       });
+    //     });
+    //   }
+    //
+    //   if (node.outlets) {
+    //     node.outlets.forEach(function(outlet, i) {
+    //       outlet.connections.forEach(function(connector) {
+    //         // connector.line.x1 = node.x + node.width + 3;
+    //         // connector.line.y1 = node.y + (i * 20) + 17 + 80;
+    //       });
+    //     });
+    //   }
+    //
+    //
+    //   // this.connections.forEach(function(connector) {
+    //   //   let BCR = connector.from.port.getBoundingClientRect();
+    //   //   connector.line.x1 = BCR.left + 3;   // 3 is half the port width, of 5
+    //   //   connector.line.y1 = BCR.top.y + 7;  // 7 is half the port height, of 14
+    //   // });
+    // }
 
-      if (node.inlets) {
-        node.inlets.forEach(function(inlet, i) {
-          inlet.connections.forEach(function(connector) {
-            connector.line.x2 = node.x - 3;
-            connector.line.y2 = node.y + (i * 20) + 17 + 80;  // if the inlets always maintain the same spacing...
-          });
-        });
-      }
-
-      if (node.outlets) {
-        node.outlets.forEach(function(outlet, i) {
-          outlet.connections.forEach(function(connector) {
-            // connector.line.x1 = node.x + node.width + 3;
-            // connector.line.y1 = node.y + (i * 20) + 17 + 80;
-          });
-        });
-      }
-
-
-      // this.connections.forEach(function(connector) {
-      //   let BCR = connector.from.port.getBoundingClientRect();
-      //   connector.line.x1 = BCR.left + 3;   // 3 is half the port width, of 5
-      //   connector.line.y1 = BCR.top.y + 7;  // 7 is half the port height, of 14
-      // });
-    }
-
-  }
-};
 
 //
 // //
@@ -198,50 +193,7 @@ export const connectable = {
       }
     },
 
-
-    //
-
-    // updateConnections(node) {
-    //   node.inlets.forEach(function(inlet) {
-    //     inlet.connections.forEach(function(line) {
-    //       line.x2 = inlet.x;
-    //       line.y2 = inlet.y;
-    //     });
-    //   });
-
-    //   node.outlets.forEach(function(outlet) {
-    //     //   input.line.x1 = input.x;
-    //     //   input.line.y1 = input.y;
-    //     if (outlet.connections.length) {
-    //       // console.log(outlet.connections);
-    //     }
-    //   });
-    // },
-
-    //
-
     deleteConnection() {
-      // from 3nodes:
-      /*    # Unregister the connection from the fields
-          @from_field.unregisterConnection(this)
-          @to_field.unregisterConnection(this)
-          @to_field.removeConnections()
-
-          # Set the "to" node dirty so it is reprocessed next time
-          @to_field.node.dirty = true
-          @to_field.changed = true
-
-          # Delete variable reference for garbage collection
-          delete @from_field
-          delete @to_field
-
-          # Trigger the removed event and call destroy()
-          @trigger "connection:removed", this
-          @destroy()
-
-      */
-
-
       var connections = this.destination.inputConnections;
 
       var index = connections.indexOf(this.inputConnection);

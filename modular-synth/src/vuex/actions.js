@@ -31,11 +31,9 @@ export const newConnection = ({ dispatch, state }, outlet) => {
 
   const from = {
     module: module,        // for line (x,y) positioning
-    // port: port, // event.target
-    port: outlet.port,
+    port: outlet.port,     // to calculate where the line will connect
     label: outlet.label,   // for reference
-    data: outlet.data     // for data flow
-    // connections: outlet.connections   // TODO remove this ...shouldn't be necessary
+    data: outlet.data      // for data flow
   };
 
   const to = {    // Object.seal({
@@ -49,16 +47,13 @@ export const newConnection = ({ dispatch, state }, outlet) => {
   /**/
 };
 
-
 export const removeConnection = ({ dispatch }, id) => {
   console.log('removing connecteor', id);
   dispatch('REMOVE_CONNECTION', id);
 };
 
 
-
+/* NOTE: id *may* be optional here, as we know the active module at all times */
 export const updatePosition = ({ dispatch }, id, x, y) => {
   dispatch('UPDATE_POSITION', id, x, y);
-
-  // dispatch('UPDATE_CONNECTIONS', module);
 };
