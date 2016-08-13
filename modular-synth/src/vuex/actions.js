@@ -31,6 +31,8 @@ export const newConnection = ({ dispatch, state }, outlet) => {
 
   const from = {
     module: module,        // for line (x,y) positioning
+    // x: module.x,
+    // y: module.y,
     port: outlet.port,     // to calculate where the line will connect
     label: outlet.label,   // for reference
     data: outlet.data      // for data flow

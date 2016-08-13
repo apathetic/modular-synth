@@ -14,6 +14,8 @@
     <component v-for="module in modules"
       :is="module.type"
       :id="module.id"
+      :x="module.x"
+      :y="module.y"
       track-by="$index">
     </component>
 
@@ -94,11 +96,6 @@ export default {
     };
   },
 
-  // ready() {
-  //   this.$on('connector:new', this.newConnector);
-  //   this.$on('connector:connect', this.connectModules);
-  // },
-
   methods: {
     toggleEditMode() {
       this.editing = !this.editing;
@@ -112,17 +109,6 @@ export default {
         this.$broadcast('stop');
       }
     },
-
-
-    // newConnector(from, to = {}) {
-    //   const connector = {
-    //     to: to,
-    //     from: from
-    //   };
-    //
-    //   // from.connections.push(this);
-    //   this.connectors.push(connector);
-    // },
 
     connectModules(connector) {
       let source = connector.from.data;
@@ -141,11 +127,6 @@ export default {
       }
     }
 
-
-    // removeConnector(line) {
-    //   let index = this.connections.indexOf(line);
-    //   this.connections.splice(index, 1);
-    // },
 
     // deleteModule() {
     //   var moduleElement = this.parentNode;

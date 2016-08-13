@@ -56,21 +56,28 @@ const mutations = {
     });
   },
   UPDATE_CONNECTION(state, id, to) {
-    let active = state.active;
-    let connection = state.connections.find((c) => { return c.id === id; });
+    const active = state.active;
+    const connection = state.connections.find((c) => { return c.id === id; });
 
     to.module = state.modules[active];
     connection.to = to;
 
-    console.log('updating cnx', connection, to);
+    const source = connection.from.data;
+    const destination = connection.to.data;
 
-    // const connection = state.connections[id];
-    // state.connections.splice(state.connections.indexOf(id), 1);
+    console.log(source, destination);
+
+    if (source && destination) {
+      console.log('connecting %s --> %s', connection.from.label, connection.to.label);
+      source.connect(destination);
+    }
   },
   REMOVE_CONNECTION(state, id) {
     let connection = state.connections.find(c => { c.id === id; });
     state.connections.splice(state.modules.indexOf(connection), 1);
-  }
+  },
+
+  ROUTE_AUDIO(state, source, destination) {}
 };
 
 
@@ -78,6 +85,6 @@ const mutations = {
 export default new Vuex.Store({
   state,
   mutations,
-  plugins
-  // strict: process.env.NODE_ENV !== 'production'
+  plugins,
+  strict: process.env.NODE_ENV !== 'production'
 });
