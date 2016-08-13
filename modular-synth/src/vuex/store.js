@@ -4,7 +4,7 @@ import plugins from './plugins';
 
 Vue.use(Vuex);
 
-let id = 0;   // module id
+let id = 1;   // module id. Start at 1, as master-out is 0.
 let cid = 0;  // connector id
 
 export const STORAGE_KEY_MODULES = 'modules';
