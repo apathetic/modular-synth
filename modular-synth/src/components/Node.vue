@@ -60,15 +60,15 @@ export default {
 
       inlets: [
         {
-          label: 'freq',
-          connections: []   // TODO remove. use computed props
+          port: 0,
+          label: 'freq'
         }, {
+          port: 1,
           label: 'gain',
-          to: this.input,
-          connections: []
+          data: this.input
         }, {
-          label: 'range',
-          connections: []
+          port: 2,
+          label: 'range'
         }
       ],
 
@@ -76,7 +76,8 @@ export default {
         {
           port: 0,
           label: 'outputL',
-          data: this.outputL   // to: this.output?
+          data: this.outputL,   // to: this.output?
+          src: this.outputL   // to: this.output?
           // connections: []
         }, {
           port: 1,
@@ -98,57 +99,16 @@ export default {
   },
 
   ready() {
-    var module = this.$el;
-
     this.width = '202px'; // module.$el.offsetWidth;
 
     // dummy outlet for test
     this.input = this.context.createGain();
     this.outputL = this.context.createGain();
     this.outputR = this.context.createGain();
-
-
-
-    module.id = 'module-' + this.id;
-    module.style.left = '200px';
-    module.style.top = '200px';
   },
 
   methods: {
-    // test(e) {
-    //   dragStart(e);
-    //   // this.startDraggingNode(e);
-    // },
     //
-    // createConnector(event, outlet) {
-    //   //
-    //   //
-    //
-    //   /* */
-    //   // keep this "end" of the line's source of truth in this
-    //   // component. Then, this node can update itself and the
-    //   // data shared in the Connector *should* update as well.
-    //   let from = {
-    //     module: this,
-    //     label: outlet.label,
-    //     data: outlet.data,
-    //     port: event.target,
-    //     connections: outlet.connections
-    //   };
-    //
-    //   this.$dispatch('connector:new', from);
-    //   /* */
-    // }
-
-
-    // startDraggingConnector(event, outlet) {
-    //   this.$dispatch('connection:start', {
-    //     port: event.target,
-    //     /// output: this.output,
-    //     outlet: outlet,
-    //     node: this
-    //   });
-    // }
   }
 };
 

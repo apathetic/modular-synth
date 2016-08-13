@@ -22,10 +22,13 @@ export const draggable = {
     }
   },
 
+  props: {
+    x: 0,
+    y: 0
+  },
+
   data() {
     return {
-      x: 0,
-      y: 0,
       dragging: false
     };
   },
