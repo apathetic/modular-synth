@@ -4,7 +4,7 @@
     class="module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
-    @mouseover.stop="setActive(id)"
+    @mouseover.stop="setActiveModule(id)"
     @mousedown.prevent="startDraggingNode">
     <!-- @mousedown.prevent="dragStart($event, this)"> -->
     {{ width }}
@@ -14,6 +14,7 @@
       <br />
     </div>
 
+    <!-- @mouseup.stop="updateConnection_(inlet)" -->
     <div class="module-connections">
       <div class="inlets">
         <span v-for="inlet in inlets"
@@ -39,14 +40,16 @@
 
 <script>
 import { draggable } from '../mixins';
-import { setActive, newConnection } from '../vuex/actions';
+import { setActiveModule, newConnection, updateConnection_ } from '../vuex/actions';
 
 export default {
   mixins: [draggable],
+
   vuex: {
     actions: {
-      setActive,
-      newConnection
+      setActiveModule,
+      newConnection,
+      updateConnection_
     }
   },
 
@@ -61,14 +64,16 @@ export default {
       inlets: [
         {
           port: 0,
-          label: 'freq'
+          label: 'freq',
+          data: this.input
         }, {
           port: 1,
           label: 'gain',
-          data: this.input
+          data: null // this.input
         }, {
           port: 2,
-          label: 'range'
+          label: 'range',
+          data: null // this.input
         }
       ],
 
@@ -76,14 +81,11 @@ export default {
         {
           port: 0,
           label: 'outputL',
-          data: this.outputL,   // to: this.output?
-          src: this.outputL   // to: this.output?
-          // connections: []
+          data: null // this.outputL   // src?
         }, {
           port: 1,
           label: 'outputR',
-          data: this.outputR
-          // connections: []
+          data: null // this.outputR
         }
       ]
     };
@@ -98,13 +100,18 @@ export default {
     }
   },
 
-  ready() {
-    this.width = '202px'; // module.$el.offsetWidth;
+  created() {
+    // this.width = '202px'; // module.$el.offsetWidth;
 
     // dummy outlet for test
-    this.input = this.context.createGain();
-    this.outputL = this.context.createGain();
-    this.outputR = this.context.createGain();
+    // this.input = this.context.createGain();
+    // this.outputL = this.context.createGain();
+    // this.outputR = this.context.createGain();
+
+    this.inlets[0].data = this.context.createGain();
+
+    this.outlets[0].data = this.context.createGain();
+    this.outlets[1].data = this.context.createGain();
   },
 
   methods: {

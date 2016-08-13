@@ -7,7 +7,8 @@
     :class="editing ? 'edit-mode': 'play-mode'"
     v-el:modules>
 
-    active: {{ active|json }}<br><br>
+    module: {{ module|json }}<br><br>
+    connection: {{ connection|json }}<br><br>
     modules: {{ modules|json }}<br><br>
     conec: {{ connectors|json }}
 
@@ -73,7 +74,8 @@ import * as actions from './vuex/actions';
 export default {
   vuex: {
     getters: {
-      active: state => state.active,
+      module: state => state.activeModule,
+      connection: state => state.activeConnection,
       modules: state => state.modules,
       connectors: state => state.connections
     },
