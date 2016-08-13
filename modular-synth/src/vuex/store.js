@@ -13,7 +13,8 @@ export const STORAGE_KEY_CONNECTIONS = 'connections';
 
 // Create an object to hold the initial state when the app starts up
 const state = {
-  active: 0,
+  activeModule: 0,
+  activeConnection: 0,
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]')
 };
@@ -22,7 +23,7 @@ const state = {
 // Create an object storing various mutations. We will write the mutation
 const mutations = {
   SET_ACTIVE(state, id) {
-    state.active = id;
+    state.activeModule = id;
   },
   ADD_MODULE(state, type) {
     state.modules.push({
@@ -48,6 +49,9 @@ const mutations = {
   },
 
 
+  SET_ACTIVE_CONNECTION(state, id) {
+    state.activeConnection = id;
+  },
   ADD_CONNECTION(state, to, from) {
     state.connections.push({
       id: cid++,
@@ -56,7 +60,7 @@ const mutations = {
     });
   },
   UPDATE_CONNECTION(state, id, to) {
-    const active = state.active;
+    const active = state.activeModule;
     const connection = state.connections.find((c) => { return c.id === id; });
 
     to.module = state.modules[active];
@@ -72,8 +76,9 @@ const mutations = {
       source.connect(destination);
     }
   },
-  REMOVE_CONNECTION(state, id) {
-    let connection = state.connections.find(c => { c.id === id; });
+  REMOVE_CONNECTION(state) {
+    let active = state.activeConnection;
+    let connection = state.connections.find(c => { c.id === active; });
     state.connections.splice(state.modules.indexOf(connection), 1);
   },
 

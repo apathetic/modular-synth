@@ -1,14 +1,12 @@
-
-export const incrementAsync = ({ dispatch }) => {
-  setTimeout(() => {
-    dispatch('INCREMENT');
-  }, 1000);
+export const setActiveModule = ({ dispatch, state }, id) => {
+  if (state.activeModule !== id) {
+    dispatch('SET_ACTIVE', id);
+  }
 };
-
-// //////////////////////////////////
-
-export const setActive = ({ dispatch }, id) => {
-  dispatch('SET_ACTIVE', id);
+export const setActiveConnection = ({ dispatch, state }, id) => {
+  if (state.activeConnection !== id) {
+    dispatch('SET_ACTIVE_CONNECTION', id);
+  }
 };
 
 export const newModule = ({ dispatch }, type) => {
@@ -19,12 +17,20 @@ export const removeModule = ({ dispatch }, id) => {
   dispatch('REMOVE_MODULE', id);
 };
 
+
 export const updateConnection = ({ dispatch }, id, to) => {
   dispatch('UPDATE_CONNECTION', id, to);
 };
 
+
+export const updateConnection_ = ({ dispatch }, inlet) => {
+  // use   state.activeConnection
+  console.log(inlet);
+};
+
+
 export const newConnection = ({ dispatch, state }, outlet) => {
-  const active = state.active;
+  const active = state.activeModule;
   const module = state.modules[active];
   // console.log(module.id);   // ._uid?
   // let id = module.id;
@@ -49,9 +55,8 @@ export const newConnection = ({ dispatch, state }, outlet) => {
   /**/
 };
 
-export const removeConnection = ({ dispatch }, id) => {
-  console.log('removing connecteor', id);
-  dispatch('REMOVE_CONNECTION', id);
+export const removeConnection = ({ dispatch }) => {
+  dispatch('REMOVE_CONNECTION');
 };
 
 
