@@ -1,11 +1,10 @@
+//------------------------------------------------
+//  Modules
+// -----------------------------------------------
+
 export const setActiveModule = ({ dispatch, state }, id) => {
   if (state.activeModule !== id) {
     dispatch('SET_ACTIVE', id);
-  }
-};
-export const setActiveConnection = ({ dispatch, state }, id) => {
-  if (state.activeConnection !== id) {
-    dispatch('SET_ACTIVE_CONNECTION', id);
   }
 };
 
@@ -18,7 +17,19 @@ export const removeModule = ({ dispatch }, id) => {
 };
 
 
+//------------------------------------------------
+//  Connections
+// -----------------------------------------------
+
+export const setActiveConnection = ({ dispatch, state }, id) => {
+  if (state.activeConnection !== id) {
+    dispatch('SET_ACTIVE_CONNECTION', id);
+  }
+};
+
 export const updateConnection = ({ dispatch }, id, to) => {
+  debugger;
+
   dispatch('UPDATE_CONNECTION', id, to);
 };
 
