@@ -21,7 +21,7 @@ body {
 
 header {
   position: absolute;
-  height: 80px;
+  height: 80px;    // NOTE THE JS RELIES ON THIS TODO
   width: 100%;
   background-color: #333;
 }
@@ -37,7 +37,7 @@ main {
   display: flex;
   height: 100%;
   width: 100%;
-  padding-top: 80px;
+  padding-top: 80px;    // NOTE THE JS RELIES ON THIS TODO
   flex-direction: row;
 }
 

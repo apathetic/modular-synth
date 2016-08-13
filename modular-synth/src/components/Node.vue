@@ -1,6 +1,5 @@
 <template>
   <div
-    data-id="{{ id }}"
     class="module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
@@ -91,14 +90,14 @@ export default {
     };
   },
 
-  computed: {
-    position() {
-      return {
-        left: this.x + 'px',
-        top: this.y + 'px'
-      };
-    }
-  },
+  // computed: {
+  //   position() {
+  //     return {
+  //       left: this.x + 'px',
+  //       top: this.y + 'px'
+  //     };
+  //   }
+  // },
 
   created() {
     // this.width = '202px'; // module.$el.offsetWidth;
