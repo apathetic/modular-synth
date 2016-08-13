@@ -35,7 +35,8 @@ export default {
   data() {
     return {
       name: 'Master Out',
-      x: 0,    // for connections
+      id: 0,    // only one of these
+      x: 0,     // for connections
       y: 0,
       inlets: [
         {

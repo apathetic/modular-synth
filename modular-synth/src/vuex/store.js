@@ -30,29 +30,62 @@ const mutations = {
       id: id++,
       type: type,
       x: 0,
-      y: 0,
-      dragging: false
+      y: 0
     });
+
+    // id++;
+    // state.modules[id] = {
+    //   id: id,
+    //   type: type,
+    //   x: 0,
+    //   y: 0
+    //   // dragging: false
+    // };
   },
   REMOVE_MODULE(state, id) {
-    state.modules.splice(state.modules.indexOf(id), 1);
+    state.modules = state.modules.filter((module) => {
+      module.id !== id;
+    });
 
-    // return state.modules.filter((module) => {
-    //   module.id !== id;
-    // });
+    // state.modules.splice(state.modules.indexOf(id), 1);
   },
   UPDATE_POSITION(state, id, x, y) {
-    state.modules[id].x = x;
-    state.modules[id].y = y;
+    // state.modules[id].x = x;
+    // state.modules[id].y = y;
     // Vue.set(state.modules[id], 'x', x);
     // Vue.set(state.modules[id], 'y', y);
+
+    let active = state.activeModule;
+    let module = state.modules.find((m) => { m.id === active; });
+
+    module = state.modules.find(function(module) { return module.id === active; });
+    module.x = x;
+    module.y = y;
   },
 
 
   SET_ACTIVE_CONNECTION(state, id) {
     state.activeConnection = id;
   },
-  ADD_CONNECTION(state, to, from) {
+  ADD_CONNECTION(state, outlet) {
+    // const module = state.modules.find((m) => { m.id === state.activeModule; });
+    const module = state.modules.find(function(m) { return m.id === state.activeModule; });
+    const from = {
+      module: module,        // for line (x,y) positioning
+      // x: module.x,
+      // y: module.y,
+      port: outlet.port,     // to calculate where the line will connect
+      label: outlet.label,   // for reference
+      data: outlet.data      // for data flow
+    };
+
+    const to = {    // Object.seal({
+      module: null,
+      port: null,
+      label: null,
+      data: null
+    };
+
     state.connections.push({
       id: cid++,
       to,
@@ -60,10 +93,12 @@ const mutations = {
     });
   },
   UPDATE_CONNECTION(state, id, to) {
-    const active = state.activeModule;
-    const connection = state.connections.find((c) => { return c.id === id; });
+    // const connection = state.connections.find((c) => { c.id === id; });
+    // const module = state.modules.find((m) => { m.id === state.activeModule; });
+    const connection = state.connections.find(function(c) { return c.id === id; });
+    const module = state.modules.find(function(m) { return m.id === state.activeModule; });
 
-    to.module = state.modules[active];
+    to.module = module;
     connection.to = to;
 
     const source = connection.from.data;

@@ -47,7 +47,6 @@
       <button @click="newModule('Node')">add Node</button>
       <button @click="newModule('Oscillator')">add osc</button>
       <button @click="newModule('Mixer')">mixer</button>
-      <button @click="newModule('masterOut')">add masterout</button>
 
       <button>  ► </button>
       <button
