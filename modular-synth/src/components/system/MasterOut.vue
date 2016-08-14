@@ -1,5 +1,10 @@
 <template>
-  <div class="module" id="master-out">
+  <div
+    class="module"
+    id="master-out"
+    @mouseover.stop="setActiveModule(id)"
+  >
+
     <div class="module-interface">
       <Level></Level>
       x{{x}}<br>
@@ -19,7 +24,7 @@
 
 <script>
 // import { draggable } from '../mixins';
-import { newConnection, updateConnection_ } from '../../vuex/actions';
+import { setActiveModule, newConnection, updateConnection_ } from '../../vuex/actions';
 import Level from '../UI/Level';
 
 export default {
@@ -27,6 +32,7 @@ export default {
 
   vuex: {
     actions: {
+      setActiveModule,
       newConnection,
       updateConnection_
     }

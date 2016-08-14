@@ -91,44 +91,6 @@ export const draggable = {
   }
 };
 
-    //
-
-    //
-
-    // update any connections.
-    // TODO: the Connector contains a ref to both src and dest modules.
-    // Rather than store (duplicate) references to the Connector within
-    // each of those modules, is it not better to allow the Connector
-    // to update itself?  However, how to broadcast / notify Connector
-    // of a module's position updates?
-    // updateConnections() {
-    //   let node = this;
-    //
-    //   if (node.inlets) {
-    //     node.inlets.forEach(function(inlet, i) {
-    //       inlet.connections.forEach(function(connector) {
-    //         connector.line.x2 = node.x - 3;
-    //         connector.line.y2 = node.y + (i * 20) + 17 + 80;  // if the inlets always maintain the same spacing...
-    //       });
-    //     });
-    //   }
-    //
-    //   if (node.outlets) {
-    //     node.outlets.forEach(function(outlet, i) {
-    //       outlet.connections.forEach(function(connector) {
-    //         // connector.line.x1 = node.x + node.width + 3;
-    //         // connector.line.y1 = node.y + (i * 20) + 17 + 80;
-    //       });
-    //     });
-    //   }
-    //
-    //
-    //   // this.connections.forEach(function(connector) {
-    //   //   let BCR = connector.from.port.getBoundingClientRect();
-    //   //   connector.line.x1 = BCR.left + 3;   // 3 is half the port width, of 5
-    //   //   connector.line.y1 = BCR.top.y + 7;  // 7 is half the port height, of 14
-    //   // });
-    // }
 
 
 //

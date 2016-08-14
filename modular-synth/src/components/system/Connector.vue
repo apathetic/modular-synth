@@ -65,8 +65,7 @@ export default {
       return node.x + width + 3;
     },
     y1() {
-      const i = this.from.port; //  || 0;
-      return this.from.module.y + (i * 20) + 17 + 80;
+      return this.from.module.y + (this.from.port * 20) + 17 + 80;
     },
 
     x2() {
@@ -75,10 +74,9 @@ export default {
              : this.to.module.x;
     },
     y2() {
-      const i = this.to.port;
       return this.cursorY
              ? this.cursorY
-             : this.to.module.y + (i * 20) + 17 + 80;
+             : this.to.module.y + (this.to.port * 20) + 17 + 80;
     }
   },
 
