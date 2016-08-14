@@ -23,7 +23,6 @@
         </span>
       </div>
 
-      <!-- @mousedown.stop="createConnector($event, outlet)" -->
       <div class="outlets">
         <span v-for="outlet in outlets"
           @mousedown.stop="newConnection(outlet)"
@@ -90,23 +89,8 @@ export default {
     };
   },
 
-  // computed: {
-  //   position() {
-  //     return {
-  //       left: this.x + 'px',
-  //       top: this.y + 'px'
-  //     };
-  //   }
-  // },
-
   created() {
-    // this.width = '202px'; // module.$el.offsetWidth;
-
     // dummy outlet for test
-    // this.input = this.context.createGain();
-    // this.outputL = this.context.createGain();
-    // this.outputR = this.context.createGain();
-
     this.inlets[0].data = this.context.createGain();
 
     this.outlets[0].data = this.context.createGain();
