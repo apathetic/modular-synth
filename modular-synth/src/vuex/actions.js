@@ -1,10 +1,10 @@
 // -----------------------------------------------
-//  Modules
+//  MODULES
 // -----------------------------------------------
 
 export const setActiveModule = ({ dispatch, state }, id) => {
   if (state.activeModule !== id) {
-    dispatch('SET_ACTIVE', id);
+    dispatch('SET_ACTIVE_MODULE', id);
   }
 };
 
@@ -16,14 +16,13 @@ export const removeModule = ({ dispatch }, id) => {
   dispatch('REMOVE_MODULE', id);
 };
 
-/* NOTE: id *may* be optional here, as we know the active module at all times */
 export const updatePosition = ({ dispatch }, id, x, y) => {
-  dispatch('UPDATE_POSITION', id, x, y);
+  dispatch('UPDATE_POSITION', x, y);
 };
 
 
 // -----------------------------------------------
-//  Connections
+//  CONNECTIONS
 // -----------------------------------------------
 
 export const setActiveConnection = ({ dispatch, state }, id) => {
@@ -32,16 +31,18 @@ export const setActiveConnection = ({ dispatch, state }, id) => {
   }
 };
 
-export const updateConnection = ({ dispatch }, id, to) => {
-  dispatch('UPDATE_CONNECTION', id, to);
+export const updateConnection = ({ dispatch, state }, id, to) => {
+  // if (xxx.from.connection === xxx.to.connection) {
+  //   dispatch('REMOVE_CONNECTION', id, to);
+  // } else {
+  dispatch('SET_ACTIVE_CONNECTION', id);  // because sometimes this doesn't happen with :hover
+  dispatch('UPDATE_CONNECTION', to);
 };
-
 
 export const updateConnection_ = ({ dispatch }, inlet) => {
   // use   state.activeConnection
   console.log(inlet);
 };
-
 
 export const newConnection = ({ dispatch }, outlet) => {
   dispatch('ADD_CONNECTION', outlet);

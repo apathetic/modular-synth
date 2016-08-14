@@ -12,8 +12,8 @@
     :class="editing ? 'edit-mode': 'play-mode'"
     v-el:modules>
 
-    module: {{ module|json }}<br><br>
-    connection: {{ connection|json }}<br><br>
+    module: {{ module }}<br><br>
+    connection: {{ connection }}<br><br>
     modules: {{ modules|json }}<br><br>
     conec: {{ connectors|json }}
 
@@ -53,7 +53,7 @@
         @click="togglePower"
         :class="power ? 'on' : 'off'">
         Audio (power) On
-        <img src="/static/images/reset1.svg">
+        <img src="/static/images/reset1.svg" style="max-width:3em">
       </button>
     </div>
 

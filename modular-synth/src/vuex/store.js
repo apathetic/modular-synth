@@ -16,13 +16,14 @@ const state = {
   activeModule: 0,
   activeConnection: 0,
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]'),
-  connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]')
+  connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
+  out: '???'
 };
 
 
 // Create an object storing various mutations. We will write the mutation
 const mutations = {
-  SET_ACTIVE(state, id) {
+  SET_ACTIVE_MODULE(state, id) {
     state.activeModule = id;
   },
   ADD_MODULE(state, type) {
@@ -32,15 +33,6 @@ const mutations = {
       x: 0,
       y: 0
     });
-
-    // id++;
-    // state.modules[id] = {
-    //   id: id,
-    //   type: type,
-    //   x: 0,
-    //   y: 0
-    //   // dragging: false
-    // };
   },
   REMOVE_MODULE(state, id) {
     state.modules = state.modules.filter((module) => {
@@ -49,16 +41,8 @@ const mutations = {
 
     // state.modules.splice(state.modules.indexOf(id), 1);
   },
-  UPDATE_POSITION(state, id, x, y) {
-    // state.modules[id].x = x;
-    // state.modules[id].y = y;
-    // Vue.set(state.modules[id], 'x', x);
-    // Vue.set(state.modules[id], 'y', y);
-
-    let active = state.activeModule;
-    let module = state.modules.find((m) => { m.id === active; });
-
-    module = state.modules.find(function(module) { return module.id === active; });
+  UPDATE_POSITION(state, x, y) {
+    const module = state.modules.find(function(module) { return module.id === state.activeModule; });
     module.x = x;
     module.y = y;
   },
@@ -92,14 +76,24 @@ const mutations = {
       from
     });
   },
-  UPDATE_CONNECTION(state, id, to) {
+  UPDATE_CONNECTION(state, to) {
     // const connection = state.connections.find((c) => { c.id === id; });
     // const module = state.modules.find((m) => { m.id === state.activeModule; });
-    const connection = state.connections.find(function(c) { return c.id === id; });
+    const connection = state.connections.find(function(c) { return c.id === state.activeConnection; });
     const module = state.modules.find(function(m) { return m.id === state.activeModule; });
+
+    // if (!module && state.activeModule === 0) {
+    //   let xx = {
+    //      MASTER OUT
+    //   };
+    // }
 
     to.module = module;
     connection.to = to;
+
+    // if (connection.to.module === connection.from.module) {
+    //     // dispatch('REMOVE_CONNECTION');
+    // }
 
     const source = connection.from.data;
     const destination = connection.to.data;
@@ -117,7 +111,10 @@ const mutations = {
     state.connections.splice(state.modules.indexOf(connection), 1);
   },
 
-  ROUTE_AUDIO(state, source, destination) {}
+
+  ROUTE_AUDIO(state, source, destination) {
+    //
+  }
 };
 
 
