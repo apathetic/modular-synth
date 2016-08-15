@@ -72,7 +72,8 @@ export const draggable = {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
-      this.updatePosition(this.id, x, y);
+      // this.updatePosition(this.id, x, y);
+      this.updatePosition(x, y);
 
       this.x = x;
       this.y = y;
