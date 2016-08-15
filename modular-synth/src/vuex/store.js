@@ -4,8 +4,6 @@ import plugins from './plugins';
 
 Vue.use(Vuex);
 
-let id = 1;   // module id. Start at 1, as masterOut is 0.
-let cid = 0;  // connector id
 
 export const STORAGE_KEY_MODULES = 'modules';
 export const STORAGE_KEY_CONNECTIONS = 'connections';
@@ -13,10 +11,12 @@ export const STORAGE_KEY_CONNECTIONS = 'connections';
 
 // Create an object to hold the initial state when the app starts up
 const state = {
-  activeModule: 0,
-  activeConnection: 0,
+  id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
+  cid: localStorage.getItem('cid') || 0,  // connector id
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
+  activeModule: 0,
+  activeConnection: 0,
   masterOutlet: {'x': 0, 'y': 0}
 };
 
@@ -28,11 +28,12 @@ const mutations = {
   },
   ADD_MODULE(state, type) {
     state.modules.push({
-      id: id++,
+      id: state.id,
       type: type,
       x: 0,
       y: 0
     });
+    state.id++;
   },
   REMOVE_MODULE(state, id) {
     state.modules = state.modules.filter((module) => {
@@ -75,10 +76,11 @@ const mutations = {
     };
 
     state.connections.push({
-      id: cid++,
+      id: state.cid,
       to,
       from
     });
+    state.cid++;
   },
   UPDATE_CONNECTION(state, to) {
     // const connection = state.connections.find((c) => { c.id === id; });  // WHY NOT WORK

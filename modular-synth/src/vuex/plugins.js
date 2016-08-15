@@ -9,6 +9,12 @@ const localStoragePlugin = (store) => {
   store.subscribe((mutation, { connections }) => {
     localStorage.setItem(STORAGE_KEY_CONNECTIONS, JSON.stringify(connections));
   });
+  store.subscribe((mutation, { id }) => {
+    localStorage.setItem('id', id);
+  });
+  store.subscribe((mutation, { cid }) => {
+    localStorage.setItem('cid', cid);
+  });
 };
 
 export default process.env.NODE_ENV !== 'production'
