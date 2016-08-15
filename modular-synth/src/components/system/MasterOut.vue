@@ -2,8 +2,7 @@
   <div
     class="module"
     id="master-out"
-    @mouseover.stop="setActiveModule(id)"
-  >
+    @mouseover.stop="setActiveModule(id)">
 
     <div class="module-interface">
       <Level></Level>
@@ -26,6 +25,7 @@
 // import { draggable } from '../mixins';
 import { setActiveModule, newConnection, updateConnection_ } from '../../vuex/actions';
 import Level from '../UI/Level';
+import store from '../../vuex/store';
 
 export default {
   components: { Level },
@@ -46,9 +46,11 @@ export default {
       y: 0,
       inlets: [
         {
+          port: 0,
           label: 'out-1',
           data: null
         }, {
+          port: 1,
           label: 'out-2',
           data: null
         }
@@ -66,9 +68,20 @@ export default {
     this.inlets[0].data = out1;
     this.inlets[1].data = out2;
 
-    let BCR = this.$el.getBoundingClientRect();
-    this.x = BCR.left;
-    this.y = BCR.top;
+    this.determinePosition();
+    window.addEventListener('resize', this.determinePosition.bind(this));
+  },
+  methods: {
+    determinePosition() {
+      const x = this.$el.getBoundingClientRect().left;
+      const y = this.$el.getBoundingClientRect().top;
+
+      this.x = x;
+      this.y = y;
+
+      let dispatch = store.dispatch;
+      dispatch('MASTER', x, y);
+    }
   }
 };
 </script>

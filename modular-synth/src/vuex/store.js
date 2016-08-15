@@ -4,7 +4,7 @@ import plugins from './plugins';
 
 Vue.use(Vuex);
 
-let id = 1;   // module id. Start at 1, as master-out is 0.
+let id = 1;   // module id. Start at 1, as masterOut is 0.
 let cid = 0;  // connector id
 
 export const STORAGE_KEY_MODULES = 'modules';
@@ -17,7 +17,7 @@ const state = {
   activeConnection: 0,
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
-  out: '???'
+  masterOutlet: {'x': 0, 'y': 0}
 };
 
 
@@ -47,6 +47,10 @@ const mutations = {
     module.y = y;
   },
 
+  MASTER(state, x, y) {
+    state.masterOutlet.x = x;
+    state.masterOutlet.y = y;
+  },
 
   SET_ACTIVE_CONNECTION(state, id) {
     state.activeConnection = id;
@@ -77,19 +81,15 @@ const mutations = {
     });
   },
   UPDATE_CONNECTION(state, to) {
-    // const connection = state.connections.find((c) => { c.id === id; });
-    // const module = state.modules.find((m) => { m.id === state.activeModule; });
+    // const connection = state.connections.find((c) => { c.id === id; });  // WHY NOT WORK
     const connection = state.connections.find(function(c) { return c.id === state.activeConnection; });
-    const module = state.modules.find(function(m) { return m.id === state.activeModule; });
 
-    // if (!module && state.activeModule === 0) {
-    //   let xx = {
-    //      MASTER OUT
-    //   };
-    // }
-
-    to.module = module;
     connection.to = to;
+    connection.to.module = state.activeModule === 0
+      ? state.masterOutlet
+      : state.modules.find(function(m) { return m.id === state.activeModule; });
+      // state.modules.find((m) => { m.id === state.activeModule; });
+
 
     // if (connection.to.module === connection.from.module) {
     //     // dispatch('REMOVE_CONNECTION');
@@ -97,8 +97,6 @@ const mutations = {
 
     const source = connection.from.data;
     const destination = connection.to.data;
-
-    console.log(source, destination);
 
     if (source && destination) {
       console.log('connecting %s --> %s', connection.from.label, connection.to.label);
