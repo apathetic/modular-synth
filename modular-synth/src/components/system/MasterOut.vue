@@ -73,6 +73,7 @@ export default {
   },
   methods: {
     determinePosition() {
+      // TODO use getBoundingClientRect is inconsistent with offsetTop in NODE. update
       const x = this.$el.getBoundingClientRect().left;
       const y = this.$el.getBoundingClientRect().top;
 
