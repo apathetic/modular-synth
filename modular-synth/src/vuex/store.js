@@ -42,8 +42,9 @@ const mutations = {
 
     // state.modules.splice(state.modules.indexOf(id), 1);
   },
-  UPDATE_POSITION(state, x, y) {
-    const module = state.modules.find(function(module) { return module.id === state.activeModule; });
+  UPDATE_POSITION(state, id, x, y) {
+    // const module = state.modules.find(function(module) { return module.id === state.activeModule; });
+    const module = state.modules.find(function(module) { return module.id === id; });
     module.x = x;
     module.y = y;
   },
@@ -76,7 +77,7 @@ const mutations = {
     };
 
     state.connections.push({
-      id: state.cid,
+      id: parseInt(state.cid),
       to,
       from
     });

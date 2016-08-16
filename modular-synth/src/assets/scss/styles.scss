@@ -1,5 +1,4 @@
-// @import "nodes";
-// @import "scss/knob";
+$header-height: 54px;
 
 * {
   box-sizing: border-box;
@@ -20,33 +19,26 @@ body {
 }
 
 header {
-  position: absolute;
-  height: 80px;    // NOTE THE JS RELIES ON THIS TODO
+  height: $header-height;
   width: 100%;
   background-color: #333;
 }
 
-footer {
-  display: none;
-  flex-basis: 40px;
-  width: 100%;
-  background-color: #999;
-}
-
 main {
   display: flex;
-  height: 100%;
   width: 100%;
-  padding-top: 80px;    // NOTE THE JS RELIES ON THIS TODO
-  flex-direction: row;
+  // height: 100%;
+  height: calc(100% - #{$header-height});
+  // padding-top: 80px;
+  // bottom: 0;
+  // position: absolute;
 }
 
-.container {
-  margin: 0 auto;
-}
+// .container {
+//   margin: 0 auto;
+// }
 
 #modules {
-  padding: 2em;
   flex: 1;
   overflow: auto;
 }
