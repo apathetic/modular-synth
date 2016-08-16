@@ -68,14 +68,17 @@ export default {
     this.inlets[0].data = out1;
     this.inlets[1].data = out2;
 
-    this.determinePosition();
     window.addEventListener('resize', this.determinePosition.bind(this));
+    window.addEventListener('load', this.determinePosition.bind(this));
   },
+
   methods: {
     determinePosition() {
       // TODO use getBoundingClientRect is inconsistent with offsetTop in NODE. update
       const x = this.$el.getBoundingClientRect().left;
-      const y = this.$el.getBoundingClientRect().top;
+      const y = this.$el.offsetTop;
+
+      console.log('asfd');
 
       this.x = x;
       this.y = y;

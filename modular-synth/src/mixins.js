@@ -55,8 +55,8 @@ export const draggable = {
       // Save starting positions of cursor and element.
       dragObj.cursorStartX = event.clientX; // + window.scrollX;
       dragObj.cursorStartY = event.clientY; // + window.scrollY;
-      dragObj.startX = this.x || node.getBoundingClientRect().left; // node.offsetLeft;
-      dragObj.startY = this.y || node.offsetTop;
+      dragObj.startX = this.x; // || node.getBoundingClientRect().left; // node.offsetLeft;
+      dragObj.startY = this.y; // || node.getBoundingClientRect().top; // node.offsetTop;
 
       // Update element's z-index.
       node.style.zIndex = ++dragObj.zIndex;
@@ -69,8 +69,10 @@ export const draggable = {
     whileDraggingNode(event) {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
+      // const x = this.x + event.clientX - dragObj.cursorStartX;
+      // const y = this.y + event.clientY - dragObj.cursorStartY;
 
-      this.updatePosition(x, y);
+      this.updatePosition(this.id, x, y);
 
       this.x = x;
       this.y = y;
