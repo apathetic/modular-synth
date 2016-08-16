@@ -9,11 +9,8 @@
 
 <template>
   <section id="modules"
-    :class="editing ? 'edit-mode': 'play-mode'"
-    v-el:modules>
+    :class="editing ? 'edit-mode': 'play-mode'">
 
-    module: {{ module }}<br><br>
-    connection: {{ connection }}<br><br>
     modules: {{ modules|json }}<br><br>
     conec: {{ connectors|json }}
 
@@ -25,15 +22,14 @@
       track-by="$index">
     </component>
 
+    <svg id="connections">
+      <connector v-for="connector in connectors"
+        :id="connector.id"
+        :to="connector.to"
+        :from="connector.from">
+      </connector>
+    </svg>
   </section>
-
-  <svg id="connections">
-    <connector v-for="connector in connectors"
-      :id="connector.id"
-      :to="connector.to"
-      :from="connector.from">
-    </connector>
-  </svg>
 
   <aside id="controls" v-el:controls>
 

@@ -65,7 +65,7 @@ export default {
       return node.x + width + 3;
     },
     y1() {
-      return this.from.module.y + (this.from.port * 20) + 17 + 80;
+      return this.from.module.y + (this.from.port * 20) + 17; // + 80;
     },
 
     x2() {
@@ -76,7 +76,7 @@ export default {
     y2() {
       return this.cursorY
              ? this.cursorY
-             : this.to.module.y + (this.to.port * 20) + 17 + 80;
+             : this.to.module.y + (this.to.port * 20) + 17; // + 80;
     }
   },
 
@@ -88,7 +88,7 @@ export default {
 
     if (!this.to.module) {
       this.cursorX = this.from.module.x + 200 + 3;  // line ends at cursor, which is initially the same point
-      this.cursorY = this.from.module.y + (0 * 20) + 17 + 80;
+      this.cursorY = this.from.module.y + (this.from.port * 20) + 17; // + 80;
 
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.drag);
@@ -104,7 +104,7 @@ export default {
      */
     drag(event) {
       this.cursorX = event.clientX;
-      this.cursorY = event.clientY;
+      this.cursorY = event.clientY - 54;  // the header height
 
       event.preventDefault();
       event.stopPropagation();
@@ -144,7 +144,7 @@ export default {
   svg {
     line {
       &:hover {
-        stroke: pink;
+        stroke: lightblue;
       }
     }
   }
