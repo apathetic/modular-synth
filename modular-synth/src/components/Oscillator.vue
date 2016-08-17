@@ -18,21 +18,8 @@
     </div>
 
     <div class="module-connections">
-      <div class="inlets">
-        <span v-for="inlet in inlets"
-          data-label="{{ inlet.label }}"
-          class="inlet">
-        </span>
-      </div>
-
-      <div class="outlets">
-        <span v-for="outlet in outlets"
-          @mousedown.stop="newConnection(outlet)"
-          data-label="{{ outlet.label }}"
-          data-port="{{ outlet.port }}"
-          class="outlet">
-        </span>
-      </div>
+      <partial name="inlets"></partial>
+      <partial name="outlets"></partial>
     </div>
   </div>
 </template>

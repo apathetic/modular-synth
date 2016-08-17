@@ -11,6 +11,7 @@
       <h3>Node - {{ id }}</h3>
       <br />
       {{ width }}
+      <slot name="interface"></slot>
     </div>
 
     <!-- @mouseup.stop="updateConnection_(inlet)" -->
@@ -95,10 +96,6 @@ export default {
 
     this.outlets[0].data = this.context.createGain();
     this.outlets[1].data = this.context.createGain();
-  },
-
-  methods: {
-    //
   }
 };
 
@@ -109,12 +106,14 @@ export default {
   .module {
     position: absolute;
     display: inline-block;
-    background: #eef;
-    border: 1px solid #000;
+    background: #888;
+    border: 1px solid #666;
+    border-radius: 2px;
     z-index: 1;
 
     &:hover {
-      background: #eff;
+      // background: #eff;
+      border-color: lightblue;
     }
 
     &.dragging {
