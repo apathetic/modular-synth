@@ -69,7 +69,7 @@ const mutations = {
       data: outlet.data      // for data flow
     };
 
-    const to = {    // Object.seal({
+    const to = {
       module: null,
       port: null,
       label: null,
@@ -92,7 +92,6 @@ const mutations = {
       ? state.masterOutlet
       : state.modules.find(function(m) { return m.id === state.activeModule; });
       // state.modules.find((m) => { m.id === state.activeModule; });
-
 
     // if (connection.to.module === connection.from.module) {
     //     // dispatch('REMOVE_CONNECTION');

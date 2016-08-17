@@ -6,8 +6,6 @@
 
     <div class="module-interface">
       <Level></Level>
-      x{{x}}<br>
-      y{{y}}<br>
     </div>
 
     <div class="module-connections">
@@ -23,7 +21,7 @@
 
 <script>
 // import { draggable } from '../mixins';
-import { setActiveModule, newConnection, updateConnection_ } from '../../vuex/actions';
+import { setActiveModule, newConnection } from '../../vuex/actions';
 import Level from '../UI/Level';
 import store from '../../vuex/store';
 
@@ -33,8 +31,7 @@ export default {
   vuex: {
     actions: {
       setActiveModule,
-      newConnection,
-      updateConnection_
+      newConnection
     }
   },
 
