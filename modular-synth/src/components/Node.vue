@@ -1,16 +1,16 @@
 <template>
   <div
-    class="module"
-    :class="dragging ? 'dragging' : ''"
-    :style="position"
-    @mouseover.stop="setActiveModule(id)"
-    @mousedown.prevent="startDraggingNode">
-    <!-- @mousedown.prevent="dragStart($event, this)"> -->
-    {{ width }}
+  class="module"
+  :class="dragging ? 'dragging' : ''"
+  :style="position"
+  @mouseover.stop="setActiveModule(id)"
+  @mousedown.prevent="startDraggingNode">
+  <!-- @mousedown.prevent="dragStart($event, this)"> -->
+
     <div class="module-interface">
       <h3>Node - {{ id }}</h3>
       <br />
-      <br />
+      {{ width }}
     </div>
 
     <!-- @mouseup.stop="updateConnection_(inlet)" -->
