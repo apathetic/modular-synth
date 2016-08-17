@@ -34,7 +34,7 @@
   <aside id="controls" v-el:controls>
 
     <div>
-      <p>
+      <p v-if="module">
         Current Module: {{ module.type }}<br>
         id: {{ module.id }}<br>
         x: {{ module.x }}<br>
