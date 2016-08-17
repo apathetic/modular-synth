@@ -4,10 +4,11 @@
 
 <template>
   <div
-    class="module"
-    :class="dragging ? 'dragging' : ''"
-    :style="position"
-    @mousedown="startDraggingNode">
+  class="module"
+  :class="dragging ? 'dragging' : ''"
+  :style="position"
+  @mouseover.stop="setActiveModule(id)"
+  @mousedown.prevent="startDraggingNode">
 
     <div class="module-interface">
       <select v-model="type">
@@ -17,10 +18,18 @@
     </div>
 
     <div class="module-connections">
+      <div class="inlets">
+        <span v-for="inlet in inlets"
+          data-label="{{ inlet.label }}"
+          class="inlet">
+        </span>
+      </div>
+
       <div class="outlets">
         <span v-for="outlet in outlets"
-          @mousedown.stop="createConnector($event, outlet)"
+          @mousedown.stop="newConnection(outlet)"
           data-label="{{ outlet.label }}"
+          data-port="{{ outlet.port }}"
           class="outlet">
         </span>
       </div>
@@ -29,37 +38,58 @@
 </template>
 
 <script>
-import {draggable} from '../mixins';
+import { draggable } from '../mixins';
+import { setActiveModule, newConnection } from '../vuex/actions';
 import Knob from './UI/Knob';   // audioParam
 
 export default {
+  components: { Knob },
+
   mixins: [draggable],
-  components: {Knob},
+
+  vuex: {
+    actions: {
+      setActiveModule,
+      newConnection
+    }
+  },
+
+  props: {
+    id: null
+  },
+
   data() {
     return {
       name: 'Oscillator',
       freq: 440,
       type: 'sine',
       types: ['sine', 'square', 'sawtooth', 'triangle'],
-
+      inlets: [
+        {
+          port: 0,
+          label: 'freq',
+          data: null
+        }
+      ],
       outlets: [
         {
-          label: 'outputL',
-          data: this.output,   // to: this.output?
-          connections: []
+          port: 0,
+          label: 'output',
+          data: null
         }
       ]
     };
   },
 
   created() {
-    this.output = this.context.createGain();
+    // this.inlets[0].data = this.context.createGain();
+    this.outlets[0].data = this.context.createGain();
 
     // Our lovely webAudio Oscillator.
     this.osc = this.context.createOscillator();
     this.osc.type = this.type;
     this.osc.frequency.value = this.freq;
-    this.osc.connect(this.output);
+    this.osc.connect(this.outlets[0].data);
 
     this.$watch('freq', this.setFreq);
     this.$watch('type', this.setType);
@@ -71,19 +101,6 @@ export default {
   computed: {},
 
   methods: {
-    createConnector(event, outlet) {
-      // ///
-      this.output.connect(this.context.destination);
-
-      this.$dispatch('connector:new', {
-        module: this,
-        label: outlet.label,
-        data: this.output,    // outlet.data,
-        port: event.target,
-        connections: outlet.connections
-      });
-    },
-
     /**
      * k-rate control of the Oscillator frequency
      * @param  {Float} f frequency
@@ -111,4 +128,3 @@ export default {
   }
 };
 </script>
-
