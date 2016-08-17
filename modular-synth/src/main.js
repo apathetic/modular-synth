@@ -20,6 +20,10 @@ Vue.mixin({
   // }
 });
 
+Vue.partial('inlets', '<div class="inlets"><span v-for="inlet in inlets" data-label="{{ inlet.label }}" class="inlet"></span></div>');
+Vue.partial('outlets', '<div class="outlets"><span v-for="outlet in outlets" @mousedown.stop="newConnection(outlet)" data-label="{{ outlet.label }}" class="outlet"></span></div>');
+
+
 /* eslint-disable no-new */
 new Vue({
   store,

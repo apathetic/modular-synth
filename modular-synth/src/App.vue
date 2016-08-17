@@ -11,8 +11,8 @@
   <section id="modules"
     :class="editing ? 'edit-mode': 'play-mode'">
 
-    modules: {{ modules|json }}<br><br>
-    conec: {{ connectors|json }}
+    <!-- modules: {{ modules|json }}<br><br> -->
+    <!-- conec: {{ connectors|json }} -->
 
     <component v-for="module in modules"
       :is="module.type"
@@ -34,7 +34,13 @@
   <aside id="controls" v-el:controls>
 
     <div>
-      <p>selected Component details / info ? debug?</p>
+      <p>
+        Current Module: {{ module.type }}<br>
+        id: {{ module.id }}<br>
+        x: {{ module.x }}<br>
+        y: {{ module.y }}<br>
+        details / info  ..?
+      </p>
       <midi></midi>
     </div>
 
@@ -76,7 +82,8 @@ import * as actions from './vuex/actions';
 export default {
   vuex: {
     getters: {
-      module: state => state.activeModule,
+      // module: state => state.activeModule,
+      module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
       modules: state => state.modules,
       connection: state => state.activeConnection,
       connectors: state => state.connections
