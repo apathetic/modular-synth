@@ -75,8 +75,6 @@ export default {
       const x = this.$el.getBoundingClientRect().left;
       const y = this.$el.offsetTop;
 
-      console.log('asfd');
-
       this.x = x;
       this.y = y;
 
@@ -90,8 +88,7 @@ export default {
 
 <style lang="scss">
   #master-out {
-    .module-interface {
-      padding: 1em;
-    }
+    min-width: 100%;
+    bottom: 0;
   }
 </style>

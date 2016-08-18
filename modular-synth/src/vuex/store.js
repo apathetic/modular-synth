@@ -8,16 +8,54 @@ Vue.use(Vuex);
 export const STORAGE_KEY_MODULES = 'modules';
 export const STORAGE_KEY_CONNECTIONS = 'connections';
 
+/**
+ * Reactify the connections.
+ * The connection objects stored in localStorage are just objects in JSON -- they
+ * lack the reactvity that we get when adding actual modules with bound listeners
+ * to the store; hence, we need to update all the static references.
+ * @return {[type]} [description]
+ */
+function bindConnections() {
+  const connections = JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]');
+  const modules = JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]');
+
+  for (let connection of connections) {
+    console.log(connection);
+    const fromId = connection.from.module.id;
+    connection.from.module = modules.find(function(m) { return m.id === fromId; });
+
+    const toId = connection.to.module.id;
+    connection.to.module = modules.find(function(m) { return m.id === toId; });
+  }
+  console.log(connections);
+  return connections;
+}
+
+/**
+ * [routeAudio description]
+ * @param  {[type]} source      [description]
+ * @param  {[type]} destination [description]
+ * @return {[type]}             [description]
+ */
+function routeAudio(source, destination) {
+  const audioOut = source.data;
+  const audioIn = destination.data;
+
+  if (audioOut && audioIn) {
+    console.log('connecting %s --> %s', source.label, destination.label);
+    audioOut.connect(audioIn);
+  }
+}
 
 // Create an object to hold the initial state when the app starts up
 const state = {
   id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
   cid: localStorage.getItem('cid') || 0,  // connector id
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]'),
-  connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
+  connections: (bindConnections()),
   activeModule: 0,
   activeConnection: 0,
-  masterOutlet: {'x': 0, 'y': 0}
+  masterOutlet: {'id': 0, 'x': 0, 'y': 0}
 };
 
 
@@ -97,13 +135,13 @@ const mutations = {
     //     // dispatch('REMOVE_CONNECTION');
     // }
 
-    const source = connection.from.data;
-    const destination = connection.to.data;
+    // const source = connection.from.data;
+    // const destination = connection.to.data;
 
-    if (source && destination) {
-      console.log('connecting %s --> %s', connection.from.label, connection.to.label);
-      source.connect(destination);
-    }
+    routeAudio(connection.from, connection.to);
+    // if (source && destination) {
+    //   source.connect(destination);
+    // }
   },
   REMOVE_CONNECTION(state) {
     let active = state.activeConnection;
