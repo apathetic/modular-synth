@@ -7,10 +7,11 @@
   @mousedown.prevent="startDraggingNode">
   <!-- @mousedown.prevent="dragStart($event, this)"> -->
 
+    <div class="module-details">
+      <h3>{{ name }}</h3>
+    </div>
+
     <div class="module-interface">
-      <h3>Node - {{ id }}</h3>
-      <br />
-      {{ width }}
       <slot name="interface"></slot>
     </div>
 
@@ -111,6 +112,10 @@ export default {
     border-radius: 2px;
     z-index: 1;
 
+    // TODO
+    min-width: 206px;
+    min-height: 80px;
+
     &:hover {
       // background: #eff;
       border-color: lightblue;
@@ -120,8 +125,20 @@ export default {
       cursor: move;
     }
 
+    &-details {
+      background: #444;
+      padding: 0.2em;
+      display: none;
+    }
+
     &-interface {
       padding: 1em 4em;
+
+
+      // // TODO
+      // min-width: 206px;
+      // min-height: 80px;
+
     }
 
     &-connections {
