@@ -15,8 +15,9 @@ html {
 
 body {
   height: 100%;
-  background-color: #aaa;
-  font-family: Source Sans Pro, Helvetica, sans-serif;
+  color: #fff;
+  background-color: #222; // #aaa;
+  font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
 }
 
 header {
@@ -47,7 +48,7 @@ main {
 
 #controls {
   flex-basis: 150px;
-  background-color: #999;
+  background-color: #333; // #999;
 }
 
 

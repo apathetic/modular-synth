@@ -80,11 +80,11 @@ export default {
       outlets: [
         {
           port: 0,
-          label: 'outputL',
+          label: 'output-1',
           data: null // this.outputL   // src?
         }, {
           port: 1,
-          label: 'outputR',
+          label: 'output-2',
           data: null // this.outputR
         }
       ]
@@ -107,7 +107,7 @@ export default {
   .module {
     position: absolute;
     display: inline-block;
-    background: #888;
+    background: #444; // #888;
     border: 1px solid #666;
     border-radius: 2px;
     z-index: 1;
@@ -150,9 +150,9 @@ export default {
       span {
         position: absolute;
         display: block;
-        width: 5px;
-        height: 14px;
-        background: #111;
+        width: 3px;
+        height: 12px;
+        background: #eee; // #111;
         cursor: pointer;
 
         // text-indent: 1em;

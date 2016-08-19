@@ -32,8 +32,8 @@ function routeAudio(source, destination) {
 const state = {
   id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
   cid: localStorage.getItem('cid') || 0,  // connector id
-  modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"id": 0, "x": 0, "y": 0}]'),
-  connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'), // (bindConnections()),
+  modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
+  connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
   activeModule: 0,
   activeConnection: 0
 };

@@ -15,6 +15,8 @@
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
       </select>
       <knob :value.sync="freq" :min="220" :max="880"></knob>
+      <knob :value.sync="sync" :min="0" :max="1"></knob>
+      <knob :value.sync="PW" :min="0" :max="6.28"></knob>
     </div>
 
     <div class="module-connections">
@@ -56,7 +58,19 @@ export default {
           port: 0,
           label: 'freq',
           data: null
+        },
+        {
+          port: 0,
+          label: 'sync',
+          data: null
+        },
+        {
+          port: 0,
+          label: 'mod-A',
+          data: null
         }
+
+
       ],
       outlets: [
         {
