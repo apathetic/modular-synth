@@ -20,10 +20,8 @@
 </template>
 
 <script>
-// import { draggable } from '../mixins';
-import { setActiveModule, newConnection } from '../../vuex/actions';
+import { setActiveModule, newConnection, updatePosition } from '../../vuex/actions';
 import Level from '../UI/Level';
-import store from '../../vuex/store';
 
 export default {
   components: { Level },
@@ -31,7 +29,8 @@ export default {
   vuex: {
     actions: {
       setActiveModule,
-      newConnection
+      newConnection,
+      updatePosition
     }
   },
 
@@ -78,9 +77,7 @@ export default {
       this.x = x;
       this.y = y;
 
-      let dispatch = store.dispatch;
-      // dispatch('MASTER', x, y);
-      dispatch('UPDATE_POSITION', 0, x, y);   // move MasterOut into modules...?  No, because will render in App <component>
+      this.updatePosition(0, x, y);
     }
   }
 };

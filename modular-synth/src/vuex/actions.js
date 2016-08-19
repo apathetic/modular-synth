@@ -3,12 +3,18 @@
 //  BOOTSTRAP
 // -----------------------------------------------
 
+/**
+ * Reactify the connections.
+ * The connection objects stored in localStorage are just objects in JSON -- they
+ * lack the reactvity that we get when adding actual modules with bound listeners
+ * to the store; hence, we need to update all the static references.
+ * @return {[type]} [description]
+ */
 export const bindConnections = ({ dispatch, state }) => {
   const connections = state.connections;
   const modules = state.modules;
 
   for (let connection of connections) {
-    console.log(connection);
     const fromId = connection.from.module.id;
     connection.from.module = modules.find(function(m) { return m.id === fromId; });
 

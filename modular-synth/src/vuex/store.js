@@ -9,29 +9,6 @@ export const STORAGE_KEY_MODULES = 'modules';
 export const STORAGE_KEY_CONNECTIONS = 'connections';
 
 /**
- * Reactify the connections.
- * The connection objects stored in localStorage are just objects in JSON -- they
- * lack the reactvity that we get when adding actual modules with bound listeners
- * to the store; hence, we need to update all the static references.
- * @return {[type]} [description]
- */
-// function bindConnections() {
-//   const connections = JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]');
-//   const modules = JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]');
-//
-//   for (let connection of connections) {
-//     console.log(connection);
-//     const fromId = connection.from.module.id;
-//     connection.from.module = modules.find(function(m) { return m.id === fromId; });
-//
-//     const toId = connection.to.module.id;
-//     connection.to.module = modules.find(function(m) { return m.id === toId; });
-//   }
-//   console.log(connections);
-//   return connections;
-// }
-
-/**
  * [routeAudio description]
  * @param  {[type]} source      [description]
  * @param  {[type]} destination [description]
@@ -48,7 +25,10 @@ function routeAudio(source, destination) {
 }
 
 
-// Create an object to hold the initial state when the app starts up
+// -----------------------------------------------
+//  STATE
+// -----------------------------------------------
+
 const state = {
   id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
   cid: localStorage.getItem('cid') || 0,  // connector id
@@ -56,11 +36,13 @@ const state = {
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'), // (bindConnections()),
   activeModule: 0,
   activeConnection: 0
-  // masterOutlet: {'id': 0, 'x': 0, 'y': 0}
 };
 
 
-// Create an object storing various mutations. We will write the mutation
+// -----------------------------------------------
+//  MUTATIONS
+// -----------------------------------------------
+
 const mutations = {
   SET_ACTIVE_MODULE(state, id) {
     state.activeModule = id;
@@ -86,11 +68,6 @@ const mutations = {
     const module = state.modules.find(function(module) { return module.id === id; });
     module.x = x;
     module.y = y;
-  },
-
-  MASTER(state, x, y) {
-    state.masterOutlet.x = x;
-    state.masterOutlet.y = y;
   },
 
   SET_ACTIVE_CONNECTION(state, id) {
@@ -154,7 +131,10 @@ const mutations = {
 };
 
 
-// Combine the initial state and the mutations to create a Vuex store.
+// -----------------------------------------------
+//  STORE
+// -----------------------------------------------
+
 export default new Vuex.Store({
   state,
   mutations,

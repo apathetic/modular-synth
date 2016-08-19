@@ -82,7 +82,6 @@ export const draggable = {
       document.removeEventListener('mousemove', this.whileDraggingNode);
       document.removeEventListener('mouseup', this.stopDraggingNode);
       // updatePosition(this, x, y);
-      // this.updateConnections();
       this.dragging = false;
     }
   }
