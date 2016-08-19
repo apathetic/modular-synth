@@ -79,8 +79,8 @@ export default {
       this.y = y;
 
       let dispatch = store.dispatch;
-      dispatch('MASTER', x, y);
-      // dispatch('UPDATE_POSITION', 0, x, y);   // move MasterOut into modules...?  No, because will render in App <component>
+      // dispatch('MASTER', x, y);
+      dispatch('UPDATE_POSITION', 0, x, y);   // move MasterOut into modules...?  No, because will render in App <component>
     }
   }
 };

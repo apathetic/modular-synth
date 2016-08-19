@@ -15,21 +15,21 @@ export const STORAGE_KEY_CONNECTIONS = 'connections';
  * to the store; hence, we need to update all the static references.
  * @return {[type]} [description]
  */
-function bindConnections() {
-  const connections = JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]');
-  const modules = JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]');
-
-  for (let connection of connections) {
-    console.log(connection);
-    const fromId = connection.from.module.id;
-    connection.from.module = modules.find(function(m) { return m.id === fromId; });
-
-    const toId = connection.to.module.id;
-    connection.to.module = modules.find(function(m) { return m.id === toId; });
-  }
-  console.log(connections);
-  return connections;
-}
+// function bindConnections() {
+//   const connections = JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]');
+//   const modules = JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]');
+//
+//   for (let connection of connections) {
+//     console.log(connection);
+//     const fromId = connection.from.module.id;
+//     connection.from.module = modules.find(function(m) { return m.id === fromId; });
+//
+//     const toId = connection.to.module.id;
+//     connection.to.module = modules.find(function(m) { return m.id === toId; });
+//   }
+//   console.log(connections);
+//   return connections;
+// }
 
 /**
  * [routeAudio description]
@@ -47,15 +47,16 @@ function routeAudio(source, destination) {
   }
 }
 
+
 // Create an object to hold the initial state when the app starts up
 const state = {
   id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
   cid: localStorage.getItem('cid') || 0,  // connector id
-  modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[]'),
-  connections: (bindConnections()),
+  modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"id": 0, "x": 0, "y": 0}]'),
+  connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'), // (bindConnections()),
   activeModule: 0,
-  activeConnection: 0,
-  masterOutlet: {'id': 0, 'x': 0, 'y': 0}
+  activeConnection: 0
+  // masterOutlet: {'id': 0, 'x': 0, 'y': 0}
 };
 
 
@@ -126,10 +127,8 @@ const mutations = {
     const connection = state.connections.find(function(c) { return c.id === state.activeConnection; });
 
     connection.to = to;
-    connection.to.module = state.activeModule === 0
-      ? state.masterOutlet
-      : state.modules.find(function(m) { return m.id === state.activeModule; });
-      // state.modules.find((m) => { m.id === state.activeModule; });
+    connection.to.module = state.modules.find(function(m) { return m.id === state.activeModule; });
+    //                     state.modules.find((m) => { m.id === state.activeModule; });
 
     // if (connection.to.module === connection.from.module) {
     //     // dispatch('REMOVE_CONNECTION');
@@ -137,7 +136,6 @@ const mutations = {
 
     // const source = connection.from.data;
     // const destination = connection.to.data;
-
     routeAudio(connection.from, connection.to);
     // if (source && destination) {
     //   source.connect(destination);
@@ -160,6 +158,6 @@ const mutations = {
 export default new Vuex.Store({
   state,
   mutations,
-  plugins,
-  strict: process.env.NODE_ENV !== 'production'
+  plugins
+  // strict: process.env.NODE_ENV !== 'production'
 });
