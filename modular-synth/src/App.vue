@@ -11,10 +11,10 @@
   <section id="modules"
     :class="editing ? 'edit-mode': 'play-mode'">
 
-    <!-- modules: {{ modules|json }}<br><br> -->
+    modules: {{ modules|json }}<br><br>
     <!-- conec: {{ connectors|json }} -->
 
-    <component v-for="module in modules"
+    <component v-for="module in modules"  v-if="module.id !== 0"
       :is="module.type"
       :id="module.id"
       :x="module.x"
@@ -85,7 +85,7 @@ export default {
       // module: state => state.activeModule,
       module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
       modules: state => state.modules,
-      connection: state => state.activeConnection,
+      // connection: state => state.activeConnection,
       connectors: state => state.connections
     },
     actions: actions
@@ -107,6 +107,11 @@ export default {
     };
   },
 
+  ready() {
+    this.bindConnections();
+    // this.routeAudio();
+  },
+
   methods: {
     toggleEditMode() {
       this.editing = !this.editing;
@@ -121,33 +126,6 @@ export default {
       }
     }
 
-    // connectModules(connector) {
-    //   let source = connector.from.data;
-    //   let destination = connector.to.data;
-    //
-    //   console.log('connecting %s from node %s --> %s in node %s',
-    //     connector.from.label,
-    //     connector.from.module.id
-    //     // connector.to.label,
-    //     // connector.to.module.id
-    //   );
-    //
-    //   // TODO: assumes just audio for now. FInd a way to route control data
-    //   if (source && destination) {
-    //     source.connect(destination);
-    //   }
-    // }
-    //
-
-    // deleteModule() {
-    //   var moduleElement = this.parentNode;
-    //
-    //   // First disconnect the audio
-    //   this.disconnectNode(moduleElement);
-    //
-    //   // Then delete the visual element
-    //   // module.$destroy(true);
-    // }
   }
 };
 

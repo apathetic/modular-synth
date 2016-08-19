@@ -1,3 +1,27 @@
+
+// -----------------------------------------------
+//  BOOTSTRAP
+// -----------------------------------------------
+
+export const bindConnections = ({ dispatch, state }) => {
+  const connections = state.connections;
+  const modules = state.modules;
+
+  for (let connection of connections) {
+    console.log(connection);
+    const fromId = connection.from.module.id;
+    connection.from.module = modules.find(function(m) { return m.id === fromId; });
+
+    const toId = connection.to.module.id;
+    connection.to.module = modules.find(function(m) { return m.id === toId; });
+  }
+};
+
+export const routeAudio = ({ dispatch, state }) => {
+
+};
+
+
 // -----------------------------------------------
 //  MODULES
 // -----------------------------------------------
