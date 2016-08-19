@@ -24,7 +24,7 @@ Other notes:
     :x2="x2"
     :y2="y2"
     :stroke="stroke"
-    stroke-width="4">
+    stroke-width="3">
   </line>
 </template>
 
@@ -51,10 +51,9 @@ export default {
 
   data() {
     return {
-      // uid: 1234,
       cursorX: false,
       cursorY: false,
-      stroke: 'black'
+      stroke: 'white'
     };
   },
 
@@ -71,7 +70,7 @@ export default {
     x2() {
       return this.cursorX
              ? this.cursorX
-             : this.to.module.x;
+             : this.to.module.x - 3;
     },
     y2() {
       return this.cursorY
@@ -111,7 +110,6 @@ export default {
     },
 
     dragEnd(event) {
-      console.log('dragend');
       const port = event.toElement || event.relatedTarget || event.target || false;
 
       // Stop capturing mousemove and mouseup events.
