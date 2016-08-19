@@ -10,6 +10,10 @@
   @mouseover.stop="setActiveModule(id)"
   @mousedown.prevent="startDraggingNode">
 
+    <div class="module-details">
+      <h3>{{ name }}</h3>
+    </div>
+
     <div class="module-interface">
       <select v-model="type">
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
@@ -32,8 +36,8 @@ import { setActiveModule, newConnection } from '../vuex/actions';
 import Knob from './UI/Knob';   // audioParam
 
 export default {
+  props: { id: null },
   components: { Knob },
-
   mixins: [draggable],
 
   vuex: {
@@ -41,10 +45,6 @@ export default {
       setActiveModule,
       newConnection
     }
-  },
-
-  props: {
-    id: null
   },
 
   data() {

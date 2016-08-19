@@ -1,110 +1,117 @@
+<template>
+  <div
+  class="module"
+  :class="dragging ? 'dragging' : ''"
+  :style="position"
+  @mouseover.stop="setActiveModule(id)"
+  @mousedown.prevent="startDraggingNode">
+  <!-- @mousedown.prevent="dragStart($event, this)"> -->
 
-	<filter type="bandpass" output="masterOut">
+    <div class="module-details">
+      <h3>{{ name }}</h3>
+    </div>
 
-		<!-- Filter Controls -->
-		<knob param="Q" default="0.8" min="0.1" max="2.0"></knob>
-		<knob param="f" default="440" min="100" max="5000"></knob>
-		<!-- <knob param="gain" default="0.8" max="1.0"></knob> -->
+    <div class="module-interface">
+      <slot name="interface"></slot>
+    </div>
 
-		<!-- Inputs -->
-		<oscillator type="saw">
-			<knob param="freq" default="440" max="2000"></knob>
-		</oscillator>
+    <!-- @mouseup.stop="updateConnection_(inlet)" -->
+    <div class="module-connections">
+      <div class="inlets">
+        <span v-for="inlet in inlets"
+          data-label="{{ inlet.label }}"
+          data-port="{{ $index }}"
+          class="inlet">
+        </span>
+      </div>
 
-		<oscillator type="sine">
-			<knob param="freq" default="85" max="2000"></knob>
-		</oscillator>
-
-	</filter>
-
-
-
-
-
-
-	//------------------------------------------------
-	//	FILTER
-	// -----------------------------------------------
-	patch.directive("filter", function(){
-		return {
-			'restrict': 'E',
-			'controller': function($scope, $element, $attrs){
-				var type = $scope.type || 'lowpass';
-				var freq = $scope.freq || '440';
-				var Q = $scope.Q || '1';
-				var output = $scope.output || 'masterOut';
-				/*
-				// create an input
-				this.input = context.createGain();
-
-				// create the filter
-				this.filt = context.createBiquadFilter();
-				this.filt.type = type;
-				this.filt.frequency.value = freq;
-				this.filt.Q.value = Q;
-
-				// our input is now connected to our filter
-				this.input.connect(this.filt);
-
-				// call it vars(?). Maybe makes more sense, in this context
-				this.vars = $scope;
-				*/
-				// store a reference to the audioNode on the element itself
-				// $element.audioNode = this;
-
-				// $element[0].input = this.input;
+      <div class="outlets">
+        <span v-for="outlet in outlets"
+          @mousedown.stop="newConnection(outlet)"
+          data-label="{{ outlet.label }}"
+          data-port="{{ outlet.port }}"
+          class="outlet">
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
 
 
+<script>
+import { draggable } from '../mixins';
+import { setActiveModule, newConnection } from '../vuex/actions';
+import Knob from './UI/Knob';
+
+export default {
+  props: { id: null },
+  components: { Knob },
+  mixins: [draggable],
+
+  vuex: {
+    actions: {
+      setActiveModule,
+      newConnection
+    }
+  },
+
+  data() {
+    return {
+      name: 'Filter',
+      freq: 440,
+      types: ['lowpass', 'hipass', 'bandpass', 'notch'],
+      Q: 1,
+
+      inlets: [
+        {
+          port: 0,
+          label: 'in-1',
+          data: this.input
+        }, {
+          port: 1,
+          label: 'in-2',
+          data: null // this.input
+        }
+      ],
+
+      outlets: [
+        {
+          port: 0,
+          label: 'output-1',
+          data: null // this.outputL   // src?
+        }, {
+          port: 1,
+          label: 'output-2',
+          data: null // this.outputR
+        }
+      ]
+    };
+  },
+
+  created() {
+    // inputs
+    this.inlets[0].data = this.context.createGain();
 
 
+    // create the filter
+    this.filter = this.context.createBiquadFilter();
+    this.filter.type = this.types[0];
+    this.filter.frequency.value = this.freq;
+    this.filter.Q.value = this.Q;
 
+    // connect input to our filter
+    this.inlets[0].data.connect(this.filter);
+  },
 
-				// create an input
-				$scope.input = context.createGain();
+  methods: {
+    setFreq(f) {
+      this.filter.frequency.value = f;
+    },
 
-				// create the filter
-				$scope.filter = context.createBiquadFilter();
-				$scope.filter.type = type;
-				$scope.filter.frequency.value = freq;
-				$scope.filter.Q.value = Q;
+    setType(t) {
+      this.filter.type = this.types[t] || 'lowpass';
+    }
+  }
+};
 
-				// our input is now connected to our filter
-				$scope.input.connect($scope.filter);
-
-
-
-
-
-
-
-
-
-			 },
-			'link': function(scope, elem, attrs, controller) {
-
-				console.log('********', scope, elem);
-
-				scope.$watch('output', function(output){
-
-					if (output == 'masterOut') {
-						scope.filter.connect(masterOut);
-					} else {
-						var destination = document.querySelector('#'+output);
-						if (destination.input) {
-							scope.filter.connect(destination.input);
-						} else {
-							console.log('"%s" not found or is not an audio node', output);
-						}
-					}
-
-				});
-
-			},
-			'scope': {
-				'type': '@',
-				'freq': '@',
-				'Q': '@',
-				'output': '@'
-			}
-		}
-	});
+</script>
