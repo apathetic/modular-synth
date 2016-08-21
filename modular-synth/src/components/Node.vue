@@ -166,6 +166,8 @@ export default {
           width: 5em;
           position: absolute;
           // pointer-events: none;
+          font-size: 0.75em;
+          text-transform: uppercase;
         }
 
         // we provide for the case of <= 4 inputs/outputs
