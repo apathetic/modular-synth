@@ -64,8 +64,8 @@ export default {
     this.inlets[0].data = out1;
     this.inlets[1].data = out2;
 
-    window.addEventListener('resize', this.determinePosition.bind(this));
-    window.addEventListener('load', this.determinePosition.bind(this));
+    window.addEventListener('resize', this.determinePosition);
+    window.addEventListener('load', this.determinePosition);
   },
 
   methods: {
@@ -80,6 +80,10 @@ export default {
       this.updatePosition(0, x, y);
     }
   }
+
+  // beforeDestroy: function () {
+  //   window.removeEventListener('resize', this.determinePosition)
+  // }
 };
 </script>
 
