@@ -8,6 +8,7 @@
 
 
 <template>
+  <grid-test></grid-test>
   <section id="modules"
     :class="editing ? 'edit-mode': 'play-mode'">
 
@@ -70,6 +71,7 @@
 </template>
 
 <script>
+import GridTest from './components/gridTEST';
 
 import Node from './components/Node';
 import Reverb from './components/Reverb';
@@ -96,6 +98,7 @@ export default {
   },
 
   components: {
+    GridTest,
     masterOut,
     connector,
     Node,
