@@ -44,7 +44,7 @@ export const draggable = {
 
   methods: {
     startDraggingNode(event) {
-      const node = this.$el;  // event.target;
+      const node = this.$el;
 
       // if (!event.target.classList.contains('module-interface')) {
       //   return;
@@ -53,10 +53,10 @@ export const draggable = {
       this.dragging = true;
 
       // Save starting positions of cursor and element.
-      dragObj.cursorStartX = event.clientX; // + window.scrollX;
-      dragObj.cursorStartY = event.clientY; // + window.scrollY;
-      dragObj.startX = this.x; // || node.getBoundingClientRect().left; // node.offsetLeft;
-      dragObj.startY = this.y; // || node.getBoundingClientRect().top; // node.offsetTop;
+      dragObj.cursorStartX = event.clientX;
+      dragObj.cursorStartY = event.clientY;
+      dragObj.startX = this.x;
+      dragObj.startY = this.y;
 
       // Update element's z-index.
       node.style.zIndex = ++dragObj.zIndex;
@@ -69,8 +69,6 @@ export const draggable = {
     whileDraggingNode(event) {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
-      // const x = this.x + event.clientX - dragObj.cursorStartX;
-      // const y = this.y + event.clientY - dragObj.cursorStartY;
 
       this.updatePosition(this.id, x, y);
 
@@ -81,7 +79,6 @@ export const draggable = {
     stopDraggingNode(event) {
       document.removeEventListener('mousemove', this.whileDraggingNode);
       document.removeEventListener('mouseup', this.stopDraggingNode);
-      // updatePosition(this, x, y);
       this.dragging = false;
     }
   }

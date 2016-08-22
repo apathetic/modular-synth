@@ -3,9 +3,9 @@
   class="module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @mouseover.stop="setActiveModule(id)"
+  @click="setSelected(id)"
+  @mouseover="setActiveModule(id)"
   @mousedown.prevent="startDraggingNode">
-  <!-- @mousedown.prevent="dragStart($event, this)"> -->
 
     <div class="module-details">
       <h3>{{ name }}</h3>
@@ -26,7 +26,7 @@
 
 <script>
 import { draggable } from '../mixins';
-import { setActiveModule, newConnection, updateConnection_ } from '../vuex/actions';
+import { setActiveModule, setSelected, newConnection, updateConnection_ } from '../vuex/actions';
 
 export default {
   mixins: [draggable],
@@ -35,6 +35,7 @@ export default {
     actions: {
       setActiveModule,
       newConnection,
+      setSelected,
       updateConnection_
     }
   },
