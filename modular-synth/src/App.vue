@@ -47,7 +47,8 @@
     <div>
       <button @click="toggleEditMode">{{ editing ? 'Play Mode' : 'Edit mode' }}</button>
       <button @click="newModule('Node')">add Node</button>
-      <button @click="newModule('Oscillator')">add osc</button>
+      <button @click="newModule('Oscillator')">osc</button>
+      <button @click="newModule('LFO')">LFO</button>
       <button @click="newModule('Reverb')">reverb</button>
       <button @click="newModule('Filter')">filter</button>
       <button @click="newModule('Mixer')">mixer</button>
@@ -74,6 +75,7 @@
 import Node from './components/Node';
 import Reverb from './components/Reverb';
 import Oscillator from './components/Oscillator';
+import LFO from './components/LFO';
 import Filter from './components/Filter';
 import Mixer from './components/Mixer';
 
@@ -101,6 +103,7 @@ export default {
     Node,
     Reverb,
     Oscillator,
+    LFO,
     Filter,
     Mixer,
     midi

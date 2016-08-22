@@ -46,9 +46,9 @@ export const draggable = {
     startDraggingNode(event) {
       const node = this.$el;  // event.target;
 
-      if (!event.target.classList.contains('module-interface')) {
-        return;
-      }
+      // if (!event.target.classList.contains('module-interface')) {
+      //   return;
+      // }
 
       this.dragging = true;
 
