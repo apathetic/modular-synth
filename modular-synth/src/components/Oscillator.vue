@@ -92,14 +92,16 @@ export default {
     this.osc.frequency.value = this.freq;
     this.osc.connect(this.outlets[0].data);
 
+
+    this.inlets[0].data = this.osc.frequency;
+
+
     this.$watch('freq', this.setFreq);
     this.$watch('type', this.setType);
 
     this.$on('start', this.start);
     this.$on('stop', this.stop);      // BAD. CANNOT RESTART.
   },
-
-  computed: {},
 
   methods: {
     /**
