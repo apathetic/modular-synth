@@ -17,22 +17,8 @@
 
     <!-- @mouseup.stop="updateConnection_(inlet)" -->
     <div class="module-connections">
-      <div class="inlets">
-        <span v-for="inlet in inlets"
-          data-label="{{ inlet.label }}"
-          data-port="{{ $index }}"
-          class="inlet">
-        </span>
-      </div>
-
-      <div class="outlets">
-        <span v-for="outlet in outlets"
-          @mousedown.stop="newConnection(outlet)"
-          data-label="{{ outlet.label }}"
-          data-port="{{ outlet.port }}"
-          class="outlet">
-        </span>
-      </div>
+      <partial name="inlets"></partial>
+      <partial name="outlets"></partial>
     </div>
   </div>
 </template>
@@ -106,7 +92,8 @@ export default {
 <style lang="scss">
   .module {
     position: absolute;
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: column;
     background: #444; // #888;
     border: 1px solid #666;
     border-radius: 2px;
@@ -128,7 +115,7 @@ export default {
     &-details {
       background: #444;
       padding: 0.2em;
-      display: none;
+      // display: none;
     }
 
     &-interface {
@@ -144,18 +131,20 @@ export default {
     &-connections {
       position: absolute;
       width: 100%;
-      top: 0;
+      top: 3px; // 0;
+      height: 0;
       font-size: 10px;
 
       span {
-        position: absolute;
+        // position: absolute;
+        margin: 7px 0;
         display: block;
         width: 3px;
         height: 12px;
         background: #eee; // #111;
         cursor: pointer;
-
-        // text-indent: 1em;
+        text-transform: uppercase;
+        font-size: 0.75em;
 
         &:hover {
           background: orange;
@@ -165,17 +154,25 @@ export default {
           content: attr(data-label);
           width: 5em;
           position: absolute;
-          // pointer-events: none;
+          top: 1px;
         }
 
         // we provide for the case of <= 4 inputs/outputs
-        &:nth-child(1) { top: 10px; }
-        &:nth-child(2) { top: 30px; }
-        &:nth-child(3) { top: 50px; }
-        &:nth-child(4) { top: 70px; }
-        &:nth-child(5) { top: 90px; }
-        &:nth-child(6) { top: 110px; }
+        // &:nth-child(1) { top: 10px; }
+        // &:nth-child(2) { top: 30px; }
+        // &:nth-child(3) { top: 50px; }
+        // &:nth-child(4) { top: 70px; }
+        // &:nth-child(5) { top: 90px; }
+        // &:nth-child(6) { top: 110px; }
       }
+    }
+
+    .inlets {
+      float: left;
+    }
+
+    .outlets {
+      float: right;
     }
 
     .inlet {
