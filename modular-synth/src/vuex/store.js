@@ -34,6 +34,7 @@ const state = {
   cid: localStorage.getItem('cid') || 0,  // connector id
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
+  selected: null,
   activeModule: 0,
   activeConnection: 0
 };
@@ -44,6 +45,13 @@ const state = {
 // -----------------------------------------------
 
 const mutations = {
+  SET_SELECTED(state, id) {
+    state.selected = id;
+  },
+  RESET_SELECTED(state) {
+    state.selected = null;
+  },
+
   SET_ACTIVE_MODULE(state, id) {
     state.activeModule = id;
   },
@@ -57,6 +65,7 @@ const mutations = {
     state.id++;
   },
   REMOVE_MODULE(state, id) {
+    // const id = state.selected;
     state.modules = state.modules.filter((module) => {
       module.id !== id;
     });
