@@ -26,7 +26,7 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { setActiveModule, newConnection, updateConnection_ } from '../vuex/actions';
+import { setActiveModule, setSelected, newConnection, updateConnection_ } from '../vuex/actions';
 
 export default {
   mixins: [draggable],

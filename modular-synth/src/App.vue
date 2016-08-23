@@ -124,7 +124,7 @@ export default {
 
     window.addEventListener('keydown', (e) => {
       e.preventDefault();
-      console.log(e);
+
       switch (e.key) {
         case 'Delete':
         case 'Backspace':

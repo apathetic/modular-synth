@@ -64,13 +64,20 @@ const mutations = {
     });
     state.id++;
   },
-  REMOVE_MODULE(state, id) {
+  REMOVE_MODULE(state) {
     // const id = state.selected;
+    const id = state.activeModule;
     state.modules = state.modules.filter((module) => {
       module.id !== id;
     });
 
     // state.modules.splice(state.modules.indexOf(id), 1);
+
+    state.connections.forEach((connection) => {
+      if (connection.to.module.id === id || connection.from.module.id === id) {
+        //
+      }
+    });
   },
   UPDATE_POSITION(state, id, x, y) {
     // const module = state.modules.find(function(module) { return module.id === state.activeModule; });
@@ -93,6 +100,25 @@ const mutations = {
       label: outlet.label,   // for reference
       data: outlet.data      // for data flow
     };
+
+
+    // ACTUAL:
+    // "from":{
+    //   "port":0,"label":"output-1","data":{},
+    //   "module":{
+    //     "id":1,"type":"Node","x":100,"y":237
+    //   }
+
+    // BETTER:
+    // "from":{
+    //   "moduleId":1,
+    //   "label":"output-1",
+    //   "port":0,
+    //   "x":100,
+    //   "y":237
+    // }
+
+
 
     const to = {
       module: null,
