@@ -22,6 +22,6 @@ Vue.partial('outlets', '<div class="outlets"><span v-for="outlet in outlets" @mo
 /* eslint-disable no-new */
 new Vue({
   store,
-  el: 'main',
+  el: 'body',
   components: { App, FileManager }
 });
