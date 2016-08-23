@@ -25,8 +25,8 @@
 
 
 <script>
-import { draggable } from '../mixins';
-import { setActiveModule, setSelected, newConnection, updateConnection_ } from '../vuex/actions';
+import { draggable } from '../mixins/draggable';
+import { setActiveModule, newConnection, updateConnection_ } from '../vuex/actions';
 
 export default {
   mixins: [draggable],
@@ -111,6 +111,7 @@ export default {
 
     &.dragging {
       cursor: move;
+      // z-index: 100;
     }
 
     &-details {
@@ -193,4 +194,12 @@ export default {
       }
     }
   }
+
+  .play-mode {
+    .module {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
 </style>
