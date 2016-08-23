@@ -76,7 +76,7 @@ import GridTest from './components/gridTEST';
 import Node from './components/Node';
 import Reverb from './components/Reverb';
 import Oscillator from './components/Oscillator';
-import LFO from './components/LFO';
+// import LFO from './components/LFO';
 import Filter from './components/Filter';
 import Mixer from './components/Mixer';
 
@@ -105,7 +105,7 @@ export default {
     Node,
     Reverb,
     Oscillator,
-    LFO,
+    // LFO,
     Filter,
     Mixer,
     midi
@@ -126,6 +126,7 @@ export default {
       e.preventDefault();
       console.log(e);
       switch (e.key) {
+        case 'Delete':
         case 'Backspace':
           this.removeModule();
           break;
