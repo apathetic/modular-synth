@@ -10,10 +10,12 @@
 <template>
   <grid-test></grid-test>
   <section id="modules"
-    :class="editing ? 'edit-mode': 'play-mode'">
+  :class="editing ? 'edit-mode': 'play-mode'"
+  @click="resetSelected">
 
     modules: {{ modules|json }}<br><br>
     <!-- conec: {{ connectors|json }} -->
+    selected: {{ selected|json }}
 
     <component v-for="module in modules"  v-if="module.id !== 0"
       :is="module.type"
@@ -48,7 +50,8 @@
     <div>
       <button @click="toggleEditMode">{{ editing ? 'Play Mode' : 'Edit mode' }}</button>
       <button @click="newModule('Node')">add Node</button>
-      <button @click="newModule('Oscillator')">add osc</button>
+      <button @click="newModule('Oscillator')">osc</button>
+      <button @click="newModule('LFO')">LFO</button>
       <button @click="newModule('Reverb')">reverb</button>
       <button @click="newModule('Filter')">filter</button>
       <button @click="newModule('Mixer')">mixer</button>
@@ -63,9 +66,6 @@
     </div>
 
     <master-out></master-out>
-    <!-- <input id="masterOut1" type="range" min="0.0" max="1.0" step="0.1" value="0.0" /> -->
-    <!-- <input id="masterOut2" type="range" min="0.0" max="1.0" step="0.1" value="0.0" /> -->
-
 
   </aside>
 </template>
@@ -76,6 +76,7 @@ import GridTest from './components/gridTEST';
 import Node from './components/Node';
 import Reverb from './components/Reverb';
 import Oscillator from './components/Oscillator';
+import LFO from './components/LFO';
 import Filter from './components/Filter';
 import Mixer from './components/Mixer';
 
@@ -88,11 +89,11 @@ import * as actions from './vuex/actions';
 export default {
   vuex: {
     getters: {
-      // module: state => state.activeModule,
       module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
       modules: state => state.modules,
       // connection: state => state.activeConnection,
-      connectors: state => state.connections
+      connectors: state => state.connections,
+      selected: state => state.selected
     },
     actions: actions
   },
@@ -104,6 +105,7 @@ export default {
     Node,
     Reverb,
     Oscillator,
+    LFO,
     Filter,
     Mixer,
     midi
@@ -119,6 +121,19 @@ export default {
   ready() {
     this.bindConnections();
     // this.routeAudio();
+
+    window.addEventListener('keydown', (e) => {
+      e.preventDefault();
+      console.log(e);
+      switch (e.key) {
+        case 'Backspace':
+          this.removeModule();
+          break;
+      }
+      // if (e.keyCode === 8) {
+      //   // this.removeModule();
+      // }
+    });
   },
 
   methods: {
