@@ -103,8 +103,10 @@ export default {
   .knob {
     width: 50px;
     height: 50px;
+    display: inline-block;
     border: 3px #ddd solid;
     border-radius: 30px;
+    margin: 1em;
     cursor: pointer;
     background: radial-gradient(ellipse at center 45%, rgba(255,255,255,1) 25%,rgba(40,40,40,0.3) 100%);
     box-shadow: 0px 3px 2px #666;
