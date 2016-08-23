@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { draggable } from '../mixins';
+import { draggable } from '../mixins/draggable';
 import GridList from '../../static/js/gridList';  // TODO more this. move static
 
 export default {
