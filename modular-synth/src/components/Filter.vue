@@ -39,7 +39,7 @@
 
 
 <script>
-import { draggable } from '../mixins';
+import { draggable } from '../mixins/draggable';
 import { setActiveModule, newConnection } from '../vuex/actions';
 import Knob from './UI/Knob';
 
