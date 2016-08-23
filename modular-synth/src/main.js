@@ -1,11 +1,9 @@
 import Vue from 'vue';
 import store from './vuex/store';
 import App from './App';
+import FileManager from './FileManager';
 
-
-var context = window.AudioContext && (new window.AudioContext());
-// var masterOut = context.createGain();
-// masterOut.connect(context.destination);
+const context = window.AudioContext && (new window.AudioContext());
 
 // All Components will have access to AudioContext
 // oh.. although *now*, that includes Connectors
@@ -15,9 +13,6 @@ Vue.mixin({
       context: context
     };
   }
-  // ready() {
-  //   this.$on... dispatch(setACTIVE)
-  // }
 });
 
 Vue.partial('inlets', '<div class="inlets"><span v-for="inlet in inlets" data-label="{{ inlet.label }}" class="inlet"></span></div>');
@@ -28,5 +23,5 @@ Vue.partial('outlets', '<div class="outlets"><span v-for="outlet in outlets" @mo
 new Vue({
   store,
   el: 'main',
-  components: { App }
+  components: { App, FileManager }
 });
