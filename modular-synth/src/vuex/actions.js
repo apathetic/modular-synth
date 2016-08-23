@@ -29,6 +29,21 @@ export const routeAudio = ({ dispatch, state }) => {
 
 
 // -----------------------------------------------
+//  UI
+// -----------------------------------------------
+
+export const setSelected = ({ dispatch, state }, id) => {
+  if (state.selected !== id) {
+    dispatch('SET_SELECTED', id);
+  }
+};
+
+export const resetSelected = ({ dispatch, state }) => {
+  dispatch('RESET_SELECTED');
+};
+
+
+// -----------------------------------------------
 //  MODULES
 // -----------------------------------------------
 
@@ -42,8 +57,8 @@ export const newModule = ({ dispatch }, type) => {
   dispatch('ADD_MODULE', type);
 };
 
-export const removeModule = ({ dispatch }, id) => {
-  dispatch('REMOVE_MODULE', id);
+export const removeModule = ({ dispatch }) => {
+  dispatch('REMOVE_MODULE');
 };
 
 export const updatePosition = ({ dispatch }, id, x, y) => {
