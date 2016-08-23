@@ -30,12 +30,12 @@ export default {
     actions: actions
   },
   data: {
+    FM,
     patches: [
       FM
     ]
   },
   ready() {
-    console.log('asfdfasasdfasdfafsd');
     console.log(FM);
   }
 };
