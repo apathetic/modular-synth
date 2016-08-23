@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { draggable } from '../mixins';
+import { draggable } from '../mixins/draggable';
 import Level from './UI/Level';
 
 export default {
