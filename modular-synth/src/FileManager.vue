@@ -7,36 +7,48 @@
 
 <template>
   <button>save</button>
-  <select name="load">
+  <select v-model="selected">
     <option value="juno">Juno</option>
     <option value="arp">Arp</option>
-    <option v-for="patch in patches" :value="patch.name">{{ patch.name }}</option>
+    <option v-for="patch in patches" :value="patch">{{ patch.name }}</option>
   </select>
-  <button>load</button>
+  <button @click="loadIt">load</button>
 </template>
 
 <script>
 
-import * as actions from './vuex/actions';
+// import { STORAGE_KEY_MODULES, STORAGE_KEY_CONNECTIONS } from './vuex/store';
+import { load } from './vuex/actions';
 // import * as patches from './assets/patches';
 import FM from './assets/patches/FM';
-// import Juno from './assets/patches/Juno';
+import Mod from './assets/patches/Mod';
 
 export default {
   vuex: {
     getters: {
       module: state => state.modules.find(function(module) { return module.id === state.activeModule; })
     },
-    actions: actions
+    actions: {
+      load
+    }
   },
-  data: {
-    FM,
-    patches: [
-      FM
-    ]
+  data() {
+    return {
+      selected: {},
+      patches: []
+    };
   },
   ready() {
-    console.log(FM);
+    this.patches.push(FM);
+    this.patches.push(Mod);
+  },
+  methods: {
+    loadIt() {
+      const patch = this.selected;
+
+      localStorage.clear();
+      this.load(patch);
+    }
   }
 };
 

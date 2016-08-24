@@ -45,6 +45,13 @@ const state = {
 // -----------------------------------------------
 
 const mutations = {
+  LOAD(state, newState) {
+    console.log(newState, 'asfdsfdafd');
+    for (let key in newState) {
+      state[key] = newState[key];
+    }
+  },
+
   SET_SELECTED(state, id) {
     state.selected = id;
   },
