@@ -119,20 +119,26 @@ export default {
   },
 
   ready() {
-    // this.bindConnections();
-    // this.routeAudio();
-    this.load(false);
-
+    console.log('c)');
     window.addEventListener('keydown', (e) => {
-      e.preventDefault();
-
-      switch (e.key) {
+      console.log(e.code);
+      switch (e.code) {
         case 'Delete':
         case 'Backspace':
           this.removeModule();
           break;
+        case 'Tab':
+          this.toggleEditMode();
+          break;
+        case 'Escape':
+          this.togglePower();
+          break;
+        case 'Space':
+          // this.togglePlay();
+          break;
       }
     });
+    this.load(false); // false: don't load any external json; just use what was left in localStorage (if any)
   },
 
   methods: {
