@@ -116,20 +116,19 @@ export default {
   },
 
   ready() {
-    this.bindConnections();
+    // this.bindConnections();
     // this.routeAudio();
+    this.load(false);
 
     window.addEventListener('keydown', (e) => {
       e.preventDefault();
 
       switch (e.key) {
+        case 'Delete':
         case 'Backspace':
           this.removeModule();
           break;
       }
-      // if (e.keyCode === 8) {
-      //   // this.removeModule();
-      // }
     });
   },
 

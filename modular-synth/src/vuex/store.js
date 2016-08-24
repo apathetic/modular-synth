@@ -9,6 +9,26 @@ export const STORAGE_KEY_MODULES = 'modules';
 export const STORAGE_KEY_CONNECTIONS = 'connections';
 
 /**
+ * Reactify the connections.
+ * The connection objects stored in localStorage are just objects in JSON -- they
+ * lack the reactvity that we get when adding actual modules with bound listeners
+ * to the store; hence, we need to update all the static references.
+ * @return {[type]} [description]
+ */
+function bindConnections() {
+  const connections = state.connections;
+  const modules = state.modules;
+
+  for (let connection of connections) {
+    const fromId = connection.from.module.id;
+    connection.from.module = modules.find(function(m) { return m.id === fromId; });
+
+    const toId = connection.to.module.id;
+    connection.to.module = modules.find(function(m) { return m.id === toId; });
+  }
+};
+
+/**
  * [routeAudio description]
  * @param  {[type]} source      [description]
  * @param  {[type]} destination [description]
@@ -46,10 +66,13 @@ const state = {
 
 const mutations = {
   LOAD(state, newState) {
-    console.log(newState, 'asfdsfdafd');
-    for (let key in newState) {
-      state[key] = newState[key];
+    if (newState) {
+      for (let key in newState) {
+        state[key] = newState[key];
+      }
     }
+    bindConnections();
+    // routeAudio();
   },
 
   SET_SELECTED(state, id) {
