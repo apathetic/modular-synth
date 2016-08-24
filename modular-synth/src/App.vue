@@ -119,8 +119,9 @@ export default {
   },
 
   ready() {
-    this.bindConnections();
+    // this.bindConnections();
     // this.routeAudio();
+    this.load(false);
 
     window.addEventListener('keydown', (e) => {
       e.preventDefault();
@@ -131,9 +132,6 @@ export default {
           this.removeModule();
           break;
       }
-      // if (e.keyCode === 8) {
-      //   // this.removeModule();
-      // }
     });
   },
 

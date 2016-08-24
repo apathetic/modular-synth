@@ -44,11 +44,8 @@ export const draggable = {
 
   methods: {
     startDraggingNode(event) {
-      const node = this.$el;  // event.target;
-
-      // if (!event.target.classList.contains('module-interface')) {
-      //   return;
-      // }
+      const node = this.$el;
+      node.style.zIndex = ++dragObj.zIndex;     // Update element's z-index.
 
       this.dragging = true;
 
@@ -58,9 +55,6 @@ export const draggable = {
       dragObj.startX = this.x;
       dragObj.startY = this.y;
 
-      // Update element's z-index.
-      node.style.zIndex = ++dragObj.zIndex;
-      //
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDraggingNode);
       document.addEventListener('mouseup', this.stopDraggingNode);

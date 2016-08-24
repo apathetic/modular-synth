@@ -10,25 +10,25 @@
  * to the store; hence, we need to update all the static references.
  * @return {[type]} [description]
  */
-export const bindConnections = ({ dispatch, state }) => {
-  const connections = state.connections;
-  const modules = state.modules;
-
-  for (let connection of connections) {
-    const fromId = connection.from.module.id;
-    connection.from.module = modules.find(function(m) { return m.id === fromId; });
-
-    const toId = connection.to.module.id;
-    connection.to.module = modules.find(function(m) { return m.id === toId; });
-  }
-};
+// export const bindConnections = ({ dispatch, state }) => {
+//   const connections = state.connections;
+//   const modules = state.modules;
+//
+//   for (let connection of connections) {
+//     const fromId = connection.from.module.id;
+//     connection.from.module = modules.find(function(m) { return m.id === fromId; });
+//
+//     const toId = connection.to.module.id;
+//     connection.to.module = modules.find(function(m) { return m.id === toId; });
+//   }
+// };
+//
+// export const routeAudio = ({ dispatch, state }) => {
+//
+// };
 
 export const load = ({ dispatch }, newState) => {
   dispatch('LOAD', newState);
-};
-
-export const routeAudio = ({ dispatch, state }) => {
-
 };
 
 
