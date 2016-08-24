@@ -12,9 +12,9 @@
   :class="editing ? 'edit-mode': 'play-mode'"
   @click="resetSelected">
 
-    modules: {{ modules|json }}<br><br>
+    <!-- modules: {{ modules|json }}<br><br> -->
     <!-- conec: {{ connectors|json }} -->
-    selected: {{ selected|json }}
+    <!-- selected: {{ selected|json }} -->
 
     <component v-for="module in modules"  v-if="module.id !== 0"
       :is="module.type"
