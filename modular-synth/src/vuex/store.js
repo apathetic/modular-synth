@@ -25,22 +25,23 @@ function bindConnections() {
 
     const toId = connection.to.module.id;
     connection.to.module = modules.find(function(m) { return m.id === toId; });
+
+    routeAudio(connection);
   }
 };
 
 /**
- * [routeAudio description]
- * @param  {[type]} source      [description]
- * @param  {[type]} destination [description]
- * @return {[type]}             [description]
+ * Route all Audio connections post-load.
+ * @param  {[type]} connection [description]
+ * @return {void}
  */
-function routeAudio(source, destination) {
-  const audioOut = source.data;
-  const audioIn = destination.data;
+function routeAudio(connection) {
+  const source = connection.from.data;
+  const destination = connection.to.data;
 
-  if (audioOut && audioIn) {
-    console.log('connecting %s --> %s', source.label, destination.label);
-    audioOut.connect(audioIn);
+  if (source && destination) {
+    console.log('connecting %s --> %s', connection.from.label, connection.to.label);
+    source.connect(destination);
   }
 }
 
@@ -176,12 +177,7 @@ const mutations = {
     //     // dispatch('REMOVE_CONNECTION');
     // }
 
-    // const source = connection.from.data;
-    // const destination = connection.to.data;
-    routeAudio(connection.from, connection.to);
-    // if (source && destination) {
-    //   source.connect(destination);
-    // }
+    routeAudio(connection);
   },
   REMOVE_CONNECTION(state) {
     let active = state.activeConnection;
