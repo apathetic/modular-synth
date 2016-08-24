@@ -23,6 +23,10 @@ export const bindConnections = ({ dispatch, state }) => {
   }
 };
 
+export const load = ({ dispatch }, newState) => {
+  dispatch('LOAD', newState);
+};
+
 export const routeAudio = ({ dispatch, state }) => {
 
 };
