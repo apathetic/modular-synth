@@ -19,8 +19,8 @@
 
 import { load } from './vuex/actions';
 // import * as patches from './assets/patches';
-import FM from './assets/patches/FM';
-import Mod from './assets/patches/Mod';
+import FM from '../static/patches/FM';
+import Mod from '../static/patches/Mod';
 
 export default {
   vuex: {
