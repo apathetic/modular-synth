@@ -6,7 +6,7 @@
 // load-friendly ie. proper ajax implementation. Or just bundle json with the App.
 
 <template>
-  <button>save</button>
+  <button @click="saveIt">save</button>
   <select v-model="selected">
     <option value="juno">Juno</option>
     <option value="arp">Arp</option>
@@ -17,7 +17,6 @@
 
 <script>
 
-// import { STORAGE_KEY_MODULES, STORAGE_KEY_CONNECTIONS } from './vuex/store';
 import { load } from './vuex/actions';
 // import * as patches from './assets/patches';
 import FM from './assets/patches/FM';
@@ -25,21 +24,19 @@ import Mod from './assets/patches/Mod';
 
 export default {
   vuex: {
-    getters: {
-      module: state => state.modules.find(function(module) { return module.id === state.activeModule; })
-    },
     actions: {
       load
     }
   },
   data() {
     return {
+      name: 'wess',
       selected: {},
       patches: []
     };
   },
   ready() {
-    this.patches.push(FM);
+    this.patches.push(FM);    // dumb way for testing for now
     this.patches.push(Mod);
   },
   methods: {
@@ -48,6 +45,16 @@ export default {
 
       localStorage.clear();
       this.load(patch);
+    },
+    saveIt() {
+      const patch = {
+        name: this.name,
+        id: localStorage.getItem('id'),
+        cid: localStorage.getItem('cid'),
+        modules: localStorage.getItem('modules'),
+        connections: localStorage.getItem('connections')
+      };
+      console.log(patch);
     }
   }
 };
