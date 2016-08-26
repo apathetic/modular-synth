@@ -9,18 +9,39 @@ export const STORAGE_KEY_MODULES = 'modules';
 export const STORAGE_KEY_CONNECTIONS = 'connections';
 
 /**
- * [routeAudio description]
- * @param  {[type]} source      [description]
- * @param  {[type]} destination [description]
- * @return {[type]}             [description]
+ * Reactify the connections.
+ * The connection objects stored in localStorage are just objects in JSON -- they
+ * lack the reactvity that we get when adding actual modules with bound listeners
+ * to the store; hence, we need to update all the static references.
+ * @return {[type]} [description]
  */
-function routeAudio(source, destination) {
-  const audioOut = source.data;
-  const audioIn = destination.data;
+function bindConnections() {
+  const connections = state.connections;
+  const modules = state.modules;
 
-  if (audioOut && audioIn) {
-    console.log('connecting %s --> %s', source.label, destination.label);
-    audioOut.connect(audioIn);
+  for (let connection of connections) {
+    const fromId = connection.from.module.id;
+    connection.from.module = modules.find(function(m) { return m.id === fromId; });
+
+    const toId = connection.to.module.id;
+    connection.to.module = modules.find(function(m) { return m.id === toId; });
+
+    routeAudio(connection);
+  }
+};
+
+/**
+ * Route all Audio connections post-load.
+ * @param  {[type]} connection [description]
+ * @return {void}
+ */
+function routeAudio(connection) {
+  const source = connection.from.data;
+  const destination = connection.to.data;
+
+  if (source && destination) {
+    console.log('connecting %s --> %s', connection.from.label, connection.to.label);
+    source.connect(destination);
   }
 }
 
@@ -45,6 +66,16 @@ const state = {
 // -----------------------------------------------
 
 const mutations = {
+  LOAD(state, newState) {
+    if (newState) {
+      for (let key in newState) {
+        state[key] = newState[key];
+      }
+    }
+    bindConnections();
+    // routeAudio();
+  },
+
   SET_SELECTED(state, id) {
     state.selected = id;
   },
@@ -64,13 +95,20 @@ const mutations = {
     });
     state.id++;
   },
-  REMOVE_MODULE(state, id) {
+  REMOVE_MODULE(state) {
     // const id = state.selected;
+    const id = state.activeModule;
     state.modules = state.modules.filter((module) => {
       module.id !== id;
     });
 
     // state.modules.splice(state.modules.indexOf(id), 1);
+
+    state.connections.forEach((connection) => {
+      if (connection.to.module.id === id || connection.from.module.id === id) {
+        //
+      }
+    });
   },
   UPDATE_POSITION(state, id, x, y) {
     // const module = state.modules.find(function(module) { return module.id === state.activeModule; });
@@ -93,6 +131,25 @@ const mutations = {
       label: outlet.label,   // for reference
       data: outlet.data      // for data flow
     };
+
+
+    // ACTUAL:
+    // "from":{
+    //   "port":0,"label":"output-1","data":{},
+    //   "module":{
+    //     "id":1,"type":"Node","x":100,"y":237
+    //   }
+
+    // BETTER:
+    // "from":{
+    //   "moduleId":1,
+    //   "label":"output-1",
+    //   "port":0,
+    //   "x":100,
+    //   "y":237
+    // }
+
+
 
     const to = {
       module: null,
@@ -120,12 +177,7 @@ const mutations = {
     //     // dispatch('REMOVE_CONNECTION');
     // }
 
-    // const source = connection.from.data;
-    // const destination = connection.to.data;
-    routeAudio(connection.from, connection.to);
-    // if (source && destination) {
-    //   source.connect(destination);
-    // }
+    routeAudio(connection);
   },
   REMOVE_CONNECTION(state) {
     let active = state.activeConnection;

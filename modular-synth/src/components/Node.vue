@@ -133,13 +133,13 @@ export default {
     &-connections {
       position: absolute;
       width: 100%;
-      top: 3px; // 0;
+      top: 2px; // 0;
       height: 0;
       font-size: 10px;
 
       span {
         // position: absolute;
-        margin: 7px 0;
+        margin: 8px 0;
         display: block;
         width: 3px;
         height: 12px;
@@ -156,10 +156,8 @@ export default {
           content: attr(data-label);
           width: 5em;
           position: absolute;
-          // pointer-events: none;
-          font-size: 0.75em;
           text-transform: uppercase;
-          top: 1px;
+          line-height: 1.6;
         }
 
         // we provide for the case of <= 4 inputs/outputs
