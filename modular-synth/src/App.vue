@@ -13,9 +13,9 @@
   :class="editing ? 'edit-mode': 'play-mode'"
   @click="resetSelected">
 
-    modules: {{ modules|json }}<br><br>
+    <!-- modules: {{ modules|json }}<br><br> -->
     <!-- conec: {{ connectors|json }} -->
-    selected: {{ selected|json }}
+    <!-- selected: {{ selected|json }} -->
 
     <component v-for="module in modules"  v-if="module.id !== 0"
       :is="module.type"
@@ -119,22 +119,25 @@ export default {
   },
 
   ready() {
-    this.bindConnections();
-    // this.routeAudio();
-
+    console.log('c)');
     window.addEventListener('keydown', (e) => {
-      e.preventDefault();
-      console.log(e);
-      switch (e.key) {
+      switch (e.code) {
         case 'Delete':
         case 'Backspace':
           this.removeModule();
           break;
+        case 'Tab':
+          this.toggleEditMode();
+          break;
+        case 'Escape':
+          this.togglePower();
+          break;
+        case 'Space':
+          // this.togglePlay();
+          break;
       }
-      // if (e.keyCode === 8) {
-      //   // this.removeModule();
-      // }
     });
+    this.load(false); // false: don't load any external json; just use what was left in localStorage (if any)
   },
 
   methods: {

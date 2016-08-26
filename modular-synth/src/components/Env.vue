@@ -1,3 +1,7 @@
+//------------------------------------------------
+//  Envelope
+// -----------------------------------------------
+
 <template>
   <div
   class="module"
@@ -17,45 +21,62 @@
 
     <!-- @mouseup.stop="updateConnection_(inlet)" -->
     <div class="module-connections">
-      <partial name="inlets"></partial>
-      <partial name="outlets"></partial>
+      <div class="inlets">
+        <span v-for="inlet in inlets"
+          data-label="{{ inlet.label }}"
+          data-port="{{ $index }}"
+          class="inlet">
+        </span>
+      </div>
+
+      <div class="outlets">
+        <span v-for="outlet in outlets"
+          @mousedown.stop="newConnection(outlet)"
+          data-label="{{ outlet.label }}"
+          data-port="{{ outlet.port }}"
+          class="outlet">
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 
 <script>
-import { draggable } from '../mixins/draggable';
-import { setActiveModule, newConnection } from '../vuex/actions';
-import Knob from './UI/Knob';
+import { draggable } from '../mixins';
+import { setActiveModule, newConnection, updateConnection_ } from '../vuex/actions';
 
 export default {
-  props: { id: null },
-  components: { Knob },
   mixins: [draggable],
 
   vuex: {
     actions: {
       setActiveModule,
-      newConnection
+      newConnection,
+      updateConnection_
     }
+  },
+
+  props: {
+    id: null
   },
 
   data() {
     return {
-      name: 'Filter',
-      freq: 440,
-      types: ['lowpass', 'hipass', 'bandpass', 'notch'],
-      Q: 1,
+      name: 'Node',
 
       inlets: [
         {
           port: 0,
-          label: 'in-1',
+          label: 'freq',
           data: this.input
         }, {
           port: 1,
-          label: 'in-2',
+          label: 'gain',
+          data: null // this.input
+        }, {
+          port: 2,
+          label: 'range',
           data: null // this.input
         }
       ],
@@ -75,28 +96,11 @@ export default {
   },
 
   created() {
-    // inputs
+    // dummy outlet for test
     this.inlets[0].data = this.context.createGain();
 
-
-    // create the filter
-    this.filter = this.context.createBiquadFilter();
-    this.filter.type = this.types[0];
-    this.filter.frequency.value = this.freq;
-    this.filter.Q.value = this.Q;
-
-    // connect input to our filter
-    this.inlets[0].data.connect(this.filter);
-  },
-
-  methods: {
-    setFreq(f) {
-      this.filter.frequency.value = f;
-    },
-
-    setType(t) {
-      this.filter.type = this.types[t] || 'lowpass';
-    }
+    this.outlets[0].data = this.context.createGain();
+    this.outlets[1].data = this.context.createGain();
   }
 };
 

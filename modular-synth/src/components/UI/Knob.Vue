@@ -1,5 +1,7 @@
 <template>
-  <div v-on:mousedown="start" @wheel="" class="knob">
+  <div
+  class="knob"
+  @mousedown.stop.prevent="start">
     <div v-el:notch class="notch"></div>
     <span>{{ value }}</span>
   </div>
@@ -60,8 +62,8 @@ export default {
       this.startValue = this.value;
       this.startClientY = e.clientY;
 
-      document.body.style.webkitUserSelect = 'none';
-      document.body.style.userSelect = 'none';
+      // document.body.style.webkitUserSelect = 'none';
+      // document.body.style.userSelect = 'none';
     },
 
     update(e) {
@@ -77,9 +79,6 @@ export default {
       this.value = Math.round(value);
       this.setRotationDegrees();
     },
-
-    end(e) {},
-
 
     /**
      * Set the knob's notch position
