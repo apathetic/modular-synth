@@ -3,33 +3,43 @@
   class="module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @click="setSelected(id)"
-  @mouseover="setActiveModule(id)"
-  @mousedown.prevent="startDraggingNode">
 
-    <div class="module-details">
+  :data-w="w"
+  :data-h="h"
+  :data-x="x"
+  :data-y="y"
+  :data-id="id"
+
+  @click="setSelected(id)"
+  @mouseover="setActiveModule(id)">
+
+    {{ position | json }}
+
+    <slot></slot>
+
+    <!-- <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
 
     <div class="module-interface">
-      <slot name="interface"></slot>
+      <! - - <slot></slot> - - >
     </div>
 
-    <!-- @mouseup.stop="updateConnection_(inlet)" -->
+    <! - - @mouseup.stop="updateConnection_(inlet)"  - - >
     <div class="module-connections">
       <partial name="inlets"></partial>
       <partial name="outlets"></partial>
-    </div>
+    </div> -->
   </div>
 </template>
 
 
 <script>
-import { draggable } from '../mixins/draggable';
+// import { draggable } from '../mixins/draggable';
 import { setActiveModule, setSelected, newConnection, updateConnection_ } from '../vuex/actions';
 
 export default {
-  mixins: [draggable],
+  // mixins: [draggable],
 
   vuex: {
     actions: {
@@ -41,7 +51,26 @@ export default {
   },
 
   props: {
-    id: null
+    id: null,
+    h: null,
+    w: null,
+    x: null,
+    y: null,
+    height: null,
+    width: null,
+    top: null,
+    left: null
+  },
+
+  computed: {
+    position() {
+      return {
+        height: this.height + 'px',
+        width: this.width + 'px',
+        left: this.left + 'px',
+        top: this.top + 'px'
+      };
+    }
   },
 
   data() {
@@ -92,17 +121,17 @@ export default {
 
 <style lang="scss">
   .module {
-    position: absolute;
-    display: inline-flex;
-    flex-direction: column;
-    background: #444; // #888;
-    border: 1px solid #666;
-    border-radius: 2px;
-    z-index: 1;
+    // position: absolute;
+    // display: inline-flex;
+    // flex-direction: column;
+    // background: #444; // #888;
+    // border: 1px solid #666;
+    // border-radius: 2px;
+    // z-index: 1;
 
     // TODO
-    min-width: 206px;
-    min-height: 80px;
+    // min-width: 206px;
+    // min-height: 80px;
 
     &:hover {
       // background: #eff;
@@ -201,6 +230,53 @@ export default {
       width: 200px;
       height: 200px;
     }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // .grid-container {
+  //   z-index: 9999;
+  //   position: absolute;
+  //   top: 66px;
+  //   left: 0;
+  //   right: 10px;
+  //   bottom: 0;
+  //   overflow: auto;
+  // }
+
+  .grid {
+    position: relative;
+    height: 100%;
+    list-style: none;
+  }
+
+  .grid .module {
+    height: 200px;
+    width: 200px;
+    border: 1px solid #fff;
+    position: absolute;
   }
 
 </style>

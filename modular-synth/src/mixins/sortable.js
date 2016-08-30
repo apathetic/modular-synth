@@ -1,671 +1,380 @@
-const defaults = {
-  lanes: 5,
-  direction: 'horizontal'
-};
-
-function cloneItems(items, _items) {
-  /**
-   * Clone items with a deep level of one. Items are not referenced but their
-   * properties are
-   */
-  // var _item;
-  var i;
-  var k;
-
-  if (_items === undefined) {
-    _items = [];
-  }
-  for (i = 0; i < items.length; i++) {
-    // XXX: this is good because we don't want to lose item reference, but
-    // maybe we should clear their properties since some might be optional
-    if (!_items[i]) {
-      _items[i] = {};
-    }
-    for (k in items[i]) {
-      _items[i][k] = items[i][k];
-    }
-  }
-  return _items;
-};
-
-function GridCol(lanes) {
-  for (var i = 0; i < lanes; i++) {
-    this.push(null);
-  }
-};
-GridCol.prototype = [];
+import GridList from '../../static/js/gridList';  // TODO more this. move static
 
 export const sortable = {
 
-  methods: {
+  data() {
+    return {
+      items: [
+        {w: 1, h: 1, x: 0, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 2, x: 0, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 2, x: 1, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 1, y: 2, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, x: 2, y: 2, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 3, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 3, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 0, x: 4, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 3, h: 1, x: 5, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, x: 5, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 5, y: 2, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, x: 6, y: 2, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 7, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 0, x: 8, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 10, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 10, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 10, y: 2, width: '', height: '', left: '', top: ''}
+      ],
 
-    /**
-     * A GridList manages the two-dimensional positions from a list of items,
-     * within a virtual matrix.
-     *
-     * The GridList's main function is to convert the item positions from one
-     * grid size to another, maintaining as much of their order as possible.
-     *
-     * The GridList's second function is to handle collisions when moving an item
-     * over another.
-     *
-     * The positioning algorithm places items in columns. Starting from left to
-     * right, going through each column top to bottom.
-     *
-     * The size of an item is expressed using the number of cols and rows it
-     * takes up within the grid (w and h)
-     *
-     * The position of an item is express using the col and row position within
-     * the grid (x and y)
-     *
-     * An item is an object of structure:
-     * {
-     *   w: 3, h: 1,
-     *   x: 0, y: 1
-     * }
-     */
-    // constructor(items, options) {
-    //   this._options = Object.assign(defaults, options);
-    //
-    //   this.items = items;
-    //
-    //   this._adjustSizeOfItems();
-    //
-    //   this.generateGrid();
+      options: {
+        lanes: 3,
+        direction: 'horizontal',
+        itemSelector: '.module',
+        widthHeightRatio: 1,
+        dragAndDrop: true
+      },
+
+      draggableOptions: {
+        zIndex: 2,
+        scroll: false,
+        containment: 'parent'
+      }
+    };
+  },
+
+  ready() {
+    // this.handle = this.$els.grid;
+    // this._init();
+    // this._bindEvents();
+
+    // window.addEventListener('resize', function() {
+    //   this.gridList.resizeGrid(this.options.lanes);   // mmm, this is unbound, here. () => prolly wont work neither
+    // }.bind(this));
+  },
+
+  methods: {
+    resize(lanes) {
+      if (lanes) {
+        this.options.lanes = lanes;
+      }
+      this._createGridSnapshot();
+      this.gridList.resizeGrid(this.options.lanes);
+      this._updateGridSnapshot();
+
+      this.reflow();
+    },
+
+    resizeItem(element, size) {
+      /**
+       * Resize an item.
+       *
+       * @param {Object} size
+       * @param {Number} [size.w]
+       * @param {Number} [size.h}
+       */
+
+      this._createGridSnapshot();
+      this.gridList.resizeItem(this._getItemByElement(element), size);
+      this._updateGridSnapshot();
+
+      this.render();
+    },
+
+    reflow() {
+      this._calculateCellSize();
+      this.render();
+    },
+
+    render() {
+      this._applySizeToItems();
+      this._applyPositionToItems();
+    },
+
+    _bindMethod(fn) {
+      /**
+       * Bind prototype method to instance scope (similar to CoffeeScript's fat
+       * arrow)
+       */
+      var that = this;
+      return function() {
+        return fn.apply(that, arguments);
+      };
+    },
+
+    _init() {
+      console.log(this.handle);
+      // Read items and their meta data. Ignore other list elements (like the
+      // position highlight)
+      // this.elements = this.handle.children(this.options.itemSelector);
+      this.elements = this.handle.querySelectorAll(this.options.itemSelector);
+      console.log(this.elements);
+
+      // OBJECTS with x, y, w, h and id. Also, a ref to $el. Stored in an Array.  ... Duplicated now, with data() ?
+      // this.items = this._generateItemsFromDOM();
+
+      // console.log(this.elements);
+      // console.log(this.items);
+
+      this._widestItem = Math.max.apply(null, this.items.map(function(item) { return item.w; }));
+      this._tallestItem = Math.max.apply(null, this.items.map(function(item) { return item.h; }));
+
+      // Used to highlight a position an element will land on upon drop
+      // TODO: this:
+      this.$positionHighlight = this.handle.querySelectorAll('.position-highlight'); // .hide();
+      Array.from(this.$positionHighlight, (el) => { el.style.display = 'none'; });
+
+      this._initGridList();
+      this.reflow();
+
+      if (this.options.dragAndDrop) {
+
+
+
+        // Init Draggable JQuery UI plugin for each of the list items
+        // http://api.jqueryui.com/draggable/
+        // this.elements.draggable(this.draggableOptions);
+
+
+
+      }
+    },
+
+    _initGridList() {
+      // Create instance of GridList (decoupled lib for handling the grid
+      // positioning and sorting post-drag and dropping)
+      this.gridList = new GridList(this.items, {
+        lanes: this.options.lanes,
+        direction: this.options.direction
+      });
+    },
+
+    _bindEvents() {
+      this._onStart = this._bindMethod(this._onStart);
+      this._onDrag = this._bindMethod(this._onDrag);
+      this._onStop = this._bindMethod(this._onStop);
+
+      // this.elements.on('dragstart', this._onStart);
+      // this.elements.on('drag', this._onDrag);
+      // this.elements.on('dragstop', this._onStop);
+      Array.from(this.elements, (item) => {
+        item.addEventListener('dragstart', this._onStart);
+        item.addEventListener('drag', this._onDrag);
+        item.addEventListener('dragstop', this._onStop);
+      });
+    },
+
+    // _unbindEvents() {
+    //   this.elements.off('dragstart', this._onStart);
+    //   this.elements.off('drag', this._onDrag);
+    //   this.elements.off('dragstop', this._onStop);
     // }
 
-    /**
-     * Illustates grid as text-based table, using a number identifier for each
-     * item. E.g.
-     *
-     *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
-     *  --------------------------------------------
-     *  0| 00 02 03 04 04 06 08 08 08 12 12 13 14 16
-     *  1| 01 -- 03 05 05 07 09 10 11 11 -- 13 15 --
-     *
-     * Warn: Does not work if items don't have a width or height specified
-     * besides their position in the grid.
-     */
-    toString() {
-      var widthOfGrid = this.grid.length;
-      var output = '\n #|';
-      var border = '\n --';
-      var item;
-      var i;
-      var j;
+    _onStart(event, ui) {
+      // Create a deep copy of the items; we use them to revert the item
+      // positions after each drag change, making an entire drag operation less
+      // distructable
+      this._createGridSnapshot();
 
-      // Render the table header
-      for (i = 0; i < widthOfGrid; i++) {
-        output += ' ' + this._padNumber(i, ' ');
-        border += '---';
-      };
-      output += border;
+      // Since dragging actually alters the grid, we need to establish the number
+      // of cols (+1 extra) before the drag starts
 
-      // Render table contents row by row, as we go on the y axis
-      for (i = 0; i < this._options.lanes; i++) {
-        output += '\n' + this._padNumber(i, ' ') + '|';
-        for (j = 0; j < widthOfGrid; j++) {
-          output += ' ';
-          item = this.grid[j][i];
-          output += item ? this._padNumber(this.items.indexOf(item), '0') : '--';
+      this._maxGridCols = this.gridList.grid.length;
+    },
+
+    _onDrag(event, ui) {
+      var item = this._getItemByElement(ui.helper);
+      var newPosition = this._snapItemPositionToGrid(item);
+
+      if (this._dragPositionChanged(newPosition)) {
+        this._previousDragPosition = newPosition;
+
+        // Regenerate the grid with the positions from when the drag started
+        GridList.cloneItems(this._items, this.items);
+        this.gridList.generateGrid();
+
+        // Since the items list is a deep copy, we need to fetch the item
+        // corresponding to this drag action again
+        item = this._getItemByElement(ui.helper);
+        this.gridList.moveItemToPosition(item, newPosition);
+
+        // Visually update item positions and highlight shape
+        this._applyPositionToItems();
+        this._highlightPositionForItem(item);
+      }
+    },
+
+    _onStop(event, ui) {
+      this._updateGridSnapshot();
+      this._previousDragPosition = null;
+
+      // HACK: jQuery.draggable removes this class after the dragstop callback,
+      // and we need it removed before the drop, to re-enable CSS transitions
+      // $(ui.helper).removeClass('ui-draggable-dragging');
+      document.querySelector('ui.helper').classList.remove('ui-draggable-dragging');
+
+
+      this._applyPositionToItems();
+      this._removePositionHighlight();
+    },
+
+    // _generateItemsFromDOM() {
+    //   /**
+    //    * Generate the structure of items used by the GridList lib, using the DOM
+    //    * data of the children of the targeted element. The items will have an
+    //    * additional reference to the initial DOM element attached, in order to
+    //    * trace back to it and re-render it once its properties are changed by the
+    //    * GridList lib
+    //    */
+    //   // var _this = this;
+    //   var items = [];
+    //   // var item;
+    //
+    //   // this.elements.each(function(i, element) {
+    //   Array.from(this.elements, function(element) {
+    //     items.push({
+    //       $element: element,
+    //       x: Number(element.getAttribute('data-x')),
+    //       y: Number(element.getAttribute('data-y')),
+    //       w: Number(element.getAttribute('data-w')),
+    //       h: Number(element.getAttribute('data-h')),
+    //       id: Number(element.getAttribute('data-id'))
+    //     });
+    //   });
+    //   return items;
+    // },
+
+    _getItemByElement(element) {
+      // XXX: this could be optimized by storing the item reference inside the
+      // meta data of the DOM element
+      // for (var i = 0; i < this.items.length; i++) {
+      //   if (this.items[i].$element.is(element)) {
+      //     return this.items[i];
+      //   }
+      // }
+
+      return this.items.find((item) => {
+        // TODO: i think only components have $el.  How to reference each item's HTMLElement in the template
+        console.log(item);
+        item.$el === element;
+      });
+    },
+
+    _calculateCellSize() {
+      if (this.options.direction === 'horizontal') {
+        this._cellHeight = Math.floor(this.handle.offsetHeight / this.options.lanes);
+        this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+      } else {
+        this._cellWidth = Math.floor(this.$element.width() / this.options.lanes);
+        this._cellHeight = this._cellWidth / this.options.widthHeightRatio;
+      }
+      if (this.options.heightToFontSizeRatio) {
+        this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
+      }
+    },
+
+
+    // -----------------------------------------------------------------
+
+
+    _getItemWidth(item) {
+      return item.w * this._cellWidth;
+    },
+
+    _getItemHeight(item) {
+      return item.h * this._cellHeight;
+    },
+
+    _applySizeToItems() {
+      this.items.forEach((item) => {
+        item.width = this._getItemWidth(item);
+        item.height = this._getItemHeight(item);
+      });
+    },
+
+    _applyPositionToItems() {
+      this.items.forEach((item) => {
+        // Don't interfere with the positions of the dragged items
+        if (!item.move) {
+          item.left = item.x * this._cellWidth;
+          item.top = item.y * this._cellHeight;
         }
-      };
-      output += '\n';
-      return output;
-    },
-
-    generateGrid() {
-      /**
-       * Build the grid structure from scratch, with the current item positions
-       */
-      var i;
-      this._resetGrid();
-      for (i = 0; i < this.items.length; i++) {
-        this._markItemPositionToGrid(this.items[i]);
-      }
-    },
-
-    resizeGrid(lanes) {
-      var currentColumn = 0;
-
-      this._options.lanes = lanes;
-      this._adjustSizeOfItems();
-
-      this._sortItemsByPosition();
-      this._resetGrid();
-
-      // The items will be sorted based on their index within the this.items array,
-      // that is their "1d position"
-      for (var i = 0; i < this.items.length; i++) {
-        var item = this.items[i];
-        var position = this._getItemPosition(item);
-
-        this._updateItemPosition(
-          item, this.findPositionForItem(item, {x: currentColumn, y: 0}));
-
-        // New items should never be placed to the left of previous items
-        currentColumn = Math.max(currentColumn, position.x);
-      }
-      this._pullItemsToLeft();
-    },
-
-    findPositionForItem(item, start, fixedRow) {
-      /**
-       * This method has two options for the position we want for the item:
-       * - Starting from a certain row/column number and only looking for
-       *   positions to its right
-       * - Accepting positions for a certain row number only (use-case: items
-       *   being shifted to the left/right as a result of collisions)
-       *
-       * @param {Object<x:Number, y:Number, w:Number, h:Number} item
-       * @param {Object<x:Number, y:Number} start Position from which to start
-       *     the search.
-       * @param {Number} [fixedRow] If provided, we're going to try to find a
-       *     position for the new item on it. If doesn't fit there, we're going
-       *     to put it on the first row.
-       *
-       * @returns {Number[2]} x and y.
-       */
-
-      var x, y, position;
-
-      // Start searching for a position from the horizontal position of the
-      // rightmost item from the grid
-      for (x = start.x; x < this.grid.length; x++) {
-        if (fixedRow !== undefined) {
-          position = [x, fixedRow];
-
-          if (this._itemFitsAtPosition(item, position)) {
-            return position;
-          }
-        } else {
-          for (y = start.y; y < this._options.lanes; y++) {
-            position = [x, y];
-
-            if (this._itemFitsAtPosition(item, position)) {
-              return position;
-            }
-          }
-        }
-      }
-      // If we've reached this point, we need to start a new column
-      var newCol = this.grid.length;
-      var newRow = 0;
-
-      if (fixedRow !== undefined &&
-          this._itemFitsAtPosition(item, [newCol, fixedRow])) {
-        newRow = fixedRow;
-      }
-      return [newCol, newRow];
-    },
-
-    moveItemToPosition(item, newPosition) {
-      var position = this._getItemPosition({
-        x: newPosition[0],
-        y: newPosition[1],
-        w: item.w,
-        h: item.h
       });
 
-      this._updateItemPosition(item, [position.x, position.y]);
-      this._resolveCollisions(item);
-    },
-
-    resizeItem(item, size) {
-      /**
-       * Resize an item and resolve collisions.
-       *
-       * @param {Object} item A reference to an item that's part of the grid.
-       * @param {Object} size
-       * @param {Number} [size.w=item.w] The new width.
-       * @param {Number} [size.h=item.h] The new height.
-       */
-
-      var width = size.w || item.w;
-      var height = size.h || item.h;
-
-      this._updateItemSize(item, width, height);
-
-      this._resolveCollisions(item);
-
-      this._pullItemsToLeft();
-    },
-
-    getChangedItems(initialItems, idAttribute) {
-      /**
-       * Compare the current items against a previous snapshot and return only
-       * the ones that changed their attributes in the meantime. This includes both
-       * position (x, y) and size (w, h)
-       *
-       * Since both their position and size can change, the items need an
-       * additional identifier attribute to match them with their previous state
-       */
-      var changedItems = [];
-
-      for (var i = 0; i < initialItems.length; i++) {
-        var item = this._getItemByAttribute(idAttribute,
-                                            initialItems[i][idAttribute]);
-
-        if (item.x !== initialItems[i].x ||
-            item.y !== initialItems[i].y ||
-            item.w !== initialItems[i].w ||
-            item.h !== initialItems[i].h) {
-          changedItems.push(item);
-        }
-      }
-      return changedItems;
-    },
-
-    _sortItemsByPosition() {
-      this.items.sort(function(item1, item2) {
-        var position1 = this._getItemPosition(item1);
-        var position2 = this._getItemPosition(item2);
-
-        // Try to preserve columns.
-        if (position1.x !== position2.x) {
-          return position1.x - position2.x;
-        }
-
-        if (position1.y !== position2.y) {
-          return position1.y - position2.y;
-        }
-        //
-        // The items are placed on the same position.
-        return 0;
-      }.bind(this));
-    },
-
-    _adjustSizeOfItems() {
-      /**
-       * Some items can have 100% height or 100% width. Those dimmensions are
-       * expressed as 0. We need to ensure a valid width and height for each of
-       * those items as the number of items per lane.
-       */
-
-      for (var i = 0; i < this.items.length; i++) {
-        var item = this.items[i];
-
-        // This can happen only the first time items are checked.
-        // We need the property to have a value for all the items so that the
-        // `cloneItems` method will merge the properties properly. If we only set
-        // it to the items that need it then the following can happen:
-        //
-        // cloneItems([{id: 1, autoSize: true} {id: 2}],
-        //            [{id: 2} {id: 1, autoSize: true}]);
-        //
-        // will result in
-        //
-        // [{id: 1, autoSize: true} {id: 2, autoSize: true}]
-        if (item.autoSize === undefined) {
-          item.autoSize = item.w === 0 || item.h === 0;
-        }
-
-        if (item.autoSize) {
-          if (this._options.direction === 'horizontal') {
-            item.h = this._options.lanes;
-          } else {
-            item.w = this._options.lanes;
-          }
-        }
+      // Update the width of the entire grid container with enough room on the
+      // right to allow dragging items to the end of the grid.
+      if (this.options.direction === 'horizontal') {
+        this.handle.style.width = (this.gridList.grid.length + this._widestItem) * this._cellWidth;
+      } else {
+        this.handle.style.height = (this.gridList.grid.length + this._tallestItem) * this._cellHeight;
       }
     },
 
-    _resetGrid() {
-      this.grid = [];
-    },
 
-    _itemFitsAtPosition(item, newPosition) {
-      /**
-       * Check that an item wouldn't overlap with another one if placed at a
-       * certain position within the grid
-       */
+    // -----------------------------------------------------------------
 
-      var position = this._getItemPosition(item);
-      var x;
-      var y;
-       // var row;
 
-      // No coordonate can be negative
-      if (newPosition[0] < 0 || newPosition[1] < 0) {
-        return false;
-      }
-
-      // Make sure the item isn't larger than the entire grid
-      if (newPosition[1] + position.h > this._options.lanes) {
-        return false;
-      }
-
-      // Make sure the position doesn't overlap with an already positioned
-      // item.
-      for (x = newPosition[0]; x < newPosition[0] + position.w; x++) {
-        var col = this.grid[x];
-
-        // Surely a column that hasn't even been created yet is available
-        if (!col) {
-          continue;
-        }
-
-        for (y = newPosition[1]; y < newPosition[1] + position.h; y++) {
-          // Any space occupied by an item can continue to be occupied by the
-          // same item.
-          if (col[y] && col[y] !== item) {
-            return false;
-          }
-        }
-      }
-
-      return true;
-    },
-
-    _updateItemPosition(item, position) {
-      if (item.x !== null && item.y !== null) {
-        this._deleteItemPositionFromGrid(item);
-      }
-
-      this._setItemPosition(item, position);
-
-      this._markItemPositionToGrid(item);
-    },
-
-    _updateItemSize(item, width, height) {
-      /**
-       * @param {Object} item A reference to a grid item.
-       * @param {Number} width The new width.
-       * @param {Number} height The new height.
-       */
-
-      if (item.x !== null && item.y !== null) {
-        this._deleteItemPositionFromGrid(item);
-      }
-
-      item.w = width;
-      item.h = height;
-
-      this._markItemPositionToGrid(item);
-    },
-
-    _markItemPositionToGrid(item) {
-      /**
-       * Mark the grid cells that are occupied by an item. This prevents items
-       * from overlapping in the grid
-       */
-
-      var position = this._getItemPosition(item);
-      var x;
-      var y;
-
-      // Ensure that the grid has enough columns to accomodate the current item.
-      this._ensureColumns(position.x + position.w);
-
-      for (x = position.x; x < position.x + position.w; x++) {
-        for (y = position.y; y < position.y + position.h; y++) {
-          this.grid[x][y] = item;
-        }
-      }
-    },
-
-    _deleteItemPositionFromGrid(item) {
-      var position = this._getItemPosition(item);
-      var x;
-      var y;
-
-      for (x = position.x; x < position.x + position.w; x++) {
-        // It can happen to try to remove an item from a position not generated
-        // in the grid, probably when loading a persisted grid of items. No need
-        // to create a column to be able to remove something from it, though
-        if (!this.grid[x]) {
-          continue;
-        }
-
-        for (y = position.y; y < position.y + position.h; y++) {
-          // Don't clear the cell if it's been occupied by a different widget in
-          // the meantime (e.g. when an item has been moved over this one, and
-          // thus by continuing to clear this item's previous position you would
-          // cancel the first item's move, leaving it without any position even)
-          if (this.grid[x][y] === item) {
-            this.grid[x][y] = null;
-          }
-        }
-      }
-    },
-
-    _ensureColumns(N) {
-      /**
-       * Ensure that the grid has at least N columns available.
-       */
-      var i;
-      for (i = 0; i < N; i++) {
-        if (!this.grid[i]) {
-          this.grid.push(new GridCol(this._options.lanes));
-        }
-      }
-    },
-
-    _getItemsCollidingWithItem(item) {
-      var collidingItems = [];
-      for (var i = 0; i < this.items.length; i++) {
-        if (item !== this.items[i] &&
-            this._itemsAreColliding(item, this.items[i])) {
-          collidingItems.push(i);
-        }
-      }
-      return collidingItems;
-    },
-
-    _itemsAreColliding(item1, item2) {
-      var position1 = this._getItemPosition(item1);
-      var position2 = this._getItemPosition(item2);
-
-      return !(position2.x >= position1.x + position1.w ||
-               position2.x + position2.w <= position1.x ||
-               position2.y >= position1.y + position1.h ||
-               position2.y + position2.h <= position1.y);
-    },
-
-    _resolveCollisions(item) {
-      if (!this._tryToResolveCollisionsLocally(item)) {
-        this._pullItemsToLeft(item);
-      }
-      this._pullItemsToLeft();
-    },
-
-    _tryToResolveCollisionsLocally(item) {
-      /**
-       * Attempt to resolve the collisions after moving a an item over one or more
-       * other items within the grid, by shifting the position of the colliding
-       * items around the moving one. This might result in subsequent collisions,
-       * in which case we will revert all position permutations. To be able to
-       * revert to the initial item positions, we create a virtual grid in the
-       * process
-       */
-      var collidingItems = this._getItemsCollidingWithItem(item);
-      if (!collidingItems.length) {
+    _dragPositionChanged(newPosition) {
+      if (!this._previousDragPosition) {
         return true;
       }
-      var _gridList = new GridList([], this._options);
-      var leftOfItem;
-      var rightOfItem;
-      var aboveOfItem;
-      var belowOfItem;
-
-      cloneItems(this.items, _gridList.items);
-      _gridList.generateGrid();
-
-      for (var i = 0; i < collidingItems.length; i++) {
-        var collidingItem = _gridList.items[collidingItems[i]];
-        var collidingPosition = this._getItemPosition(collidingItem);
-
-        // We use a simple algorithm for moving items around when collisions occur:
-        // In this prioritized order, we try to move a colliding item around the
-        // moving one:
-        // 1. to its left side
-        // 2. above it
-        // 3. under it
-        // 4. to its right side
-        var position = this._getItemPosition(item);
-
-        leftOfItem = [position.x - collidingPosition.w, collidingPosition.y];
-        rightOfItem = [position.x + position.w, collidingPosition.y];
-        aboveOfItem = [collidingPosition.x, position.y - collidingPosition.h];
-        belowOfItem = [collidingPosition.x, position.y + position.h];
-
-        if (_gridList._itemFitsAtPosition(collidingItem, leftOfItem)) {
-          _gridList._updateItemPosition(collidingItem, leftOfItem);
-        } else if (_gridList._itemFitsAtPosition(collidingItem, aboveOfItem)) {
-          _gridList._updateItemPosition(collidingItem, aboveOfItem);
-        } else if (_gridList._itemFitsAtPosition(collidingItem, belowOfItem)) {
-          _gridList._updateItemPosition(collidingItem, belowOfItem);
-        } else if (_gridList._itemFitsAtPosition(collidingItem, rightOfItem)) {
-          _gridList._updateItemPosition(collidingItem, rightOfItem);
-        } else {
-          // Collisions failed, we must use the pullItemsToLeft method to arrange
-          // the other items around this item with fixed position. This is our
-          // plan B for when local collision resolving fails.
-          return false;
-        }
-      }
-      // If we reached this point it means we managed to resolve the collisions
-      // from one single iteration, just by moving the colliding items around. So
-      // we accept this scenario and marge the brached-out grid instance into the
-      // original one
-      cloneItems(_gridList.items, this.items);
-      this.generateGrid();
-      return true;
+      return (newPosition[0] !== this._previousDragPosition[0] ||
+              newPosition[1] !== this._previousDragPosition[1]);
     },
 
-    _pullItemsToLeft(fixedItem) {
-      /**
-       * Build the grid from scratch, by using the current item positions and
-       * pulling them as much to the left as possible, removing as space between
-       * them as possible.
-       *
-       * If a "fixed item" is provided, its position will be kept intact and the
-       * rest of the items will be layed around it.
-       */
+    _snapItemPositionToGrid(item) {
+      var position = item.$element.position();
 
+      position[0] -= this.$element.position().left;
 
-      // Start a fresh grid with the fixed item already placed inside
-      this._sortItemsByPosition();
-      this._resetGrid();
+      var col = Math.round(position.left / this._cellWidth);
+      var row = Math.round(position.top / this._cellHeight);
 
-      // Start the grid with the fixed item as the first positioned item
-      if (fixedItem) {
-        var fixedPosition = this._getItemPosition(fixedItem);
-        this._updateItemPosition(fixedItem, [fixedPosition.x, fixedPosition.y]);
-      }
+      // Keep item position within the grid and don't let the item create more
+      // than one extra column
+      col = Math.max(col, 0);
+      row = Math.max(row, 0);
 
-      for (var i = 0; i < this.items.length; i++) {
-        var item = this.items[i];
-        var position = this._getItemPosition(item);
-
-        // The fixed item keeps its exact position
-        if (fixedItem && item === fixedItem) {
-          continue;
-        }
-
-        var x = this._findLeftMostPositionForItem(item);
-        var newPosition = this.findPositionForItem(
-              item, {x: x, y: 0}, position.y);
-
-        this._updateItemPosition(item, newPosition);
-      }
-    },
-
-    _findLeftMostPositionForItem(item) {
-      /**
-       * When pulling items to the left, we need to find the leftmost position for
-       * an item, with two considerations in mind:
-       * - preserving its current row
-       * - preserving the previous horizontal order between items
-       */
-
-      var tail = 0;
-      var position = this._getItemPosition(item);
-
-      for (var i = 0; i < this.grid.length; i++) {
-        for (var j = position.y; j < position.y + position.h; j++) {
-          var otherItem = this.grid[i][j];
-
-          if (!otherItem) {
-            continue;
-          }
-
-          var otherPosition = this._getItemPosition(otherItem);
-
-          if (this.items.indexOf(otherItem) < this.items.indexOf(item)) {
-            tail = otherPosition.x + otherPosition.w;
-          }
-        }
-      }
-
-      return tail;
-    },
-
-    _getItemByAttribute(key, value) {
-      for (var i = 0; i < this.items.length; i++) {
-        if (this.items[i][key] === value) {
-          return this.items[i];
-        }
-      }
-      return null;
-    },
-
-    _padNumber(nr, prefix) {
-      // Currently works for 2-digit numbers (<100)
-      return nr >= 10 ? nr : prefix + nr;
-    },
-
-    _getItemPosition(item) {
-      /**
-       * If the direction is vertical we need to rotate the grid 90 deg to the
-       * left. Thus, we simulate the fact that items are being pulled to the top.
-       *
-       * Since the items have widths and heights, if we apply the classic
-       * counter-clockwise 90 deg rotation
-       *
-       *     [0 -1]
-       *     [1  0]
-       *
-       * then the top left point of an item will become the bottom left point of
-       * the rotated item. To adjust for this, we need to subtract from the y
-       * position the height of the original item - the width of the rotated item.
-       *
-       * However, if we do this then we'll reverse some actions: resizing the
-       * width of an item will stretch the item to the left instead of to the
-       * right; resizing an item that doesn't fit into the grid will push the
-       * items around it instead of going on a new row, etc.
-       *
-       * We found it better to do a vertical flip of the grid after rotating it.
-       * This restores the direction of the actions and greatly simplifies the
-       * transformations.
-       */
-
-      if (this._options.direction === 'horizontal') {
-        return item;
+      if (this.options.direction === 'horizontal') {
+        col = Math.min(col, this._maxGridCols);
+        row = Math.min(row, this.options.lanes - item.h);
       } else {
-        return {
-          x: item.y,
-          y: item.x,
-          w: item.h,
-          h: item.w
-        };
+        col = Math.min(col, this.options.lanes - item.w);
+        row = Math.min(row, this._maxGridCols);
+      }
+
+      return [col, row];
+    },
+
+    _highlightPositionForItem(item) {
+      this.$positionHighlight.css({
+        width: this._getItemWidth(item),
+        height: this._getItemHeight(item),
+        left: item.x * this._cellWidth,
+        top: item.y * this._cellHeight
+      }).show();
+      if (this.options.heightToFontSizeRatio) {
+        this.$positionHighlight.css('font-size', this._fontSize);
       }
     },
 
-    _setItemPosition(item, position) {
-      /**
-       * See _getItemPosition.
-       */
+    _removePositionHighlight() {
+      this.$positionHighlight.hide();
+    },
 
-      if (this._options.direction === 'horizontal') {
-        item.x = position[0];
-        item.y = position[1];
-      } else {
-        // We're supposed to subtract the rotated item's height which is actually
-        // the non-rotated item's width.
-        item.x = position[1];
-        item.y = position[0];
+    _createGridSnapshot() {
+      this._items = GridList.cloneItems(this.items);
+    },
+
+    _updateGridSnapshot() {
+      // Notify the user with the items that changed since the previous snapshot
+      this._triggerOnChange();
+      GridList.cloneItems(this.items, this._items);
+    },
+
+    _triggerOnChange() {
+      if (typeof this.options.onChange !== 'function') {
+        return;
       }
+      this.options.onChange.call(
+        this, this.gridList.getChangedItems(this._items, '$element'));
     }
   }
 };
