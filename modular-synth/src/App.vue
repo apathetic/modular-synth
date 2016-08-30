@@ -9,12 +9,12 @@
 
 <template>
 
-  <section id="modules"
+  <section
+  id="modules"
   class="grid-container"
+  v-el:grid
   :class="editing ? 'edit-mode': 'play-mode'"
   @click="resetSelected">
-
-  <div v-el:grid class="grid">
 
     <node v-for="item in items"
       :id="$index"
@@ -31,7 +31,6 @@
       <div class="inner"> {{ $index }}</div>
     </node>
 
-  <div>
 
     <!-- modules: {{ modules|json }}<br><br> -->
     <!-- conec: {{ connectors|json }} -->
