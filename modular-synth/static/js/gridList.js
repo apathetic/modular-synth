@@ -1,39 +1,48 @@
+// NOTE: same as sortable.js
+
 const defaults = {
   lanes: 5,
   direction: 'horizontal'
 };
 
 function cloneItems(items, _items) {
-  /**
-   * Clone items with a deep level of one. Items are not referenced but their
-   * properties are
-   */
-  // var _item;
-  var i;
-  var k;
+  // /**
+  //  * Clone items with a deep level of one. Items are not referenced but their
+  //  * properties are
+  //  */
+  // // var _item;
+  // var i;
+  // var k;
+  //
+  // if (_items === undefined) {
+  //   _items = [];
+  // }
+  // for (i = 0; i < items.length; i++) {
+  //   // XXX: this is good because we don't want to lose item reference, but
+  //   // maybe we should clear their properties since some might be optional
+  //   if (!_items[i]) {
+  //     _items[i] = {};
+  //   }
+  //   for (k in items[i]) {
+  //     _items[i][k] = items[i][k];
+  //   }
+  // }
+  // return _items;
 
-  if (_items === undefined) {
-    _items = [];
-  }
-  for (i = 0; i < items.length; i++) {
-    // XXX: this is good because we don't want to lose item reference, but
-    // maybe we should clear their properties since some might be optional
-    if (!_items[i]) {
-      _items[i] = {};
-    }
-    for (k in items[i]) {
-      _items[i][k] = items[i][k];
-    }
-  }
-  return _items;
+  _items = Object.assign(_items, items);
+  // return _items; // why...?
 };
 
-function GridCol(lanes) {
-  for (var i = 0; i < lanes; i++) {
-    this.push(null);
-  }
-};
-GridCol.prototype = [];
+// Makes an empty Array (or "gridCol") with _lanes" elements
+// question: why _not_ just:  new Array(lanes).fill(null)  ..????
+// function GridCol(lanes) {
+//   for (var i = 0; i < lanes; i++) {
+//     this.push(null);
+//   }
+// };
+// GridCol.prototype = [];
+
+
 
 export default class GridList {
 
@@ -71,7 +80,7 @@ export default class GridList {
     // }
     this._options = Object.assign(defaults, options);
 
-    this.items = items;
+    this.items = items;   // TODO these do not have reference to DOM nodes... only the DATA within vue...
 
     this._adjustSizeOfItems();
 
@@ -90,33 +99,33 @@ export default class GridList {
    * Warn: Does not work if items don't have a width or height specified
    * besides their position in the grid.
    */
-  toString() {
-    var widthOfGrid = this.grid.length;
-    var output = '\n #|';
-    var border = '\n --';
-    var item;
-    var i;
-    var j;
-
-    // Render the table header
-    for (i = 0; i < widthOfGrid; i++) {
-      output += ' ' + this._padNumber(i, ' ');
-      border += '---';
-    };
-    output += border;
-
-    // Render table contents row by row, as we go on the y axis
-    for (i = 0; i < this._options.lanes; i++) {
-      output += '\n' + this._padNumber(i, ' ') + '|';
-      for (j = 0; j < widthOfGrid; j++) {
-        output += ' ';
-        item = this.grid[j][i];
-        output += item ? this._padNumber(this.items.indexOf(item), '0') : '--';
-      }
-    };
-    output += '\n';
-    return output;
-  }
+  // toString() {
+  //   var widthOfGrid = this.grid.length;
+  //   var output = '\n #|';
+  //   var border = '\n --';
+  //   var item;
+  //   var i;
+  //   var j;
+  //
+  //   // Render the table header
+  //   for (i = 0; i < widthOfGrid; i++) {
+  //     output += ' ' + this._padNumber(i, ' ');
+  //     border += '---';
+  //   };
+  //   output += border;
+  //
+  //   // Render table contents row by row, as we go on the y axis
+  //   for (i = 0; i < this._options.lanes; i++) {
+  //     output += '\n' + this._padNumber(i, ' ') + '|';
+  //     for (j = 0; j < widthOfGrid; j++) {
+  //       output += ' ';
+  //       item = this.grid[j][i];
+  //       output += item ? this._padNumber(this.items.indexOf(item), '0') : '--';
+  //     }
+  //   };
+  //   output += '\n';
+  //   return output;
+  // }
 
   generateGrid() {
     /**
@@ -444,7 +453,8 @@ export default class GridList {
     var i;
     for (i = 0; i < N; i++) {
       if (!this.grid[i]) {
-        this.grid.push(new GridCol(this._options.lanes));
+        // this.grid.push(new GridCol(this._options.lanes));
+        this.grid.push(new Array(this._options.lanes).fill(null));
       }
     }
   }
@@ -496,7 +506,11 @@ export default class GridList {
     var aboveOfItem;
     var belowOfItem;
 
+
+    // TODO. this.
     cloneItems(this.items, _gridList.items);
+    //
+
     _gridList.generateGrid();
 
     for (var i = 0; i < collidingItems.length; i++) {

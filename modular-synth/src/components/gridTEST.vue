@@ -1,64 +1,70 @@
 <template>
   <div class="grid-container">
-    <ul v-el:grid class="grid">
-      <li v-for="item in items" v-el:item
-      data-w="{{ item.w }}"
-      data-h="{{ item.h }}"
-      data-x="{{ item.x }}"
-      data-y="{{ item.y }}">
+    <div v-el:grid class="grid">
+
+      <node v-for="item in items"
+
+      :id="$index"
+      :w="item.w"
+      :h="item.h"
+      :x="item.x"
+      :y="item.y"
+
+      :height="item.height"
+      :width="item.width"
+      :left="item.left"
+      :top="item.top"
+      >
         <div class="inner">
-          <div class="controls">
-            <a href="#zoom1" class="resize" data-w="1" data-h="1">1x1</a>
-            <a href="#zoom2" class="resize" data-w="2" data-h="1">2x1</a>
-            <a href="#zoom3" class="resize" data-w="3" data-h="1">3x1</a>
-            <a href="#zoom1" class="resize" data-w="1" data-h="2">1x2</a>
-            <a href="#zoom2" class="resize" data-w="2" data-h="2">2x2</a>
-          </div>
           {{ $index }}
         </div>
-      </li>
-    </ul>
+
+      </node>
+
+    <div>
   </div>
 </template>
 
 <script>
-import { draggable } from '../mixins/draggable';
 import GridList from '../../static/js/gridList';  // TODO more this. move static
+import Node from './Node';
 
 export default {
-  mixins: [draggable],
+  components: {
+    Node
+  },
 
   data() {
     return {
       items: [
-        {w: 1, h: 1, x: 0, y: 0},
-        {w: 1, h: 2, x: 0, y: 1},
-        {w: 2, h: 2, x: 1, y: 0},
-        {w: 1, h: 1, x: 1, y: 2},
-        {w: 2, h: 1, x: 2, y: 2},
-        {w: 1, h: 1, x: 3, y: 0},
-        {w: 1, h: 1, x: 3, y: 1},
-        {w: 1, h: 0, x: 4, y: 0},
-        {w: 3, h: 1, x: 5, y: 0},
-        {w: 2, h: 1, x: 5, y: 1},
-        {w: 1, h: 1, x: 5, y: 2},
-        {w: 2, h: 1, x: 6, y: 2},
-        {w: 1, h: 1, x: 7, y: 1},
-        {w: 2, h: 0, x: 8, y: 0},
-        {w: 1, h: 1, x: 10, y: 0},
-        {w: 1, h: 1, x: 10, y: 1},
-        {w: 1, h: 1, x: 10, y: 2}
+        {w: 1, h: 1, x: 0, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 2, x: 0, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 2, x: 1, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 1, y: 2, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, x: 2, y: 2, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 3, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 3, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 0, x: 4, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 3, h: 1, x: 5, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, x: 5, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 5, y: 2, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, x: 6, y: 2, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 7, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 0, x: 8, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 10, y: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 10, y: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, x: 10, y: 2, width: '', height: '', left: '', top: ''}
       ],
 
-      defaults: {
-        lanes: 5,
+      options: {
+        lanes: 3,
         direction: 'horizontal',
-        itemSelector: 'li[data-w]',
+        itemSelector: '.module',
         widthHeightRatio: 1,
         dragAndDrop: true
       },
 
-      draggableDefaults: {
+      draggableOptions: {
         zIndex: 2,
         scroll: false,
         containment: 'parent'
@@ -67,33 +73,35 @@ export default {
   },
 
   ready() {
-    // var items = buildElements(container, fixtures.DEMO);
+    this.handle = this.$els.grid;
+    this._init();
+    this._bindEvents();
 
-    console.log(this.$els.item);
 
     // "LOAD" (ie set up fixtures)
     // ---------------------------------------
-    const items = this.items; // for now... should be HTMLELments (not Array of Objects)
-    var grid = new GridList(items, {
-      direction: 'horizontal',
-      lanes: 2
-    });
-
+    // const items = this.items; // for now... should be HTMLELments (not Array of Objects)
+    // var grid = new GridList(this.items, {
+    //   direction: 'horizontal',
+    //   lanes: 2
+    // });
+    //
     window.addEventListener('resize', function() {
-      grid.resizeGrid(2);
-    });
+      this.gridList.resizeGrid(this.options.lanes);   // mmm, this is unbound, here. () => prolly wont work neither
+    }.bind(this));
 
 
     // "GRIDLIST"
     // ---------------------------------------
     // const element = document.querySelector('#grid');
-    const element = this.$els.grid;
-    const options = {};
-    const draggableOptions = {};
-    // const instance = new DraggableGridList(element, options, draggableOptions);
-    const instance = this.constructor(element, options, draggableOptions);
+    // const element = this.$els.grid;
 
-    this.instance = instance;
+    // const options = {};
+    // const draggableOptions = {};
+    // const instance = new DraggableGridList(element, options, draggableOptions);
+    // this.constructor(element);
+
+    // this.instance = instance;
     // then:
     // instance.resizeItem()...
     // instance.generateGrid(), etc...
@@ -101,18 +109,15 @@ export default {
 
   methods: {
 
-    constructor(element, options, draggableOptions) {
-      this.options = Object.assign({}, this.defaults, options);
-      this.draggableOptions = Object.assign({}, this.draggableDefaults, draggableOptions);
-
-      // this.$element = $(element);
-      this.element = typeof element === 'string'
-                     ? document.querySelector(element)
-                     : element;
-
-      this._init();
-      this._bindEvents();
-    },
+    // constructor(handle, options, draggableOptions) {
+    //   // this.options = Object.assign({}, this.defaults, options);
+    //   // this.draggableOptions = Object.assign({}, this.draggableDefaults, draggableOptions);
+    //   // this.$element = $(element);
+    //
+    //   this.handle = handle;
+    //   this._init();
+    //   this._bindEvents();
+    // },
 
 
     // destroy: function() {
@@ -170,14 +175,21 @@ export default {
     _init() {
       // Read items and their meta data. Ignore other list elements (like the
       // position highlight)
-      // this.$items = this.element.children(this.options.itemSelector);
-      this.$items = this.element.querySelectorAll(this.options.itemSelector);
-      this.items = this._generateItemsFromDOM();
+      // this.elements = this.handle.children(this.options.itemSelector);
+      this.elements = this.handle.querySelectorAll(this.options.itemSelector);
+
+      // OBJECTS with x, y, w, h and id. Also, a ref to $el. Stored in an Array.  ... Duplicated now, with data() ?
+      // this.items = this._generateItemsFromDOM();
+
+      // console.log(this.elements);
+      // console.log(this.items);
+
       this._widestItem = Math.max.apply(null, this.items.map(function(item) { return item.w; }));
       this._tallestItem = Math.max.apply(null, this.items.map(function(item) { return item.h; }));
 
       // Used to highlight a position an element will land on upon drop
-      this.$positionHighlight = this.element.querySelectorAll('.position-highlight'); // .hide();
+      // TODO: this:
+      this.$positionHighlight = this.handle.querySelectorAll('.position-highlight'); // .hide();
       Array.from(this.$positionHighlight, (el) => { el.style.display = 'none'; });
 
       this._initGridList();
@@ -189,7 +201,7 @@ export default {
 
         // Init Draggable JQuery UI plugin for each of the list items
         // http://api.jqueryui.com/draggable/
-        // this.$items.draggable(this.draggableOptions);
+        // this.elements.draggable(this.draggableOptions);
 
 
 
@@ -210,10 +222,10 @@ export default {
       this._onDrag = this._bindMethod(this._onDrag);
       this._onStop = this._bindMethod(this._onStop);
 
-      // this.$items.on('dragstart', this._onStart);
-      // this.$items.on('drag', this._onDrag);
-      // this.$items.on('dragstop', this._onStop);
-      Array.from(this.$items, (item) => {
+      // this.elements.on('dragstart', this._onStart);
+      // this.elements.on('drag', this._onDrag);
+      // this.elements.on('dragstop', this._onStop);
+      Array.from(this.elements, (item) => {
         item.addEventListener('dragstart', this._onStart);
         item.addEventListener('drag', this._onDrag);
         item.addEventListener('dragstop', this._onStop);
@@ -221,9 +233,9 @@ export default {
     },
 
     // _unbindEvents() {
-    //   this.$items.off('dragstart', this._onStart);
-    //   this.$items.off('drag', this._onDrag);
-    //   this.$items.off('dragstop', this._onStop);
+    //   this.elements.off('dragstart', this._onStart);
+    //   this.elements.off('drag', this._onDrag);
+    //   this.elements.off('dragstop', this._onStop);
     // }
 
     _onStart(event, ui) {
@@ -274,31 +286,31 @@ export default {
       this._removePositionHighlight();
     },
 
-    _generateItemsFromDOM() {
-      /**
-       * Generate the structure of items used by the GridList lib, using the DOM
-       * data of the children of the targeted element. The items will have an
-       * additional reference to the initial DOM element attached, in order to
-       * trace back to it and re-render it once its properties are changed by the
-       * GridList lib
-       */
-      // var _this = this;
-      var items = [];
-      // var item;
-
-      // this.$items.each(function(i, element) {
-      Array.from(this.$items, function(element) {
-        items.push({
-          $element: element,
-          x: Number(element.getAttribute('data-x')),
-          y: Number(element.getAttribute('data-y')),
-          w: Number(element.getAttribute('data-w')),
-          h: Number(element.getAttribute('data-h')),
-          id: Number(element.getAttribute('data-id'))
-        });
-      });
-      return items;
-    },
+    // _generateItemsFromDOM() {
+    //   /**
+    //    * Generate the structure of items used by the GridList lib, using the DOM
+    //    * data of the children of the targeted element. The items will have an
+    //    * additional reference to the initial DOM element attached, in order to
+    //    * trace back to it and re-render it once its properties are changed by the
+    //    * GridList lib
+    //    */
+    //   // var _this = this;
+    //   var items = [];
+    //   // var item;
+    //
+    //   // this.elements.each(function(i, element) {
+    //   Array.from(this.elements, function(element) {
+    //     items.push({
+    //       $element: element,
+    //       x: Number(element.getAttribute('data-x')),
+    //       y: Number(element.getAttribute('data-y')),
+    //       w: Number(element.getAttribute('data-w')),
+    //       h: Number(element.getAttribute('data-h')),
+    //       id: Number(element.getAttribute('data-id'))
+    //     });
+    //   });
+    //   return items;
+    // },
 
     _getItemByElement(element) {
       // XXX: this could be optimized by storing the item reference inside the
@@ -310,13 +322,15 @@ export default {
       // }
 
       return this.items.find((item) => {
-        item.$element === element;
+        // TODO: i think only components have $el.  How to reference each item's HTMLElement in the template
+        console.log(item);
+        item.$el === element;
       });
     },
 
     _calculateCellSize() {
       if (this.options.direction === 'horizontal') {
-        this._cellHeight = Math.floor(this.element.offsetHeight / this.options.lanes);
+        this._cellHeight = Math.floor(this.handle.offsetHeight / this.options.lanes);
         this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
       } else {
         this._cellWidth = Math.floor(this.$element.width() / this.options.lanes);
@@ -327,6 +341,10 @@ export default {
       }
     },
 
+
+    // -----------------------------------------------------------------
+
+
     _getItemWidth(item) {
       return item.w * this._cellWidth;
     },
@@ -336,39 +354,33 @@ export default {
     },
 
     _applySizeToItems() {
-      // for (var i = 0; i < this.items.length; i++) {
-      //   this.items[i].$element.css({
-      //     width: this._getItemWidth(this.items[i]),
-      //     height: this._getItemHeight(this.items[i])
-      //   });
-      // }
       this.items.forEach((item) => {
-        item.$element.style.width = this._getItemWidth(item);
-        item.$element.style.height = this._getItemHeight(item);
+        item.width = this._getItemWidth(item);
+        item.height = this._getItemHeight(item);
       });
-
-      if (this.options.heightToFontSizeRatio) {
-        this.$items.css('font-size', this._fontSize);
-      }
     },
 
     _applyPositionToItems() {
       this.items.forEach((item) => {
         // Don't interfere with the positions of the dragged items
         if (!item.move) {
-          item.$element.style.left = item.x * this._cellWidth;
-          item.$element.style.top = item.y * this._cellHeight;
+          item.left = item.x * this._cellWidth;
+          item.top = item.y * this._cellHeight;
         }
       });
 
       // Update the width of the entire grid container with enough room on the
       // right to allow dragging items to the end of the grid.
       if (this.options.direction === 'horizontal') {
-        this.element.style.width = (this.gridList.grid.length + this._widestItem) * this._cellWidth;
+        this.handle.style.width = (this.gridList.grid.length + this._widestItem) * this._cellWidth;
       } else {
-        this.element.style.height = (this.gridList.grid.length + this._tallestItem) * this._cellHeight;
+        this.handle.style.height = (this.gridList.grid.length + this._tallestItem) * this._cellHeight;
       }
     },
+
+
+    // -----------------------------------------------------------------
+
 
     _dragPositionChanged(newPosition) {
       if (!this._previousDragPosition) {
@@ -441,6 +453,7 @@ export default {
 
 <style>
   .grid-container {
+    z-index: 9999;
     position: absolute;
     top: 66px;
     left: 0;
@@ -456,9 +469,12 @@ export default {
     transition: width 0.2s,
                 height 0.2s;
   }
-    .grid li {
+    .grid .module {
+
+      height: 200px; width: 200px;
       position: absolute;
-      z-index: 1;
+
+      /*z-index: 1;
       font-weight: bold;
       line-height: 4em;
       text-align: center;
@@ -468,9 +484,9 @@ export default {
                   width 0.2s,
                   height 0.2s,
                   font-size 0.2s,
-                  line-height 0.2s;
+                  line-height 0.2s;*/
     }
-    .grid li .inner {
+    .grid .module .inner {
       position: absolute;
       background: #fff;
       border: 1px solid #bbb;
@@ -480,17 +496,19 @@ export default {
       right: 0;
       -webkit-transition: background 3s;
               transition: background 3s;
+
+      color: red;
     }
-    .grid li.changed .inner {
+    .grid .module.changed .inner {
       background: #ffff66;
       -webkit-transition: none;
               transition: none;
     }
-    .grid li.ui-draggable-dragging {
+    .grid .module.ui-draggable-dragging {
       -webkit-transition: none;
               transition: none;
     }
-    .grid li.position-highlight {
+    .grid .module.position-highlight {
       -webkit-transition: none;
               transition: none;
     }
@@ -498,58 +516,6 @@ export default {
         border: none;
         background: #ccc;
       }
-    .grid .controls {
-      position: absolute;
-      top: 0;
-      right: 0;
-      float: right;
-      font-size: 0.4em;
-      font-weight: normal;
-      line-height: 1em;
-      opacity: 0;
-      -webkit-transition: opacity 0.2s;
-              transition: opacity 0.2s;
-    }
-      .grid .controls .resize {
-        font-size: 0.6em;
-        float: left;
-        margin: 5px 5px 0 0;
-        padding: 0.3em;
-        background: #fafafa;
-        color: #444;
-        text-decoration: none;
-      }
-      .grid .controls .resize:hover {
-        background: #f1f1f1;
-      }
-    .grid li:hover .controls {
-      opacity: 1;
-    }
 
-  /*.header {
-    height: 55px;
-    border-bottom: 1px solid #ccc;
-  }
-    .header .button {
-      float: left;
-      width: 40px;
-      height: 40px;
-      margin: 6px 0 0 10px;
-      border: solid 1px #ccc;
-      background: #fafafa;
-      color: #000;
-      font-size: 18px;
-      line-height: 40px;
-      font-weight: 700;
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .header p {
-      float: left;
-      padding: 14px 0 0 10px;
-      font-size: 18px;
-      line-height: 18px;
-    }
-  */
+
 </style>

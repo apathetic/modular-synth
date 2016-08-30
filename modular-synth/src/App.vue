@@ -8,10 +8,30 @@
 
 
 <template>
-  <grid-test></grid-test>
+
   <section id="modules"
+  class="grid-container"
   :class="editing ? 'edit-mode': 'play-mode'"
   @click="resetSelected">
+
+  <div v-el:grid class="grid">
+
+    <node v-for="item in items"
+      :id="$index"
+      :w="item.w"
+      :h="item.h"
+      :x="item.x"
+      :y="item.y"
+
+      :height="item.height"
+      :width="item.width"
+      :left="item.left"
+      :top="item.top"
+      >
+      <div class="inner"> {{ $index }}</div>
+    </node>
+
+  <div>
 
     <!-- modules: {{ modules|json }}<br><br> -->
     <!-- conec: {{ connectors|json }} -->
@@ -71,12 +91,13 @@
 </template>
 
 <script>
-import GridTest from './components/gridTEST';
+// import GridTest from './components/gridTEST';
+import { sortable } from './mixins/sortable';
 
 import Node from './components/Node';
 import Reverb from './components/Reverb';
 import Oscillator from './components/Oscillator';
-// import LFO from './components/LFO';
+import LFO from './components/LFO';
 import Filter from './components/Filter';
 import Mixer from './components/Mixer';
 
@@ -87,6 +108,8 @@ import midi from './components/system/Midi.vue';
 import * as actions from './vuex/actions';
 
 export default {
+  mixins: [sortable],
+
   vuex: {
     getters: {
       module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
@@ -99,13 +122,13 @@ export default {
   },
 
   components: {
-    GridTest,
+    // GridTest,
     masterOut,
     connector,
     Node,
     Reverb,
     Oscillator,
-    // LFO,
+    LFO,
     Filter,
     Mixer,
     midi
@@ -139,6 +162,17 @@ export default {
       }
     });
     this.load(false); // false: don't load any external json; just use what was left in localStorage (if any)
+
+    //
+    //
+
+    // SORTABLE:
+    this.handle = this.$els.grid;
+    this._init();
+    // this._bindEvents();
+    // window.addEventListener('resize', function() {
+    //   this.gridList.resizeGrid(this.options.lanes);   // mmm, this is unbound, here. () => prolly wont work neither
+    // }.bind(this));
   },
 
   methods: {
