@@ -15,21 +15,19 @@
 
     {{ position | json }}
 
-    <slot></slot>
-
-    <!-- <div class="module-details">
+    <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
 
     <div class="module-interface">
-      <! - - <slot></slot> - - >
+      <!--<slot></slot> -->
     </div>
 
-    <! - - @mouseup.stop="updateConnection_(inlet)"  - - >
+    <!-- @mouseup.stop="updateConnection_(inlet)"  -->
     <div class="module-connections">
       <partial name="inlets"></partial>
       <partial name="outlets"></partial>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -227,8 +225,8 @@ export default {
 
   .play-mode {
     .module {
-      width: 200px;
-      height: 200px;
+      width: 200px !important;
+      height: 200px !important;
     }
   }
 
@@ -266,17 +264,18 @@ export default {
   //   overflow: auto;
   // }
 
-  .grid {
-    position: relative;
-    height: 100%;
-    list-style: none;
-  }
+  // .grid {
+  //   position: relative;
+  //   height: 100%;
+  //   list-style: none;
+  // }
 
-  .grid .module {
+  .module {
     height: 200px;
     width: 200px;
     border: 1px solid #fff;
     position: absolute;
+    transition: height 0.2s, width 0.2s;
   }
 
 </style>
