@@ -186,6 +186,14 @@ export default {
       } else {
         this.$broadcast('stop');
       }
+    },
+
+    startDrag(e) {
+      if (this.editing) {
+        this.startDragging(e);    // from draggable
+      } else {
+        this.startSorting(e);     // from sortable
+      }
     }
 
   }

@@ -55,6 +55,7 @@ export const sortable = {
       if (lanes) {
         this.options.lanes = lanes;
       }
+
       this._createGridSnapshot();
       this.gridList.resizeGrid(this.options.lanes);
       this._updateGridSnapshot();
@@ -88,16 +89,16 @@ export const sortable = {
       this._applyPositionToItems();
     },
 
-    _bindMethod(fn) {
-      /**
-       * Bind prototype method to instance scope (similar to CoffeeScript's fat
-       * arrow)
-       */
-      var that = this;
-      return function() {
-        return fn.apply(that, arguments);
-      };
-    },
+    // _bindMethod(fn) {
+    //   /**
+    //    * Bind prototype method to instance scope (similar to CoffeeScript's fat
+    //    * arrow)
+    //    */
+    //   var that = this;
+    //   return function() {
+    //     return fn.apply(that, arguments);
+    //   };
+    // },
 
     _init() {
       console.log(this.handle);
@@ -146,20 +147,21 @@ export const sortable = {
       });
     },
 
-    _bindEvents() {
-      this._onStart = this._bindMethod(this._onStart);
-      this._onDrag = this._bindMethod(this._onDrag);
-      this._onStop = this._bindMethod(this._onStop);
+    // _bindEvents() {
+    //   // this._onStart = this._bindMethod(this._onStart);
+    //   // this._onDrag = this._bindMethod(this._onDrag);
+    //   // this._onStop = this._bindMethod(this._onStop);
+    //
+    //   // this.elements.on('dragstart', this._onStart);
+    //   // this.elements.on('drag', this._onDrag);
+    //   // this.elements.on('dragstop', this._onStop);
 
-      // this.elements.on('dragstart', this._onStart);
-      // this.elements.on('drag', this._onDrag);
-      // this.elements.on('dragstop', this._onStop);
-      Array.from(this.elements, (item) => {
-        item.addEventListener('dragstart', this._onStart);
-        item.addEventListener('drag', this._onDrag);
-        item.addEventListener('dragstop', this._onStop);
-      });
-    },
+    //   Array.from(this.elements, (item) => {
+    //     item.addEventListener('dragstart', this._onStart);
+    //     item.addEventListener('drag', this._onDrag);
+    //     item.addEventListener('dragstop', this._onStop);
+    //   });
+    // },
 
     // _unbindEvents() {
     //   this.elements.off('dragstart', this._onStart);
@@ -167,10 +169,11 @@ export const sortable = {
     //   this.elements.off('dragstop', this._onStop);
     // }
 
-    _onStart(event, ui) {
+    // _onStart
+    startSorting(event) {
       // Create a deep copy of the items; we use them to revert the item
       // positions after each drag change, making an entire drag operation less
-      // distructable
+      // destructable
       this._createGridSnapshot();
 
       // Since dragging actually alters the grid, we need to establish the number
@@ -179,7 +182,8 @@ export const sortable = {
       this._maxGridCols = this.gridList.grid.length;
     },
 
-    _onDrag(event, ui) {
+    // _onDrag
+    whileSorting(event, ui) {
       var item = this._getItemByElement(ui.helper);
       var newPosition = this._snapItemPositionToGrid(item);
 
@@ -201,7 +205,8 @@ export const sortable = {
       }
     },
 
-    _onStop(event, ui) {
+    // _onStop
+    stopSorting(event) {
       this._updateGridSnapshot();
       this._previousDragPosition = null;
 
@@ -258,16 +263,19 @@ export const sortable = {
     },
 
     _calculateCellSize() {
-      if (this.options.direction === 'horizontal') {
-        this._cellHeight = Math.floor(this.handle.offsetHeight / this.options.lanes);
-        this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
-      } else {
-        this._cellWidth = Math.floor(this.$element.width() / this.options.lanes);
-        this._cellHeight = this._cellWidth / this.options.widthHeightRatio;
-      }
-      if (this.options.heightToFontSizeRatio) {
-        this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
-      }
+      this._cellHeight = 240;
+      this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+
+      // if (this.options.direction === 'horizontal') {
+      //   this._cellHeight = Math.floor(this.handle.offsetHeight / this.options.lanes);
+      //   this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+      // } else {
+      //   this._cellWidth = Math.floor(this.$element.width() / this.options.lanes);
+      //   this._cellHeight = this._cellWidth / this.options.widthHeightRatio;
+      // }
+      // if (this.options.heightToFontSizeRatio) {
+      //   this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
+      // }
     },
 
 
@@ -348,11 +356,14 @@ export const sortable = {
         width: this._getItemWidth(item),
         height: this._getItemHeight(item),
         left: item.x * this._cellWidth,
-        top: item.y * this._cellHeight
-      }).show();
-      if (this.options.heightToFontSizeRatio) {
-        this.$positionHighlight.css('font-size', this._fontSize);
-      }
+        top: item.y * this._cellHeight,
+
+        display: 'block'
+      });
+      // }).show();
+      // if (this.options.heightToFontSizeRatio) {
+      //   this.$positionHighlight.css('font-size', this._fontSize);
+      // }
     },
 
     _removePositionHighlight() {
