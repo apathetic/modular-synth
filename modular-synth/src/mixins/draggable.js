@@ -43,7 +43,7 @@ export const draggable = {
   },
 
   methods: {
-    startDraggingNode(event) {
+    startDragging(event) {
       const node = this.$el;
       node.style.zIndex = ++dragObj.zIndex;     // Update element's z-index.
 
@@ -60,7 +60,7 @@ export const draggable = {
       document.addEventListener('mouseup', this.stopDraggingNode);
     },
 
-    whileDraggingNode(event) {
+    whileDragging(event) {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
@@ -70,7 +70,7 @@ export const draggable = {
       this.y = y;
     },
 
-    stopDraggingNode(event) {
+    stopDragging(event) {
       document.removeEventListener('mousemove', this.whileDraggingNode);
       document.removeEventListener('mouseup', this.stopDraggingNode);
       this.dragging = false;

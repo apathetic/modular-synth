@@ -33,11 +33,11 @@
 
 
 <script>
-// import { draggable } from '../mixins/draggable';
+import { draggable } from '../mixins/draggable';
 import { setActiveModule, setSelected, newConnection, updateConnection_ } from '../vuex/actions';
 
 export default {
-  // mixins: [draggable],
+  mixins: [draggable],
 
   vuex: {
     actions: {
