@@ -14,14 +14,22 @@
   @mouseover="setActiveModule(id)"
   @mousedown.prevent="startDragging">
 
-    {{ position | json }}
-
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
 
     <div class="module-interface">
       <!--<slot></slot> -->
+
+      {{ position | json }}<br><br>
+
+      col: {{ col }}<br>
+      row: {{ row }}<br>
+      colSpan: {{ w }}<br>
+      rowSpan: {{ h }}<br>
+
+      x: {{ x }}<br>
+      y: {{ y }}
     </div>
 
     <!-- @mouseup.stop="updateConnection_(inlet)"  -->
@@ -51,12 +59,12 @@ export default {
 
   props: {
     id: null,
-    h: null,
-    w: null,
+    // h: null,   // rowSpan
+    // w: null,   // colSpan
     x: null,
     y: null,
-    height: null,
-    width: null,
+    // height: null,
+    // width: null,
     top: null,
     left: null
   },
@@ -66,8 +74,15 @@ export default {
       return {
         height: this.height + 'px',
         width: this.width + 'px',
+
+        // SORTABLE:
         left: this.left + 'px',
         top: this.top + 'px'
+
+        // DRAGGABLE:
+        // left: this.x + 'px',
+        // top: this.y + 'px'
+
       };
     }
   },
@@ -75,6 +90,9 @@ export default {
   data() {
     return {
       name: 'Node',
+
+      width: 240,
+      height: 240,
 
       inlets: [
         {

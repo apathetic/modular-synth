@@ -16,7 +16,7 @@
   :class="editing ? 'edit-mode': 'play-mode'"
   @click="resetSelected">
 
-    <node v-for="item in items"
+    <!-- <node v-for="item in items"
       :id="$index"
       :w="item.w"
       :h="item.h"
@@ -31,6 +31,7 @@
       >
       <div class="inner"> {{ $index }}</div>
     </node>
+    -->
 
     <!-- :x ==>  dragX ... but also gridX, which is different -->
     <!-- :y ==> dragY ... but also gridY -->
@@ -42,8 +43,15 @@
     <component v-for="module in modules"  v-if="module.id !== 0"
       :is="module.type"
       :id="module.id"
+
       :x="module.x"
       :y="module.y"
+
+      :col="module.col"
+      :row="module.row"
+      :left="module.left"
+      :top="module.top"
+
       track-by="$index">
     </component>
 
@@ -168,6 +176,7 @@ export default {
     //
 
     // SORTABLE:
+    this.items = this.modules;  // temp, to get sortable working
     this.handle = this.$els.grid;
     this._init();
     // this._bindEvents();

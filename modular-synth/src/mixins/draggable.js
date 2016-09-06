@@ -33,14 +33,14 @@ export const draggable = {
     };
   },
 
-  computed: {
-    position() {
-      return {
-        left: this.x + 'px',
-        top: this.y + 'px'
-      };
-    }
-  },
+  // computed: {
+  //   position() {
+  //     return {
+  //       left: this.x + 'px',
+  //       top: this.y + 'px'
+  //     };
+  //   }
+  // },
 
   methods: {
     startDragging(event) {
