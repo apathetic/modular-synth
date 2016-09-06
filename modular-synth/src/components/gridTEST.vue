@@ -73,9 +73,9 @@ export default {
   },
 
   ready() {
-    this.handle = this.$els.grid;
-    this._init();
-    this._bindEvents();
+    // this.handle = this.$els.grid;
+    // this._init();
+    // this._bindEvents();
 
 
     // "LOAD" (ie set up fixtures)

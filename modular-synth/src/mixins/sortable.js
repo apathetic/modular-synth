@@ -4,25 +4,25 @@ export const sortable = {
 
   data() {
     return {
-      items: [
-        {w: 1, h: 1, col: 0, row: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 2, col: 0, row: 1, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 2, col: 1, row: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, col: 1, row: 2, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 1, col: 2, row: 2, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, col: 3, row: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, col: 3, row: 1, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 0, col: 4, row: 0, width: '', height: '', left: '', top: ''},
-        {w: 3, h: 1, col: 5, row: 0, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 1, col: 5, row: 1, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, col: 5, row: 2, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 1, col: 6, row: 2, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, col: 7, row: 1, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 0, col: 8, row: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, col: 10, row: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, col: 10, row: 1, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, col: 10, row: 2, width: '', height: '', left: '', top: ''}
-      ],
+      // items: [
+      //   {w: 1, h: 1, col: 0, row: 0, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 2, col: 0, row: 1, width: '', height: '', left: '', top: ''},
+      //   {w: 2, h: 2, col: 1, row: 0, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 1, col: 1, row: 2, width: '', height: '', left: '', top: ''},
+      //   {w: 2, h: 1, col: 2, row: 2, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 1, col: 3, row: 0, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 1, col: 3, row: 1, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 0, col: 4, row: 0, width: '', height: '', left: '', top: ''},
+      //   {w: 3, h: 1, col: 5, row: 0, width: '', height: '', left: '', top: ''},
+      //   {w: 2, h: 1, col: 5, row: 1, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 1, col: 5, row: 2, width: '', height: '', left: '', top: ''},
+      //   {w: 2, h: 1, col: 6, row: 2, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 1, col: 7, row: 1, width: '', height: '', left: '', top: ''},
+      //   {w: 2, h: 0, col: 8, row: 0, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 1, col: 10, row: 0, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 1, col: 10, row: 1, width: '', height: '', left: '', top: ''},
+      //   {w: 1, h: 1, col: 10, row: 2, width: '', height: '', left: '', top: ''}
+      // ],
 
       options: {
         lanes: 3,
@@ -30,13 +30,13 @@ export const sortable = {
         itemSelector: '.module',
         widthHeightRatio: 1,
         dragAndDrop: true
-      },
-
-      draggableOptions: {
-        zIndex: 2,
-        scroll: false,
-        containment: 'parent'
       }
+
+      // draggableOptions: {
+      //   zIndex: 2,
+      //   scroll: false,
+      //   containment: 'parent'
+      // }
     };
   },
 
@@ -125,17 +125,11 @@ export const sortable = {
       this._initGridList();
       this.reflow();
 
-      if (this.options.dragAndDrop) {
-
-
-
+      // if (this.options.dragAndDrop) {
         // Init Draggable JQuery UI plugin for each of the list items
         // http://api.jqueryui.com/draggable/
         // this.elements.draggable(this.draggableOptions);
-
-
-
-      }
+      // }
     },
 
     _initGridList() {
