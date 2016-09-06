@@ -21,6 +21,7 @@ import { load } from './vuex/actions';
 // import * as patches from './assets/patches';
 import FM from '../static/patches/FM';
 import Mod from '../static/patches/Mod';
+import gridtest from '../static/patches/gridTest';
 
 export default {
   vuex: {
@@ -38,6 +39,7 @@ export default {
   ready() {
     this.patches.push(FM);    // dumb way for testing for now
     this.patches.push(Mod);
+    this.patches.push(gridtest);
   },
   methods: {
     loadIt() {
