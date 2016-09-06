@@ -5,23 +5,23 @@ export const sortable = {
   data() {
     return {
       items: [
-        {w: 1, h: 1, x: 0, y: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 2, x: 0, y: 1, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 2, x: 1, y: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, x: 1, y: 2, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 1, x: 2, y: 2, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, x: 3, y: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, x: 3, y: 1, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 0, x: 4, y: 0, width: '', height: '', left: '', top: ''},
-        {w: 3, h: 1, x: 5, y: 0, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 1, x: 5, y: 1, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, x: 5, y: 2, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 1, x: 6, y: 2, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, x: 7, y: 1, width: '', height: '', left: '', top: ''},
-        {w: 2, h: 0, x: 8, y: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, x: 10, y: 0, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, x: 10, y: 1, width: '', height: '', left: '', top: ''},
-        {w: 1, h: 1, x: 10, y: 2, width: '', height: '', left: '', top: ''}
+        {w: 1, h: 1, col: 0, row: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 2, col: 0, row: 1, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 2, col: 1, row: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, col: 1, row: 2, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, col: 2, row: 2, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, col: 3, row: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, col: 3, row: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 0, col: 4, row: 0, width: '', height: '', left: '', top: ''},
+        {w: 3, h: 1, col: 5, row: 0, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, col: 5, row: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, col: 5, row: 2, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 1, col: 6, row: 2, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, col: 7, row: 1, width: '', height: '', left: '', top: ''},
+        {w: 2, h: 0, col: 8, row: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, col: 10, row: 0, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, col: 10, row: 1, width: '', height: '', left: '', top: ''},
+        {w: 1, h: 1, col: 10, row: 2, width: '', height: '', left: '', top: ''}
       ],
 
       options: {
@@ -301,8 +301,8 @@ export const sortable = {
       this.items.forEach((item) => {
         // Don't interfere with the positions of the dragged items
         if (!item.move) {
-          item.left = item.x * this._cellWidth;
-          item.top = item.y * this._cellHeight;
+          item.left = item.col * this._cellWidth;
+          item.top = item.row * this._cellHeight;
         }
       });
 
@@ -329,7 +329,7 @@ export const sortable = {
 
     _snapItemPositionToGrid(item) {
       var position = item.$element.position();
-
+      console.log('try BCR');
       position[0] -= this.$element.position().left;
 
       var col = Math.round(position.left / this._cellWidth);
@@ -355,8 +355,8 @@ export const sortable = {
       this.$positionHighlight.css({
         width: this._getItemWidth(item),
         height: this._getItemHeight(item),
-        left: item.x * this._cellWidth,
-        top: item.y * this._cellHeight,
+        left: item.col * this._cellWidth,
+        top: item.row * this._cellHeight,
 
         display: 'block'
       });
