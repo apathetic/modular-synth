@@ -20,8 +20,9 @@
       :id="$index"
       :w="item.w"
       :h="item.h"
-      :x="item.x"
-      :y="item.y"
+
+      :col="item.col"
+      :row="item.row"
 
       :height="item.height"
       :width="item.width"
@@ -31,6 +32,8 @@
       <div class="inner"> {{ $index }}</div>
     </node>
 
+    <!-- :x ==>  dragX ... but also gridX, which is different -->
+    <!-- :y ==> dragY ... but also gridY -->
 
     <!-- modules: {{ modules|json }}<br><br> -->
     <!-- conec: {{ connectors|json }} -->

@@ -6,12 +6,13 @@
 
   :data-w="w"
   :data-h="h"
-  :data-x="x"
-  :data-y="y"
+  :data-col="col"
+  :data-row="row"
   :data-id="id"
 
   @click="setSelected(id)"
-  @mouseover="setActiveModule(id)">
+  @mouseover="setActiveModule(id)"
+  @mousedown.prevent="startDragging">
 
     {{ position | json }}
 

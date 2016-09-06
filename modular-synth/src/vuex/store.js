@@ -90,8 +90,10 @@ const mutations = {
     state.modules.push({
       id: state.id,
       type: type,
-      x: 0,
-      y: 0
+      x: 0,         // for draggingX
+      y: 0,         // for draggingY
+      col: 0,       // for gridX position
+      row: 0        // for gridY position
     });
     state.id++;
   },
