@@ -101,12 +101,11 @@ export const sortable = {
     // },
 
     _init() {
-      console.log(this.handle);
+      console.log('initing gridlist with:', this.handle);
       // Read items and their meta data. Ignore other list elements (like the
       // position highlight)
       // this.elements = this.handle.children(this.options.itemSelector);
       this.elements = this.handle.querySelectorAll(this.options.itemSelector);
-      console.log(this.elements);
 
       // OBJECTS with x, y, w, h and id. Also, a ref to $el. Stored in an Array.  ... Duplicated now, with data() ?
       // this.items = this._generateItemsFromDOM();
@@ -142,25 +141,25 @@ export const sortable = {
     },
 
     // _bindEvents() {
-    //   // this._onStart = this._bindMethod(this._onStart);
-    //   // this._onDrag = this._bindMethod(this._onDrag);
-    //   // this._onStop = this._bindMethod(this._onStop);
+    //   // this._onStart = this._bindMethod(this.startSorting);
+    //   // this._onDrag = this._bindMethod(this.whileSorting);
+    //   // this._onStop = this._bindMethod(this.stopSorting);
     //
-    //   // this.elements.on('dragstart', this._onStart);
-    //   // this.elements.on('drag', this._onDrag);
-    //   // this.elements.on('dragstop', this._onStop);
+    //   // this.elements.on('dragstart', this.startSorting);
+    //   // this.elements.on('drag', this.whileSorting);
+    //   // this.elements.on('dragstop', this.stopSorting);
 
     //   Array.from(this.elements, (item) => {
-    //     item.addEventListener('dragstart', this._onStart);
-    //     item.addEventListener('drag', this._onDrag);
-    //     item.addEventListener('dragstop', this._onStop);
+    //     item.addEventListener('dragstart', this.startSorting);
+    //     item.addEventListener('drag', this.whileSorting);
+    //     item.addEventListener('dragstop', this.stopSorting);
     //   });
     // },
 
     // _unbindEvents() {
     //   this.elements.off('dragstart', this._onStart);
-    //   this.elements.off('drag', this._onDrag);
-    //   this.elements.off('dragstop', this._onStop);
+    //   this.elements.off('drag', this.whileSorting);
+    //   this.elements.off('dragstop', this.stopSorting);
     // }
 
     // _onStart
@@ -177,20 +176,26 @@ export const sortable = {
     },
 
     // _onDrag
-    whileSorting(event, ui) {
-      var item = this._getItemByElement(ui.helper);
+    whileSorting(event) {
+      console.log(event.target);
+
+      // var item = this._getItemByElement(ui.helper);    // jquery UI draggable thing
+      var item = this._getItemByElement(event.target);
+
+
       var newPosition = this._snapItemPositionToGrid(item);
 
       if (this._dragPositionChanged(newPosition)) {
         this._previousDragPosition = newPosition;
 
         // Regenerate the grid with the positions from when the drag started
-        GridList.cloneItems(this._items, this.items);
+        // GridList.cloneItems(this._items, this.items);
+        this.items = Object.assign({}, this._items);
         this.gridList.generateGrid();
 
         // Since the items list is a deep copy, we need to fetch the item
         // corresponding to this drag action again
-        item = this._getItemByElement(ui.helper);
+        // item = this._getItemByElement(ui.helper);  // [wes] ..again?
         this.gridList.moveItemToPosition(item, newPosition);
 
         // Visually update item positions and highlight shape
@@ -251,7 +256,6 @@ export const sortable = {
 
       return this.items.find((item) => {
         // TODO: i think only components have $el.  How to reference each item's HTMLElement in the template
-        console.log(item);
         item.$el === element;
       });
     },
@@ -365,13 +369,15 @@ export const sortable = {
     },
 
     _createGridSnapshot() {
-      this._items = GridList.cloneItems(this.items);
+      this._items = Object.assign({}, this.items);
+      // this._items = GridList.cloneItems(this.items);
     },
 
     _updateGridSnapshot() {
       // Notify the user with the items that changed since the previous snapshot
       this._triggerOnChange();
-      GridList.cloneItems(this.items, this._items);
+      // GridList.cloneItems(this.items, this._items);
+      this._items = Object.assign({}, this.items);
     },
 
     _triggerOnChange() {

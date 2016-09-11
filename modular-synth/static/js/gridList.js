@@ -5,33 +5,33 @@ const defaults = {
   direction: 'horizontal'
 };
 
-function cloneItems(items, _items) {
-  // /**
-  //  * Clone items with a deep level of one. Items are not referenced but their
-  //  * properties are
-  //  */
-  // // var _item;
-  // var i;
-  // var k;
-  //
-  // if (_items === undefined) {
-  //   _items = [];
-  // }
-  // for (i = 0; i < items.length; i++) {
-  //   // XXX: this is good because we don't want to lose item reference, but
-  //   // maybe we should clear their properties since some might be optional
-  //   if (!_items[i]) {
-  //     _items[i] = {};
-  //   }
-  //   for (k in items[i]) {
-  //     _items[i][k] = items[i][k];
-  //   }
-  // }
-  // return _items;
-
-  _items = Object.assign(_items, items);
-  // return _items; // why...?
-};
+// GridList.cloneItems = ...
+// function cloneItems(items, _items) {
+//   // /**
+//   //  * Clone items with a deep level of one. Items are not referenced but their
+//   //  * properties are
+//   //  */
+//   // // var _item;
+//   // var i;
+//   // var k;
+//   //
+//   // if (_items === undefined) {
+//   //   _items = [];
+//   // }
+//   // for (i = 0; i < items.length; i++) {
+//   //   // XXX: this is good because we don't want to lose item reference, but
+//   //   // maybe we should clear their properties since some might be optional
+//   //   if (!_items[i]) {
+//   //     _items[i] = {};
+//   //   }
+//   //   for (k in items[i]) {
+//   //     _items[i][k] = items[i][k];
+//   //   }
+//   // }
+//   // return _items;
+//
+//   return Object.assign(_items, items);
+// };
 
 // Makes an empty Array (or "gridCol") with _lanes" elements
 // question: why _not_ just:  new Array(lanes).fill(null)  ..????
@@ -508,7 +508,8 @@ export default class GridList {
 
 
     // TODO. this.
-    cloneItems(this.items, _gridList.items);
+    // cloneItems(this.items, _gridList.items);
+    _gridList.items = Object.assign({}, this.items);
     //
 
     _gridList.generateGrid();
@@ -550,7 +551,8 @@ export default class GridList {
     // from one single iteration, just by moving the colliding items around. So
     // we accept this scenario and marge the brached-out grid instance into the
     // original one
-    cloneItems(_gridList.items, this.items);
+    // cloneItems(_gridList.items, this.items);
+    this.items = Object.assign({}, _gridList.items);
     this.generateGrid();
     return true;
   }

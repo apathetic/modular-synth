@@ -152,7 +152,6 @@ export default {
   },
 
   ready() {
-    console.log('c)');
     window.addEventListener('keydown', (e) => {
       switch (e.code) {
         case 'Delete':
@@ -170,15 +169,23 @@ export default {
           break;
       }
     });
-    this.load(false); // false: don't load any external json; just use what was left in localStorage (if any)
+
+    // TODO !!!!!!
+    // uncomment to get LOAD working
+    // this.load(false); // false: don't load any external json; just use what was left in localStorage (if any)
 
     //
     //
+    console.log('initcc"');
 
     // SORTABLE:
     this.items = this.modules;  // temp, to get sortable working
     this.handle = this.$els.grid;
-    this._init();
+
+    console.log('init?"');
+    this._init();   // initSorting
+
+
     // this._bindEvents();
     // window.addEventListener('resize', function() {
     //   this.gridList.resizeGrid(this.options.lanes);   // mmm, this is unbound, here. () => prolly wont work neither
@@ -197,17 +204,36 @@ export default {
       } else {
         this.$broadcast('stop');
       }
-    },
-
-    startDrag(e) {
-      if (this.editing) {
-        this.startDragging(e);    // from draggable
-      } else {
-        this.startSorting(e);     // from sortable
-      }
     }
 
+    // startDrag(e) {
+    //   if (this.editing) {
+    //     this.startDragging(e);    // from draggable
+    //   } else {
+    //     this.startSorting(e);     // from sortable
+    //   }
+    // }
+  },
+
+  events: {
+    'drag:start'(event, msg) {
+      console.log(msg);
+      if (!this.editing) {
+        this.startSorting();    // sort modules if we're not in edit mode
+      }
+    },
+    'drag': function(event, coords) {
+      if (!this.editing) {
+        console.log('sort', coords);
+        this.whileSorting(event);    // sort modules if we're not in edit mode
+      }
+    },
+    'drag:end'(msg) {
+      console.log(msg);
+    }
   }
+
+
 };
 
 </script>

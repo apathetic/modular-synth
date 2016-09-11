@@ -44,8 +44,6 @@ export const draggable = {
 
   methods: {
     startDragging(event) {
-      console.log('start dragging');
-
       const node = this.$el;
       node.style.zIndex = ++dragObj.zIndex;     // Update element's z-index.
 
@@ -57,17 +55,21 @@ export const draggable = {
       dragObj.startX = this.x;
       dragObj.startY = this.y;
 
+      console.log('start dragging');
+      this.$dispatch('drag:start', event, [this.x, this.y]);
+
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDragging);
       document.addEventListener('mouseup', this.stopDragging);
     },
 
     whileDragging(event) {
-      console.log('dragging');
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
+      console.log('dragging');
       this.updatePosition(this.id, x, y);
+      this.$dispatch('drag', event, [x, y]);
 
       this.x = x;
       this.y = y;
@@ -75,6 +77,7 @@ export const draggable = {
 
     stopDragging(event) {
       console.log('stop dragging');
+      this.$dispatch('drag:stop', event);
 
       document.removeEventListener('mousemove', this.whileDragging);
       document.removeEventListener('mouseup', this.stopDragging);
