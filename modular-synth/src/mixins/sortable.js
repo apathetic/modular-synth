@@ -1,6 +1,14 @@
 import GridList from '../../static/js/gridList';  // TODO more this. move static
+import store from '../vuex/store'; // .... er...
+
+const rowHeight = 240;
 
 export const sortable = {
+  // vuex: {
+  //   getters: {
+  //     active: state => state.activeModule    // state.selected...???
+  //   }
+  // },
 
   data() {
     return {
@@ -63,22 +71,6 @@ export const sortable = {
       this.reflow();
     },
 
-    resizeItem(element, size) {
-      /**
-       * Resize an item.
-       *
-       * @param {Object} size
-       * @param {Number} [size.w]
-       * @param {Number} [size.h}
-       */
-
-      this._createGridSnapshot();
-      this.gridList.resizeItem(this._getItemByElement(element), size);
-      this._updateGridSnapshot();
-
-      this.render();
-    },
-
     reflow() {
       this._calculateCellSize();
       this.render();
@@ -101,25 +93,17 @@ export const sortable = {
     // },
 
     _init() {
-      console.log('initing gridlist with:', this.handle);
-      // Read items and their meta data. Ignore other list elements (like the
-      // position highlight)
+      // TODO TODO TODO how to get the $el from the child components?
       // this.elements = this.handle.children(this.options.itemSelector);
-      this.elements = this.handle.querySelectorAll(this.options.itemSelector);
+      // this.elements = this.handle.querySelectorAll(this.options.itemSelector);
 
-      // OBJECTS with x, y, w, h and id. Also, a ref to $el. Stored in an Array.  ... Duplicated now, with data() ?
-      // this.items = this._generateItemsFromDOM();
-
-      // console.log(this.elements);
-      // console.log(this.items);
 
       this._widestItem = Math.max.apply(null, this.items.map(function(item) { return item.w; }));
       this._tallestItem = Math.max.apply(null, this.items.map(function(item) { return item.h; }));
 
       // Used to highlight a position an element will land on upon drop
-      // TODO: this:
-      this.$positionHighlight = this.handle.querySelectorAll('.position-highlight'); // .hide();
-      Array.from(this.$positionHighlight, (el) => { el.style.display = 'none'; });
+      this.$positionHighlight = this.handle.querySelector('.position-highlight');
+      this.$positionHighlight.style.display = 'none';
 
       this._initGridList();
       this.reflow();
@@ -163,7 +147,7 @@ export const sortable = {
     // }
 
     // _onStart
-    startSorting(event) {
+    startSorting() {
       // Create a deep copy of the items; we use them to revert the item
       // positions after each drag change, making an entire drag operation less
       // destructable
@@ -173,24 +157,38 @@ export const sortable = {
       // of cols (+1 extra) before the drag starts
 
       this._maxGridCols = this.gridList.grid.length;
+
+      //
+      // see line 193:
+      this.item = store.state.modules.find(function(m) {
+        return m.id === store.state.activeModule;
+      });
     },
 
     // _onDrag
-    whileSorting(event) {
-      console.log(event.target);
+    whileSorting(el) {
+      // WE need two things, here:
+      //   - the "item" object, which we'll store updated row,col coords on
+      //   - the HTMLElement, $el, which we'll use to determine "item"s position in the grid
+      //
+      // TODO why not get this on startSort... and stash above?
+      var item = this.item;
+      // var item = this._getItemByElement(ui.helper);    // jquery UI draggable thing. HTMLElement.
 
-      // var item = this._getItemByElement(ui.helper);    // jquery UI draggable thing
-      var item = this._getItemByElement(event.target);
-
-
-      var newPosition = this._snapItemPositionToGrid(item);
+      var newPosition = this._snapItemPositionToGrid(el, item);
 
       if (this._dragPositionChanged(newPosition)) {
         this._previousDragPosition = newPosition;
 
         // Regenerate the grid with the positions from when the drag started
+        //
+        //
         // GridList.cloneItems(this._items, this.items);
-        this.items = Object.assign({}, this._items);
+        // this.items = Object.assign({}, this._items);
+        this.items = Object.keys(this._items).map(key => this._items[key]);
+        //
+        //
+
         this.gridList.generateGrid();
 
         // Since the items list is a deep copy, we need to fetch the item
@@ -244,24 +242,24 @@ export const sortable = {
     //   });
     //   return items;
     // },
-
-    _getItemByElement(element) {
-      // XXX: this could be optimized by storing the item reference inside the
-      // meta data of the DOM element
-      // for (var i = 0; i < this.items.length; i++) {
-      //   if (this.items[i].$element.is(element)) {
-      //     return this.items[i];
-      //   }
-      // }
-
-      return this.items.find((item) => {
-        // TODO: i think only components have $el.  How to reference each item's HTMLElement in the template
-        item.$el === element;
-      });
-    },
+    //
+    // _getItemByElement(element) {
+    //   // XXX: this could be optimized by storing the item reference inside the
+    //   // meta data of the DOM element
+    //   // for (var i = 0; i < this.items.length; i++) {
+    //   //   if (this.items[i].$element.is(element)) {
+    //   //     return this.items[i];
+    //   //   }
+    //   // }
+    //
+    //   return this.items.find((item) => {
+    //     // TODO: i think only components have $el.  How to reference each item's HTMLElement in the template
+    //     item.$el === element;
+    //   });
+    // },
 
     _calculateCellSize() {
-      this._cellHeight = 240;
+      this._cellHeight = rowHeight;
       this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
 
       // if (this.options.direction === 'horizontal') {
@@ -296,6 +294,8 @@ export const sortable = {
     },
 
     _applyPositionToItems() {
+      console.log(this.items);
+
       this.items.forEach((item) => {
         // Don't interfere with the positions of the dragged items
         if (!item.move) {
@@ -325,10 +325,10 @@ export const sortable = {
               newPosition[1] !== this._previousDragPosition[1]);
     },
 
-    _snapItemPositionToGrid(item) {
-      var position = item.$element.position();
-      console.log('try BCR');
-      position[0] -= this.$element.position().left;
+    _snapItemPositionToGrid(el, item) {
+      // var position = item.$element.position();
+      // position[0] -= this.$element.position().left; // [wes] ???????
+      var position = el.getBoundingClientRect();
 
       var col = Math.round(position.left / this._cellWidth);
       var row = Math.round(position.top / this._cellHeight);
@@ -338,26 +338,26 @@ export const sortable = {
       col = Math.max(col, 0);
       row = Math.max(row, 0);
 
-      if (this.options.direction === 'horizontal') {
-        col = Math.min(col, this._maxGridCols);
-        row = Math.min(row, this.options.lanes - item.h);
-      } else {
-        col = Math.min(col, this.options.lanes - item.w);
-        row = Math.min(row, this._maxGridCols);
-      }
+      // if (this.options.direction === 'horizontal') {
+      col = Math.min(col, this._maxGridCols);
+      row = Math.min(row, this.options.lanes - item.h);
+      // } else {
+      //   col = Math.min(col, this.options.lanes - item.w);
+      //   row = Math.min(row, this._maxGridCols);
+      // }
 
       return [col, row];
     },
 
     _highlightPositionForItem(item) {
-      this.$positionHighlight.css({
-        width: this._getItemWidth(item),
-        height: this._getItemHeight(item),
-        left: item.col * this._cellWidth,
-        top: item.row * this._cellHeight,
+      // this.$positionHighlight.css({
+      this.$positionHighlight.style.width = this._getItemWidth(item);
+      this.$positionHighlight.style.height = this._getItemHeight(item);
+      this.$positionHighlight.style.left = item.col * this._cellWidth;
+      this.$positionHighlight.style.top = item.row * this._cellHeight;
 
-        display: 'block'
-      });
+      this.$positionHighlight.style.display = 'block';
+      // });
       // }).show();
       // if (this.options.heightToFontSizeRatio) {
       //   this.$positionHighlight.css('font-size', this._fontSize);
@@ -369,15 +369,26 @@ export const sortable = {
     },
 
     _createGridSnapshot() {
-      this._items = Object.assign({}, this.items);
+      //
+      //
       // this._items = GridList.cloneItems(this.items);
+      // this._items = Object.assign({}, this.items);  // this clones items in the vuex store...???
+      this._items = Object.keys(this.items).map(key => this.items[key]);
+      //
+      //
     },
 
     _updateGridSnapshot() {
       // Notify the user with the items that changed since the previous snapshot
       this._triggerOnChange();
+
+      //
+      //
       // GridList.cloneItems(this.items, this._items);
-      this._items = Object.assign({}, this.items);
+      // this._items = Object.assign({}, this.items);
+      this._items = Object.keys(this.items).map(key => this.items[key]);
+      //
+      //
     },
 
     _triggerOnChange() {

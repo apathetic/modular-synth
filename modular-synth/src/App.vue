@@ -16,6 +16,10 @@
   :class="editing ? 'edit-mode': 'play-mode'"
   @click="resetSelected">
 
+    <div class="position-highlight">
+      <div class="inner"></div>
+    </div>
+
     <!-- <node v-for="item in items"
       :id="$index"
       :w="item.w"
@@ -64,7 +68,7 @@
     </svg>
   </section>
 
-  <aside id="controls" v-el:controls>
+  <aside id="controls">
 
     <div>
       <p v-if="module">
@@ -176,13 +180,12 @@ export default {
 
     //
     //
-    console.log('initcc"');
+    console.log('initcc"', this.$els);
 
     // SORTABLE:
-    this.items = this.modules;  // temp, to get sortable working
+    this.items = this.modules;  // TODO temp, to get sortable working
     this.handle = this.$els.grid;
 
-    console.log('init?"');
     this._init();   // initSorting
 
 
@@ -205,27 +208,17 @@ export default {
         this.$broadcast('stop');
       }
     }
-
-    // startDrag(e) {
-    //   if (this.editing) {
-    //     this.startDragging(e);    // from draggable
-    //   } else {
-    //     this.startSorting(e);     // from sortable
-    //   }
-    // }
   },
 
   events: {
-    'drag:start'(event, msg) {
-      console.log(msg);
+    'drag:start'(coords, el) {
       if (!this.editing) {
         this.startSorting();    // sort modules if we're not in edit mode
       }
     },
-    'drag': function(event, coords) {
+    'drag:active'(coords, el) {
       if (!this.editing) {
-        console.log('sort', coords);
-        this.whileSorting(event);    // sort modules if we're not in edit mode
+        this.whileSorting(el);    // sort modules if we're not in edit mode
       }
     },
     'drag:end'(msg) {

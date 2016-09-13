@@ -130,16 +130,6 @@ export default {
 
     this.outlets[0].data = this.context.createGain();
     this.outlets[1].data = this.context.createGain();
-  // },
-  //
-  // methods: {
-  //   startDrag(e) {
-  //     this.startDragging(e);     // from draggable. always do this one.
-  //
-  //     if (!this.editing) {
-  //       this.startSorting(e);    // sort modules if we're not in edit mode
-  //     }
-  //   }
   }
 };
 
