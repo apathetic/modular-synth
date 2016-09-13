@@ -56,7 +56,7 @@ export const draggable = {
       dragObj.startY = this.y;
 
       console.log('start dragging');
-      this.$dispatch('drag:start', event, [this.x, this.y]);
+      this.$dispatch('drag:start', [this.x, this.y], this.$el);
 
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDragging);
@@ -69,7 +69,7 @@ export const draggable = {
 
       console.log('dragging');
       this.updatePosition(this.id, x, y);
-      this.$dispatch('drag', event, [x, y]);
+      this.$dispatch('drag:active', [x, y], this.$el);
 
       this.x = x;
       this.y = y;
