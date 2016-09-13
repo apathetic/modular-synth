@@ -1,4 +1,3 @@
-// NOTE: same as sortable.js
 
 const defaults = {
   lanes: 5,
@@ -30,7 +29,6 @@ const defaults = {
 //   // }
 //   // return _items;
 //
-//   return Object.assign(_items, items);
 // };
 
 // Makes an empty Array (or "gridCol") with _lanes" elements
