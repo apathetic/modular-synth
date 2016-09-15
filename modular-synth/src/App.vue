@@ -82,7 +82,7 @@
     </div>
 
     <div>
-      <button @click="toggleEditMode">{{ editing ? 'Play Mode' : 'Edit mode' }}</button>
+      <button @click="toggleEditMode">{{ editing ? 'Play' : 'Edit' }}</button>
       <button @click="newModule('Node')">add Node</button>
       <button @click="newModule('Oscillator')">osc</button>
       <button @click="newModule('LFO')">LFO</button>
