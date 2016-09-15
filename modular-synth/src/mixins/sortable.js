@@ -1,14 +1,18 @@
 import GridList from '../../static/js/gridList';  // TODO more this. move static
+import { updatePosition } from '../vuex/actions';
 import store from '../vuex/store'; // .... er...
 
 const rowHeight = 240;
 
 export const sortable = {
-  // vuex: {
-  //   getters: {
-  //     active: state => state.activeModule    // state.selected...???
-  //   }
-  // },
+  vuex: {
+    actions: {
+      updatePosition
+    }
+    //   getters: {
+    //     active: state => state.activeModule    // state.selected...???
+    //   }
+  },
 
   data() {
     return {
@@ -181,13 +185,9 @@ export const sortable = {
         this._previousDragPosition = newPosition;
 
         // Regenerate the grid with the positions from when the drag started
-        //
-        //
         // GridList.cloneItems(this._items, this.items);
         // this.items = Object.assign({}, this._items);
         this.items = Object.keys(this._items).map(key => this._items[key]);
-        //
-        //
 
         this.gridList.generateGrid();
 
@@ -210,7 +210,7 @@ export const sortable = {
       // HACK: jQuery.draggable removes this class after the dragstop callback,
       // and we need it removed before the drop, to re-enable CSS transitions
       // $(ui.helper).removeClass('ui-draggable-dragging');
-      document.querySelector('ui.helper').classList.remove('ui-draggable-dragging');
+      // document.querySelector('ui.helper').classList.remove('ui-draggable-dragging');
 
 
       this._applyPositionToItems();
@@ -294,13 +294,15 @@ export const sortable = {
     },
 
     _applyPositionToItems() {
-      console.log(this.items);
-
       this.items.forEach((item) => {
         // Don't interfere with the positions of the dragged items
         if (!item.move) {
-          item.left = item.col * this._cellWidth;
-          item.top = item.row * this._cellHeight;
+          // item.left = item.col * this._cellWidth;
+          // item.top = item.row * this._cellHeight;
+
+          const x = item.col * this._cellWidth;
+          const y = item.row * this._cellHeight;
+          this.updatePosition(item.id, x, y);
         }
       });
 

@@ -91,8 +91,8 @@ export default {
     return {
       name: 'Node',
 
-      width: 240,
-      height: 240,
+      // width: 240,
+      // height: 240,
 
       inlets: [
         {
@@ -242,31 +242,20 @@ export default {
     }
   }
 
+
+
+
+
+
+
+
+
   .play-mode {
     .module {
-      width: 200px !important;
-      height: 200px !important;
+      width: 240px !important;
+      height: 240px !important;
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
