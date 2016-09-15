@@ -292,7 +292,7 @@ export default class GridList {
 
   _adjustSizeOfItems() {
     /**
-     * Some items can have 100% height or 100% width. Those dimmensions are
+     * Some items can have 100% height or 100% width. Those dimensions are
      * expressed as 0. We need to ensure a valid width and height for each of
      * those items as the number of items per lane.
      */
@@ -507,7 +507,8 @@ export default class GridList {
 
     // TODO. this.
     // cloneItems(this.items, _gridList.items);
-    _gridList.items = Object.assign({}, this.items);
+    // _gridList.items = Object.assign({}, this.items);
+    _gridList.items = Object.keys(this.items).map(key => this.items[key]);
     //
 
     _gridList.generateGrid();
@@ -550,7 +551,8 @@ export default class GridList {
     // we accept this scenario and marge the brached-out grid instance into the
     // original one
     // cloneItems(_gridList.items, this.items);
-    this.items = Object.assign({}, _gridList.items);
+    this.items = Object.keys(_gridList.items).map(key => _gridList.items[key]);
+
     this.generateGrid();
     return true;
   }

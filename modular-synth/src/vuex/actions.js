@@ -66,7 +66,7 @@ export const removeModule = ({ dispatch }) => {
 };
 
 export const updatePosition = ({ dispatch }, id, x, y) => {
-  // dispatch('UPDATE_POSITION', id, x, y);
+  dispatch('UPDATE_POSITION', id, x, y);
 };
 
 
