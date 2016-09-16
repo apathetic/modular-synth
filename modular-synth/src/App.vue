@@ -20,26 +20,6 @@
       <div class="inner"></div>
     </div>
 
-    <!-- <node v-for="item in items"
-      :id="$index"
-      :w="item.w"
-      :h="item.h"
-
-      :col="item.col"
-      :row="item.row"
-
-      :height="item.height"
-      :width="item.width"
-      :left="item.left"
-      :top="item.top"
-      >
-      <div class="inner"> {{ $index }}</div>
-    </node>
-    -->
-
-    <!-- :x ==>  dragX ... but also gridX, which is different -->
-    <!-- :y ==> dragY ... but also gridY -->
-
     <!-- modules: {{ modules|json }}<br><br> -->
     <!-- conec: {{ connectors|json }} -->
     <!-- selected: {{ selected|json }} -->
@@ -53,6 +33,7 @@
 
       :col="module.col"
       :row="module.row"
+
       :left="module.left"
       :top="module.top"
 
@@ -178,14 +159,12 @@ export default {
     // uncomment to get LOAD working
     // this.load(false); // false: don't load any external json; just use what was left in localStorage (if any)
 
-    //
-    //
-    console.log('initcc"', this.$els);
+
 
     // SORTABLE:
+    // TODO move _init in sortable into ready() (in sortable) and remove this:
     this.items = this.modules;  // TODO temp, to get sortable working
     this.handle = this.$els.grid;
-
     this._init();   // initSorting
 
 
@@ -213,7 +192,7 @@ export default {
   events: {
     'drag:start'(coords, el) {
       if (!this.editing) {
-        this.startSorting();    // sort modules if we're not in edit mode
+        this.startSorting();
       }
     },
     'drag:active'(coords, el) {
@@ -221,12 +200,12 @@ export default {
         this.whileSorting(el);    // sort modules if we're not in edit mode
       }
     },
-    'drag:end'(msg) {
-      console.log(msg);
+    'drag:end'() {
+      if (!this.editing) {
+        this.stopSorting();
+      }
     }
   }
-
-
 };
 
 </script>

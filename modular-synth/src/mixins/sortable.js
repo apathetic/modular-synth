@@ -3,6 +3,11 @@ import { updatePosition } from '../vuex/actions';
 import store from '../vuex/store'; // .... er...
 
 const rowHeight = 240;
+const options = {
+  lanes: 3,
+  widthHeightRatio: 1
+};
+
 
 export const sortable = {
   vuex: {
@@ -14,62 +19,33 @@ export const sortable = {
     //   }
   },
 
-  data() {
-    return {
-      // items: [
-      //   {w: 1, h: 1, col: 0, row: 0, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 2, col: 0, row: 1, width: '', height: '', left: '', top: ''},
-      //   {w: 2, h: 2, col: 1, row: 0, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 1, col: 1, row: 2, width: '', height: '', left: '', top: ''},
-      //   {w: 2, h: 1, col: 2, row: 2, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 1, col: 3, row: 0, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 1, col: 3, row: 1, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 0, col: 4, row: 0, width: '', height: '', left: '', top: ''},
-      //   {w: 3, h: 1, col: 5, row: 0, width: '', height: '', left: '', top: ''},
-      //   {w: 2, h: 1, col: 5, row: 1, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 1, col: 5, row: 2, width: '', height: '', left: '', top: ''},
-      //   {w: 2, h: 1, col: 6, row: 2, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 1, col: 7, row: 1, width: '', height: '', left: '', top: ''},
-      //   {w: 2, h: 0, col: 8, row: 0, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 1, col: 10, row: 0, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 1, col: 10, row: 1, width: '', height: '', left: '', top: ''},
-      //   {w: 1, h: 1, col: 10, row: 2, width: '', height: '', left: '', top: ''}
-      // ],
+  // data() {
+  //   return {
+  //     options: {
+  //       lanes: 3,
+  //       widthHeightRatio: 1
+  //     }
+  //   };
+  // },
 
-      options: {
-        lanes: 3,
-        direction: 'horizontal',
-        itemSelector: '.module',
-        widthHeightRatio: 1,
-        dragAndDrop: true
-      }
-
-      // draggableOptions: {
-      //   zIndex: 2,
-      //   scroll: false,
-      //   containment: 'parent'
-      // }
-    };
-  },
-
-  ready() {
-    // this.handle = this.$els.grid;
-    // this._init();
-    // this._bindEvents();
-
-    // window.addEventListener('resize', function() {
-    //   this.gridList.resizeGrid(this.options.lanes);   // mmm, this is unbound, here. () => prolly wont work neither
-    // }.bind(this));
-  },
+  // ready() {
+  //   this.handle = this.$els.grid;
+  //   this._init();
+  //   this._bindEvents();
+  //
+  //   window.addEventListener('resize', function() {
+  //     this.gridList.resizeGrid(this.options.lanes);   // mmm, this is unbound, here. () => prolly wont work neither
+  //   }.bind(this));
+  // },
 
   methods: {
     resize(lanes) {
       if (lanes) {
-        this.options.lanes = lanes;
+        options.lanes = lanes;
       }
 
       this._createGridSnapshot();
-      this.gridList.resizeGrid(this.options.lanes);
+      this.gridList.resizeGrid(options.lanes);
       this._updateGridSnapshot();
 
       this.reflow();
@@ -81,7 +57,7 @@ export const sortable = {
     },
 
     render() {
-      this._applySizeToItems();
+      // this._applySizeToItems();
       this._applyPositionToItems();
     },
 
@@ -109,7 +85,11 @@ export const sortable = {
       this.$positionHighlight = this.handle.querySelector('.position-highlight');
       this.$positionHighlight.style.display = 'none';
 
-      this._initGridList();
+      // this._initGridList();
+      this.gridList = new GridList(this.items, {
+        lanes: options.lanes
+      });
+
       this.reflow();
 
       // if (this.options.dragAndDrop) {
@@ -119,14 +99,14 @@ export const sortable = {
       // }
     },
 
-    _initGridList() {
-      // Create instance of GridList (decoupled lib for handling the grid
-      // positioning and sorting post-drag and dropping)
-      this.gridList = new GridList(this.items, {
-        lanes: this.options.lanes,
-        direction: this.options.direction
-      });
-    },
+    // _initGridList() {
+    //   // Create instance of GridList (decoupled lib for handling the grid
+    //   // positioning and sorting post-drag and dropping)
+    //   this.gridList = new GridList(this.items, {
+    //     lanes: this.options.lanes
+    //     // direction: this.options.direction
+    //   });
+    // },
 
     // _bindEvents() {
     //   // this._onStart = this._bindMethod(this.startSorting);
@@ -159,14 +139,14 @@ export const sortable = {
 
       // Since dragging actually alters the grid, we need to establish the number
       // of cols (+1 extra) before the drag starts
-
       this._maxGridCols = this.gridList.grid.length;
 
       //
-      // see line 193:
+      // see line 157:
       this.item = store.state.modules.find(function(m) {
         return m.id === store.state.activeModule;
       });
+      // this.item.move = true; // [wes] added by me
     },
 
     // _onDrag
@@ -177,9 +157,10 @@ export const sortable = {
       //
       // TODO why not get this on startSort... and stash above?
       var item = this.item;
-      // var item = this._getItemByElement(ui.helper);    // jquery UI draggable thing. HTMLElement.
+      // var item = this._getItemByElement(ui.helper),
 
       var newPosition = this._snapItemPositionToGrid(el, item);
+      // console.log(newPosition);
 
       if (this._dragPositionChanged(newPosition)) {
         this._previousDragPosition = newPosition;
@@ -193,7 +174,7 @@ export const sortable = {
 
         // Since the items list is a deep copy, we need to fetch the item
         // corresponding to this drag action again
-        // item = this._getItemByElement(ui.helper);  // [wes] ..again?
+        // item = this._getItemByElement(ui.helper);  // [wes] what? why? no.
         this.gridList.moveItemToPosition(item, newPosition);
 
         // Visually update item positions and highlight shape
@@ -203,64 +184,20 @@ export const sortable = {
     },
 
     // _onStop
-    stopSorting(event) {
+    stopSorting() {
       this._updateGridSnapshot();
+      // this.item.move = false;    // [wes] added by me
+      this.item = null;             // [wes] added by me
       this._previousDragPosition = null;
-
-      // HACK: jQuery.draggable removes this class after the dragstop callback,
-      // and we need it removed before the drop, to re-enable CSS transitions
-      // $(ui.helper).removeClass('ui-draggable-dragging');
-      // document.querySelector('ui.helper').classList.remove('ui-draggable-dragging');
-
-
       this._applyPositionToItems();
       this._removePositionHighlight();
-    },
 
-    // _generateItemsFromDOM() {
-    //   /**
-    //    * Generate the structure of items used by the GridList lib, using the DOM
-    //    * data of the children of the targeted element. The items will have an
-    //    * additional reference to the initial DOM element attached, in order to
-    //    * trace back to it and re-render it once its properties are changed by the
-    //    * GridList lib
-    //    */
-    //   // var _this = this;
-    //   var items = [];
-    //   // var item;
-    //
-    //   // this.elements.each(function(i, element) {
-    //   Array.from(this.elements, function(element) {
-    //     items.push({
-    //       $element: element,
-    //       x: Number(element.getAttribute('data-x')),
-    //       y: Number(element.getAttribute('data-y')),
-    //       w: Number(element.getAttribute('data-w')),
-    //       h: Number(element.getAttribute('data-h')),
-    //       id: Number(element.getAttribute('data-id'))
-    //     });
-    //   });
-    //   return items;
-    // },
-    //
-    // _getItemByElement(element) {
-    //   // XXX: this could be optimized by storing the item reference inside the
-    //   // meta data of the DOM element
-    //   // for (var i = 0; i < this.items.length; i++) {
-    //   //   if (this.items[i].$element.is(element)) {
-    //   //     return this.items[i];
-    //   //   }
-    //   // }
-    //
-    //   return this.items.find((item) => {
-    //     // TODO: i think only components have $el.  How to reference each item's HTMLElement in the template
-    //     item.$el === element;
-    //   });
-    // },
+      console.log(this.gridList.toString());
+    },
 
     _calculateCellSize() {
       this._cellHeight = rowHeight;
-      this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+      this._cellWidth = this._cellHeight * options.widthHeightRatio;
 
       // if (this.options.direction === 'horizontal') {
       //   this._cellHeight = Math.floor(this.handle.offsetHeight / this.options.lanes);
@@ -286,17 +223,18 @@ export const sortable = {
       return item.h * this._cellHeight;
     },
 
-    _applySizeToItems() {
-      this.items.forEach((item) => {
-        item.width = this._getItemWidth(item);
-        item.height = this._getItemHeight(item);
-      });
-    },
+    // _applySizeToItems() {
+    //   this.items.forEach((item) => {
+    //     item.width = this._getItemWidth(item);
+    //     item.height = this._getItemHeight(item);
+    //   });
+    // },
 
     _applyPositionToItems() {
       this.items.forEach((item) => {
         // Don't interfere with the positions of the dragged items
-        if (!item.move) {
+        // if (!item.move) {
+        if (this.item !== item) {
           // item.left = item.col * this._cellWidth;
           // item.top = item.row * this._cellHeight;
 
@@ -308,11 +246,11 @@ export const sortable = {
 
       // Update the width of the entire grid container with enough room on the
       // right to allow dragging items to the end of the grid.
-      if (this.options.direction === 'horizontal') {
-        this.handle.style.width = (this.gridList.grid.length + this._widestItem) * this._cellWidth;
-      } else {
-        this.handle.style.height = (this.gridList.grid.length + this._tallestItem) * this._cellHeight;
-      }
+      // if (this.options.direction === 'horizontal') {
+      this.handle.style.width = (this.gridList.grid.length + this._widestItem) * this._cellWidth;
+      // } else {
+        // this.handle.style.height = (this.gridList.grid.length + this._tallestItem) * this._cellHeight;
+      // }
     },
 
 
@@ -329,8 +267,9 @@ export const sortable = {
 
     _snapItemPositionToGrid(el, item) {
       // var position = item.$element.position();
-      // position[0] -= this.$element.position().left; // [wes] ???????
+      // position[0] -= this.$element.position().left; // [wes]: ???????
       var position = el.getBoundingClientRect();
+      // position.top -= 54;   // header.
 
       var col = Math.round(position.left / this._cellWidth);
       var row = Math.round(position.top / this._cellHeight);
@@ -342,7 +281,7 @@ export const sortable = {
 
       // if (this.options.direction === 'horizontal') {
       col = Math.min(col, this._maxGridCols);
-      row = Math.min(row, this.options.lanes - item.h);
+      row = Math.min(row, options.lanes - item.h);
       // } else {
       //   col = Math.min(col, this.options.lanes - item.w);
       //   row = Math.min(row, this._maxGridCols);
@@ -367,7 +306,8 @@ export const sortable = {
     },
 
     _removePositionHighlight() {
-      this.$positionHighlight.hide();
+      // this.$positionHighlight.hide();
+      this.$positionHighlight.style.display = 'none';
     },
 
     _createGridSnapshot() {
@@ -382,23 +322,19 @@ export const sortable = {
 
     _updateGridSnapshot() {
       // Notify the user with the items that changed since the previous snapshot
-      this._triggerOnChange();
+      // this._triggerOnChange();
 
-      //
-      //
       // GridList.cloneItems(this.items, this._items);
       // this._items = Object.assign({}, this.items);
       this._items = Object.keys(this.items).map(key => this.items[key]);
-      //
-      //
-    },
-
-    _triggerOnChange() {
-      if (typeof this.options.onChange !== 'function') {
-        return;
-      }
-      this.options.onChange.call(
-        this, this.gridList.getChangedItems(this._items, '$element'));
     }
+
+    // _triggerOnChange() {
+    //   if (typeof options.onChange !== 'function') {
+    //     return;
+    //   }
+    //   options.onChange.call(
+    //     this, this.gridList.getChangedItems(this._items, '$element'));
+    // }
   }
 };

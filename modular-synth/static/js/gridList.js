@@ -97,33 +97,33 @@ export default class GridList {
    * Warn: Does not work if items don't have a width or height specified
    * besides their position in the grid.
    */
-  // toString() {
-  //   var widthOfGrid = this.grid.length;
-  //   var output = '\n #|';
-  //   var border = '\n --';
-  //   var item;
-  //   var i;
-  //   var j;
-  //
-  //   // Render the table header
-  //   for (i = 0; i < widthOfGrid; i++) {
-  //     output += ' ' + this._padNumber(i, ' ');
-  //     border += '---';
-  //   };
-  //   output += border;
-  //
-  //   // Render table contents row by row, as we go on the y axis
-  //   for (i = 0; i < this._options.lanes; i++) {
-  //     output += '\n' + this._padNumber(i, ' ') + '|';
-  //     for (j = 0; j < widthOfGrid; j++) {
-  //       output += ' ';
-  //       item = this.grid[j][i];
-  //       output += item ? this._padNumber(this.items.indexOf(item), '0') : '--';
-  //     }
-  //   };
-  //   output += '\n';
-  //   return output;
-  // }
+  toString() {
+    var widthOfGrid = this.grid.length;
+    var output = '\n #|';
+    var border = '\n --';
+    var item;
+    var i;
+    var j;
+
+    // Render the table header
+    for (i = 0; i < widthOfGrid; i++) {
+      output += ' ' + this._padNumber(i, ' ');
+      border += '---';
+    };
+    output += border;
+
+    // Render table contents row by row, as we go on the y axis
+    for (i = 0; i < this._options.lanes; i++) {
+      output += '\n' + this._padNumber(i, ' ') + '|';
+      for (j = 0; j < widthOfGrid; j++) {
+        output += ' ';
+        item = this.grid[j][i];
+        output += item ? this._padNumber(this.items.indexOf(item), '0') : '--';
+      }
+    };
+    output += '\n';
+    return output;
+  }
 
   generateGrid() {
     /**
@@ -152,10 +152,12 @@ export default class GridList {
       var position = this._getItemPosition(item);
 
       this._updateItemPosition(
-        item, this.findPositionForItem(item, {x: currentColumn, y: 0}));
+        item,
+        this.findPositionForItem(item, {col: currentColumn, row: 0})
+      );
 
       // New items should never be placed to the left of previous items
-      currentColumn = Math.max(currentColumn, position.x);
+      currentColumn = Math.max(currentColumn, position.col);
     }
 
     this._pullItemsToLeft();
@@ -183,7 +185,7 @@ export default class GridList {
 
     // Start searching for a position from the horizontal position of the
     // rightmost item from the grid
-    for (x = start.x; x < this.grid.length; x++) {
+    for (x = start.col; x < this.grid.length; x++) {
       if (fixedRow !== undefined) {
         position = [x, fixedRow];
 
@@ -191,7 +193,7 @@ export default class GridList {
           return position;
         }
       } else {
-        for (y = start.y; y < this._options.lanes; y++) {
+        for (y = start.row; y < this._options.lanes; y++) {
           position = [x, y];
 
           if (this._itemFitsAtPosition(item, position)) {
@@ -215,35 +217,35 @@ export default class GridList {
 
   moveItemToPosition(item, newPosition) {
     var position = this._getItemPosition({
-      x: newPosition[0],
-      y: newPosition[1],
+      row: newPosition[0],
+      col: newPosition[1],
       w: item.w,
       h: item.h
     });
 
-    this._updateItemPosition(item, [position.x, position.y]);
+    this._updateItemPosition(item, [position.col, position.row]);
     this._resolveCollisions(item);
   }
 
-  resizeItem(item, size) {
-    /**
-     * Resize an item and resolve collisions.
-     *
-     * @param {Object} item A reference to an item that's part of the grid.
-     * @param {Object} size
-     * @param {Number} [size.w=item.w] The new width.
-     * @param {Number} [size.h=item.h] The new height.
-     */
-
-    var width = size.w || item.w;
-    var height = size.h || item.h;
-
-    this._updateItemSize(item, width, height);
-
-    this._resolveCollisions(item);
-
-    this._pullItemsToLeft();
-  }
+  // resizeItem(item, size) {
+  //   /**
+  //    * Resize an item and resolve collisions.
+  //    *
+  //    * @param {Object} item A reference to an item that's part of the grid.
+  //    * @param {Object} size
+  //    * @param {Number} [size.w=item.w] The new width.
+  //    * @param {Number} [size.h=item.h] The new height.
+  //    */
+  //
+  //   var width = size.w || item.w;
+  //   var height = size.h || item.h;
+  //
+  //   this._updateItemSize(item, width, height);
+  //
+  //   this._resolveCollisions(item);
+  //
+  //   this._pullItemsToLeft();
+  // }
 
   getChangedItems(initialItems, idAttribute) {
     /**
@@ -260,8 +262,8 @@ export default class GridList {
       var item = this._getItemByAttribute(idAttribute,
                                           initialItems[i][idAttribute]);
 
-      if (item.x !== initialItems[i].x ||
-          item.y !== initialItems[i].y ||
+      if (item.col !== initialItems[i].col ||
+          item.row !== initialItems[i].row ||
           item.w !== initialItems[i].w ||
           item.h !== initialItems[i].h) {
         changedItems.push(item);
@@ -277,12 +279,12 @@ export default class GridList {
       var position2 = this._getItemPosition(item2);
 
       // Try to preserve columns.
-      if (position1.x !== position2.x) {
-        return position1.x - position2.x;
+      if (position1.col !== position2.col) {
+        return position1.col - position2.col;
       }
 
-      if (position1.y !== position2.y) {
-        return position1.y - position2.y;
+      if (position1.row !== position2.row) {
+        return position1.row - position2.row;
       }
 
       // The items are placed on the same position.
@@ -373,7 +375,7 @@ export default class GridList {
   }
 
   _updateItemPosition(item, position) {
-    if (item.x !== null && item.y !== null) {
+    if (item.col !== null && item.row !== null) {
       this._deleteItemPositionFromGrid(item);
     }
 
@@ -382,22 +384,22 @@ export default class GridList {
     this._markItemPositionToGrid(item);
   }
 
-  _updateItemSize(item, width, height) {
-    /**
-     * @param {Object} item A reference to a grid item.
-     * @param {Number} width The new width.
-     * @param {Number} height The new height.
-     */
-
-    if (item.x !== null && item.y !== null) {
-      this._deleteItemPositionFromGrid(item);
-    }
-
-    item.w = width;
-    item.h = height;
-
-    this._markItemPositionToGrid(item);
-  }
+  // _updateItemSize(item, width, height) {
+  //   /**
+  //    * @param {Object} item A reference to a grid item.
+  //    * @param {Number} width The new width.
+  //    * @param {Number} height The new height.
+  //    */
+  //
+  //   if (item.col !== null && item.row !== null) {
+  //     this._deleteItemPositionFromGrid(item);
+  //   }
+  //
+  //   item.w = width;
+  //   item.h = height;
+  //
+  //   this._markItemPositionToGrid(item);
+  // }
 
   _markItemPositionToGrid(item) {
     /**
@@ -410,10 +412,10 @@ export default class GridList {
     var y;
 
     // Ensure that the grid has enough columns to accomodate the current item.
-    this._ensureColumns(position.x + position.w);
+    this._ensureColumns(position.col + position.w);
 
-    for (x = position.x; x < position.x + position.w; x++) {
-      for (y = position.y; y < position.y + position.h; y++) {
+    for (x = position.col; x < position.col + position.w; x++) {
+      for (y = position.row; y < position.row + position.h; y++) {
         this.grid[x][y] = item;
       }
     }
@@ -424,7 +426,7 @@ export default class GridList {
     var x;
     var y;
 
-    for (x = position.x; x < position.x + position.w; x++) {
+    for (x = position.col; x < position.col + position.w; x++) {
       // It can happen to try to remove an item from a position not generated
       // in the grid, probably when loading a persisted grid of items. No need
       // to create a column to be able to remove something from it, though
@@ -432,7 +434,7 @@ export default class GridList {
         continue;
       }
 
-      for (y = position.y; y < position.y + position.h; y++) {
+      for (y = position.row; y < position.row + position.h; y++) {
         // Don't clear the cell if it's been occupied by a different widget in
         // the meantime (e.g. when an item has been moved over this one, and
         // thus by continuing to clear this item's previous position you would
@@ -472,10 +474,10 @@ export default class GridList {
     var position1 = this._getItemPosition(item1);
     var position2 = this._getItemPosition(item2);
 
-    return !(position2.x >= position1.x + position1.w ||
-             position2.x + position2.w <= position1.x ||
-             position2.y >= position1.y + position1.h ||
-             position2.y + position2.h <= position1.y);
+    return !(position2.col >= position1.col + position1.w ||
+             position2.col + position2.w <= position1.col ||
+             position2.row >= position1.row + position1.h ||
+             position2.row + position2.h <= position1.row);
   }
 
   _resolveCollisions(item) {
@@ -526,10 +528,10 @@ export default class GridList {
       // 4. to its right side
       var position = this._getItemPosition(item);
 
-      leftOfItem = [position.x - collidingPosition.w, collidingPosition.y];
-      rightOfItem = [position.x + position.w, collidingPosition.y];
-      aboveOfItem = [collidingPosition.x, position.y - collidingPosition.h];
-      belowOfItem = [collidingPosition.x, position.y + position.h];
+      leftOfItem = [position.col - collidingPosition.w, collidingPosition.row];
+      rightOfItem = [position.col + position.w, collidingPosition.row];
+      aboveOfItem = [collidingPosition.col, position.row - collidingPosition.h];
+      belowOfItem = [collidingPosition.col, position.row + position.h];
 
       if (_gridList._itemFitsAtPosition(collidingItem, leftOfItem)) {
         _gridList._updateItemPosition(collidingItem, leftOfItem);
@@ -575,7 +577,7 @@ export default class GridList {
     // Start the grid with the fixed item as the first positioned item
     if (fixedItem) {
       var fixedPosition = this._getItemPosition(fixedItem);
-      this._updateItemPosition(fixedItem, [fixedPosition.x, fixedPosition.y]);
+      this._updateItemPosition(fixedItem, [fixedPosition.col, fixedPosition.row]);
     }
 
     for (var i = 0; i < this.items.length; i++) {
@@ -587,9 +589,9 @@ export default class GridList {
         continue;
       }
 
-      var x = this._findLeftMostPositionForItem(item);
+      var col = this._findLeftMostPositionForItem(item);
       var newPosition = this.findPositionForItem(
-            item, {x: x, y: 0}, position.y);
+            item, {col: col, row: 0}, position.row);
 
       this._updateItemPosition(item, newPosition);
     }
@@ -607,7 +609,7 @@ export default class GridList {
     var position = this._getItemPosition(item);
 
     for (var i = 0; i < this.grid.length; i++) {
-      for (var j = position.y; j < position.y + position.h; j++) {
+      for (var j = position.row; j < position.row + position.h; j++) {
         var otherItem = this.grid[i][j];
 
         if (!otherItem) {
@@ -617,7 +619,7 @@ export default class GridList {
         var otherPosition = this._getItemPosition(otherItem);
 
         if (this.items.indexOf(otherItem) < this.items.indexOf(item)) {
-          tail = otherPosition.x + otherPosition.w;
+          tail = otherPosition.col + otherPosition.w;
         }
       }
     }
@@ -668,8 +670,8 @@ export default class GridList {
       return item;
     } else {
       return {
-        x: item.y,
-        y: item.x,
+        row: item.row,
+        col: item.col,
         w: item.h,
         h: item.w
       };
@@ -682,13 +684,13 @@ export default class GridList {
      */
 
     if (this._options.direction === 'horizontal') {
-      item.x = position[0];
-      item.y = position[1];
+      item.col = position[0];
+      item.row = position[1];
     } else {
       // We're supposed to subtract the rotated item's height which is actually
       // the non-rotated item's width.
-      item.x = position[1];
-      item.y = position[0];
+      item.col = position[1];
+      item.row = position[0];
     }
   }
 };
