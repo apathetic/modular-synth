@@ -94,6 +94,10 @@ export default {
       // width: 240,
       // height: 240,
 
+      w: 1,
+      h: 2,
+
+
       inlets: [
         {
           port: 0,
@@ -158,6 +162,8 @@ export default {
     &.dragging {
       cursor: move;
       // z-index: 100;
+      //
+      transition: none;
     }
 
     &-details {
@@ -255,6 +261,9 @@ export default {
       width: 240px !important;
       height: 240px !important;
     }
+    .module-connections {
+      display: none;
+    }
   }
 
 
@@ -283,7 +292,8 @@ export default {
     width: 200px;
     border: 1px solid #fff;
     position: absolute;
-    transition: height 0.2s, width 0.2s;
+    // transition: height 0.2s, width 0.2s;
+    transition: all 0.2s;
   }
 
 </style>
