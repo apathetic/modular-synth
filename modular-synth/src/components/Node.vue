@@ -147,6 +147,14 @@ export default {
     // border: 1px solid #666;
     // border-radius: 2px;
     // z-index: 1;
+    height: 200px;
+    width: 200px;
+    border: 1px solid #fff;
+    position: absolute;
+    // transition: height 0.2s, width 0.2s;
+    transition: all 0.2s;
+    transition-timing-function: ease-in-out;
+    z-index: 1;
 
     // TODO
     // min-width: 206px;
@@ -258,15 +266,13 @@ export default {
     .module {
       width: 240px !important;
       height: 240px !important;
+
+      transition-delay: 0.2s;
     }
     .module-connections {
       display: none;
     }
   }
-
-
-
-
 
 
   // .grid-container {
@@ -284,14 +290,4 @@ export default {
   //   height: 100%;
   //   list-style: none;
   // }
-
-  .module {
-    height: 200px;
-    width: 200px;
-    border: 1px solid #fff;
-    position: absolute;
-    // transition: height 0.2s, width 0.2s;
-    transition: all 0.2s;
-  }
-
 </style>

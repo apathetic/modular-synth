@@ -43,9 +43,14 @@ export const draggable = {
       // Save starting positions of cursor and element.
       dragObj.cursorStartX = event.clientX;
       dragObj.cursorStartY = event.clientY;
-      dragObj.startX = this.x;
-      dragObj.startY = this.y;
+      dragObj.startX = node.offsetLeft; // this.x; ...  Calculate explicity because could be in play mode, in which
+      dragObj.startY = node.offsetTop;  // this.y;      case x,y would not pertain to the actual node coords.
 
+      // console.log('x', node.offsetLeft, this.x);
+      // console.log('y', node.offsetTop, this.y);
+
+      this.x = node.offsetLeft;
+      this.y = node.offsetTop;
       this.$dispatch('drag:start', [this.x, this.y], this.$el);
 
       // Capture mousemove and mouseup events on the page.
@@ -57,12 +62,12 @@ export const draggable = {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
-      this.updatePosition(this.id, x, y);
-      this.$dispatch('drag:active', [x, y], this.$el);
+      // console.log('x, y', x, y);
 
-      // C) And uncomment:
-      // this.x = x;  // we *could* set this on the node directly, since it's here, the coords are here... but, better to manage via the store
-      // this.y = y;
+      this.x = x;  // we *could* set this on the node directly, since it's here & the coords are here... but, better to manage via the store
+      this.y = y;
+      this.$dispatch('drag:active', [x, y], this.$el);
+      this.updatePosition(this.id, x, y);
     },
 
     stopDragging(event) {
