@@ -44,7 +44,15 @@ main {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -1;
+  // z-index: -1;
+  transition: opacity 0.2s;
+  transition-delay: 0.2s;
+
+  .play-mode & {
+    opacity: 0;
+    z-index: -1;
+    transition-delay: 0s;
+  }
 }
 
 #controls {

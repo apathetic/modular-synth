@@ -74,8 +74,12 @@ export const removeModule = ({ dispatch }) => {
   dispatch('REMOVE_MODULE');
 };
 
-export const updatePosition = ({ dispatch }, id, x, y) => {
-  dispatch('UPDATE_POSITION', id, x, y);
+export const updatePosition = ({ dispatch, state }, id, x, y) => {
+  // if in EDIT MODE, we want to update the node AND the store
+  // if in PLAY mode, we just want to update the node
+  if (state.editing) {
+    dispatch('UPDATE_POSITION', id, x, y);
+  }
 };
 
 export const updateGridLocation = ({ dispatch }, id, col, row) => {
