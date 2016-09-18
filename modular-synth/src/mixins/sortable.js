@@ -3,9 +3,10 @@ import { updateGridLocation } from '../vuex/actions';
 import store from '../vuex/store'; // .... er...
 
 const rowHeight = 240;
+// const colWidth = 120;
 const options = {
   lanes: 3,
-  widthHeightRatio: 1
+  widthHeightRatio: 1 // 0.5
 };
 
 
@@ -38,18 +39,27 @@ export const sortable = {
   //   }.bind(this));
   // },
 
+  //
+  //
+  //
+  //
+  // TODO I think we can safely kill all _createGridSnapshot() refs -- there is no
+  //      need to clone the items on each sort; they're safe within the store (and
+  //      any actions on them are not desctructive by design).
+  //
+
   methods: {
-    resize(lanes) {
-      if (lanes) {
-        options.lanes = lanes;
-      }
-
-      this._createGridSnapshot();
-      this.gridList.resizeGrid(options.lanes);
-      this._updateGridSnapshot();
-
-      this.reflow();
-    },
+    // resize(lanes) {
+    //   if (lanes) {
+    //     options.lanes = lanes;
+    //   }
+    //
+    //   this._createGridSnapshot();
+    //   this.gridList.resizeGrid(options.lanes);
+    //   this._updateGridSnapshot();
+    //
+    //   this.reflow();
+    // },
 
     reflow() {
       this._calculateCellSize();
@@ -146,21 +156,17 @@ export const sortable = {
       this.item = store.state.modules.find(function(m) {
         return m.id === store.state.activeModule;
       });
-      // this.item.move = true; // [wes] added by me
     },
 
     // _onDrag
     whileSorting(el) {
       // WE need two things, here:
-      //   - the "item" object, which we'll store updated row,col coords on
-      //   - the HTMLElement, $el, which we'll use to determine "item"s position in the grid
+      //   - the "item" object, which has row,col coords
+      //   - the HTMLElement, $el, which we'll use to determine "item"s actual position in the grid
       //
       // TODO why not get this on startSort... and stash above?
       var item = this.item;
-      // var item = this._getItemByElement(ui.helper),
-
       var newPosition = this._snapItemPositionToGrid(el, item);
-      // console.log(newPosition);
 
       if (this._dragPositionChanged(newPosition)) {
         this._previousDragPosition = newPosition;
@@ -168,7 +174,7 @@ export const sortable = {
         // Regenerate the grid with the positions from when the drag started
         // GridList.cloneItems(this._items, this.items);
         // this.items = Object.assign({}, this._items);
-        this.items = Object.keys(this._items).map(key => this._items[key]);
+        this.items = Object.keys(this._items).map(key => this._items[key]);        // TODO kill this?
 
         this.gridList.generateGrid();
 
@@ -185,7 +191,7 @@ export const sortable = {
 
     // _onStop
     stopSorting() {
-      this._updateGridSnapshot();
+      this._updateGridSnapshot();   // TODO kill this?
       // this.item.move = false;    // [wes] added by me
       this.item = null;             // [wes] added by me
       this._previousDragPosition = null;
@@ -245,7 +251,7 @@ export const sortable = {
           // NOTE: we do not want to manually set or override x,y here.
           //
           // Rather, lets simply set col,row in the store and let the data figure itself out:
-          this.updateGridLocation(item.id, item.row, item.col);
+          this.updateGridLocation(item.id, item.col, item.row);
           //
           //
         }
@@ -268,15 +274,19 @@ export const sortable = {
       if (!this._previousDragPosition) {
         return true;
       }
-      return (newPosition[0] !== this._previousDragPosition[0] ||
-              newPosition[1] !== this._previousDragPosition[1]);
+      return newPosition[0] !== this._previousDragPosition[0] ||
+             newPosition[1] !== this._previousDragPosition[1];
     },
 
     _snapItemPositionToGrid(el, item) {
       // var position = item.$element.position();
       // position[0] -= this.$element.position().left; // [wes]: ???????
-      var position = el.getBoundingClientRect();
-      // position.top -= 54;   // header.
+
+      // var position = el.getBoundingClientRect();
+      var position = {
+        left: el.offsetLeft,
+        top: el.offsetTop
+      };
 
       var col = Math.round(position.left / this._cellWidth);
       var row = Math.round(position.top / this._cellHeight);
@@ -298,22 +308,14 @@ export const sortable = {
     },
 
     _highlightPositionForItem(item) {
-      // this.$positionHighlight.css({
-      this.$positionHighlight.style.width = this._getItemWidth(item);
-      this.$positionHighlight.style.height = this._getItemHeight(item);
-      this.$positionHighlight.style.left = item.col * this._cellWidth;
-      this.$positionHighlight.style.top = item.row * this._cellHeight;
-
+      this.$positionHighlight.style.width = this._getItemWidth(item) + 'px';
+      this.$positionHighlight.style.height = this._getItemHeight(item) + 'px';
+      this.$positionHighlight.style.left = item.col * this._cellWidth + 'px';
+      this.$positionHighlight.style.top = item.row * this._cellHeight + 'px';
       this.$positionHighlight.style.display = 'block';
-      // });
-      // }).show();
-      // if (this.options.heightToFontSizeRatio) {
-      //   this.$positionHighlight.css('font-size', this._fontSize);
-      // }
     },
 
     _removePositionHighlight() {
-      // this.$positionHighlight.hide();
       this.$positionHighlight.style.display = 'none';
     },
 
