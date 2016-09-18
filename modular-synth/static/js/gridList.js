@@ -220,8 +220,8 @@ export default class GridList {
 
   moveItemToPosition(item, newPosition) {
     var position = this._getItemPosition({
-      row: newPosition[0],
-      col: newPosition[1],
+      col: newPosition[0],
+      row: newPosition[1],
       w: item.w,
       h: item.h
     });
@@ -510,11 +510,8 @@ export default class GridList {
     var belowOfItem;
 
 
-    // TODO. this.
     // cloneItems(this.items, _gridList.items);
-    // _gridList.items = Object.assign({}, this.items);
     _gridList.items = Object.keys(this.items).map(key => this.items[key]);
-    //
 
     _gridList.generateGrid();
 

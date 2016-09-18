@@ -85,7 +85,9 @@ button {
 .position-highlight {
   width: 240px;
   height: 240px;
-  background: red;
+  // background: red;
+  border: 4px dashed grey;
+  transition: all 0.2s;
 }
 
 select {
