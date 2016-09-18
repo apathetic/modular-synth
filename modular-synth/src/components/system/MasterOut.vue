@@ -89,6 +89,8 @@ export default {
 
 <style lang="scss">
   #master-out {
+    border-width: 1px 0 0 0;
+    border-color: #222;
     min-width: 100%;
     bottom: 0;
   }
