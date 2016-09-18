@@ -60,7 +60,7 @@ export default {
   computed: {
     x1() {
       const node = this.from.module;
-      const width = node.width || 204;    // node.width is not in state.modules
+      const width = node.width || 200;    // node.width is not in state.modules
       return node.x + width + 3;
     },
     y1() {
