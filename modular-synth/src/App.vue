@@ -161,6 +161,11 @@ export default {
         case 'Space':
           // this.togglePlay();
           break;
+        case 'ShiftLeft':
+        case 'ShiftRight':
+          // this.toggleSorting;
+          console.log('shift');
+          break;
       }
     });
 

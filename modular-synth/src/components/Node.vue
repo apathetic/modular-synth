@@ -255,39 +255,13 @@ export default {
   }
 
 
-
-
-
-
-
-
-
   .play-mode {
     .module {
       width: 240px !important;
       height: 240px !important;
-
-      transition-delay: 0.2s;
     }
     .module-connections {
       display: none;
     }
   }
-
-
-  // .grid-container {
-  //   z-index: 9999;
-  //   position: absolute;
-  //   top: 66px;
-  //   left: 0;
-  //   right: 10px;
-  //   bottom: 0;
-  //   overflow: auto;
-  // }
-
-  // .grid {
-  //   position: relative;
-  //   height: 100%;
-  //   list-style: none;
-  // }
 </style>
