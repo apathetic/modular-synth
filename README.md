@@ -10,6 +10,10 @@ TODO
   - store state of app
   - persist to localstorage and recall
 
+- Connections:
+  - have startConnection: just draw an open-ended connection
+    - addConnection will take src, dest and "replace" the user-drawn connection
+  - updated connection object. See store.js line ~142 for details
 
 - MIDI input
   - pitch

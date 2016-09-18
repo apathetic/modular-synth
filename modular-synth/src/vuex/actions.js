@@ -33,6 +33,15 @@ export const load = ({ dispatch }, newState) => {
 
 
 // -----------------------------------------------
+//  APP
+// -----------------------------------------------
+
+export const toggleEditMode = ({ dispatch }) => {
+  dispatch('TOGGLE_EDIT');
+};
+
+
+// -----------------------------------------------
 //  UI
 // -----------------------------------------------
 
@@ -69,6 +78,10 @@ export const updatePosition = ({ dispatch }, id, x, y) => {
   dispatch('UPDATE_POSITION', id, x, y);
 };
 
+export const updateGridLocation = ({ dispatch }, id, col, row) => {
+  dispatch('UPDATE_LOCATION', id, col, row);
+};
+
 
 // -----------------------------------------------
 //  CONNECTIONS
@@ -86,11 +99,6 @@ export const updateConnection = ({ dispatch, state }, id, to) => {
   // } else {
   dispatch('SET_ACTIVE_CONNECTION', id);  // because sometimes this doesn't happen with :hover
   dispatch('UPDATE_CONNECTION', to);
-};
-
-export const updateConnection_ = ({ dispatch }, inlet) => {
-  // use   state.activeConnection
-  console.log(inlet);
 };
 
 export const newConnection = ({ dispatch }, outlet) => {

@@ -57,7 +57,8 @@ const state = {
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
   selected: null,
   activeModule: 0,
-  activeConnection: 0
+  activeConnection: 0,
+  editing: false
 };
 
 
@@ -74,6 +75,10 @@ const mutations = {
     }
     bindConnections();
     // routeAudio();
+  },
+
+  TOGGLE_EDIT(state) {
+    state.editing = !state.editing;
   },
 
   SET_SELECTED(state, id) {
@@ -119,8 +124,20 @@ const mutations = {
   UPDATE_POSITION(state, id, x, y) {
     // const module = state.modules.find(function(module) { return module.id === state.activeModule; });
     const module = state.modules.find(function(module) { return module.id === id; });
+
+    // A)
+    // SET module.left, top here instead ???
     module.x = x;
     module.y = y;
+    // ... BUT still need a way to persist x,y in the store...
+    //
+    //
+  },
+  UPDATE_LOCATION(state, id, col, row) {
+    const module = state.modules.find(function(module) { return module.id === id; });
+
+    module.col = col;
+    module.row = row;
   },
 
   SET_ACTIVE_CONNECTION(state, id) {
