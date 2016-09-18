@@ -125,13 +125,8 @@ const mutations = {
     // const module = state.modules.find(function(module) { return module.id === state.activeModule; });
     const module = state.modules.find(function(module) { return module.id === id; });
 
-    // A)
-    // SET module.left, top here instead ???
     module.x = x;
     module.y = y;
-    // ... BUT still need a way to persist x,y in the store...
-    //
-    //
   },
   UPDATE_LOCATION(state, id, col, row) {
     const module = state.modules.find(function(module) { return module.id === id; });

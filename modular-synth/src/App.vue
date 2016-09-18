@@ -51,6 +51,8 @@
 
   <aside id="controls">
 
+    <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
+
     <div>
       <p v-if="module">
         Current Module: {{ module.type }}<br>
