@@ -33,15 +33,6 @@ export const draggable = {
     };
   },
 
-  // computed: {
-  //   position() {
-  //     return {
-  //       left: this.x + 'px',
-  //       top: this.y + 'px'
-  //     };
-  //   }
-  // },
-
   methods: {
     startDragging(event) {
       const node = this.$el;
@@ -55,7 +46,6 @@ export const draggable = {
       dragObj.startX = this.x;
       dragObj.startY = this.y;
 
-      // console.log('start dragging');
       this.$dispatch('drag:start', [this.x, this.y], this.$el);
 
       // Capture mousemove and mouseup events on the page.
@@ -67,16 +57,15 @@ export const draggable = {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
-      // console.log('dragging');
       this.updatePosition(this.id, x, y);
       this.$dispatch('drag:active', [x, y], this.$el);
 
+      // C) And uncomment:
       // this.x = x;  // we *could* set this on the node directly, since it's here, the coords are here... but, better to manage via the store
       // this.y = y;
     },
 
     stopDragging(event) {
-      // console.log('stop dragging');
       this.$dispatch('drag:end');
 
       document.removeEventListener('mousemove', this.whileDragging);

@@ -104,6 +104,7 @@ export default class GridList {
     var item;
     var i;
     var j;
+    // var id;
 
     // Render the table header
     for (i = 0; i < widthOfGrid; i++) {
@@ -118,7 +119,9 @@ export default class GridList {
       for (j = 0; j < widthOfGrid; j++) {
         output += ' ';
         item = this.grid[j][i];
-        output += item ? this._padNumber(this.items.indexOf(item), '0') : '--';
+        // id = this.items.indexOf(item);
+        // id = item.id;
+        output += item ? this._padNumber(item.id, '0') : '--';
       }
     };
     output += '\n';
