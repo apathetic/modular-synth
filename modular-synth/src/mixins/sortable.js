@@ -1,5 +1,5 @@
 import GridList from '../../static/js/gridList';  // TODO more this. move static
-import { updatePosition } from '../vuex/actions';
+import { updateGridLocation } from '../vuex/actions';
 import store from '../vuex/store'; // .... er...
 
 const rowHeight = 240;
@@ -12,7 +12,7 @@ const options = {
 export const sortable = {
   vuex: {
     actions: {
-      updatePosition
+      updateGridLocation
     }
     //   getters: {
     //     active: state => state.activeModule    // state.selected...???
@@ -238,9 +238,16 @@ export const sortable = {
           // item.left = item.col * this._cellWidth;
           // item.top = item.row * this._cellHeight;
 
-          const x = item.col * this._cellWidth;
-          const y = item.row * this._cellHeight;
-          this.updatePosition(item.id, x, y);
+          // const x = item.col * this._cellWidth;
+          // const y = item.row * this._cellHeight;
+          // this.updatePosition(item.id, x, y);
+
+          // NOTE: we do not want to manually set or override x,y here.
+          //
+          // Rather, lets simply set col,row in the store and let the data figure itself out:
+          this.updateGridLocation(item.id, item.row, item.col);
+          //
+          //
         }
       });
 

@@ -4,15 +4,10 @@
   :class="dragging ? 'dragging' : ''"
   :style="position"
 
-  :data-w="w"
-  :data-h="h"
-  :data-col="col"
-  :data-row="row"
-  :data-id="id"
-
-  @click="setSelected(id)"
-  @mouseover="setActiveModule(id)"
   @mousedown.prevent="startDragging">
+
+  <!-- @click="setSelected(id)" -->
+  <!-- @mouseover="setActiveModule(id)" -->
 
     <div class="module-details">
       <h3>{{ name }}</h3>
@@ -25,11 +20,15 @@
 
       col: {{ col }}<br>
       row: {{ row }}<br>
-      colSpan: {{ w }}<br>
-      rowSpan: {{ h }}<br>
+      w: {{ w }}<br>
+      h: {{ h }}<br>
 
       x: {{ x }}<br>
-      y: {{ y }}
+      y: {{ y }}<br>
+
+      left: {{ left }}<br>
+      right: {{ right }}
+
     </div>
 
     <!-- @mouseup.stop="updateConnection_(inlet)"  -->
@@ -43,42 +42,40 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { setActiveModule, setSelected, newConnection, updateConnection_ } from '../vuex/actions';
+import { newConnection } from '../vuex/actions';
 
 export default {
   mixins: [draggable],
 
   vuex: {
+    vuex: {
+      getters: {
+        editing: state => state.editing
+      }
+    },
     actions: {
-      setActiveModule,
-      newConnection,
-      setSelected,
-      updateConnection_
+      newConnection
     }
   },
 
   props: {
     id: null,
-    // h: null,   // rowSpan
-    // w: null,   // colSpan
     x: null,
     y: null,
-    // height: null,
-    // width: null,
-    top: null,
-    left: null
+    col: null,
+    row: null
   },
 
   computed: {
     position() {
       return {
-        height: this.height + 'px',
-        width: this.width + 'px',
+        // left: (this.editing) ? this.x : this.col*240
 
         // SORTABLE:
-        // left: this.left + 'px',
+        // left: this.col * "cellWidth" + 'px',
         // top: this.top + 'px'
 
+        // B) Then: use this.left and this.top here ...
         // DRAGGABLE:
         left: this.x + 'px',
         top: this.y + 'px'

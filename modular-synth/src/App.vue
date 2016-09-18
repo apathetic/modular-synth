@@ -34,8 +34,8 @@
       :col="module.col"
       :row="module.row"
 
-      :left="module.left"
-      :top="module.top"
+      @click="setSelected(module.id)"
+      @mouseover="setActiveModule(module.id)"
 
       track-by="$index">
     </component>
@@ -57,6 +57,12 @@
         id: {{ module.id }}<br>
         x: {{ module.x }}<br>
         y: {{ module.y }}<br>
+
+        col: {{ module.col }}<br>
+        row: {{ module.row }}<br>
+        w: {{ module.w }}<br>
+        h: {{ module.h }}<br>
+
         details / info  ..?
       </p>
       <midi></midi>
@@ -107,6 +113,7 @@ export default {
 
   vuex: {
     getters: {
+      editing: state => state.editing,
       module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
       modules: state => state.modules,
       // connection: state => state.activeConnection,
@@ -131,8 +138,8 @@ export default {
 
   data() {
     return {
-      power: false,
-      editing: true
+      power: false
+      // editing: true
     };
   },
 
@@ -176,9 +183,9 @@ export default {
   },
 
   methods: {
-    toggleEditMode() {
-      this.editing = !this.editing;
-    },
+    // toggleEditMode() {
+    //   this.editing = !this.editing;
+    // },
 
     togglePower() {
       this.power = !this.power;
