@@ -43,6 +43,7 @@
 <script>
 import { draggable } from '../mixins/draggable';
 import { newConnection } from '../vuex/actions';
+import store from '../vuex/store'; // .... er...
 
 export default {
   mixins: [draggable],
@@ -69,16 +70,16 @@ export default {
   computed: {
     position() {
       return {
-        // left: (this.editing) ? this.x : this.col*240
+        left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * 240 + 'px',
+        top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * 240 + 'px'
 
         // SORTABLE:
         // left: this.col * "cellWidth" + 'px',
         // top: this.top + 'px'
 
-        // B) Then: use this.left and this.top here ...
         // DRAGGABLE:
-        left: this.x + 'px',
-        top: this.y + 'px'
+        // left: this.x + 'px',
+        // top: this.y + 'px'
 
       };
     }
