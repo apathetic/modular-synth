@@ -4,43 +4,6 @@ const defaults = {
   direction: 'horizontal'
 };
 
-// GridList.cloneItems = ...
-// function cloneItems(items, _items) {
-//   // /**
-//   //  * Clone items with a deep level of one. Items are not referenced but their
-//   //  * properties are
-//   //  */
-//   // // var _item;
-//   // var i;
-//   // var k;
-//   //
-//   // if (_items === undefined) {
-//   //   _items = [];
-//   // }
-//   // for (i = 0; i < items.length; i++) {
-//   //   // XXX: this is good because we don't want to lose item reference, but
-//   //   // maybe we should clear their properties since some might be optional
-//   //   if (!_items[i]) {
-//   //     _items[i] = {};
-//   //   }
-//   //   for (k in items[i]) {
-//   //     _items[i][k] = items[i][k];
-//   //   }
-//   // }
-//   // return _items;
-//
-// };
-
-// Makes an empty Array (or "gridCol") with _lanes" elements
-// question: why _not_ just:  new Array(lanes).fill(null)  ..????
-// function GridCol(lanes) {
-//   for (var i = 0; i < lanes; i++) {
-//     this.push(null);
-//   }
-// };
-// GridCol.prototype = [];
-
-
 
 export default class GridList {
 
@@ -70,18 +33,9 @@ export default class GridList {
    * }
    */
   constructor(items, options) {
-    // this._options = options;
-    // for (var k in this.defaults) {
-    //   if (!this._options.hasOwnProperty(k)) {
-    //     this._options[k] = this.defaults[k];
-    //   }
-    // }
     this._options = Object.assign(defaults, options);
-
     this.items = items;   // TODO these do not have reference to DOM nodes... only the DATA within vue...
-
     this._adjustSizeOfItems();
-
     this.generateGrid();
   }
 
@@ -343,7 +297,6 @@ export default class GridList {
     var position = this._getItemPosition(item);
     var x;
     var y;
-     // var row;
 
     // No coordonate can be negative
     if (newPosition[0] < 0 || newPosition[1] < 0) {
@@ -506,13 +459,10 @@ export default class GridList {
     var _gridList = new GridList([], this._options);
     var leftOfItem;
     var rightOfItem;
-    var aboveOfItem;
-    var belowOfItem;
+    // var aboveOfItem;
+    // var belowOfItem;
 
-
-    // cloneItems(this.items, _gridList.items);
     _gridList.items = Object.keys(this.items).map(key => this.items[key]);
-
     _gridList.generateGrid();
 
     for (var i = 0; i < collidingItems.length; i++) {
@@ -523,22 +473,22 @@ export default class GridList {
       // In this prioritized order, we try to move a colliding item around the
       // moving one:
       // 1. to its left side
-      // 2. above it
-      // 3. under it
+      // 2. above it    [wes] no, removed
+      // 3. under it    [wes] no, removed
       // 4. to its right side
       var position = this._getItemPosition(item);
 
       leftOfItem = [position.col - collidingPosition.w, collidingPosition.row];
       rightOfItem = [position.col + position.w, collidingPosition.row];
-      aboveOfItem = [collidingPosition.col, position.row - collidingPosition.h];
-      belowOfItem = [collidingPosition.col, position.row + position.h];
+      // aboveOfItem = [collidingPosition.col, position.row - collidingPosition.h];
+      // belowOfItem = [collidingPosition.col, position.row + position.h];
 
       if (_gridList._itemFitsAtPosition(collidingItem, leftOfItem)) {
         _gridList._updateItemPosition(collidingItem, leftOfItem);
-      } else if (_gridList._itemFitsAtPosition(collidingItem, aboveOfItem)) {
-        _gridList._updateItemPosition(collidingItem, aboveOfItem);
-      } else if (_gridList._itemFitsAtPosition(collidingItem, belowOfItem)) {
-        _gridList._updateItemPosition(collidingItem, belowOfItem);
+      // } else if (_gridList._itemFitsAtPosition(collidingItem, aboveOfItem)) {
+      //   _gridList._updateItemPosition(collidingItem, aboveOfItem);
+      // } else if (_gridList._itemFitsAtPosition(collidingItem, belowOfItem)) {
+      //   _gridList._updateItemPosition(collidingItem, belowOfItem);
       } else if (_gridList._itemFitsAtPosition(collidingItem, rightOfItem)) {
         _gridList._updateItemPosition(collidingItem, rightOfItem);
       } else {

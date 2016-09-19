@@ -72,15 +72,6 @@ export default {
       return {
         left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * 240 + 'px',
         top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * 240 + 'px'
-
-        // SORTABLE:
-        // left: this.col * "cellWidth" + 'px',
-        // top: this.top + 'px'
-
-        // DRAGGABLE:
-        // left: this.x + 'px',
-        // top: this.y + 'px'
-
       };
     }
   },
@@ -88,13 +79,8 @@ export default {
   data() {
     return {
       name: 'Node',
-
-      // width: 240,
-      // height: 240,
-
-      w: 1,
-      h: 2,
-
+      w: 1, // width
+      h: 2, // height
 
       inlets: [
         {
@@ -140,28 +126,15 @@ export default {
 
 <style lang="scss">
   .module {
-    // position: absolute;
-    // display: inline-flex;
-    // flex-direction: column;
-    // background: #444; // #888;
-    // border: 1px solid #666;
-    // border-radius: 2px;
-    // z-index: 1;
     height: 200px;
     width: 200px;
     border: 1px solid #fff;
     position: absolute;
-    // transition: height 0.2s, width 0.2s;
     transition: all 0.2s;
     transition-timing-function: ease-in-out;
     z-index: 1;
 
-    // TODO
-    // min-width: 206px;
-    // min-height: 80px;
-
     &:hover {
-      // background: #eff;
       border-color: lightblue;
     }
 
@@ -175,17 +148,10 @@ export default {
     &-details {
       background: #444;
       padding: 0.2em;
-      // display: none;
     }
 
     &-interface {
       padding: 1em 4em;
-
-
-      // // TODO
-      // min-width: 206px;
-      // min-height: 80px;
-
     }
 
     &-connections {
@@ -259,9 +225,10 @@ export default {
     .module {
       width: 240px !important;
       height: 240px !important;
-    }
-    .module-connections {
-      display: none;
+
+      &-connections {
+        display: none;
+      }
     }
   }
 </style>
