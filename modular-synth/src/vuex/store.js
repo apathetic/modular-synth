@@ -98,9 +98,7 @@ const mutations = {
       x: 0,         // for draggingX
       y: 0,         // for draggingY
       col: 0,       // for gridX position
-      row: 0,       // for gridY position
-      w: 1,         // but, set for now just to get it working
-      h: 1
+      row: 0       // for gridY position
     });
     state.id++;
   },

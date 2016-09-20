@@ -15,52 +15,9 @@ export const sortable = {
     actions: {
       updateGridLocation
     }
-    //   getters: {
-    //     active: state => state.activeModule    // state.selected...???
-    //   }
   },
 
-  // data() {
-  //   return {
-  //     options: {
-  //       lanes: 3,
-  //       widthHeightRatio: 1
-  //     }
-  //   };
-  // },
-
-  // ready() {
-  //   this.handle = this.$els.grid;
-  //   this._init();
-  //   this._bindEvents();
-  //
-  //   window.addEventListener('resize', function() {
-  //     this.gridList.resizeGrid(this.options.lanes);   // mmm, this is unbound, here. () => prolly wont work neither
-  //   }.bind(this));
-  // },
-
-  //
-  //
-  //
-  //
-  // TODO I think we can safely kill all _createGridSnapshot() refs -- there is no
-  //      need to clone the items on each sort; they're safe within the store (and
-  //      any actions on them are not desctructive by design).
-  //
-
   methods: {
-    // resize(lanes) {
-    //   if (lanes) {
-    //     options.lanes = lanes;
-    //   }
-    //
-    //   this._createGridSnapshot();
-    //   this.gridList.resizeGrid(options.lanes);
-    //   this._updateGridSnapshot();
-    //
-    //   this.reflow();
-    // },
-
     reflow() {
       this._calculateCellSize();
       this.render();
@@ -71,23 +28,7 @@ export const sortable = {
       this._applyPositionToItems();
     },
 
-    // _bindMethod(fn) {
-    //   /**
-    //    * Bind prototype method to instance scope (similar to CoffeeScript's fat
-    //    * arrow)
-    //    */
-    //   var that = this;
-    //   return function() {
-    //     return fn.apply(that, arguments);
-    //   };
-    // },
-
     _init() {
-      // TODO TODO TODO how to get the $el from the child components?
-      // this.elements = this.handle.children(this.options.itemSelector);
-      // this.elements = this.handle.querySelectorAll(this.options.itemSelector);
-
-
       this._widestItem = Math.max.apply(null, this.items.map(function(item) { return item.w; }));
       this._tallestItem = Math.max.apply(null, this.items.map(function(item) { return item.h; }));
 
@@ -101,58 +42,15 @@ export const sortable = {
       });
 
       this.reflow();
-
-      // if (this.options.dragAndDrop) {
-        // Init Draggable JQuery UI plugin for each of the list items
-        // http://api.jqueryui.com/draggable/
-        // this.elements.draggable(this.draggableOptions);
-      // }
     },
 
-    // _initGridList() {
-    //   // Create instance of GridList (decoupled lib for handling the grid
-    //   // positioning and sorting post-drag and dropping)
-    //   this.gridList = new GridList(this.items, {
-    //     lanes: this.options.lanes
-    //     // direction: this.options.direction
-    //   });
-    // },
-
-    // _bindEvents() {
-    //   // this._onStart = this._bindMethod(this.startSorting);
-    //   // this._onDrag = this._bindMethod(this.whileSorting);
-    //   // this._onStop = this._bindMethod(this.stopSorting);
-    //
-    //   // this.elements.on('dragstart', this.startSorting);
-    //   // this.elements.on('drag', this.whileSorting);
-    //   // this.elements.on('dragstop', this.stopSorting);
-
-    //   Array.from(this.elements, (item) => {
-    //     item.addEventListener('dragstart', this.startSorting);
-    //     item.addEventListener('drag', this.whileSorting);
-    //     item.addEventListener('dragstop', this.stopSorting);
-    //   });
-    // },
-
-    // _unbindEvents() {
-    //   this.elements.off('dragstart', this._onStart);
-    //   this.elements.off('drag', this.whileSorting);
-    //   this.elements.off('dragstop', this.stopSorting);
-    // }
-
-    // _onStart
     startSorting() {
-      // Create a deep copy of the items; we use them to revert the item
-      // positions after each drag change, making an entire drag operation less
-      // destructable
-      this._createGridSnapshot();
-
       // Since dragging actually alters the grid, we need to establish the number
       // of cols (+1 extra) before the drag starts
       this._maxGridCols = this.gridList.grid.length;
 
       //
-      // see line 157:
+      // see line 77:
       this.item = store.state.modules.find(function(m) {
         return m.id === store.state.activeModule;
       });
@@ -170,17 +68,7 @@ export const sortable = {
 
       if (this._dragPositionChanged(newPosition)) {
         this._previousDragPosition = newPosition;
-
-        // Regenerate the grid with the positions from when the drag started
-        // GridList.cloneItems(this._items, this.items);
-        // this.items = Object.assign({}, this._items);
-        this.items = Object.keys(this._items).map(key => this._items[key]);        // TODO kill this?
-
         this.gridList.generateGrid();
-
-        // Since the items list is a deep copy, we need to fetch the item
-        // corresponding to this drag action again
-        // item = this._getItemByElement(ui.helper);  // [wes] what? why? no.
         this.gridList.moveItemToPosition(item, newPosition);
 
         // Visually update item positions and highlight shape
@@ -191,8 +79,7 @@ export const sortable = {
 
     // _onStop
     stopSorting() {
-      this._updateGridSnapshot();   // TODO kill this?
-      // this.item.move = false;    // [wes] added by me
+      // this._triggerOnChange()
       this.item = null;             // [wes] added by me
       this._previousDragPosition = null;
       this._applyPositionToItems();
@@ -202,19 +89,9 @@ export const sortable = {
     },
 
     _calculateCellSize() {
+      // Not much to calculate, as it'll be fixed eventually
       this._cellHeight = rowHeight;
       this._cellWidth = this._cellHeight * options.widthHeightRatio;
-
-      // if (this.options.direction === 'horizontal') {
-      //   this._cellHeight = Math.floor(this.handle.offsetHeight / this.options.lanes);
-      //   this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
-      // } else {
-      //   this._cellWidth = Math.floor(this.$element.width() / this.options.lanes);
-      //   this._cellHeight = this._cellWidth / this.options.widthHeightRatio;
-      // }
-      // if (this.options.heightToFontSizeRatio) {
-      //   this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
-      // }
     },
 
 
@@ -229,31 +106,13 @@ export const sortable = {
       return item.h * this._cellHeight;
     },
 
-    // _applySizeToItems() {
-    //   this.items.forEach((item) => {
-    //     item.width = this._getItemWidth(item);
-    //     item.height = this._getItemHeight(item);
-    //   });
-    // },
-
     _applyPositionToItems() {
       this.items.forEach((item) => {
         // Don't interfere with the positions of the dragged items
-        // if (!item.move) {
         if (this.item !== item) {
-          // item.left = item.col * this._cellWidth;
-          // item.top = item.row * this._cellHeight;
-
-          // const x = item.col * this._cellWidth;
-          // const y = item.row * this._cellHeight;
-          // this.updatePosition(item.id, x, y);
-
           // NOTE: we do not want to manually set or override x,y here.
-          //
           // Rather, lets simply set col,row in the store and let the data figure itself out:
           this.updateGridLocation(item.id, item.col, item.row);
-          //
-          //
         }
       });
 
@@ -317,25 +176,6 @@ export const sortable = {
 
     _removePositionHighlight() {
       this.$positionHighlight.style.display = 'none';
-    },
-
-    _createGridSnapshot() {
-      //
-      //
-      // this._items = GridList.cloneItems(this.items);
-      // this._items = Object.assign({}, this.items);  // this clones items in the vuex store...???
-      this._items = Object.keys(this.items).map(key => this.items[key]);
-      //
-      //
-    },
-
-    _updateGridSnapshot() {
-      // Notify the user with the items that changed since the previous snapshot
-      // this._triggerOnChange();
-
-      // GridList.cloneItems(this.items, this._items);
-      // this._items = Object.assign({}, this.items);
-      this._items = Object.keys(this.items).map(key => this.items[key]);
     }
 
     // _triggerOnChange() {
