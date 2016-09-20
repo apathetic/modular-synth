@@ -163,6 +163,8 @@ export default {
           break;
         case 'ShiftLeft':
         case 'ShiftRight':
+          // WE only want to rearrange the module-rack if shift is held;
+          // otherwise, we probably want to play the module
           // this.toggleSorting;
           console.log('shift');
           break;

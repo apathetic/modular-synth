@@ -49,11 +49,9 @@ export const draggable = {
       // console.log('x', node.offsetLeft, this.x);
       // console.log('y', node.offsetTop, this.y);
 
+      // TODO Shouldn't need after...?
       this.x = node.offsetLeft;
       this.y = node.offsetTop;
-
-      // TODO try this (something like the following:)
-      // this.x = store.state.editing ? storestatcmoduleid.x : node.offsetLeft;
 
       this.$dispatch('drag:start', [this.x, this.y], this.$el, this.id);
 
@@ -77,10 +75,10 @@ export const draggable = {
 
     stopDragging(event) {
       this.$dispatch('drag:end');
+      this.dragging = false;
 
       document.removeEventListener('mousemove', this.whileDragging);
       document.removeEventListener('mouseup', this.stopDragging);
-      this.dragging = false;
     }
   }
 };
