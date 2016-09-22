@@ -35,7 +35,7 @@ export default class GridList {
   constructor(items, options) {
     this._options = Object.assign(defaults, options);
     this.items = items;   // TODO these do not have reference to DOM nodes... only the DATA within vue...
-    this._adjustSizeOfItems();
+    // this._adjustSizeOfItems();
     this.generateGrid();
   }
 

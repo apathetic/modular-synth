@@ -124,6 +124,9 @@ const mutations = {
     module.x = x;
     module.y = y;
   },
+  // APPLY_POSITION(state) {
+  //
+  // }
   UPDATE_LOCATION(state, id, col, row) {
     const module = state.modules.find(function(module) { return module.id === id; });
 
