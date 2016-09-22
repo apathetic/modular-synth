@@ -50,7 +50,8 @@
   </section>
 
   <aside id="controls">
-
+    {{ test | json }}<br>
+    ------------------------
     <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
 
     <div>
@@ -110,6 +111,9 @@ import midi from './components/system/Midi.vue';
 
 import * as actions from './vuex/actions';
 
+// TODO remove this here dependency:
+import store from './vuex/store'; // .... er...
+
 export default {
   mixins: [sortable],
 
@@ -117,6 +121,7 @@ export default {
     getters: {
       editing: state => state.editing,
       module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
+      test: state => state.modules.find(function(module) { return module.id === 1; }),
       modules: state => state.modules,
       // connection: state => state.activeConnection,
       connectors: state => state.connections,
@@ -147,6 +152,7 @@ export default {
 
   ready() {
     window.addEventListener('keydown', (e) => {
+      // debugger;
       switch (e.code) {
         case 'Delete':
         case 'Backspace':
@@ -154,6 +160,7 @@ export default {
           break;
         case 'Tab':
           this.toggleEditMode();
+          // this.restorePositions();
           break;
         case 'Escape':
           this.togglePower();
@@ -194,6 +201,20 @@ export default {
     // toggleEditMode() {
     //   this.editing = !this.editing;
     // },
+    restorePositions() {
+      if (this.editing) {
+        console.log('restoring position ...?');
+
+        this.modules[1].x = 444;
+        this.modules[1].y = 444;
+
+        this.modules.forEach((module) => {
+          var coords = store.state.modules.find(function(m) { return m.id === module.id; });
+          module.x = coords.x;
+          module.y = coords.y;
+        });
+      }
+    },
 
     togglePower() {
       this.power = !this.power;
@@ -206,14 +227,16 @@ export default {
   },
 
   events: {
-    'drag:start'(coords, el) {
+    'drag:start'(coords, el, id) {
       if (!this.editing) {
         this.startSorting();
       }
     },
-    'drag:active'(coords, el) {
+    'drag:active'(coords, el, id) {
       if (!this.editing) {
         this.whileSorting(el);    // sort modules if we're not in edit mode
+      } else {
+        // this.updatePosition(id, coords.x, coords.y);
       }
     },
     'drag:end'() {

@@ -54,6 +54,11 @@ export const sortable = {
       this.item = store.state.modules.find(function(m) {
         return m.id === store.state.activeModule;
       });
+      // is there really no better way...? :
+      // this.coords = {
+      //   x: this.item.x,
+      //   y: this.item.y
+      // };
     },
 
     // _onDrag
@@ -79,6 +84,8 @@ export const sortable = {
 
     // _onStop
     stopSorting() {
+      // this.item.x = 999;
+
       // this._triggerOnChange()
       this.item = null;             // [wes] added by me
       this._previousDragPosition = null;
