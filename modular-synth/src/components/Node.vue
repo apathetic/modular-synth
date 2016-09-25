@@ -43,6 +43,7 @@
 <script>
 import { draggable } from '../mixins/draggable';
 import { newConnection } from '../vuex/actions';
+import { cellWidth, cellHeight } from '../dimensions';
 import store from '../vuex/store'; // .... er...
 
 export default {
@@ -70,8 +71,8 @@ export default {
   computed: {
     position() {
       return {
-        left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * 240 + 'px',
-        top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * 240 + 'px'
+        left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * cellWidth + 'px',
+        top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * cellHeight + 'px'
       };
     }
   },

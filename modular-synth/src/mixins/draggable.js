@@ -53,7 +53,7 @@ export const draggable = {
       this.x = node.offsetLeft;
       this.y = node.offsetTop;
 
-      this.$dispatch('drag:start', [this.x, this.y], this.$el, this.id);
+      this.$dispatch('drag:start', [this.x, this.y], this.$el);
 
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDragging);
@@ -69,7 +69,7 @@ export const draggable = {
       this.x = x;  // we *could* set this on the node directly, since it's here & the coords are here... but, better to manage via the store
       this.y = y;
 
-      this.$dispatch('drag:active', [x, y], this.$el, this.id);
+      this.$dispatch('drag:active', [x, y], this.$el);
       this.updatePosition(this.id, x, y);
     },
 
