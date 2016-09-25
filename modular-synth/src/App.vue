@@ -145,14 +145,14 @@ export default {
 
   data() {
     return {
-      power: false
+      power: false,
+      sorting: false
       // editing: true
     };
   },
 
   ready() {
     window.addEventListener('keydown', (e) => {
-      // debugger;
       switch (e.code) {
         case 'Delete':
         case 'Backspace':
@@ -174,9 +174,20 @@ export default {
           // otherwise, we probably want to play the module
           // this.toggleSorting;
           console.log('shift');
+          this.sorting = true;
           break;
       }
     });
+
+    window.addEventListener('keyup', (e) => {
+      switch (e.code) {
+        case 'ShiftLeft':
+        case 'ShiftRight':
+          this.sorting = false;
+          break;
+      }
+    });
+
 
     // TODO !!!!!!
     // uncomment to get LOAD working
@@ -186,7 +197,6 @@ export default {
 
     // SORTABLE:
     // TODO move _init in sortable into ready() (in sortable) and remove this:
-    this.items = this.modules;  // TODO temp, to get sortable working
     this.handle = this.$els.grid;
     this._init();   // initSorting
 
@@ -227,14 +237,14 @@ export default {
   },
 
   events: {
-    'drag:start'(coords, el, id) {
+    'drag:start'(coords, el) {
       if (!this.editing) {
         this.startSorting();
       }
     },
-    'drag:active'(coords, el, id) {
-      if (!this.editing) {
-        this.whileSorting(el);    // sort modules if we're not in edit mode
+    'drag:active'(coords, el) {
+      if (!this.editing) { // && this.sorting) {
+        this.whileSorting(el);
       } else {
         // this.updatePosition(id, coords.x, coords.y);
       }
@@ -249,4 +259,7 @@ export default {
 
 </script>
 
-<style src="assets/scss/styles.scss" lang="scss"></style>
+<style lang="scss">
+  @import 'assets/scss/variables.scss';
+  @import 'assets/scss/styles.scss';
+</style>

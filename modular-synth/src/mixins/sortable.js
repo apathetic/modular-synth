@@ -1,9 +1,15 @@
+/**
+ * NOTE: "modules" (nee items) are from the App's internal data state.
+ * They are synchronized with the vuex store via a getter. But to be
+ * clear, we can destructively mess with this data array and not worry
+ * too much as the source of truth is still safe within vuex.
+ */
+
 import GridList from '../../static/js/gridList';  // TODO more this. move static
 import { updateGridLocation } from '../vuex/actions';
 import store from '../vuex/store'; // .... er...
+import { cellWidth, cellHeight } from '../dimensions';
 
-const rowHeight = 240;
-// const colWidth = 120;
 const options = {
   lanes: 3,
   widthHeightRatio: 1 // 0.5
@@ -29,15 +35,15 @@ export const sortable = {
     },
 
     _init() {
-      this._widestItem = Math.max.apply(null, this.items.map(function(item) { return item.w; }));
-      this._tallestItem = Math.max.apply(null, this.items.map(function(item) { return item.h; }));
+      this._widestItem = Math.max.apply(null, this.modules.map(function(item) { return item.w; }));
+      this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
 
       // Used to highlight a position an element will land on upon drop
       this.$positionHighlight = this.handle.querySelector('.position-highlight');
       this.$positionHighlight.style.display = 'none';
 
       // this._initGridList();
-      this.gridList = new GridList(this.items, {
+      this.gridList = new GridList(this.modules, {
         lanes: options.lanes
       });
 
@@ -49,16 +55,10 @@ export const sortable = {
       // of cols (+1 extra) before the drag starts
       this._maxGridCols = this.gridList.grid.length;
 
-      //
-      // see line 77:
+      // see line 73:
       this.item = store.state.modules.find(function(m) {
         return m.id === store.state.activeModule;
       });
-      // is there really no better way...? :
-      // this.coords = {
-      //   x: this.item.x,
-      //   y: this.item.y
-      // };
     },
 
     // _onDrag
@@ -97,8 +97,8 @@ export const sortable = {
 
     _calculateCellSize() {
       // Not much to calculate, as it'll be fixed eventually
-      this._cellHeight = rowHeight;
-      this._cellWidth = this._cellHeight * options.widthHeightRatio;
+      this._cellHeight = cellHeight;
+      this._cellWidth = cellWidth; // this._cellHeight * options.widthHeightRatio;
     },
 
 
@@ -114,7 +114,7 @@ export const sortable = {
     },
 
     _applyPositionToItems() {
-      this.items.forEach((item) => {
+      this.modules.forEach((item) => {
         // Don't interfere with the positions of the dragged items
         if (this.item !== item) {
           // NOTE: we do not want to manually set or override x,y here.
@@ -145,9 +145,6 @@ export const sortable = {
     },
 
     _snapItemPositionToGrid(el, item) {
-      // var position = item.$element.position();
-      // position[0] -= this.$element.position().left; // [wes]: ???????
-
       // var position = el.getBoundingClientRect();
       var position = {
         left: el.offsetLeft,
