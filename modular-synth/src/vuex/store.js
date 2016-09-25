@@ -117,6 +117,8 @@ const mutations = {
       }
     });
   },
+
+  // UPDATE_XY_POSITION(
   UPDATE_POSITION(state, id, x, y) {
     // const module = state.modules.find(function(module) { return module.id === state.activeModule; });
     const module = state.modules.find(function(module) { return module.id === id; });
@@ -124,12 +126,12 @@ const mutations = {
     module.x = x;
     module.y = y;
   },
+
   // APPLY_POSITION(state) {
-  //
-  // }
+  // UPDATE_GRID_POSITION(
   UPDATE_LOCATION(state, id, col, row) {
     const module = state.modules.find(function(module) { return module.id === id; });
-
+    // if (col === null || row === null) { window.alert(module); }
     module.col = col;
     module.row = row;
   },
