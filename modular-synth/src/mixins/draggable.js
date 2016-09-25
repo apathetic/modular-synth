@@ -36,22 +36,19 @@ export const draggable = {
   methods: {
     startDragging(event) {
       const node = this.$el;
-      node.style.zIndex = ++dragObj.zIndex;     // Update element's z-index.
 
-      this.dragging = true;
+      node.style.zIndex = ++dragObj.zIndex;     // Update element's z-index.
 
       // Save starting positions of cursor and element.
       dragObj.cursorStartX = event.clientX;
       dragObj.cursorStartY = event.clientY;
-      dragObj.startX = node.offsetLeft; // this.x; ...  Calculate explicity because could be in play mode, in which
-      dragObj.startY = node.offsetTop;  // this.y;      case x,y would not pertain to the actual node coords.
+      dragObj.startX = node.offsetLeft; // Calculate explicity because could be in play mode, in which
+      dragObj.startY = node.offsetTop;  // case x,y would not pertain to the actual node coords.
 
-      // console.log('x', node.offsetLeft, this.x);
-      // console.log('y', node.offsetTop, this.y);
-
-      // TODO Shouldn't need after...?
+      // TODO Shouldn't need this...?
       this.x = node.offsetLeft;
       this.y = node.offsetTop;
+      this.dragging = true;
 
       this.$dispatch('drag:start', [this.x, this.y], this.$el);
 
@@ -63,8 +60,6 @@ export const draggable = {
     whileDragging(event) {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
-
-      // console.log('x, y', x, y);
 
       this.x = x;  // we *could* set this on the node directly, since it's here & the coords are here... but, better to manage via the store
       this.y = y;

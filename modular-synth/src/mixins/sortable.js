@@ -92,7 +92,7 @@ export const sortable = {
       this._applyPositionToItems();
       this._removePositionHighlight();
 
-      console.log(this.gridList.toString());
+      // console.log(this.gridList.toString());
     },
 
     _calculateCellSize() {
