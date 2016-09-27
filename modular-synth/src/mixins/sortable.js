@@ -84,8 +84,6 @@ export const sortable = {
 
     // _onStop
     stopSorting() {
-      // this.item.x = 999;
-
       // this._triggerOnChange()
       this.item = null;             // [wes] added by me
       this._previousDragPosition = null;
