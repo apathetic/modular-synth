@@ -50,11 +50,10 @@ export default {
   mixins: [draggable],
 
   vuex: {
-    vuex: {
-      getters: {
-        editing: state => state.editing
-      }
-    },
+    // getters: {
+    //   // editing: state => state.editing,
+    //   posx: state => state.modules[1].x
+    // },
     actions: {
       newConnection
     }
@@ -112,6 +111,19 @@ export default {
       ]
     };
   },
+
+  events: {
+    'drag:end'(coords, el) {
+      // grab the stored XY position from the store and reset after drag
+      let x = store.state.modules[this.id].x;
+      let y = store.state.modules[this.id].y;
+      // console.log('node: dragend', x);
+      this.x = x;
+      this.y = y;
+    }
+  },
+
+
 
   created() {
     // dummy outlet for test
