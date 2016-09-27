@@ -92,14 +92,23 @@ const mutations = {
     state.activeModule = id;
   },
   ADD_MODULE(state, type) {
-    state.modules.push({
+    // state.modules.push({
+    //   id: state.id,
+    //   type: type,
+    //   x: 0,         // for dragging X
+    //   y: 0,         // for dragging Y
+    //   col: 0,       // for grid X position
+    //   row: 0        // for grid Y position
+    // });
+    state.modules[state.id] = {
       id: state.id,
       type: type,
-      x: 0,         // for draggingX
-      y: 0,         // for draggingY
-      col: 0,       // for gridX position
-      row: 0       // for gridY position
-    });
+      x: 0,         // for dragging X
+      y: 0,         // for dragging Y
+      col: 0,       // for grid X position
+      row: 0        // for grid Y position
+    };
+
     state.id++;
   },
   REMOVE_MODULE(state) {

@@ -112,7 +112,7 @@ import midi from './components/system/Midi.vue';
 import * as actions from './vuex/actions';
 
 // TODO remove this here dependency:
-import store from './vuex/store'; // .... er...
+// import store from './vuex/store'; // .... er...
 
 export default {
   mixins: [sortable],
@@ -121,7 +121,7 @@ export default {
     getters: {
       editing: state => state.editing,
       module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
-      test: state => state.modules.find(function(module) { return module.id === 1; }),
+      // test: state => state.modules.find(function(module) { return module.id === 1; }),
       modules: state => state.modules,
       // connection: state => state.activeConnection,
       connectors: state => state.connections,
@@ -131,7 +131,6 @@ export default {
   },
 
   components: {
-    // GridTest,
     masterOut,
     connector,
     Node,
@@ -160,7 +159,6 @@ export default {
           break;
         case 'Tab':
           this.toggleEditMode();
-          // this.restorePositions();
           break;
         case 'Escape':
           this.togglePower();
@@ -194,37 +192,16 @@ export default {
     // this.load(false); // false: don't load any external json; just use what was left in localStorage (if any)
 
 
-
     // SORTABLE:
     // TODO move _init in sortable into ready() (in sortable) and remove this:
     this.handle = this.$els.grid;
     this._init();   // initSorting
-
-
-    // this._bindEvents();
-    // window.addEventListener('resize', function() {
-    //   this.gridList.resizeGrid(this.options.lanes);   // mmm, this is unbound, here. () => prolly wont work neither
-    // }.bind(this));
   },
 
   methods: {
     // toggleEditMode() {
     //   this.editing = !this.editing;
     // },
-    restorePositions() {
-      if (this.editing) {
-        console.log('restoring position ...?');
-
-        this.modules[1].x = 444;
-        this.modules[1].y = 444;
-
-        this.modules.forEach((module) => {
-          var coords = store.state.modules.find(function(m) { return m.id === module.id; });
-          module.x = coords.x;
-          module.y = coords.y;
-        });
-      }
-    },
 
     togglePower() {
       this.power = !this.power;
@@ -243,7 +220,7 @@ export default {
       }
     },
     'drag:active'(coords, el) {
-      if (!this.editing) { // && this.sorting) {
+      if (!this.editing) { //  this.sorting) {
         this.whileSorting(el);
       } else {
         // this.updatePosition(id, coords.x, coords.y);
