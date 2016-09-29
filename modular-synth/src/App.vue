@@ -95,7 +95,6 @@
 </template>
 
 <script>
-// import GridTest from './components/gridTEST';
 import { sortable } from './mixins/sortable';
 
 import Node from './components/Node';
@@ -111,9 +110,6 @@ import midi from './components/system/Midi.vue';
 
 import * as actions from './vuex/actions';
 
-// TODO remove this here dependency:
-// import store from './vuex/store'; // .... er...
-
 export default {
   mixins: [sortable],
 
@@ -121,7 +117,6 @@ export default {
     getters: {
       editing: state => state.editing,
       module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
-      // test: state => state.modules.find(function(module) { return module.id === 1; }),
       modules: state => state.modules,
       // connection: state => state.activeConnection,
       connectors: state => state.connections,
@@ -222,8 +217,6 @@ export default {
     'drag:active'(coords, el) {
       if (!this.editing) { //  this.sorting) {
         this.whileSorting(el);
-      } else {
-        // this.updatePosition(id, coords.x, coords.y);
       }
     },
     'drag:end'() {
@@ -239,4 +232,5 @@ export default {
 <style lang="scss">
   @import 'assets/scss/variables.scss';
   @import 'assets/scss/styles.scss';
+  @import 'assets/scss/node.scss';
 </style>
