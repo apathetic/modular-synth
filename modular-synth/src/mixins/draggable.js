@@ -37,25 +37,21 @@ export const draggable = {
   methods: {
     startDragging(event) {
       const node = this.$el;
+      const x = node.offsetLeft;  // Calculate explicity because could be in play mode, in which
+      const y = node.offsetTop;   // case x,y would not pertain to the actual node coords.
 
       node.style.zIndex = ++dragObj.zIndex;     // Update element's z-index.
 
       // Save starting positions of cursor and element.
       dragObj.cursorStartX = event.clientX;
       dragObj.cursorStartY = event.clientY;
-      dragObj.startX = node.offsetLeft; // Calculate explicity because could be in play mode, in which
-      dragObj.startY = node.offsetTop;  // case x,y would not pertain to the actual node coords.
+      dragObj.startX = x;
+      dragObj.startY = y;
 
-      // TODO Shouldn't need this...?
-      // OKAY: do not set directly on the Node. If we
-      // do, we can not change via App
-      this.x = node.offsetLeft;
-      this.y = node.offsetTop;
-      // ----------
-
+      this.x = x;
+      this.y = y;
       this.dragging = true;
-
-      this.$dispatch('drag:start', [this.x, this.y], this.$el);
+      this.$dispatch('drag:start', [x, y], this.$el);
 
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDragging);
@@ -66,26 +62,21 @@ export const draggable = {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
-      // ----------
-      this.x = x;  // we *could* set this on the node directly, since it's here & the coords are here... but, better to manage via the store
+      this.x = x;
       this.y = y;
-      // ----------
 
       this.$dispatch('drag:active', [x, y], this.$el);
       this.updatePosition(this.id, x, y);
     },
 
     stopDragging(event) {
-      this.$dispatch('drag:end', this.id);
       this.dragging = false;
+      this.$dispatch('drag:end', this.id);
 
-      // OKAY... if we null the x,y values on the node here,
-      // then it *should* get proper posiioning from vuex
+      // restore the x,y values on the node
       if (!store.state.editing) {
-        // let x = store.state.modules[this.id].x;
-        // let y = store.state.modules[this.id].y;
-        // this.x = x;
-        // this.y = y;
+        this.x = store.state.modules[this.id].x;
+        this.y = store.state.modules[this.id].y;
       }
 
       document.removeEventListener('mousemove', this.whileDragging);
