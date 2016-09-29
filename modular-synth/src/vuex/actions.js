@@ -14,14 +14,6 @@ export const load = ({ dispatch }, newState) => {
 
 export const toggleEditMode = ({ dispatch, state }) => {
   dispatch('TOGGLE_EDIT');
-  if (state.editing) {
-    // TODO try this (something like the following:)
-    // this.x = store.state.editing ? store.state.modules[this.id].x : node.offsetLeft;
-
-    // state.modules.forEach((module) => {
-    //   dispatch('APPLY_POSITION', module);
-    // });
-  }
 };
 
 // -----------------------------------------------
