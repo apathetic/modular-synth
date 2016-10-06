@@ -6,7 +6,6 @@
  */
 
 import { updatePosition } from '../vuex/actions';
-import store from '../vuex/store'; // .... er...
 
 const dragObj = {
   zIndex: 0,
@@ -20,6 +19,9 @@ export const draggable = {
   vuex: {
     actions: {
       updatePosition
+    },
+    getters: {
+      module: (state) => state.modules.find(function(module) { return module.id === this.id; })
     }
   },
 
@@ -74,9 +76,11 @@ export const draggable = {
       this.$dispatch('drag:end', this.id);
 
       // restore the x,y values on the node
-      if (!store.state.editing) {
-        this.x = store.state.modules[this.id].x;
-        this.y = store.state.modules[this.id].y;
+      if (!this.$store.state.editing) {
+        const module = this.$store.state.modules.find((module) => { return module.id === this.id; });
+
+        this.x = module.x;
+        this.y = module.y;
       }
 
       document.removeEventListener('mousemove', this.whileDragging);

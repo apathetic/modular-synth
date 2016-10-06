@@ -2,7 +2,7 @@
   <div
     class="module"
     id="master-out"
-    @mouseover.stop="setActiveModule(id)">
+    @mouseover.stop="setActive(id)">
 
     <div class="module-interface">
       <Level></Level>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { setActiveModule, newConnection, updatePosition } from '../../vuex/actions';
+import { setActive, newConnection, updatePosition } from '../../vuex/actions';
 import Level from '../UI/Level';
 
 export default {
@@ -28,7 +28,7 @@ export default {
 
   vuex: {
     actions: {
-      setActiveModule,
+      setActive,
       newConnection,
       updatePosition
     }
@@ -93,5 +93,7 @@ export default {
     border-color: #222;
     min-width: 100%;
     bottom: 0;
+    width: auto;
+    height: auto;
   }
 </style>
