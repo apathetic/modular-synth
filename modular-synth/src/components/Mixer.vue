@@ -3,7 +3,6 @@
     class="mixer module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
-    @mouseover.stop="setActiveModule(id)"
     @mousedown.prevent="startDraggingNode">
 
     <div class="module-details">

@@ -3,7 +3,6 @@
   class="module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @mouseover.stop="setActiveModule(id)"
   @mousedown.prevent="startDraggingNode">
   <!-- @mousedown.prevent="dragStart($event, this)"> -->
 
@@ -26,7 +25,7 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { setActiveModule, newConnection } from '../vuex/actions';
+import { newConnection } from '../vuex/actions';
 import Knob from './UI/Knob';
 
 export default {
@@ -36,7 +35,6 @@ export default {
 
   vuex: {
     actions: {
-      setActiveModule,
       newConnection
     }
   },

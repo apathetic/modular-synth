@@ -6,9 +6,6 @@
 
   @mousedown.prevent="startDragging">
 
-  <!-- @click="setSelected(id)" -->
-  <!-- @mouseover="setActiveModule(id)" -->
-
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
@@ -41,78 +38,78 @@
 
 
 <script>
-import { draggable } from '../mixins/draggable';
-import { newConnection } from '../vuex/actions';
-import { cellWidth, cellHeight } from '../dimensions';
-import store from '../vuex/store'; // .... er...
+  import { draggable } from '../mixins/draggable';
+  import { newConnection } from '../vuex/actions';
+  import { cellWidth, cellHeight } from '../dimensions';
+  import store from '../vuex/store'; // .... er...
 
-export default {
-  mixins: [draggable],
+  export default {
+    mixins: [draggable],
 
-  vuex: {
-    actions: {
-      newConnection
-    }
-  },
+    vuex: {
+      actions: {
+        newConnection
+      }
+    },
 
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
+    props: {
+      id: null,
+      col: null,
+      row: null
+    },
 
-  computed: {
-    position() {
+    computed: {
+      position() {
+        return {
+          left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * cellWidth + 'px',
+          top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * cellHeight + 'px'
+        };
+      }
+    },
+
+    data() {
       return {
-        left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * cellWidth + 'px',
-        top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * cellHeight + 'px'
+        name: 'Node',
+        w: 1, // width
+        h: 2, // height
+
+        inlets: [
+          {
+            port: 0,
+            label: 'freq',
+            data: this.input
+          }, {
+            port: 1,
+            label: 'gain',
+            data: null // this.input
+          }, {
+            port: 2,
+            label: 'range',
+            data: null // this.input
+          }
+        ],
+
+        outlets: [
+          {
+            port: 0,
+            label: 'output-1',
+            data: null // this.outputL   // src?
+          }, {
+            port: 1,
+            label: 'output-2',
+            data: null // this.outputR
+          }
+        ]
       };
+    },
+
+    created() {
+      // dummy outlet for test
+      this.inlets[0].data = this.context.createGain();
+
+      this.outlets[0].data = this.context.createGain();
+      this.outlets[1].data = this.context.createGain();
     }
-  },
-
-  data() {
-    return {
-      name: 'Node',
-      w: 1, // width
-      h: 2, // height
-
-      inlets: [
-        {
-          port: 0,
-          label: 'freq',
-          data: this.input
-        }, {
-          port: 1,
-          label: 'gain',
-          data: null // this.input
-        }, {
-          port: 2,
-          label: 'range',
-          data: null // this.input
-        }
-      ],
-
-      outlets: [
-        {
-          port: 0,
-          label: 'output-1',
-          data: null // this.outputL   // src?
-        }, {
-          port: 1,
-          label: 'output-2',
-          data: null // this.outputR
-        }
-      ]
-    };
-  },
-
-  created() {
-    // dummy outlet for test
-    this.inlets[0].data = this.context.createGain();
-
-    this.outlets[0].data = this.context.createGain();
-    this.outlets[1].data = this.context.createGain();
-  }
-};
+  };
 
 </script>

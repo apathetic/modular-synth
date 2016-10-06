@@ -19,6 +19,8 @@ function bindConnections() {
   const connections = state.connections;
   const modules = state.modules;
 
+  console.log('load');
+
   for (let connection of connections) {
     const fromId = connection.from.module.id;
     connection.from.module = modules.find(function(m) { return m.id === fromId; });
@@ -52,11 +54,11 @@ function routeAudio(connection) {
 
 const state = {
   id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
-  cid: localStorage.getItem('cid') || 0,  // connector id
+  // cid: localStorage.getItem('cid') || 0,  // connector id
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
-  selected: null,
-  activeModule: 0,
+  selected: null,   // Hovered: Module Info, Connections.
+  active: 0,        // Clicked: Dragging, Deleting.
   activeConnection: 0,
   editing: false
 };
@@ -81,33 +83,39 @@ const mutations = {
     state.editing = !state.editing;
   },
 
-  SET_SELECTED(state, id) {
+
+
+  SET_ACTIVE_CONNECTION(state, id) {
+    state.activeConnection = id;
+  },
+
+
+
+  SET_ACTIVE(state, id) {
+    state.active = id;
+  },
+  CLEAR_ACTIVE(state) {
+    state.active = null;
+  },
+  SET_FOCUS(state, id) {
     state.selected = id;
   },
-  RESET_SELECTED(state) {
+  CLEAR_FOCUS(state) {
     state.selected = null;
   },
 
-  SET_ACTIVE_MODULE(state, id) {
-    state.activeModule = id;
-  },
   ADD_MODULE(state, type) {
-    // state.modules.push({
-    //   id: state.id,
-    //   type: type,
-    //   x: 0,         // for dragging X
-    //   y: 0,         // for dragging Y
-    //   col: 0,       // for grid X position
-    //   row: 0        // for grid Y position
-    // });
-    state.modules[state.id] = {
+    state.modules.push({
       id: state.id,
       type: type,
       x: 0,         // for dragging X
       y: 0,         // for dragging Y
       col: 0,       // for grid X position
       row: 0        // for grid Y position
-    };
+    });
+
+    // While it could be easier to reference a specific node, having a
+    // sparse array creates "null"s, which are then problematic to iterate over.
 
     state.id++;
   },
@@ -127,30 +135,25 @@ const mutations = {
     });
   },
 
-  // UPDATE_XY_POSITION(
-  UPDATE_POSITION(state, id, x, y) {
-    // const module = state.modules.find(function(module) { return module.id === state.activeModule; });
+  UPDATE_GRID_POSITION(state, id, x, y) {
     const module = state.modules.find(function(module) { return module.id === id; });
 
     module.x = x;
     module.y = y;
   },
-
-  // APPLY_POSITION(state) {
-  // UPDATE_GRID_POSITION(
-  UPDATE_LOCATION(state, id, col, row) {
+  UPDATE_RACK_POSITION(state, id, col, row) {
     const module = state.modules.find(function(module) { return module.id === id; });
-    // if (col === null || row === null) { window.alert(module); }
+
     module.col = col;
     module.row = row;
   },
 
-  SET_ACTIVE_CONNECTION(state, id) {
-    state.activeConnection = id;
-  },
   ADD_CONNECTION(state, outlet) {
     // const module = state.modules.find((m) => { m.id === state.activeModule; });
-    const module = state.modules.find(function(m) { return m.id === state.activeModule; });
+    const module = state.modules.find(function(m) { return m.id === state.selected; });
+    // console.log(outlet);
+    // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
+
     const from = {
       module: module,        // for line (x,y) positioning
       // x: module.x,
@@ -163,18 +166,20 @@ const mutations = {
 
     // ACTUAL:
     // "from":{
-    //   "port":0,"label":"output-1","data":{},
+    //   "port":0,
+    //   "label":"output-1",
+    //   "data":{},
     //   "module":{
     //     "id":1,"type":"Node","x":100,"y":237
     //   }
 
     // BETTER:
     // "from":{
-    //   "moduleId":1,
-    //   "label":"output-1",
     //   "port":0,
+    //   "label":"output-1",
     //   "x":100,
     //   "y":237
+    //   "moduleId":1,
     // }
 
 
@@ -187,29 +192,30 @@ const mutations = {
     };
 
     state.connections.push({
-      id: parseInt(state.cid),
+      id: parseInt(state.id),
       to,
       from
     });
-    state.cid++;
+    state.id++;
   },
-  UPDATE_CONNECTION(state, to) {
-    // const connection = state.connections.find((c) => { c.id === id; });  // WHY NOT WORK
-    const connection = state.connections.find(function(c) { return c.id === state.activeConnection; });
+  UPDATE_CONNECTION(state, id, inlet) {
+    const connection = state.connections.find(function(c) { return c.id === id; });
+    const module = state.modules.find(function(m) { return m.id === state.selected; });
+    // const module = state.modules.find(function(m) { return m.id === state.active; });
 
-    connection.to = to;
-    connection.to.module = state.modules.find(function(m) { return m.id === state.activeModule; });
-    //                     state.modules.find((m) => { m.id === state.activeModule; });
+    connection.to = inlet;
+    connection.to.module = module;
 
-    // if (connection.to.module === connection.from.module) {
-    //     // dispatch('REMOVE_CONNECTION');
-    // }
 
-    routeAudio(connection);
+    if (connection.to.module === connection.from.module) {
+      // this.$store.dispatch('REMOVE_CONNECTION', id);
+    } else {
+      routeAudio(connection);
+    }
   },
-  REMOVE_CONNECTION(state) {
-    let active = state.activeConnection;
-    let connection = state.connections.find(c => { c.id === active; });
+  REMOVE_CONNECTION(state, id) {
+    // let active = state.activeConnection;
+    let connection = state.connections.find(c => { c.id === id; });
     state.connections.splice(state.modules.indexOf(connection), 1);
   },
 
@@ -221,11 +227,25 @@ const mutations = {
 
 
 // -----------------------------------------------
+//  GETTERS
+// -----------------------------------------------
+
+const getters = {
+  editing: (state) => state.editing,
+  active: (state) => state.modules.find(function(module) { return module.id === state.active; }),
+  modules: (state) => state.modules,
+  connectors: (state) => state.connections,
+  selected: (state) => state.selected
+};
+
+
+// -----------------------------------------------
 //  STORE
 // -----------------------------------------------
 
 export default new Vuex.Store({
   state,
+  getters,
   mutations,
   plugins
   // strict: process.env.NODE_ENV !== 'production'
