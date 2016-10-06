@@ -8,225 +8,224 @@
 
 
 <template>
+  <main :class="editing ? 'edit-mode': 'play-mode'">
+    <section
+    id="modules"
+    class="grid-container"
+    v-el:grid
+    @click="clearActive">
 
-  <section
-  id="modules"
-  class="grid-container"
-  v-el:grid
-  :class="editing ? 'edit-mode': 'play-mode'"
-  @click="resetSelected">
+      <div class="position-highlight">
+        <div class="inner"></div>
+      </div>
 
-    <div class="position-highlight">
-      <div class="inner"></div>
-    </div>
+      <!-- modules: {{ modules|json }}<br><br> -->
+      <!-- conec: {{ connectors|json }} -->
+      <!-- selected: {{ selected|json }} -->
 
-    <!-- modules: {{ modules|json }}<br><br> -->
-    <!-- conec: {{ connectors|json }} -->
-    <!-- selected: {{ selected|json }} -->
+      <component v-for="module in modules"  v-if="module.id !== 0"
+        :is="module.type"
+        :id="module.id"
+        :x="module.x"
+        :y="module.y"
+        :col="module.col"
+        :row="module.row"
 
-    <component v-for="module in modules"  v-if="module.id !== 0"
-      :is="module.type"
-      :id="module.id"
+        @mousedown.stop="setActive(module.id)"
+        @mouseover="setFocus(module.id)"
+        @mouseout="clearFocus()"
 
-      :x="module.x"
-      :y="module.y"
+        track-by="$index">
+      </component>
 
-      :col="module.col"
-      :row="module.row"
+      <!-- @click="setSelected(module.id)" -->
 
-      @click="setSelected(module.id)"
-      @mouseover="setActiveModule(module.id)"
+      <svg id="connections">
+        <connector v-for="connector in connectors"
+          :id="connector.id"
+          :to="connector.to"
+          :from="connector.from">
+        </connector>
+      </svg>
 
-      track-by="$index">
-    </component>
+    </section>
 
-    <svg id="connections">
-      <connector v-for="connector in connectors"
-        :id="connector.id"
-        :to="connector.to"
-        :from="connector.from">
-      </connector>
-    </svg>
-  </section>
+    <aside id="controls">
+      {{ test | json }}<br>
+      ------------------------
+      <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
 
-  <aside id="controls">
-    {{ test | json }}<br>
-    ------------------------
-    <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
+      <div>
+        <p v-if="module">
+          Current Module: {{ module.type }}<br>
+          id: {{ module.id }}<br>
+          x: {{ module.x }}<br>
+          y: {{ module.y }}<br>
 
-    <div>
-      <p v-if="module">
-        Current Module: {{ module.type }}<br>
-        id: {{ module.id }}<br>
-        x: {{ module.x }}<br>
-        y: {{ module.y }}<br>
+          col: {{ module.col }}<br>
+          row: {{ module.row }}<br>
+          w: {{ module.w }}<br>
+          h: {{ module.h }}<br>
 
-        col: {{ module.col }}<br>
-        row: {{ module.row }}<br>
-        w: {{ module.w }}<br>
-        h: {{ module.h }}<br>
+          details / info  ..?
+        </p>
+        <midi></midi>
+      </div>
 
-        details / info  ..?
-      </p>
-      <midi></midi>
-    </div>
+      <div>
+        <button @click="toggleEditMode">{{ editing ? 'Play' : 'Edit' }}</button>
+        <button @click="newModule('Node')">add Node</button>
+        <button @click="newModule('Oscillator')">osc</button>
+        <button @click="newModule('LFO')">LFO</button>
+        <button @click="newModule('Reverb')">reverb</button>
+        <button @click="newModule('Filter')">filter</button>
+        <button @click="newModule('Mixer')">mixer</button>
 
-    <div>
-      <button @click="toggleEditMode">{{ editing ? 'Play' : 'Edit' }}</button>
-      <button @click="newModule('Node')">add Node</button>
-      <button @click="newModule('Oscillator')">osc</button>
-      <button @click="newModule('LFO')">LFO</button>
-      <button @click="newModule('Reverb')">reverb</button>
-      <button @click="newModule('Filter')">filter</button>
-      <button @click="newModule('Mixer')">mixer</button>
+        <button>  ► </button>
+        <button
+          @click="togglePower"
+          :class="power ? 'on' : 'off'">
+          Audio (power) On
+          <img src="/static/images/reset1.svg" style="max-width:3em">
+        </button>
+      </div>
 
-      <button>  ► </button>
-      <button
-        @click="togglePower"
-        :class="power ? 'on' : 'off'">
-        Audio (power) On
-        <img src="/static/images/reset1.svg" style="max-width:3em">
-      </button>
-    </div>
+      <master-out></master-out>
 
-    <master-out></master-out>
-
-  </aside>
+    </aside>
+  </main>
 </template>
 
 <script>
-import { sortable } from './mixins/sortable';
+  import { sortable } from './mixins/sortable';
 
-import Node from './components/Node';
-import Reverb from './components/Reverb';
-import Oscillator from './components/Oscillator';
-import LFO from './components/LFO';
-import Filter from './components/Filter';
-import Mixer from './components/Mixer';
+  import Node from './components/Node';
+  import Reverb from './components/Reverb';
+  import Oscillator from './components/Oscillator';
+  import LFO from './components/LFO';
+  import Filter from './components/Filter';
+  import Mixer from './components/Mixer';
 
-import masterOut from './components/system/MasterOut';
-import connector from './components/system/Connector';
-import midi from './components/system/Midi.vue';
+  import masterOut from './components/system/MasterOut';
+  import connector from './components/system/Connector';
+  import midi from './components/system/Midi.vue';
 
-import * as actions from './vuex/actions';
+  import * as actions from './vuex/actions';
 
-export default {
-  mixins: [sortable],
+  export default {
+    mixins: [sortable],
 
-  vuex: {
-    getters: {
-      editing: state => state.editing,
-      module: state => state.modules.find(function(module) { return module.id === state.activeModule; }),
-      modules: state => state.modules,
-      // connection: state => state.activeConnection,
-      connectors: state => state.connections,
-      selected: state => state.selected
+    vuex: {
+      getters: {
+        editing: (state) => state.editing,
+        module: (state) => state.modules.find(function(module) { return module.id === state.active; }),
+        modules: (state) => state.modules,
+        // connection: (state) => state.activeConnection,
+        connectors: (state) => state.connections,
+        selected: (state) => state.selected
+      },
+      actions: actions
     },
-    actions: actions
-  },
 
-  components: {
-    masterOut,
-    connector,
-    Node,
-    Reverb,
-    Oscillator,
-    LFO,
-    Filter,
-    Mixer,
-    midi
-  },
+    components: {
+      masterOut,
+      connector,
+      Node,
+      Reverb,
+      Oscillator,
+      LFO,
+      Filter,
+      Mixer,
+      midi
+    },
 
-  data() {
-    return {
-      power: false,
-      sorting: false
-      // editing: true
-    };
-  },
+    data() {
+      return {
+        power: false,
+        sorting: false
+        // editing: true
+      };
+    },
 
-  ready() {
-    window.addEventListener('keydown', (e) => {
-      switch (e.code) {
-        case 'Delete':
-        case 'Backspace':
-          this.removeModule();
-          break;
-        case 'Tab':
-          this.toggleEditMode();
-          break;
-        case 'Escape':
-          this.togglePower();
-          break;
-        case 'Space':
-          // this.togglePlay();
-          break;
-        case 'ShiftLeft':
-        case 'ShiftRight':
-          // WE only want to rearrange the module-rack if shift is held;
-          // otherwise, we probably want to play the module
-          // this.toggleSorting;
-          console.log('shift');
-          this.sorting = true;
-          break;
+    ready() {
+      window.addEventListener('keydown', (e) => {
+        switch (e.code) {
+          case 'Delete':
+          case 'Backspace':
+            this.removeModule();
+            break;
+          case 'Tab':
+            this.toggleEditMode();
+            break;
+          case 'Escape':
+            this.togglePower();
+            break;
+          case 'Space':
+            // this.togglePlay();
+            break;
+          case 'ShiftLeft':
+          case 'ShiftRight':
+            // WE only want to rearrange the module-rack if shift is held;
+            // otherwise, we probably want to play the module
+            // this.toggleSorting;
+            console.log('shift');
+            this.sorting = true;
+            break;
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        switch (e.code) {
+          case 'ShiftLeft':
+          case 'ShiftRight':
+            this.sorting = false;
+            break;
+        }
+      });
+
+      // load patch (whatever was stored in localStorage);
+      // this.load();
+
+
+      // SORTABLE:
+      // TODO move _init in sortable into ready() (in sortable) and remove this:
+      this.handle = this.$els.grid;
+      this._init();   // initSorting
+    },
+
+    methods: {
+      // toggleEditMode() {
+      //   this.editing = !this.editing;
+      // },
+
+      togglePower() {
+        this.power = !this.power;
+        if (this.power) {
+          this.$broadcast('start');
+        } else {
+          this.$broadcast('stop');
+        }
       }
-    });
+    },
 
-    window.addEventListener('keyup', (e) => {
-      switch (e.code) {
-        case 'ShiftLeft':
-        case 'ShiftRight':
-          this.sorting = false;
-          break;
-      }
-    });
-
-
-    // TODO !!!!!!
-    // uncomment to get LOAD working
-    // this.load(false); // false: don't load any external json; just use what was left in localStorage (if any)
-
-
-    // SORTABLE:
-    // TODO move _init in sortable into ready() (in sortable) and remove this:
-    this.handle = this.$els.grid;
-    this._init();   // initSorting
-  },
-
-  methods: {
-    // toggleEditMode() {
-    //   this.editing = !this.editing;
-    // },
-
-    togglePower() {
-      this.power = !this.power;
-      if (this.power) {
-        this.$broadcast('start');
-      } else {
-        this.$broadcast('stop');
+    events: {
+      'drag:start'(coords, el) {
+        if (!this.editing) {
+          this.startSorting();
+        }
+      },
+      'drag:active'(coords, el) {
+        if (!this.editing) { //  this.sorting) {
+          this.whileSorting(el);
+        }
+      },
+      'drag:end'() {
+        if (!this.editing) {
+          this.stopSorting();
+        }
       }
     }
-  },
-
-  events: {
-    'drag:start'(coords, el) {
-      if (!this.editing) {
-        this.startSorting();
-      }
-    },
-    'drag:active'(coords, el) {
-      if (!this.editing) { //  this.sorting) {
-        this.whileSorting(el);
-      }
-    },
-    'drag:end'() {
-      if (!this.editing) {
-        this.stopSorting();
-      }
-    }
-  }
-};
-
+  };
 </script>
 
 <style lang="scss">

@@ -33,9 +33,9 @@ import { updateConnection, removeConnection, setActiveConnection } from '../../v
 
 export default {
   vuex: {
-    getters: {
-      active: (state) => state.modules[state.active]
-    },
+    // getters: {
+    //   active: (state) => state.modules[state.active]
+    // },
     actions: {
       updateConnection,
       removeConnection,
@@ -119,7 +119,7 @@ export default {
       if (port && port.classList.contains('inlet')) {           // TODO better check for this?
         const label = port.getAttribute('data-label');
 
-        // gah. modules are JS obj, *not* Vue components. ALso -- App.$children would
+        // gah. modules are JS obj, *not* Vue components. also -- App.$children would
         // contain *all* vue components -- midi thing, svg lines, etc.
         const App = this.$parent;
         const module = App.$children.find(function(m) { return m.$el.contains(port); });

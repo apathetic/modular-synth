@@ -14,6 +14,7 @@
   &.dragging {
     cursor: move;
     transition: none;
+    opacity: 0.8;
   }
 
   &-details {
@@ -84,8 +85,8 @@
 
 .play-mode {
   .module {
-    width: 240px !important;
-    height: 240px !important;
+    width: 240px;
+    height: 240px;
 
     &-connections {
       display: none;

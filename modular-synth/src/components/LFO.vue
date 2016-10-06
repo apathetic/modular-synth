@@ -7,7 +7,6 @@
   class="module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @mouseover.stop="setActiveModule(id)"
   @mousedown.prevent="startDraggingNode">
 
     <div class="module-details">
@@ -27,7 +26,7 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { setActiveModule, newConnection } from '../vuex/actions';
+import { newConnection } from '../vuex/actions';
 import Knob from './UI/Knob';   // audioParam
 
 export default {
@@ -37,7 +36,6 @@ export default {
 
   vuex: {
     actions: {
-      setActiveModule,
       newConnection
     }
   },

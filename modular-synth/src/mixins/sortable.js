@@ -55,10 +55,19 @@ export const sortable = {
       // of cols (+1 extra) before the drag starts
       this._maxGridCols = this.gridList.grid.length;
 
-      // see line 73:
+      // see line 80:
+      // A)
       this.item = store.state.modules.find(function(m) {
-        return m.id === store.state.activeModule;
+        return m.id === store.state.active;
       });
+
+      // B)
+      // this.item = this.$store.state.modules.find(function(m) {
+      //   return m.id === this.$store.state.activeModule;
+      // });
+
+      // C)
+      // this.item = this.$store.getters.active;
     },
 
     // _onDrag
