@@ -74,7 +74,6 @@ export const setActiveConnection = ({ dispatch, state }, id) => {
 };
 
 export const updateConnection = ({ dispatch, state }, id, inlet) => {
-  console.log(id, inlet);
   // if (xxx.from.connection === xxx.to.connection) {
   //   dispatch('REMOVE_CONNECTION', id, to);
   // } else {

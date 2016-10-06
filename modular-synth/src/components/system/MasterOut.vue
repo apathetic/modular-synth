@@ -2,7 +2,8 @@
   <div
     class="module"
     id="master-out"
-    @mouseover.stop="setActive(id)">
+    @mouseover="setFocus(id)"
+    @mouseout="clearFocus()">
 
     <div class="module-interface">
       <Level></Level>
@@ -20,7 +21,7 @@
 </template>
 
 <script>
-import { setActive, newConnection, updatePosition } from '../../vuex/actions';
+import { setFocus, clearFocus, newConnection, updatePosition } from '../../vuex/actions';
 import Level from '../UI/Level';
 
 export default {
@@ -28,7 +29,8 @@ export default {
 
   vuex: {
     actions: {
-      setActive,
+      setFocus,
+      clearFocus,
       newConnection,
       updatePosition
     }
