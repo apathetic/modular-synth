@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { setFocus, clearFocus, newConnection, updatePosition } from '../../vuex/actions';
+import { setFocus, clearFocus, updatePosition } from '../../store/actions';
 import Level from '../UI/Level';
 
 export default {
@@ -31,7 +31,6 @@ export default {
     actions: {
       setFocus,
       clearFocus,
-      newConnection,
       updatePosition
     }
   },

@@ -38,13 +38,13 @@
         track-by="$index">
       </component>
 
-      <!-- @click="setSelected(module.id)" -->
-
       <svg id="connections">
         <connector v-for="connector in connectors"
           :id="connector.id"
           :to="connector.to"
-          :from="connector.from">
+          :from="connector.from"
+
+          @mousedown.stop="setActive(connector.id)">
         </connector>
       </svg>
 
@@ -110,7 +110,7 @@
   import connector from './components/system/Connector';
   import midi from './components/system/Midi.vue';
 
-  import * as actions from './vuex/actions';
+  import * as actions from './store/actions';
 
   export default {
     mixins: [sortable],
@@ -152,15 +152,19 @@
         switch (e.code) {
           case 'Delete':
           case 'Backspace':
+            console.log('delete');
             this.removeModule();
             break;
           case 'Tab':
+            console.log('tab');
             this.toggleEditMode();
             break;
           case 'Escape':
+            console.log('escape');
             this.togglePower();
             break;
           case 'Space':
+            console.log('space');
             // this.togglePlay();
             break;
           case 'ShiftLeft':
@@ -171,6 +175,8 @@
             console.log('shift');
             this.sorting = true;
             break;
+          default:
+            console.log(e.code);
         }
       });
 
@@ -183,21 +189,11 @@
         }
       });
 
-      // load patch (whatever was stored in localStorage);
-      // this.load();
-
-
-      // SORTABLE:
-      // TODO move _init in sortable into ready() (in sortable) and remove this:
-      this.handle = this.$els.grid;
-      this._init();   // initSorting
+      this.load();
+      this.initSorting(this.$els.grid);
     },
 
     methods: {
-      // toggleEditMode() {
-      //   this.editing = !this.editing;
-      // },
-
       togglePower() {
         this.power = !this.power;
         if (this.power) {
@@ -205,6 +201,11 @@
         } else {
           this.$broadcast('stop');
         }
+      },
+      newModule() {
+        this.addModule();
+        this.gridList.generateGrid();
+        // this.initSorting();
       }
     },
 

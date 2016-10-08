@@ -35,9 +35,9 @@
   import { draggable } from '../mixins/draggable';
   import Knob from './UI/Knob';   // audioParam
 
-  import { newConnection } from '../vuex/actions';
+  import { newConnection } from '../store/actions';
   import { cellWidth, cellHeight } from '../dimensions';
-  import store from '../vuex/store'; // .... er...
+  import store from '../store/store'; // .... er...
 
 
   export default {

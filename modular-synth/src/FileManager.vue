@@ -17,7 +17,7 @@
 
 <script>
 
-import { load } from './vuex/actions';
+import { load } from './store/actions';
 // import * as patches from './assets/patches';
 import FM from '../static/patches/FM';
 import Mod from '../static/patches/Mod';

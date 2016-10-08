@@ -17,7 +17,6 @@ Other notes:
 
 <template>
   <line
-    @mouseover.stop="setActiveConnection(id)"
     @click="removeConnection"
     :x1="x1"
     :y1="y1"
@@ -29,17 +28,13 @@ Other notes:
 </template>
 
 <script>
-import { updateConnection, removeConnection, setActiveConnection } from '../../vuex/actions';
+import { updateConnection, removeConnection } from '../../store/actions';
 
 export default {
   vuex: {
-    // getters: {
-    //   active: (state) => state.modules[state.active]
-    // },
     actions: {
       updateConnection,
-      removeConnection,
-      setActiveConnection
+      removeConnection
     }
   },
 
