@@ -28,7 +28,8 @@ function bindConnections() {
     const toId = connection.to.module.id;
     connection.to.module = modules.find(function(m) { return m.id === toId; });
 
-    routeAudio(connection);
+    // well... if the module has yet to init, its inputs/outputs will not exist
+    // routeAudio(connection);
   }
 };
 
@@ -40,6 +41,8 @@ function bindConnections() {
 function routeAudio(connection) {
   const source = connection.from.data;
   const destination = connection.to.data;
+
+  debugger;
 
   if (source && destination) {
     console.log('connecting %s --> %s', connection.from.label, connection.to.label);
@@ -59,7 +62,7 @@ const state = {
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
   selected: null,   // Hovered: Module Info, Connections.
   active: 0,        // Clicked: Dragging, Deleting.
-  activeConnection: 0,
+  // activeConnection: 0,
   editing: false
 };
 
@@ -82,14 +85,6 @@ const mutations = {
   TOGGLE_EDIT(state) {
     state.editing = !state.editing;
   },
-
-
-
-  SET_ACTIVE_CONNECTION(state, id) {
-    state.activeConnection = id;
-  },
-
-
 
   SET_ACTIVE(state, id) {
     state.active = id;
@@ -120,17 +115,23 @@ const mutations = {
     state.id++;
   },
   REMOVE_MODULE(state) {
-    // const id = state.selected;
-    const id = state.activeModule;
-    state.modules = state.modules.filter((module) => {
-      module.id !== id;
-    });
+    const id = state.active;
 
-    // state.modules.splice(state.modules.indexOf(id), 1);
+    // filter it out. (WHY NO WORK)
+    // state.modules = state.modules.filter((module) => {
+    //   module.id !== id;
+    // });
+
+    state.modules.some((module, i) => {
+      if (module.id === id) {
+        state.modules.splice(i, 1);
+        return true;
+      }
+    });
 
     state.connections.forEach((connection) => {
       if (connection.to.module.id === id || connection.from.module.id === id) {
-        //
+        console.log('removing ', connection);
       }
     });
   },
@@ -218,7 +219,6 @@ const mutations = {
     let connection = state.connections.find(c => { c.id === id; });
     state.connections.splice(state.modules.indexOf(connection), 1);
   },
-
 
   ROUTE_AUDIO(state, source, destination) {
     //

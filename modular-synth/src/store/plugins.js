@@ -1,5 +1,5 @@
 import { STORAGE_KEY_MODULES, STORAGE_KEY_CONNECTIONS } from './store';
-// import createLogger from 'vuex/logger';
+// import createLogger from 'store/logger';
 
 
 const localStoragePlugin = (store) => {
