@@ -26,7 +26,7 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { newConnection } from '../vuex/actions';
+import { newConnection } from '../store/actions';
 import Knob from './UI/Knob';   // audioParam
 
 export default {

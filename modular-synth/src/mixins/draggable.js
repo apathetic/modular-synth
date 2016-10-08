@@ -5,7 +5,7 @@
  * @type {Object}
  */
 
-import { updatePosition } from '../vuex/actions';
+import { updatePosition } from '../store/actions';
 
 const dragObj = {
   zIndex: 0,
