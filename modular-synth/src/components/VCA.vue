@@ -18,7 +18,6 @@
       <slot name="interface"></slot>
     </div>
 
-    <!-- @mouseup.stop="updateConnection_(inlet)" -->
     <div class="module-connections">
       <div class="inlets">
         <span v-for="inlet in inlets"
@@ -43,15 +42,14 @@
 
 <script>
 import { draggable } from '../mixins';
-import { newConnection, updateConnection_ } from '../vuex/actions';
+import { newConnection } from '../store/actions';
 
 export default {
   mixins: [draggable],
 
   vuex: {
     actions: {
-      newConnection,
-      updateConnection_
+      newConnection
     }
   },
 

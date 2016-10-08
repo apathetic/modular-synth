@@ -6,9 +6,11 @@
  */
 
 import GridList from '../../static/js/gridList';  // TODO more this. move static
-import { updateGridLocation } from '../vuex/actions';
-import store from '../vuex/store'; // .... er...
+import { updateGridLocation } from '../store/actions';
 import { cellWidth, cellHeight } from '../dimensions';
+
+import store from '../store/store'; // .... er...
+
 
 const options = {
   lanes: 3,
@@ -24,17 +26,8 @@ export const sortable = {
   },
 
   methods: {
-    reflow() {
-      this._calculateCellSize();
-      this.render();
-    },
-
-    render() {
-      // this._applySizeToItems();
-      this._applyPositionToItems();
-    },
-
-    _init() {
+    initSorting(handle) {
+      this.handle = handle;
       this._widestItem = Math.max.apply(null, this.modules.map(function(item) { return item.w; }));
       this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
 
@@ -48,6 +41,16 @@ export const sortable = {
       });
 
       this.reflow();
+    },
+
+    reflow() {
+      this._calculateCellSize();
+      this.render();
+    },
+
+    render() {
+      // this._applySizeToItems();
+      this._applyPositionToItems();
     },
 
     startSorting() {
@@ -124,8 +127,6 @@ export const sortable = {
       this.modules.forEach((item) => {
         // Don't interfere with the positions of the dragged items
         if (this.item !== item) {
-          // NOTE: we do not want to manually set or override x,y here.
-          // Rather, lets simply set col,row in the store and let the data figure itself out:
           this.updateGridLocation(item.id, item.col, item.row);
         }
       });
