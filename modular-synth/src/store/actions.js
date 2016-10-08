@@ -42,7 +42,7 @@ export const clearFocus = ({ dispatch, state }) => {
 //  MODULES
 // -----------------------------------------------
 
-export const newModule = ({ dispatch }, type) => {
+export const addModule = ({ dispatch }, type) => {
   dispatch('ADD_MODULE', type);
 };
 
@@ -67,17 +67,7 @@ export const updateGridLocation = ({ dispatch }, id, col, row) => {
 //  CONNECTIONS
 // -----------------------------------------------
 
-export const setActiveConnection = ({ dispatch, state }, id) => {
-  if (state.activeConnection !== id) {
-    dispatch('SET_ACTIVE_CONNECTION', id);
-  }
-};
-
 export const updateConnection = ({ dispatch, state }, id, inlet) => {
-  // if (xxx.from.connection === xxx.to.connection) {
-  //   dispatch('REMOVE_CONNECTION', id, to);
-  // } else {
-  // dispatch('SET_ACTIVE_CONNECTION', connection.id);  // because sometimes this doesn't happen with :hover
   dispatch('UPDATE_CONNECTION', id, inlet);
 };
 
