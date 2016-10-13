@@ -36,7 +36,7 @@ npm test
 - NODES
   - base node mixin... or?
   - DELETE node
-
+    - connection audio ?
 
 - Connections
   - have startConnection: just draw an open-ended connection
