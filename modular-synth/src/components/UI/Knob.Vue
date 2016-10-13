@@ -4,6 +4,7 @@
   @mousedown.stop.prevent="start">
     <div v-el:notch class="notch"></div>
     <span>{{ value }}</span>
+    {{ label }}
   </div>
 </template>
 
@@ -11,9 +12,10 @@
 <script>
 export default {
   props: {
-    'value': 0,
-    'min': 0,
-    'max': 100
+    label: '',
+    value: 0,
+    min: 0,
+    max: 100
   },
 
   data() {
@@ -41,10 +43,7 @@ export default {
 
     window.addEventListener('mousemove', (e) => {
       if (window.mouseDown && self.active) {
-        // self.update.call(self);
-
         let change = self.startClientY - e.clientY;
-        // let dialSpeed = 1; change *= dialSpeed;
         let value = self.startValue + change;
 
         value = Math.min(self.max, Math.max(self.min, value));
@@ -70,13 +69,12 @@ export default {
       console.log(e.target);
 
       let change = this.startClientY - e.clientY;
-      // let dialSpeed = 1; change *= dialSpeed;
       let value = this.startValue + change;
 
       // value = Math.min(this.max, Math.max(this.min, value));
       value = Math.min(100, Math.max(0, value));
 
-      this.value = Math.round(value);
+      // this.value = Math.round(value);
       this.setRotationDegrees();
     },
 
@@ -130,7 +128,7 @@ export default {
 
       top: 2.5em;
       position: relative;
-      color: black;
+      // color: black;
     }
   }
 </style>

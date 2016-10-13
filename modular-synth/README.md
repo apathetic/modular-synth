@@ -26,7 +26,13 @@ npm test
   - ~~persist to localstorage and recall~~
 
 
+- UI
+  - cannot select from dropdown; dragging intercedes
+  - dial doesnt do floats
+
+
 - LOADING
+  - update masterOut position on load
   - FIX connection reactivity on load
   - audio chain
     - FIX audio connections on load

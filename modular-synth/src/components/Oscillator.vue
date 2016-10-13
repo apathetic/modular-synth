@@ -1,13 +1,9 @@
-//------------------------------------------------
-//  OSCILLATOR
-// -----------------------------------------------
-
 <template>
   <div
-  class="module"
+  class="oscillator module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @mousedown.prevent="startDragging">
+  @mousedown.stop="startDragging">
 
     <div class="module-details">
       <h3>{{ name }}</h3>
@@ -17,9 +13,9 @@
       <select v-model="type">
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
       </select>
-      <knob :value.sync="freq" :min="220" :max="880"></knob>
-      <knob :value.sync="sync" :min="0" :max="1"></knob>
-      <knob :value.sync="PW" :min="0" :max="6.28"></knob>
+      <knob label="freq" :value.sync="freq" :min="220" :max="880"></knob>
+      <knob label="sync" :value.sync="sync" :min="0"   :max="1"></knob>
+      <knob label="PW"   :value.sync="PW"   :min="0"   :max="6.28"></knob>
     </div>
 
     <div class="module-connections">
@@ -31,28 +27,26 @@
 
 
 <script>
-  // import { node } from '../mixins/node';
   import { draggable } from '../mixins/draggable';
-  import Knob from './UI/Knob';   // audioParam
-
   import { newConnection } from '../store/actions';
   import { rackWidth, rackHeight } from '../dimensions';
+  import Knob from './UI/Knob';
+  // import { node } from '../mixins/node';
   import store from '../store/store'; // .... er...
 
 
   export default {
-    // mixins: [draggable, node],
     mixins: [draggable],
     components: { Knob },
-    props: {
-      id: null,
-      col: null,
-      row: null
-    },
     vuex: {
       actions: {
         newConnection
       }
+    },
+    props: {
+      id: null,
+      col: null,
+      row: null
     },
     computed: {
       position() {
@@ -66,10 +60,12 @@
     data() {
       return {
         name: 'Oscillator',
-        w: 1, // width
-        h: 2, // height
+        w: 1, // rack width
+        h: 2, // rack height
 
         freq: 440,
+        PW: 0,
+        sync: 0,
         type: 'sine',
         types: ['sine', 'square', 'sawtooth', 'triangle'],
         inlets: [
@@ -79,18 +75,17 @@
             data: null
           },
           {
-            port: 0,
+            port: 1,
             label: 'sync',
             data: null
           },
           {
-            port: 0,
+            port: 2,
             label: 'mod-A',
             data: null
           }
-
-
         ],
+
         outlets: [
           {
             port: 0,
@@ -109,8 +104,9 @@
       this.osc = this.context.createOscillator();
       this.osc.type = this.type;
       this.osc.frequency.value = this.freq;
-      this.osc.connect(this.outlets[0].data);
 
+      this.osc.connect(this.outlets[0].data);
+      // or: this.outlets[0].data = this.osc; ...???
 
       this.inlets[0].data = this.osc.frequency;
 
