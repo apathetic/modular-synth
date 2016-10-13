@@ -3,7 +3,6 @@
   class="module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-
   @mousedown.prevent="startDragging">
 
     <div class="module-details">
@@ -62,12 +61,14 @@
           {
             port: 0,
             label: 'freq',
-            data: this.input
-          }, {
+            data: null // this.input
+          },
+          {
             port: 1,
             label: 'gain',
             data: null // this.input
-          }, {
+          },
+          {
             port: 2,
             label: 'range',
             data: null // this.input
@@ -79,7 +80,8 @@
             port: 0,
             label: 'output-1',
             data: null // this.outputL   // src?
-          }, {
+          },
+          {
             port: 1,
             label: 'output-2',
             data: null // this.outputR
