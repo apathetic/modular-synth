@@ -10,7 +10,7 @@
   @mousedown.prevent="startDragging">
 
     <div class="module-details">
-      <h3>{{ name }}</h3>{{ id }}
+      <h3>{{ name }}</h3>
     </div>
 
     <div class="module-interface">
@@ -36,7 +36,7 @@
   import Knob from './UI/Knob';   // audioParam
 
   import { newConnection } from '../store/actions';
-  import { cellWidth, cellHeight } from '../dimensions';
+  import { rackWidth, rackHeight } from '../dimensions';
   import store from '../store/store'; // .... er...
 
 
@@ -57,8 +57,8 @@
     computed: {
       position() {
         return {
-          left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * cellWidth + 'px',
-          top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * cellHeight + 'px'
+          left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
+          top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
         };
       }
     },

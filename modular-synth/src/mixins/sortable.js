@@ -7,15 +7,11 @@
 
 import GridList from '../../static/js/gridList';  // TODO more this. move static
 import { updateGridLocation } from '../store/actions';
-import { cellWidth, cellHeight } from '../dimensions';
+import { rackWidth, rackHeight } from '../dimensions';
 
 import store from '../store/store'; // .... er...
 
-
-const options = {
-  lanes: 3,
-  widthHeightRatio: 1 // 0.5
-};
+const lanes = 3;
 
 
 export const sortable = {
@@ -36,10 +32,7 @@ export const sortable = {
       this.$positionHighlight.style.display = 'none';
 
       // this._initGridList();
-      this.gridList = new GridList(this.modules, {
-        lanes: options.lanes
-      });
-
+      this.gridList = new GridList(this.modules);
       this.reflow();
     },
 
@@ -101,14 +94,12 @@ export const sortable = {
       this._previousDragPosition = null;
       this._applyPositionToItems();
       this._removePositionHighlight();
-
       // console.log(this.gridList.toString());
     },
 
     _calculateCellSize() {
-      // Not much to calculate, as it'll be fixed eventually
-      this._cellHeight = cellHeight;
-      this._cellWidth = cellWidth; // this._cellHeight * options.widthHeightRatio;
+      this._rackHeight = rackHeight;
+      this._rackWidth = rackWidth;
     },
 
 
@@ -116,11 +107,11 @@ export const sortable = {
 
 
     _getItemWidth(item) {
-      return item.w * this._cellWidth;
+      return item.w * this._rackWidth;
     },
 
     _getItemHeight(item) {
-      return item.h * this._cellHeight;
+      return item.h * this._rackHeight;
     },
 
     _applyPositionToItems() {
@@ -134,9 +125,9 @@ export const sortable = {
       // Update the width of the entire grid container with enough room on the
       // right to allow dragging items to the end of the grid.
       // if (this.options.direction === 'horizontal') {
-      this.handle.style.width = (this.gridList.grid.length + this._widestItem) * this._cellWidth;
+      this.handle.style.width = (this.gridList.grid.length + this._widestItem) * this._rackWidth;
       // } else {
-        // this.handle.style.height = (this.gridList.grid.length + this._tallestItem) * this._cellHeight;
+        // this.handle.style.height = (this.gridList.grid.length + this._tallestItem) * this._rackHeight;
       // }
     },
 
@@ -159,8 +150,8 @@ export const sortable = {
         top: el.offsetTop
       };
 
-      var col = Math.round(position.left / this._cellWidth);
-      var row = Math.round(position.top / this._cellHeight);
+      var col = Math.round(position.left / this._rackWidth);
+      var row = Math.round(position.top / this._rackHeight);
 
       // Keep item position within the grid and don't let the item create more
       // than one extra column
@@ -169,7 +160,7 @@ export const sortable = {
 
       // if (this.options.direction === 'horizontal') {
       col = Math.min(col, this._maxGridCols);
-      row = Math.min(row, options.lanes - item.h);
+      row = Math.min(row, lanes - item.h);
       // } else {
       //   col = Math.min(col, this.options.lanes - item.w);
       //   row = Math.min(row, this._maxGridCols);
@@ -181,8 +172,8 @@ export const sortable = {
     _highlightPositionForItem(item) {
       this.$positionHighlight.style.width = this._getItemWidth(item) + 'px';
       this.$positionHighlight.style.height = this._getItemHeight(item) + 'px';
-      this.$positionHighlight.style.left = item.col * this._cellWidth + 'px';
-      this.$positionHighlight.style.top = item.row * this._cellHeight + 'px';
+      this.$positionHighlight.style.left = item.col * this._rackWidth + 'px';
+      this.$positionHighlight.style.top = item.row * this._rackHeight + 'px';
       this.$positionHighlight.style.display = 'block';
     },
 

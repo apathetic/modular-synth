@@ -29,25 +29,32 @@ function bindConnections() {
     connection.to.module = modules.find(function(m) { return m.id === toId; });
 
     // well... if the module has yet to init, its inputs/outputs will not exist
-    // routeAudio(connection);
+    // connect(connection);
   }
 };
 
 /**
- * Route all Audio connections post-load.
- * @param  {[type]} connection [description]
+ * Route an Audio connection.
+ * @param  {Connector} connection Contains references to both source and destination audio nodes.
  * @return {void}
  */
-function routeAudio(connection) {
+function connect(connection) {
   const source = connection.from.data;
   const destination = connection.to.data;
-
-  debugger;
 
   if (source && destination) {
     console.log('connecting %s --> %s', connection.from.label, connection.to.label);
     source.connect(destination);
   }
+}
+
+/**
+ * Disconnect and Audio connection.
+ * @param  {Connector} connection Contains references to both source and destination audio nodes.
+ * @return {void}
+ */
+function disconnect(connection) {
+
 }
 
 
@@ -79,7 +86,6 @@ const mutations = {
       }
     }
     bindConnections();
-    // routeAudio();
   },
 
   TOGGLE_EDIT(state) {
@@ -100,6 +106,7 @@ const mutations = {
   },
 
   ADD_MODULE(state, type) {
+    console.log('adding new module %s id %d', type, state.id);
     state.modules.push({
       id: state.id,
       type: type,
@@ -129,9 +136,10 @@ const mutations = {
       }
     });
 
+    console.log('removing module #', id);
+
     state.connections.forEach((connection) => {
       if (connection.to.module.id === id || connection.from.module.id === id) {
-        console.log('removing ', connection);
       }
     });
   },
@@ -211,17 +219,16 @@ const mutations = {
     if (connection.to.module === connection.from.module) {
       // this.$store.dispatch('REMOVE_CONNECTION', id);
     } else {
-      routeAudio(connection);
+      connect(connection);
     }
   },
   REMOVE_CONNECTION(state, id) {
     // let active = state.activeConnection;
-    let connection = state.connections.find(c => { c.id === id; });
-    state.connections.splice(state.modules.indexOf(connection), 1);
-  },
-
-  ROUTE_AUDIO(state, source, destination) {
-    //
+    const connection = state.connections.find(c => { c.id === id; });
+    if (connection) {
+      state.connections.splice(state.modules.indexOf(connection), 1);
+      disconnect(connection);
+    }
   }
 };
 

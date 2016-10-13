@@ -96,5 +96,10 @@ export default {
     bottom: 0;
     width: auto;
     height: auto;
+
+    .module-interface {
+      visibility: visible;
+    }
+
   }
 </style>
