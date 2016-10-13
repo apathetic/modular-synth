@@ -1,6 +1,6 @@
 
 const defaults = {
-  lanes: 5,
+  lanes: 3,
   direction: 'horizontal'
 };
 

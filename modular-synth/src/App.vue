@@ -190,7 +190,8 @@
       });
 
       this.load();
-      this.initSorting(this.$els.grid);
+      this.initSorting(this.$els.grid); // TODO why cannot move into sortable:ready() ...?
+      // this.gridList.generateGrid();
     },
 
     methods: {
@@ -202,10 +203,11 @@
           this.$broadcast('stop');
         }
       },
-      newModule() {
-        this.addModule();
+      newModule(type) {
+        this.addModule(type);
+
+        this.gridList.items = this.modules;
         this.gridList.generateGrid();
-        // this.initSorting();
       }
     },
 

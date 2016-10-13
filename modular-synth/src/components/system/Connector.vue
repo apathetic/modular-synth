@@ -29,6 +29,7 @@ Other notes:
 
 <script>
 import { updateConnection, removeConnection } from '../../store/actions';
+import { cellWidth } from '../../dimensions';
 
 export default {
   vuex: {
@@ -55,7 +56,7 @@ export default {
   computed: {
     x1() {
       const node = this.from.module;
-      const width = node.width || 200;    // node.width is not in state.modules
+      const width = cellWidth; // node.width || 200;    // node.width is not in state.modules
       return node.x + width + 3;
     },
     y1() {
@@ -81,7 +82,7 @@ export default {
     // HOWEVER... the connection is then _not_reactive... :(
 
     if (!this.to.module) {
-      this.cursorX = this.from.module.x + 200 + 3;  // line ends at cursor, which is initially the same point
+      this.cursorX = this.from.module.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
       this.cursorY = this.from.module.y + (this.from.port * 20) + 17; // + 80;
 
       // Capture mousemove and mouseup events on the page.

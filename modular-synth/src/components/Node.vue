@@ -11,24 +11,9 @@
     </div>
 
     <div class="module-interface">
-      <!--<slot></slot> -->
-
       {{ position | json }}<br><br>
-
-      col: {{ col }}<br>
-      row: {{ row }}<br>
-      w: {{ w }}<br>
-      h: {{ h }}<br>
-
-      x: {{ x }}<br>
-      y: {{ y }}<br>
-
-      left: {{ left }}<br>
-      right: {{ right }}
-
     </div>
 
-    <!-- @mouseup.stop="updateConnection_(inlet)"  -->
     <div class="module-connections">
       <partial name="inlets"></partial>
       <partial name="outlets"></partial>
@@ -40,7 +25,7 @@
 <script>
   import { draggable } from '../mixins/draggable';
   import { newConnection } from '../store/actions';
-  import { cellWidth, cellHeight } from '../dimensions';
+  import { rackWidth, rackHeight } from '../dimensions';
   import store from '../store/store'; // .... er...
 
   export default {
@@ -61,8 +46,8 @@
     computed: {
       position() {
         return {
-          left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * cellWidth + 'px',
-          top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * cellHeight + 'px'
+          left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
+          top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
         };
       }
     },

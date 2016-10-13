@@ -1,6 +1,6 @@
 .module {
-  height: 200px;
-  width: 200px;
+  height: $cellHeight; // 200px;
+  width: $cellWidth; // 200px;
   border: 1px solid #fff;
   position: absolute;
   transition: all 0.2s;
@@ -24,6 +24,13 @@
 
   &-interface {
     padding: 1em 4em;
+    // display: none;
+
+
+    visibility: hidden;
+    transition: visibility 0s;    // yes you can do this (to delay the toggle of block/none);
+    // transition-delay: 4s;
+
   }
 
   &-connections {
@@ -85,8 +92,15 @@
 
 .play-mode {
   .module {
-    width: 240px;
-    height: 240px;
+    width: $rackWidth;
+    height: $rackHeight;
+
+    &-interface {
+      display: block;
+      visibility: visible;
+      // transition-delay: 0.3s;
+      transition-delay: 0.2s;
+    }
 
     &-connections {
       display: none;
