@@ -72,7 +72,7 @@ export default {
   methods: {
     determinePosition() {
       // TODO use getBoundingClientRect is inconsistent with offsetTop in NODE. update
-      const x = this.$el.getBoundingClientRect().left;
+      const x = this.$el.getBoundingClientRect().left;  // TODO will not work if in PLAY mode
       const y = this.$el.offsetTop;
 
       this.x = x;
@@ -100,6 +100,5 @@ export default {
     .module-interface {
       visibility: visible;
     }
-
   }
 </style>

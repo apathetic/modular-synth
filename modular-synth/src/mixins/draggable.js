@@ -75,7 +75,7 @@ export const draggable = {
       this.dragging = false;
       this.$dispatch('drag:end', this.id);
 
-      // restore the x,y values on the node
+      // restore the x,y grid values on the node
       if (!this.$store.state.editing) {
         const module = this.$store.state.modules.find((module) => { return module.id === this.id; });
 

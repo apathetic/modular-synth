@@ -24,25 +24,32 @@ npm test
 - VUEX
   - ~~store state of app~~
   - ~~persist to localstorage and recall~~
+  - common getters / setters (ie. active module, connection, etc)
 
 
 - UI
-  - cannot select from dropdown; dragging intercedes
-  - dial doesnt do floats
+  - ~~cannot select from dropdown; dragging intercedes~~
+  - dial doesn't do floats **
 
 
 - LOADING
-  - update masterOut position on load
-  - FIX connection reactivity on load
-  - audio chain
-    - FIX audio connections on load
-  - FIX modules dont gridify properly
+  - update masterOut position on load *
+  - ~~connection reactivity on load~~
+  - route audio on load ***
+  - FIX modules: dont gridify properly after 1st load ***
 
 
 - NODES
   - base node mixin... or?
-  - DELETE node
-    - connection audio ?
+  - DELETE node ***
+    - audio connections ***
+
+
+- Audio
+  - lives in the actual components (not in the store.modules)
+    - (same problem for Connector)
+  - global "get (actual) component by id" method?
+
 
 - Connections
   - have startConnection: just draw an open-ended connection
@@ -50,15 +57,15 @@ npm test
   - updated connection object. See store.js line ~142 for details
 
 
-- MIDI input
+- MIDI
   - pitch
   - gate
   - note
   - bend
   - velocity
-  - modwheel
+  - mod-wheel
   - aftertouch
-- MIDI learn
+  - MIDI learn
 
 
 - UI -- 2 modes: play / edit.
@@ -68,6 +75,7 @@ npm test
   - when a node is selected, all connected connections become highlighted
 
 
+----------------------------------------------------------------
 
 
 - NODES:
