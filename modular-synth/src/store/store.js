@@ -19,7 +19,9 @@ function bindConnections() {
   const connections = state.connections;
   const modules = state.modules;
 
-  console.log('load');
+  const load = new Event('load');// eslint-disable-line
+  window.dispatchEvent(load);
+
 
   for (let connection of connections) {
     const fromId = connection.from.module.id;
@@ -29,7 +31,9 @@ function bindConnections() {
     connection.to.module = modules.find(function(m) { return m.id === toId; });
 
     // well... if the module has yet to init, its inputs/outputs will not exist
-    // connect(connection);
+    // setTimeout(function() {
+    connect(connection);
+    // }, 1000);
   }
 };
 
@@ -41,6 +45,13 @@ function bindConnections() {
 function connect(connection) {
   const source = connection.from.data;
   const destination = connection.to.data;
+
+  // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
+
+  const App = this.$parent;
+  const module = App.$children.find(function(m) { return m.id === connection.from.id; });
+  console.log(module);
+  debugger;
 
   if (source && destination) {
     console.log('connecting %s --> %s', connection.from.label, connection.to.label);
@@ -158,10 +169,11 @@ const mutations = {
   },
 
   ADD_CONNECTION(state, outlet) {
-    // const module = state.modules.find((m) => { m.id === state.activeModule; });
     const module = state.modules.find(function(m) { return m.id === state.selected; });
-    // console.log(outlet);
     // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
+    // console.log(outlet);
+
+    // NOTE: outlet is a reference to the Component itself (ie in the App), NOT the state.module
 
     const from = {
       module: module,        // for line (x,y) positioning
