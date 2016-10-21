@@ -97,19 +97,11 @@
     },
 
     created() {
-      // this.inlets[0].data = this.context.createGain();
       this.outlets[0].data = this.context.createGain();
-
-      // Our lovely webAudio Oscillator.
-      this.osc = this.context.createOscillator();
-      this.osc.type = this.type;
-      this.osc.frequency.value = this.freq;
-
-      this.osc.connect(this.outlets[0].data);
-      // or: this.outlets[0].data = this.osc; ...???
-
-      this.inlets[0].data = this.osc.frequency;
-
+      // this.inlets[0].data = this.context.createGain();
+      // this.inlets[0].data = this.osc.frequency;
+      console.log('new?');
+      this.newOscillator();
 
       this.$watch('freq', this.setFreq);
       this.$watch('type', this.setType);
@@ -119,24 +111,33 @@
     },
 
     methods: {
-      /**
-       * k-rate control of the Oscillator frequency
-       * @param  {Float} f frequency
-       */
       setFreq(f) {
+        /**
+         * k-rate control of the Oscillator frequency
+         * @param  {Float} f frequency
+         */
         this.osc.frequency.value = f;
       },
 
-      /**
-       * Update wave type
-       * @param  {String} t One of the pre-defined oscillator wave types
-       */
       setType(t) {
+        /**
+         * Update wave type
+         * @param  {String} t One of the pre-defined oscillator wave types
+         */
         this.osc.type = t;
       },
 
+      newOscillator() {
+        this.osc = this.context.createOscillator();
+        this.osc.type = this.type;
+        this.osc.frequency.value = this.freq;
+
+        this.osc.connect(this.outlets[0].data);
+        // this.outlets[0].data = this.osc; // or ...???
+      },
+
       start() {
-        // this.osc = this.context.createOscillator();   // create a new OSC every time
+        this.newOscillator();           // create a new OSC every time. They're cheap.
         this.osc.start();
       },
 
