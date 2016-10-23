@@ -1,20 +1,18 @@
 before_script:
-    - apt-get update -y
-    - apt-get install -y libssl-dev build-essential wget
-    - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
-    - source /root/.bashrc
-    - nvm install node
-    - nvm use node
-    - npm install && npm install -g mocha
+  - apt-get update -y
+  - apt-get install -y libssl-dev build-essential wget
+  - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+  - source /root/.bashrc
+  - nvm install node
+  - nvm use node
+  - npm install
 
 test:
-    script:
-        - npm test
-
-
-
-job_deploy:
-  stage: deploy
-  tags: delpoyServer1
   script:
-    -  npm install &&  forever restartall
+    - npm test
+
+deploy:
+  stage: deploy
+  tags: deployServer
+  script:
+    -  npm install && npm run build && forever restartall
