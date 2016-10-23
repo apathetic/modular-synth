@@ -75,12 +75,10 @@ function disconnect(connection) {
 
 const state = {
   id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
-  // cid: localStorage.getItem('cid') || 0,  // connector id
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
   selected: null,   // Hovered: Module Info, Connections.
   active: 0,        // Clicked: Dragging, Deleting.
-  // activeConnection: 0,
   editing: false
 };
 
@@ -128,7 +126,7 @@ const mutations = {
     });
 
     // While it could be easier to reference a specific node, having a
-    // sparse array creates "null"s, which are then problematic to iterate over.
+    // sparse array creates "null"s, which are then problematic to iterate over (in the template).
 
     state.id++;
   },
@@ -196,11 +194,11 @@ const mutations = {
 
     // BETTER:
     // "from":{
-    //   "port":0,
-    //   "label":"output-1",
-    //   "x":100,
-    //   "y":237
-    //   "moduleId":1,
+    //   "moduleId": 1,
+    //   "port": 0,
+    //   "label": "output-1",
+    //   "x": 100,
+    //   "y": 237
     // }
 
 

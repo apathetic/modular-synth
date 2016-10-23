@@ -12,9 +12,9 @@ const localStoragePlugin = (store) => {
   store.subscribe((mutation, { id }) => {
     localStorage.setItem('id', id);
   });
-  store.subscribe((mutation, { cid }) => {
-    localStorage.setItem('cid', cid);
-  });
+  // store.subscribe((mutation, { cid }) => {
+  //   localStorage.setItem('cid', cid);
+  // });
 };
 
 export default process.env.NODE_ENV !== 'production'
