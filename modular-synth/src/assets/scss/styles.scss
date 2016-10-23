@@ -70,24 +70,72 @@ h3 {
 
 button {
   -webkit-appearance: none;
-  outline: none;
   border: none;
   border-radius: 3px;
-  padding: 0.5em 1em;
-  background-color: #54bfff; // green;
   color: white;
+  cursor: pointer;
   display: inline-block;
   margin-bottom: 1em;
+  outline: none;
 
-  &:hover {
-    background-color: #696;
-    cursor: pointer;
+  &:focus {
+    outline: none; // sorry :(
   }
 }
 
+.button {
+  background-color: #54bfff;
+  padding: 0.5em 1em;
+
+  &:hover {
+    background-color: #349fdf;
+  }
+}
+
+.mode {
+  border: 1px solid #333;
+  box-shadow: inset 0 0.2em 0.6em rgba(0, 0, 0, 0.3);
+  background: #555;
+
+  span {
+    display: inline-block;
+    padding: 0.5em 1em;
+    z-index: 1;
+    color: #999; // inactive
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    transition: left 0.3s;
+    background-color: #54bfff;
+    border-radius: 0.3em;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  &:hover:after { background-color: #349fdf; }
+
+  .edit-mode &:after { left: 50%; }
+
+}
+
+.play-mode .play { color: #fff; }
+.edit-mode .edit { color: #fff; }
+
+
+
+
+
+// dummy test
 .on {
   background-color: blue !important;
 }
+
+
 
 .position-highlight {
   width: 240px;
