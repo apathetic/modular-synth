@@ -51,13 +51,19 @@
     </section>
 
     <aside id="controls">
-      {{ test | json }}<br>
-      ------------------------
       <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
+
+      <button class="mode" @click="toggleEditMode">
+        <span class="play">play</span>
+        <span class="edit">edit</span>
+      </button>
+
+
 
       <div>
         <p v-if="module">
-          Current Module: {{ module.type }}<br>
+          <h4>Current Module</h4>
+          type: {{ module.type }}<br>
           id: {{ module.id }}<br>
           x: {{ module.x }}<br>
           y: {{ module.y }}<br>
@@ -73,15 +79,14 @@
       </div>
 
       <div>
-        <button @click="toggleEditMode">{{ editing ? 'Play' : 'Edit' }}</button>
-        <button @click="newModule('Node')">add Node</button>
-        <button @click="newModule('Oscillator')">osc</button>
-        <button @click="newModule('LFO')">LFO</button>
-        <button @click="newModule('Reverb')">reverb</button>
-        <button @click="newModule('Filter')">filter</button>
-        <button @click="newModule('Mixer')">mixer</button>
+        <button class="button" @click="newModule('Node')">add Node</button>
+        <button class="button" @click="newModule('Oscillator')">osc</button>
+        <button class="button" @click="newModule('LFO')">LFO</button>
+        <button class="button" @click="newModule('Reverb')">reverb</button>
+        <button class="button" @click="newModule('Filter')">filter</button>
+        <button class="button" @click="newModule('Mixer')">mixer</button>
 
-        <button>  ► </button>
+        <button class="button">  ► </button>
         <button
           @click="togglePower"
           :class="power ? 'on' : 'off'">
