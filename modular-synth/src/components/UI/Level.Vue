@@ -4,7 +4,7 @@
     <meter orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></meter>
 
     <input type="range" orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></input>
-    <button>mute</button>
+    <button class="button">mute</button>
   </div>
 </template>
 
