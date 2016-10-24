@@ -39,7 +39,7 @@
       </component>
 
       <svg id="connections">
-        <connector v-for="connector in connectors"
+        <connector v-for="connector in connections"
           :id="connector.id"
           :to="connector.to"
           :from="connector.from"
@@ -51,18 +51,16 @@
     </section>
 
     <aside id="controls">
-      <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
+      <div class="pad">
+        <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
 
-      <button class="mode" @click="toggleEditMode">
-        <span class="play">play</span>
-        <span class="edit">edit</span>
-      </button>
+        <button class="mode" @click="toggleEditMode">
+          <span class="play">play</span>
+          <span class="edit">edit</span>
+        </button>
 
-
-
-      <div>
         <p v-if="module">
-          <h4>Current Module</h4>
+          <strong>Current Module</strong><br>
           type: {{ module.type }}<br>
           id: {{ module.id }}<br>
           x: {{ module.x }}<br>
@@ -75,10 +73,10 @@
 
           details / info  ..?
         </p>
-        <midi></midi>
-      </div>
 
-      <div>
+        <midi></midi>
+
+
         <button class="button" @click="newModule('Node')">add Node</button>
         <button class="button" @click="newModule('Oscillator')">osc</button>
         <button class="button" @click="newModule('LFO')">LFO</button>
@@ -86,12 +84,11 @@
         <button class="button" @click="newModule('Filter')">filter</button>
         <button class="button" @click="newModule('Mixer')">mixer</button>
 
-        <button class="button">  ► </button>
+        <br>
         <button
           @click="togglePower"
           :class="power ? 'on' : 'off'">
-          Audio (power) On
-          <img src="/static/images/reset1.svg" style="max-width:3em">
+          <img src="/static/images/reset1.svg" style="width:6em;height:3em">
         </button>
       </div>
 
@@ -125,8 +122,7 @@
         editing: (state) => state.editing,
         module: (state) => state.modules.find(function(module) { return module.id === state.active; }),
         modules: (state) => state.modules,
-        // connection: (state) => state.activeConnection,
-        connectors: (state) => state.connections,
+        connections: (state) => state.connections,
         selected: (state) => state.selected
       },
       actions: actions
@@ -148,7 +144,6 @@
       return {
         power: false,
         sorting: false
-        // editing: true
       };
     },
 

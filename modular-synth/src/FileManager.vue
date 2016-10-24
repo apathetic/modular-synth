@@ -6,13 +6,15 @@
 // load-friendly ie. proper ajax implementation. Or just bundle json with the App.
 
 <template>
-  <button @click="saveIt">save</button>
-  <select v-model="selected">
-    <option value="juno">Juno</option>
-    <option value="arp">Arp</option>
-    <option v-for="patch in patches" :value="patch">{{ patch.name }}</option>
-  </select>
-  <button @click="loadIt">load</button>
+  <div class="pad">
+    <button class="button" @click="save">save</button>
+    <select v-model="selected">
+      <option value="juno">Juno</option>
+      <option value="arp">Arp</option>
+      <option v-for="patch in patches" :value="patch">{{ patch.name }}</option>
+    </select>
+    <button class="button" @click="loadIt">load</button>
+  </div>
 </template>
 
 <script>
@@ -29,6 +31,7 @@ export default {
       load
     }
   },
+
   data() {
     return {
       name: 'wess',
@@ -36,11 +39,13 @@ export default {
       patches: []
     };
   },
+
   ready() {
     this.patches.push(FM);    // dumb way for testing for now
     this.patches.push(Mod);
     this.patches.push(gridtest);
   },
+
   methods: {
     loadIt() {
       const patch = this.selected;
@@ -48,11 +53,10 @@ export default {
       localStorage.clear();
       this.load(patch);
     },
-    saveIt() {
+    save() {
       const patch = {
         name: this.name,
         id: localStorage.getItem('id'),
-        cid: localStorage.getItem('cid'),
         modules: localStorage.getItem('modules'),
         connections: localStorage.getItem('connections')
       };

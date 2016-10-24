@@ -107,7 +107,7 @@ button {
   &:after {
     content: '';
     position: absolute;
-    transition: left 0.3s;
+    transition: left $transition-time;
     background-color: #54bfff;
     border-radius: 0.3em;
     width: 50%;
@@ -126,7 +126,9 @@ button {
 .play-mode .play { color: #fff; }
 .edit-mode .edit { color: #fff; }
 
-
+.pad {
+  padding: 1em;
+}
 
 
 
@@ -138,11 +140,10 @@ button {
 
 
 .position-highlight {
-  width: 240px;
-  height: 240px;
-  // background: red;
+  width: $rackWidth;
+  height: $rackHeight;
   border: 4px dashed grey;
-  transition: all 0.2s;
+  transition: all $transition-time;
 }
 
 select {
