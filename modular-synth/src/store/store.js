@@ -8,34 +8,7 @@ Vue.use(Vuex);
 export const STORAGE_KEY_MODULES = 'modules';
 export const STORAGE_KEY_CONNECTIONS = 'connections';
 
-/**
- * Reactify the connections.
- * The connection objects stored in localStorage are just objects in JSON -- they
- * lack the reactvity that we get when adding actual modules with bound listeners
- * to the store; hence, we need to update all the static references.
- * @return {[type]} [description]
- */
-function bindConnections() {
-  const connections = state.connections;
-  const modules = state.modules;
 
-  const load = new Event('load');// eslint-disable-line
-  window.dispatchEvent(load);
-
-
-  for (let connection of connections) {
-    const fromId = connection.from.module.id;
-    connection.from.module = modules.find(function(m) { return m.id === fromId; });
-
-    const toId = connection.to.module.id;
-    connection.to.module = modules.find(function(m) { return m.id === toId; });
-
-    // well... if the module has yet to init, its inputs/outputs will not exist
-    // setTimeout(function() {
-    connect(connection);
-    // }, 1000);
-  }
-};
 
 /**
  * Route an Audio connection.
@@ -48,14 +21,14 @@ function connect(connection) {
 
   // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
 
-  const App = this.$parent;
-  const module = App.$children.find(function(m) { return m.id === connection.from.id; });
-  console.log(module);
-  debugger;
+  // const App = this.$parent;
+  // const module = App.$children.find(function(m) { return m.id === connection.from.id; });
+  // console.log(module);
+  // debugger;
 
   if (source && destination) {
     console.log('connecting %s --> %s', connection.from.label, connection.to.label);
-    source.connect(destination);
+    // source.connect(destination);
   }
 }
 
@@ -94,7 +67,7 @@ const mutations = {
         state[key] = newState[key];
       }
     }
-    bindConnections();
+    // bindConnections();
   },
 
   TOGGLE_EDIT(state) {
