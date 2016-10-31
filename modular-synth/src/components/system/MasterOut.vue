@@ -65,15 +65,15 @@ export default {
     this.inlets[0].data = out1;
     this.inlets[1].data = out2;
 
+    this.determinePosition();
+
     window.addEventListener('resize', this.determinePosition);
-    window.addEventListener('load', this.determinePosition);
   },
 
   methods: {
     determinePosition() {
-      // TODO use getBoundingClientRect is inconsistent with offsetTop in NODE. update
-      const x = this.$el.getBoundingClientRect().left;  // TODO will not work if in PLAY mode
-      const y = this.$el.offsetTop;
+      const x = this.$el.getBoundingClientRect().left;  // relative to viewport
+      const y = this.$el.offsetTop;                     // relative to parent
 
       this.x = x;
       this.y = y;
@@ -81,10 +81,6 @@ export default {
       this.updatePosition(0, x, y);
     }
   }
-
-  // beforeDestroy: function () {
-  //   window.removeEventListener('resize', this.determinePosition)
-  // }
 };
 </script>
 
