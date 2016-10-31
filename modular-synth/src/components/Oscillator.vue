@@ -71,43 +71,42 @@
         inlets: [
           {
             port: 0,
-            label: 'freq',
-            data: null
+            label: 'freq'
+            // data: null
           },
           {
             port: 1,
-            label: 'sync',
-            data: null
+            label: 'sync'
+            // data: null
           },
           {
             port: 2,
-            label: 'mod-A',
-            data: null
+            label: 'mod-A'
+            // data: null
           }
         ],
 
         outlets: [
           {
             port: 0,
-            label: 'output',
-            data: null
+            label: 'output'
+            // data: null
           }
         ]
       };
     },
 
     created() {
-      this.outlets[0].data = this.context.createGain();
-      // this.inlets[0].data = this.context.createGain();
-      // this.inlets[0].data = this.osc.frequency;
-      console.log('new?');
+      this.gain = this.context.createGain();
+      // this.outlets[0].data = this.gain;
+      this.outlets[0].audio = this.gain;
       this.newOscillator();
 
       this.$watch('freq', this.setFreq);
       this.$watch('type', this.setType);
 
       this.$on('start', this.start);
-      this.$on('stop', this.stop);      // BAD. CANNOT RESTART.
+      this.$on('stop', this.stop);
     },
 
     methods: {

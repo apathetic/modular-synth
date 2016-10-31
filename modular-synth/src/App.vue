@@ -212,6 +212,14 @@
     },
 
     events: {
+      'patch:load'(name) {
+        console.log('I AM LOAD ', name);
+        // this.bindConnections();
+        // this.routeAudio();
+      },
+      'patch:save'() {
+      },
+
       'drag:start'(coords, el) {
         if (!this.editing) {
           this.startSorting();
