@@ -33,7 +33,7 @@ npm test
 
 
 - LOADING
-  - update masterOut position on load *
+  - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
   - route audio on load *** (use store plugin / store mutatin observer)
   - FIX modules: dont gridify properly after 1st load ***
