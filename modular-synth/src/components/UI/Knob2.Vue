@@ -1,0 +1,141 @@
+<template>
+  <svg class="knob2" @mousedown.stop.prevent="start">
+    <path v-el:track class="track" fill="none" stroke-width="8" d=""></path>
+    <path v-el:display class="display" fill="none" stroke-width="8" d=""></path>
+    <path v-el:computed fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
+    <text x="24" y="28">{{ value }}</text>
+    <text x="24" y="54">{{ label }}</text>
+  </svg>
+</template>
+
+
+<script>
+const size = 20;
+const x = 24; // half the css knob size
+const y = 24;
+
+// let startValue = 0;
+// let startClientY = 0;
+
+
+function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+  let angleInRadians = (angleInDegrees + 90) * Math.PI / 180.0;
+
+  return {
+    x: centerX + (radius * Math.cos(angleInRadians)),
+    y: centerY + (radius * Math.sin(angleInRadians))
+  };
+}
+
+function describeArc(x, y, radius, startAngle, endAngle) {
+  const start = polarToCartesian(x, y, radius, endAngle);
+  const end = polarToCartesian(x, y, radius, startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+
+  return [
+    'M', start.x, start.y,
+    'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y
+  ].join(' ');
+}
+
+export default {
+  props: {
+    label: '',
+    value: 0,
+    min: 0,
+    max: 100
+  },
+
+  data() {
+    return {
+      active: false,
+      startValue: 0,
+      startClientY: null,
+      knobValue: 1,
+      range: 1
+    };
+  },
+
+  created() {
+    const self = this;
+
+    this.range = (this.max - this.min) / 100;
+    this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
+
+    window.addEventListener('mouseup', (e) => {
+      window.mouseDown = false;
+      self.active = false;
+
+      document.body.style.webkitUserSelect = 'auto';
+      document.body.style.userSelect = 'auto';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (window.mouseDown && self.active) {
+        self.update(e);
+      }
+    });
+  },
+
+  ready() {
+    this.$els.track.setAttribute('d', describeArc(x, y, size, 30, 330));
+    // document.getElementById('computed').setAttribute('d', describeArc(x, y, size-14, 30, end));
+
+    this.setDisplay();
+  },
+
+  methods: {
+    start(e) {
+      window.mouseDown = true;
+      this.active = true;
+      this.startValue = this.knobValue;
+      this.startClientY = e.clientY;
+
+      // document.body.style.webkitUserSelect = 'none';
+      // document.body.style.userSelect = 'none';
+    },
+
+    update(e) {
+      const delta = this.startClientY - e.clientY;
+      const knobValue = this.startValue + delta;
+
+      this.knobValue = Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
+      this.setDisplay();
+    },
+
+    setDisplay() {
+      const rotationValue = this.knobValue * 3 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+      const value = Math.round(this.knobValue * this.range + this.min);
+
+      this.$els.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
+      this.value = value;
+    }
+  }
+};
+
+</script>
+
+
+<style lang="scss">
+  // @import '../assets/scss/variables.scss';
+
+  .knob2 {
+    width: 48px;
+    height: 64px;
+    cursor: pointer;
+
+    text {
+      text-anchor: middle;
+      font-size: 1rem;
+      fill: #fff;
+    }
+
+    .track {
+      stroke: #444; // $color-grey-dark;
+    }
+
+    .display {
+      stroke: #54bfff;
+    }
+  }
+</style>

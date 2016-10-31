@@ -167,11 +167,8 @@ const mutations = {
 
     // BETTER:
     // "from":{
-    //   "moduleId": 1,
-    //   "port": 0,
+    //   "id": 1,
     //   "label": "output-1",
-    //   "x": 100,
-    //   "y": 237
     // }
 
 
