@@ -116,7 +116,7 @@
          * k-rate control of the Oscillator frequency
          * @param  {Float} f frequency
          */
-        this.osc.frequency.value = f;
+        this.node.frequency.value = f;
       },
 
       setType(t) {
@@ -124,25 +124,32 @@
          * Update wave type
          * @param  {String} t One of the pre-defined oscillator wave types
          */
-        this.osc.type = t;
+        this.node.type = t;
+      },
+
+      setGain(g) {
+        /**
+         * Update Oscillator gain
+         * @param  {Float} g  Gain, between 0 and 1.
+         */
+        this.gain.gain.value = g;
       },
 
       newOscillator() {
-        this.osc = this.context.createOscillator();
-        this.osc.type = this.type;
-        this.osc.frequency.value = this.freq;
+        this.node = this.context.createOscillator();
+        this.node.type = this.type;
+        this.node.frequency.value = this.freq;
 
-        this.osc.connect(this.outlets[0].data);
-        // this.outlets[0].data = this.osc; // or ...???
+        this.node.connect(this.gain);
       },
 
       start() {
         this.newOscillator();           // create a new OSC every time. They're cheap.
-        this.osc.start();
+        this.node.start();
       },
 
       stop() {
-        this.osc.stop();
+        this.node.stop();
       }
     }
   };
