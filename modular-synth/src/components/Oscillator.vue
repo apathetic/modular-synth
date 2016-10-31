@@ -30,7 +30,7 @@
   import { draggable } from '../mixins/draggable';
   import { newConnection } from '../store/actions';
   import { rackWidth, rackHeight } from '../dimensions';
-  import Knob from './UI/Knob';
+  import Knob from './UI/Knob2';
   // import { node } from '../mixins/node';
   import store from '../store/store'; // .... er...
 
