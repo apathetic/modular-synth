@@ -25,3 +25,6 @@ new Vue({
   el: 'body',
   components: { App, FileManager }
 });
+
+
+window.App = App;

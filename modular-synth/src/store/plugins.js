@@ -29,17 +29,44 @@ const webAudioPlugin = (store) => {
       const modules = store.state.modules;
 
       for (let connection of connections) {
-        const fromId = connection.from.module.id;
-        connection.from.module = modules.find(function(m) { return m.id === fromId; });
+        const source = connection.from.data;
+        const destination = connection.to.data;
 
-        const toId = connection.to.module.id;
-        connection.to.module = modules.find(function(m) { return m.id === toId; });
+        const to = modules.find(function(m) { return m.id === connection.to.module.id; });
+        const from = modules.find(function(m) { return m.id === connection.from.module.id; });
 
-      //   // connect(connection);
+        // bind visual connections
+        connection.to.module = to;
+        connection.from.module = from;
+
+        // connect(connection);
+        if (source && destination) {
+          console.log('connecting %s --> %s', connection.from.label, connection.to.label);
+          // source.connect(destination);
+        }
       }
     }
   });
 };
+
+/* * /
+function connect(connection) {
+  const source = connection.from.data;
+  const destination = connection.to.data;
+
+  // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
+
+  // const App = this.$parent;
+  // const module = App.$children.find(function(m) { return m.id === connection.from.id; });
+  // console.log(module);
+  // debugger;
+
+  if (source && destination) {
+    console.log('connecting %s --> %s', connection.from.label, connection.to.label);
+    // source.connect(destination);
+  }
+}
+/* */
 
 /* */
 export default process.env.NODE_ENV !== 'production'
