@@ -56,7 +56,8 @@ export default {
   computed: {
     x1() {
       const node = this.from.module;
-      const width = cellWidth; // node.width || 200;    // node.width is not in state.modules
+      const width = cellWidth;
+
       return node.x + width + 3;
     },
     y1() {
