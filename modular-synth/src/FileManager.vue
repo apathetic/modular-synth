@@ -23,6 +23,7 @@ import { load } from './store/actions';
 // import * as patches from './assets/patches';
 import FM from '../static/patches/FM';
 import Mod from '../static/patches/Mod';
+import Blank from '../static/patches/blank';
 import gridtest from '../static/patches/gridTest';
 
 export default {
@@ -43,6 +44,7 @@ export default {
   ready() {
     this.patches.push(FM);    // dumb way for testing for now
     this.patches.push(Mod);
+    this.patches.push(Blank);
     this.patches.push(gridtest);
   },
 
