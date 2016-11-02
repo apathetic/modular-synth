@@ -66,7 +66,6 @@ export default {
     this.inlets[1].data = out2;
 
     this.determinePosition();
-
     window.addEventListener('resize', this.determinePosition);
   },
 
