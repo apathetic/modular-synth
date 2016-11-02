@@ -9,18 +9,17 @@ export default {
   connections: [
     {
       id: 3,
-      to: {
-        port: 1,
-        label: 'gain',
-        data: null,
+      from: {
+        port: 0, label: 'output-1',
         module: {
-          'id': 2, 'type': 'Node', 'x': 383, 'y': 225
+          id: 1, type: 'Node'
         }
       },
-      from: {
-        port: 1, label: 'output-2', 'data': {},
+      to: {
+        port: 0,
+        label: 'freq',
         module: {
-          id: 1, type: 'Node', 'x': 100, 'y': 237
+          id: 2, type: 'Node'
         }
       }
 
@@ -40,16 +39,16 @@ export default {
     },
     {
       id: 4,
-      to: {
-        port: 0, label: 'freq', 'data': {},
+      from: {
+        port: 0, label: 'output-1',
         module: {
-          id: 2, type: 'Node', 'x': 383, 'y': 225
+          id: 2, type: 'Node'
         }
       },
-      from: {
-        port: 0, label: 'output-1', 'data': {},
+      to: {
+        port: 0, label: 'out-1',
         module: {
-          id: 1, type: 'Node', 'x': 100, 'y': 237
+          id: 0, type: 'MasterOut'
         }
       }
     }
