@@ -1,8 +1,8 @@
 <template>
   <svg class="knob2" @mousedown.stop.prevent="start">
-    <path v-el:track class="track" fill="none" stroke-width="8" d=""></path>
-    <path v-el:display class="display" fill="none" stroke-width="8" d=""></path>
-    <path v-el:computed fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
+    <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
+    <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
+    <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
     <text x="24" y="28">{{ value }}</text>
     <text x="24" y="54">{{ label }}</text>
   </svg>
@@ -77,8 +77,8 @@ export default {
     });
   },
 
-  ready() {
-    this.$els.track.setAttribute('d', describeArc(x, y, size, 30, 330));
+  mounted() {
+    this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330));
     // document.getElementById('computed').setAttribute('d', describeArc(x, y, size-14, 30, end));
 
     this.setDisplay();
@@ -107,7 +107,7 @@ export default {
       const rotationValue = this.knobValue * 3 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
       const value = Math.round(this.knobValue * this.range + this.min);
 
-      this.$els.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
+      this.$refs.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
       this.value = value;
     }
   }

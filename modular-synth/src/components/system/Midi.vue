@@ -1,24 +1,24 @@
 <template>
   <h3>midi infos</h3>
   <div id="log">{{ log }}</div>
-  <div id="inputs" v-el:inputs></div>
-  <div id="outputs" v-el:outputs></div>
+  <div id="inputs" ref="inputs"></div>
+  <div id="outputs" ref="outputs"></div>
 
   inputs:
   <select>
-    <option v-for="value in devices.inputs" v-bind:value="value._uid" track-by="_uid">
+    <option v-for="value in devices.inputs" v-bind:value="value._uid" :key="value._uid">
       {{ value.name }} ({{ value.manufacturer }})
     </option>
   </select>
 
   outputs:
   <select>
-    <option v-for="value in devices.outputs" v-bind:value="value._uid" track-by="_uid">
+    <option v-for="value in devices.outputs" v-bind:value="value._uid" :key="value._uid">
       {{ value.name }} ({{ value.manufacturer }})
     </option>
   </select>
 
-  <!-- {{ devices | json }} -->
+  <!-- {{ devices }} -->
 </template>
 
 

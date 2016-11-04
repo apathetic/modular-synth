@@ -68,7 +68,8 @@ export default {
       ]
     };
   },
-  ready() {
+
+  mounted() {
     // inputs
     this.inlets[0].data = this.context.createGain();
     this.inlets[1].data = this.context.createGain();

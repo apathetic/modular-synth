@@ -24,9 +24,6 @@ export default {
     };
   },
 
-  ready() {
-  },
-
   methods: {
     startDraggingNode(event) {
       var el;
