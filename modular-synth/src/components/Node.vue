@@ -10,7 +10,7 @@
     </div>
 
     <div class="module-interface">
-      {{ position | json }}<br><br>
+      {{ position }}<br><br>
     </div>
 
     <div class="module-connections">

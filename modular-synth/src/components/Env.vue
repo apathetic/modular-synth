@@ -20,18 +20,20 @@
 
     <div class="module-connections">
       <div class="inlets">
-        <span v-for="inlet in inlets"
-          data-label="{{ inlet.label }}"
-          data-port="{{ $index }}"
+        <span v-for="(inlet, index) in inlets"
+          :data-label="inlet.label"
+          :data-port="index"
+          :___data-port="inlet.port"
           class="inlet">
         </span>
       </div>
 
       <div class="outlets">
-        <span v-for="outlet in outlets"
+        <span v-for="(outlet, index) in outlets"
           @mousedown.stop="newConnection(outlet)"
-          data-label="{{ outlet.label }}"
-          data-port="{{ outlet.port }}"
+          :data-label="outlet.label"
+          :data-port="index"
+          :___data-port="outlet.port"
           class="outlet">
         </span>
       </div>

@@ -2,7 +2,7 @@
   <div
   class="knob"
   @mousedown.stop.prevent="start">
-    <div v-el:notch class="notch"></div>
+    <div ref="notch" class="notch"></div>
     <span>{{ value }}</span>
     {{ label }}
   </div>
@@ -26,8 +26,10 @@ export default {
     };
   },
 
-  ready() {
+  mounted() {
+    // Vue.nextTick(function() {
     this.setRotationDegrees();
+    // });
   },
 
   created() {
@@ -88,7 +90,7 @@ export default {
       let value = (this.value - this.min) / (this.max - this.min);
       let rotationValue = (value * maxDegreeShift) + dialOffsetLow;
 
-      this.$els.notch.style['transform'] = 'rotate(' + rotationValue + 'deg)';
+      this.$refs.notch.style['transform'] = 'rotate(' + rotationValue + 'deg)';
     }
   }
 };

@@ -11,9 +11,9 @@
 
     <div class="module-connections">
       <div class="inlets">
-        <span v-for="inlet in inlets"
-          data-label="{{ inlet.label }}"
-          data-port="{{ $index }}"
+        <span v-for="(inlet, index) in inlets"
+          :data-label="inlet.label"
+          :data-port="index"
           class="inlet">
         </span>
       </div>
@@ -55,7 +55,7 @@ export default {
     };
   },
 
-  ready() {
+  mounted() {
     const out1 = this.context.createGain();
     const out2 = this.context.createGain();
 
@@ -65,7 +65,10 @@ export default {
     this.inlets[0].data = out1;
     this.inlets[1].data = out2;
 
+    // Vue.nextTick(function() {
     this.determinePosition();
+    // });
+
     // window.addEventListener('load', this.determinePosition);
     window.addEventListener('resize', this.determinePosition);
   },

@@ -41,7 +41,7 @@ export default {
     };
   },
 
-  ready() {
+  mounted() {
     this.patches.push(FM);    // dumb way for testing for now
     this.patches.push(Mod);
     this.patches.push(Blank);
