@@ -55,7 +55,7 @@ npm test
   - have startConnection: just draw an open-ended connection
     - addConnection will take src, dest and "replace" the user-drawn connection
   - updated connection object. See store.js line ~142 for details
-
+  - rename "data" to "audio" 
 
 - MIDI
   - pitch

@@ -88,7 +88,9 @@
         <button
           @click="togglePower"
           :class="power ? 'on' : 'off'">
-          <img src="/static/images/reset1.svg" style="width:6em;height:3em">
+            on/off
+          <!-- <object data="/static/images/reset1.svg" style="width:6em;height:3em"></object> -->
+
         </button>
       </div>
 
