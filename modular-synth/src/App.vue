@@ -200,8 +200,10 @@
       togglePower() {
         this.power = !this.power;
         if (this.power) {
+          console.log('audio on');
           this.$broadcast('start');
         } else {
+          console.log('audio off');
           this.$broadcast('stop');
         }
       },

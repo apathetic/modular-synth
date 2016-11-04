@@ -149,7 +149,7 @@
         this.node = this.context.createOscillator();
         this.node.type = this.type;
         this.node.frequency.value = this.freq;
-
+        console.log('starting osc');
         this.node.connect(this.gain);
       },
 
