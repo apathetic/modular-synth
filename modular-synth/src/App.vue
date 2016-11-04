@@ -12,18 +12,18 @@
     <section
     id="modules"
     class="grid-container"
-    v-el:grid
+    ref="grid"
     @click="clearActive">
 
       <div class="position-highlight">
         <div class="inner"></div>
       </div>
 
-      <!-- modules: {{ modules|json }}<br><br> -->
-      <!-- conec: {{ connectors|json }} -->
-      <!-- selected: {{ selected|json }} -->
+      <!-- modules: {{ modules }}<br><br> -->
+      <!-- conec: {{ connectors }} -->
+      <!-- selected: {{ selected }} -->
 
-      <component v-for="module in modules"  v-if="module.id !== 0"
+      <component v-for="(module, index) in modules"  v-if="module.id !== 0"
         :is="module.type"
         :id="module.id"
         :x="module.x"
@@ -35,7 +35,7 @@
         @mouseover="setFocus(module.id)"
         @mouseout="clearFocus()"
 
-        track-by="$index">
+        track-by="index">
       </component>
 
       <svg id="connections">
@@ -149,7 +149,7 @@
       };
     },
 
-    ready() {
+    mounted() {
       window.addEventListener('keydown', (e) => {
         switch (e.code) {
           case 'Delete':
@@ -191,8 +191,8 @@
         }
       });
 
-      this.load();
-      this.initSorting(this.$els.grid); // TODO why cannot move into sortable:ready() ...?
+      this.load();                        // from actions.js
+      this.initSorting(this.$refs.grid);  // TODO why cannot move into sortable:ready() ...?
       // this.gridList.generateGrid();
     },
 

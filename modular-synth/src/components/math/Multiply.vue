@@ -12,13 +12,13 @@
     <div class="module-connections">
       <div class="inlets">
         <span v-for="inlet in inlets"
-          data-label="{{ inlet.label }}"
+          :data-label="inlet.label"
           class="inlet">
         </span>
       </div>
       <div class="outlets">
         <span v-for="outlet in outlets"
-          data-label="{{ outlet.label }}"
+          :data-label="outlet.label"
           class="outlet">
         </span>
       </div>
@@ -57,7 +57,8 @@ export default {
       ]
     };
   },
-  ready() {
+
+  mounted() {
     this.in1 = this.context.createGain();
     this.in2 = this.context.createGain();
     this.out = this.context.createGain();
