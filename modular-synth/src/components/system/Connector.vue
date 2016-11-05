@@ -1,15 +1,26 @@
-THE Connector contains a visual representation of the connection between two
-modules (aka a line). It also contains connection registration info:
+THE Connector provides a visual representation of the connection between two
+modules (aka a line). It also contains the relevant audio connection information:
 
 * origin
   - module
   - outlet
-  - port (#)
+  - (port?)
 * destination
   - module
   - inlet
   - port
 
+The Connector will bind each module's x,y coordinates here, providing real-time
+updates for each end of the line. It will also bind the audio inputs / outputs
+in each module, so that audio connections can be made herein.
+
+// From VUEX:
+"from":{
+  "id": 1,               // from this we derive the x,y coords
+  "label": "output-1",   // from this, we derive y-offset coord, as well as the audioNode to connect to
+}
+
+Using the module id, we bind the x,y coords and the audioNode to data props.
 
 Other notes:
   * there can be multiple connections from an output.
@@ -63,7 +74,6 @@ export default {
     y1() {
       return this.from.module.y + (this.from.port * 20) + 27; // + 80;
     },
-
     x2() {
       return this.cursorX
              ? this.cursorX
@@ -77,11 +87,8 @@ export default {
   },
 
   created() {
-    // If the destination/module.to already exists (ie. because we are fetching
-    // data from vuex, we don't need to track mouse position)
-
-    // HOWEVER... the connection is then _not_reactive... :(
-
+    // If created via clicking (ie. not via a load event), then one end is
+    // being positioned by the user's cursor.
     if (!this.to.module) {
       this.cursorX = this.from.module.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
       this.cursorY = this.from.module.y + (this.from.port * 20) + 27; // + 80;
@@ -93,6 +100,58 @@ export default {
   },
 
   methods: {
+    /**
+     * THE MEAT AND BONES OF THE APP. HERE. THIS IS WHERE SHIT HAPPENS.
+     */
+    connect() {
+      console.log('connector: connect', this);
+      if (this.to.module === this.from.module) {
+        this.removeConnection(this.id);
+      } else {
+        const source = this.from.data;
+        const destination = this.to.data;
+
+        // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
+        // const App = this.$parent;
+        // const module = App.$children.find(function(m) { return m.id === connection.from.id; });
+        // console.log(module);
+        // debugger;
+
+
+        if (source && destination) {
+          console.log('connecting %s --> %s', this.from.label, this.to.label);
+          source.connect(destination);
+        } else {
+          console.log('connector failed. tried %s --> %s', this.from.label, this.to.label);
+        }
+      }
+    },
+
+    /**
+     * If the Connector is created via a "load" Event, references to a module's
+     * x,y coordinates will be static, as will the reference to its audioNode.
+     * Loop through these references and make sure they are updated and active.
+     */
+    reactify() {
+      const modules = store.state.modules;    // universal getters perhaps handy here
+
+      const source = this.from.data;
+      const destination = this.to.data;
+      const to = modules.find(function(m) { return m.id === this.to.module.id; });
+      const from = modules.find(function(m) { return m.id === this.from.module.id; });
+
+      // bind visual connections
+      this.to.module = to;
+      this.from.module = from;
+
+      // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
+      if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
+        this.connect();
+      } else {
+        console.log('connector: missing 1 or more audioNode');
+      }
+    },
+
     /**
      * Update the connector's position.
      * @param  {Event} event: The mousemove Event.

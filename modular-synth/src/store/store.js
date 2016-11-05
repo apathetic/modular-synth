@@ -9,39 +9,6 @@ export const STORAGE_KEY_MODULES = 'modules';
 export const STORAGE_KEY_CONNECTIONS = 'connections';
 
 
-
-/**
- * Route an Audio connection.
- * @param  {Connector} connection Contains references to both source and destination audio nodes.
- * @return {void}
- */
-function connect(connection) {
-  const source = connection.from.data;
-  const destination = connection.to.data;
-
-  // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
-
-  // const App = this.$parent;
-  // const module = App.$children.find(function(m) { return m.id === connection.from.id; });
-  // console.log(module);
-  // debugger;
-
-  if (source && destination) {
-    console.log('connecting %s --> %s', connection.from.label, connection.to.label);
-    // source.connect(destination);
-  }
-}
-
-/**
- * Disconnect and Audio connection.
- * @param  {Connector} connection Contains references to both source and destination audio nodes.
- * @return {void}
- */
-function disconnect(connection) {
-
-}
-
-
 // -----------------------------------------------
 //  STATE
 // -----------------------------------------------
@@ -139,22 +106,24 @@ const mutations = {
     module.row = row;
   },
 
+  // 'start_connection' ?
   ADD_CONNECTION(state, outlet) {
+    // find the module that contains the outlet. Ironically, we dont even use "outlet" to
+    // determine this, instead relying on the App "selected" module.
     const module = state.modules.find(function(m) { return m.id === state.selected; });
     // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
-    // console.log(outlet);
-
-    // NOTE: outlet is a reference to the Component itself (ie in the App), NOT the state.module
 
     const from = {
-      module: module,        // for line (x,y) positioning
-      // x: module.x,
-      // y: module.y,
-      port: outlet.port,     // to calculate where the line will connect
-      label: outlet.label,   // for reference
-      data: outlet.data      // for data flow
+      module: module.id,     // for line (x,y) positioning
+      label: outlet.label,   // used to derive the audioNode to connect to
+      port: outlet.port      // to calculate the line y-offset
     };
 
+    const to = {
+      module: null,
+      label: null,
+      port: null
+    };
 
     // ACTUAL:
     // "from":{
@@ -172,42 +141,32 @@ const mutations = {
     // }
 
 
-
-    const to = {
-      module: null,
-      port: null,
-      label: null,
-      data: null
-    };
-
     state.connections.push({
       id: parseInt(state.id),
       to,
       from
     });
+
     state.id++;
   },
   UPDATE_CONNECTION(state, id, inlet) {
     const connection = state.connections.find(function(c) { return c.id === id; });
     const module = state.modules.find(function(m) { return m.id === state.selected; });
-    // const module = state.modules.find(function(m) { return m.id === state.active; });
+    const to = {
+      module: module.id,    // for line (x,y) positioning
+      label: inlet.label,   // used to derive the audioNode to connect to
+      port: inlet.port      // to calculate the line y-offset
+    };
 
-    connection.to = inlet;
-    connection.to.module = module;
-
-
-    if (connection.to.module === connection.from.module) {
-      // this.$store.dispatch('REMOVE_CONNECTION', id);
-    } else {
-      connect(connection);
-    }
+    connection.to = to;
+    connection.connect();
   },
   REMOVE_CONNECTION(state, id) {
     // let active = state.activeConnection;
     const connection = state.connections.find(c => { c.id === id; });
     if (connection) {
       state.connections.splice(state.modules.indexOf(connection), 1);
-      disconnect(connection);
+      connection.$destroy();
     }
   }
 };

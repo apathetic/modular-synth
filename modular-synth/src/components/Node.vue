@@ -32,7 +32,7 @@
 
     vuex: {
       actions: {
-        newConnection
+        newConnection   // TODO move to outlet partial
       }
     },
 

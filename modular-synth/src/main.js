@@ -27,4 +27,4 @@ new Vue({
 });
 
 
-window.App = App;
+// window.App = App;
