@@ -23,11 +23,15 @@ const webAudioPlugin = (store) => {
        * lack the reactvity that we get when adding actual modules with bound listeners
        * to the store; hence, we need to update all the static references.
        */
-      const connections = store.state.connections;
+
+      // THIS IS THE JSON CONNECTOR. WE NEED THE VUE COMPONENENT CONNECTOR.
+      // const connections = store.state.connections;
       // const modules = store.state.modules;
 
-      for (let connection of connections) {
-        connection.reactify();
+      // for (let connection of connections) {
+        //
+        // const connector = window.App.$children.find(function(c) { return c.id === connection.id; });
+        // connector.reactify();
 
         // const source = connection.from.data;
         // const destination = connection.to.data;
@@ -43,7 +47,7 @@ const webAudioPlugin = (store) => {
         //   console.log('connecting %s --> %s', connection.from.label, connection.to.label);
         //   // source.connect(destination);
         // }
-      }
+      // }
     }
   });
 };

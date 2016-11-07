@@ -76,5 +76,5 @@ export const newConnection = ({ dispatch }, outlet) => {
 };
 
 export const removeConnection = ({ dispatch }, id) => {
-  dispatch('REMOVE_CONNECTION');
+  dispatch('REMOVE_CONNECTION', id);
 };
