@@ -10,46 +10,27 @@ export default {
     {
       id: 3,
       from: {
-        port: 0, label: 'output-1',
-        module: {
-          id: 1, type: 'Node'
-        }
+        id: 1,
+        port: 0,
+        label: 'output-1'
       },
       to: {
+        id: 2,
         port: 0,
-        label: 'freq',
-        module: {
-          id: 2, type: 'Node'
-        }
+        label: 'freq'
       }
-
-
-      // ideal (?) :
-      //  ------------
-      //  id: 3,
-      //  to: {
-      //    id: 2          // the ref module
-      //    label: 'gain'  // the port label
-      //  },
-      //  from: {
-      //    id: 1,
-      //    label: output-2
-      //  }
-
     },
     {
       id: 4,
       from: {
-        port: 0, label: 'output-1',
-        module: {
-          id: 2, type: 'Node'
-        }
+        id: 2,
+        port: 0,
+        label: 'output-1'
       },
       to: {
-        port: 0, label: 'out-1',
-        module: {
-          id: 0, type: 'MasterOut'
-        }
+        id: 0,
+        port: 0,
+        label: 'out-1'
       }
     }
   ]

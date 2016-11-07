@@ -5,6 +5,8 @@ import FileManager from './FileManager';
 
 const context = window.AudioContext && (new window.AudioContext());
 
+window.App = App;
+
 // All Components will have access to AudioContext
 // oh.. although *now*, that includes Connectors
 Vue.mixin({
@@ -25,6 +27,3 @@ new Vue({
   el: 'body',
   components: { App, FileManager }
 });
-
-
-// window.App = App;
