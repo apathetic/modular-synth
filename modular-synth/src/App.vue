@@ -19,10 +19,6 @@
         <div class="inner"></div>
       </div>
 
-      <!-- modules: {{ modules|json }}<br><br> -->
-      <!-- conec: {{ connectors|json }} -->
-      <!-- selected: {{ selected|json }} -->
-
       <component v-for="module in modules"  v-if="module.id !== 0"
         :is="module.type"
         :id="module.id"
@@ -194,6 +190,16 @@
       this.load();
       this.initSorting(this.$els.grid); // TODO why cannot move into sortable:ready() ...?
       // this.gridList.generateGrid();
+
+      /**
+       * Reactify the connections.
+       * The connection objects stored in localStorage are just objects in JSON -- they
+       * lack the reactvity that we get when adding actual modules with bound listeners
+       * to the store; hence, we need to update all the static references.
+       */
+      // for (let connection of this.connections) {
+        // connection.reactify();
+      // }
     },
 
     methods: {

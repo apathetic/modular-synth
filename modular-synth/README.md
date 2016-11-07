@@ -49,13 +49,15 @@ npm test
   - lives in the actual components (not in the store.modules)
     - (same problem for Connector)
   - global "get (actual) component by id" method?
+  - rename "data" to "audio" or "signal"
 
 
 - Connections
   - have startConnection: just draw an open-ended connection
     - addConnection will take src, dest and "replace" the user-drawn connection
   - updated connection object. See store.js line ~142 for details
-  - rename "data" to "audio" 
+  - rename "data" to "audio"
+  - reconcile "connector" name and "connection"
 
 - MIDI
   - pitch

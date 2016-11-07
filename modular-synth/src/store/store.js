@@ -17,9 +17,9 @@ const state = {
   id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
+  editing: false,
   selected: null,   // Hovered: Module Info, Connections.
-  active: 0,        // Clicked: Dragging, Deleting.
-  editing: false
+  active: 0         // Clicked: Dragging, Deleting.
 };
 
 
@@ -109,37 +109,21 @@ const mutations = {
   // 'start_connection' ?
   ADD_CONNECTION(state, outlet) {
     // find the module that contains the outlet. Ironically, we dont even use "outlet" to
-    // determine this, instead relying on the App "selected" module.
+    // determine this, instead relying on the "selected" module in the App.
     const module = state.modules.find(function(m) { return m.id === state.selected; });
     // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
 
     const from = {
-      module: module.id,     // for line (x,y) positioning
+      id: module.id,         // ref. to module, for line (x,y) positioning
       label: outlet.label,   // used to derive the audioNode to connect to
       port: outlet.port      // to calculate the line y-offset
     };
 
     const to = {
-      module: null,
+      id: null,
       label: null,
       port: null
     };
-
-    // ACTUAL:
-    // "from":{
-    //   "port":0,
-    //   "label":"output-1",
-    //   "data":{},
-    //   "module":{
-    //     "id":1,"type":"Node","x":100,"y":237
-    //   }
-
-    // BETTER:
-    // "from":{
-    //   "id": 1,
-    //   "label": "output-1",
-    // }
-
 
     state.connections.push({
       id: parseInt(state.id),
@@ -151,22 +135,22 @@ const mutations = {
   },
   UPDATE_CONNECTION(state, id, inlet) {
     const connection = state.connections.find(function(c) { return c.id === id; });
-    const module = state.modules.find(function(m) { return m.id === state.selected; });
+    // const module = state.modules.find(function(m) { return m.id === state.selected; });
+
     const to = {
-      module: module.id,    // for line (x,y) positioning
+      id: state.selected,   // module.id,        // for line (x,y) positioning
       label: inlet.label,   // used to derive the audioNode to connect to
       port: inlet.port      // to calculate the line y-offset
     };
 
     connection.to = to;
-    connection.connect();
   },
   REMOVE_CONNECTION(state, id) {
     // let active = state.activeConnection;
-    const connection = state.connections.find(c => { c.id === id; });
+    const connection = state.connections.find(c => { return c.id === id; });
+
     if (connection) {
       state.connections.splice(state.modules.indexOf(connection), 1);
-      connection.$destroy();
     }
   }
 };
