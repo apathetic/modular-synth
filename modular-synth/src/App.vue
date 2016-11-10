@@ -19,7 +19,7 @@
         <div class="inner"></div>
       </div>
 
-      <component v-for="module in modules"  v-if="module.id !== 0"
+      <component v-for="module in modules"
         :is="module.type"
         :id="module.id"
         :x="module.x"
@@ -55,17 +55,17 @@
           <span class="edit">edit</span>
         </button>
 
-        <p v-if="module">
+        <p v-if="active">
           <strong>Current Module</strong><br>
-          type: {{ module.type }}<br>
-          id: {{ module.id }}<br>
-          x: {{ module.x }}<br>
-          y: {{ module.y }}<br>
+          type: {{ active.type }}<br>
+          id: {{ active.id }}<br>
+          x: {{ active.x }}<br>
+          y: {{ active.y }}<br>
 
-          col: {{ module.col }}<br>
-          row: {{ module.row }}<br>
-          w: {{ module.w }}<br>
-          h: {{ module.h }}<br>
+          col: {{ active.col }}<br>
+          row: {{ active.row }}<br>
+          w: {{ active.w }}<br>
+          h: {{ active.h }}<br>
 
           details / info  ..?
         </p>
@@ -118,8 +118,8 @@
     vuex: {
       getters: {
         editing: (state) => state.editing,
-        module: (state) => state.modules.find(function(module) { return module.id === state.active; }),
-        modules: (state) => state.modules,
+        active: (state) => state.modules.find(function(module) { return module.id === state.active; }),
+        modules: (state) => state.modules.filter(function(module) { return module.id !== 0; }),
         connections: (state) => state.connections,
         selected: (state) => state.selected
       },
