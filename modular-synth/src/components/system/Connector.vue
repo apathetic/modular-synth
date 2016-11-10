@@ -1,28 +1,36 @@
 THE Connector provides a visual representation of the connection between two
-modules (aka a line). It also contains the relevant audio connection information:
+modules (aka a line) as well as the audio connection information in each module.
 
-* origin
-  - module id
-  - label
-  - port
-* destination
-  - module id
-  - label
-  - port
+Required (to/from):
+audioNode
+port
+x
+y
 
-The Connector will bind each module's x,y coordinates here, providing real-time
+
+The Connector will bind to each module's x,y coordinates to provide real-time
 updates for each end of the line. It will also bind the audio inputs / outputs
-in each module, so that audio connections can be made herein.
+in each module, so that audio connections can be made.
 
-// From VUEX:
-"from":{
-  "id": 1,               // from this we derive the x,y coords
-  // "label": "output-1",   // from this, we derive y-offset coord, as well as the audioNode to connect to
-  "port": 1,            // from this, we derive y-offset coord, as well as the audioNode to connect to
+In the Store, we have "to" and "from" info in the following format:
+
+"to":{
+  "id": 0,        // from this we derive the x,y coords (below)
+  "port": 1       // from this, we derive y-offset coord, as well as the audioNode to connect to (in the Vue component, below)
 }
 
-Using the module id, we fetch and store a reference to the actual Vue module (i.e. not the JSON object
-from the store).
+"from":{
+  "id": 1,
+  "port": 1
+}
+
+
+With the above information, we can locate and bind a reference to the actual Vue component, ie:
+
+"toModule": App.$children.find((c) => { c.id === to.id });
+"fromModule": App.$children.find((c) => { c.id === from.id });
+
+...while the "port" would direct us to the relevant in/out- let of the AudioNode to connect.
 
 Other notes:
   * there can be multiple connections from an output.
@@ -56,19 +64,10 @@ export default {
     }
   },
 
-  props: {          // from the Store:
+  props: {                // data from the Store
     id: Number,
-    to: Object,     // module id, port #
+    to: Object,
     from: Object
-  },
-
-  data() {          // reference to actual modules in the App:
-    return {
-      fromModule: null,
-      toModule: null,
-      cursorX: false,
-      cursorY: false
-    };
   },
 
   computed: {
@@ -90,20 +89,32 @@ export default {
     }
   },
 
-  created() {
-    this.fromModule = this.modules.find((m) => { return m.id === this.from.id; });
+  data() {                // reference to actual modules in the App:
+    return {
+      fromModule: null,   // should be a Vue Component
+      toModule: null,     // should be a Vue Component
+      source: null,
+      destination: null,
+      cursorX: false,
+      cursorY: false
+    };
+  },
 
-    // If created via clicking (ie. not via a load event), then one end is
-    // being positioned by the user's cursor.
+  created() {
+    this.fromModule = this.getModule(this.from.id);
+    // this.source = this.fromModule.outlets[this.from.port].data;
+
+    // If created via clicking (ie. not via a load event), then one
+    // end is currently being positioned by the user's cursor.
     if (!this.to.id) {
       this.cursorX = this.fromModule.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
-      this.cursorY = this.fromModule.y + (this.from.port * 20) + 27; // + 80;
+      this.cursorY = this.fromModule.y + (this.from.port * 20) + 27;
 
-      // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.drag);
       document.addEventListener('mouseup', this.dragEnd);
     } else {
-      this.toModule = this.modules.find((m) => { m.id === this.to.id; });
+      this.toModule = this.getModule(this.to.id);
+      // this.destination = this.toModule.inlets[this.to.port].data;
     }
   },
 
@@ -112,11 +123,16 @@ export default {
      * THE MEAT AND BONES OF THE APP. HERE. THIS IS WHERE SHIT HAPPENS.
      */
     connect() {
-      const source = this.fromModule.data;
-      const destination = this.toModule.data;
+      // const toPort = this.to.port;
+      // const fromPort = this.from.port;
+      debugger;
+      // const source = this.fromModule.outlets[fromPort].data;
+      // const destination = this.toModule.inlets[toPort].data;
 
-      console.log(this.fromModule);
-      console.log(this.toModule);
+      console.log(this.from, this.fromModule);
+      console.log(this.to.port, this.toModule);
+      const source = this.fromModule;
+      const destination = this.toModule.inlets;
 
       // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
@@ -135,19 +151,32 @@ export default {
      * Loop through these references and make sure they are updated and active.
      */
     reactify() {
-      const modules = this.modules;    // universal getters perhaps handy here
+      // const modules = this.modules;    // universal getters perhaps handy here
+
+      console.log('Connector: binding to node #%d from #%s', this.to.id, this.from.id);
 
       // bind visual connections
-      this.toModule = modules.find(function(m) { return m.id === this.to.id; });
-      this.fromModule = modules.find(function(m) { return m.id === this.from.id; });
+      this.toModule = this.modules.find(function(m) { return m.id === this.to.id; });
+      this.fromModule = this.modules.find(function(m) { return m.id === this.from.id; });
 
       // and route ye olde audio
       this.connect();
     },
 
     /**
+     * Fetch a Vue Component from the App, given a particular id. Fetch the currently
+     * selected Component if no id is passed in.
+     * @type {Number} id The id of the module to fetch.
+     */
+    getModule(id = this.selected) {
+      const App = this.$parent;
+      // const module = App.$children.find((m) => { return m.$el.contains(target); });
+      return App.$children.find((m) => { return m.id === id; });
+    },
+
+    /**
      * Update the connector's position.
-     * @param  {Event} event: The mousemove Event.
+     * @param  {Event} event The mousemove Event.
      * @return {Void}
      */
     drag(event) {
@@ -165,42 +194,32 @@ export default {
      */
     dragEnd(event) {
       const target = event.toElement || event.relatedTarget || event.target || false;
+      const label = target.getAttribute('data-label');
 
-      // Stop capturing mousemove and mouseup events.
       document.removeEventListener('mousemove', this.drag);
       document.removeEventListener('mouseup', this.dragEnd);
 
-      if (target && target.classList.contains('inlet')) {           // TODO better check for this?
-        const label = target.getAttribute('data-label');
+      if (target && label) {
+        const module = this.getModule();      // ironically, we dont even use the target to fetch the Component
 
-        // gah. modules are JSON obj, *not* Vue components. also -- App.$children would
-        // contain *all* vue components -- midi thing, svg lines, etc.
-        const App = this.$parent;
-        const module = App.$children.find(function(m) { return m.$el.contains(target); });
-        const inlet = module.inlets.find(function(i) { return i.label === label; });
-        // const to = Object.assign(inlet, { id: module.id });
+        const inlet = module.inlets.find((i) => { return i.label === label; });
+        const port = inlet.port;
 
-        // this.to = to;
-        // this.to.label = inlet.label;
-        // this.to.port = inlet.port;
-        // this.to.id = module.id;
-
-        // we really only care about referencing the module (as it has x,y and audio)
+        // we only care about referencing the module (as it has x,y and audio)
+        // does... does the Object from the Store have audio...??
         this.toModule = module;
-
-        console.log(this.toModule.x);
-        console.log(this.toModule.y);
+        this.destination = module.inlets[port].data;
 
         if (this.to.id === this.from.id) {
-          this.removeConnection(this.id);     // remove is circular connection
+          this.removeConnection(this.id);         // remove is circular connection
         } else {
-          // this.connect();
-          this.updateConnection(this.id, inlet);    // update _state_ data in the store
+          this.updateConnection(this.id, inlet);  // update _state_ data in the store. Note, this also will update the "to" prop
+          this.connect();
+          // const to = Object.assign(inlet, { id: module.id });
           // this.updateConnection(this.id, to);
-          console.log('modules', this.from, this.to);
         }
       } else {
-        this.removeConnection(this.id);       // remove if connection wasn't made
+        this.removeConnection(this.id);           // remove if connection wasn't made
       }
 
       this.cursorX = false;

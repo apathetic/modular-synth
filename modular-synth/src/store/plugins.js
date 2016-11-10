@@ -29,24 +29,9 @@ const webAudioPlugin = (store) => {
       // const modules = store.state.modules;
 
       // for (let connection of connections) {
-        //
-        // const connector = window.App.$children.find(function(c) { return c.id === connection.id; });
-        // connector.reactify();
-
-        // const source = connection.from.data;
-        // const destination = connection.to.data;
-        //
-        // const to = modules.find(function(m) { return m.id === connection.to.module.id; });
-        // const from = modules.find(function(m) { return m.id === connection.from.module.id; });
-        //
-        // // bind visual connections
-        // connection.to.module = to;
-        // connection.from.module = from;
-        //
-        // if (source && destination) {
-        //   console.log('connecting %s --> %s', connection.from.label, connection.to.label);
-        //   // source.connect(destination);
-        // }
+      //   const connector = window.App.$children.find(function(c) { return c.id === connection.id; });
+      //
+      //   connector.reactify();
       // }
     }
   });
