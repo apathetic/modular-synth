@@ -2,12 +2,12 @@ THE Connector provides a visual representation of the connection between two
 modules (aka a line). It also contains the relevant audio connection information:
 
 * origin
-  - module
-  - outlet
-  - (port?)
+  - module id
+  - label
+  - port
 * destination
-  - module
-  - inlet
+  - module id
+  - label
   - port
 
 The Connector will bind each module's x,y coordinates here, providing real-time
@@ -21,7 +21,8 @@ in each module, so that audio connections can be made herein.
   "port": 1,            // from this, we derive y-offset coord, as well as the audioNode to connect to
 }
 
-Using the module id, we bind the x,y coords and the audioNode to data props.
+Using the module id, we fetch and store a reference to the actual Vue module (i.e. not the JSON object
+from the store).
 
 Other notes:
   * there can be multiple connections from an output.
@@ -50,7 +51,8 @@ export default {
       removeConnection
     },
     getters: {
-      modules: (state) => state.modules // only used to "reactify" new connections
+      modules: (state) => state.modules,   // only used to "reactify" new connections
+      selected: (state) => state.selected
     }
   },
 
@@ -113,14 +115,17 @@ export default {
       const source = this.fromModule.data;
       const destination = this.toModule.data;
 
+      console.log(this.fromModule);
+      console.log(this.toModule);
+
       // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
 
       if (source && destination) {
-        console.log('connecting %s --> %s', this.from.label, this.to.label);
+        console.log('routing %s --> %s', this.from.label, this.to.label);
         source.connect(destination);
       } else {
-        console.log('connector failed. tried %s --> %s', this.from.label, this.to.label);
+        console.log('audio routing failed. tried %s --> %s', this.from.label, this.to.label);
       }
     },
 
