@@ -17,6 +17,7 @@ const localStoragePlugin = (store) => {
 const webAudioPlugin = (store) => {
   store.subscribe((mutation) => {
     if (mutation.type === 'LOAD') {
+      console.log('loadin');
       /**
        * Reactify the connections.
        * The connection objects stored in localStorage are just objects in JSON -- they

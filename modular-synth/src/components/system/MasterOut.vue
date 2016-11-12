@@ -6,7 +6,7 @@
     @mouseout="clearFocus()">
 
     <div class="module-interface">
-      <Level></Level>
+      <Level label="Volume" :value.sync="gain" :min="0" :max="1"></Level>
     </div>
 
     <div class="module-connections">
@@ -38,9 +38,10 @@ export default {
   data() {
     return {
       name: 'Master Out',
-      id: 0,    // only one of these
-      x: 0,     // for connections
+      id: 0,    // MasterOut is always id 0
+      x: 0,
       y: 0,
+      gain: 0.6,
       inlets: [
         {
           port: 0,
@@ -55,17 +56,19 @@ export default {
     };
   },
 
-  mounted() {
-    const out1 = this.context.createGain();
-    const out2 = this.context.createGain();
+  created() {
+    console.log('creating masterout');
+    this.out1 = this.context.createGain();
+    this.out2 = this.context.createGain();
 
-    out1.connect(this.context.destination);
-    out2.connect(this.context.destination);
+    this.out1.connect(this.context.destination);
+    this.out2.connect(this.context.destination);
 
-    this.inlets[0].data = out1;
-    this.inlets[1].data = out2;
+    this.inlets[0].data = this.out1;
+    this.inlets[1].data = this.out2;
+  },
 
-    // Vue.nextTick(function() {
+  ready() {
     this.determinePosition();
     // });
 
@@ -74,6 +77,11 @@ export default {
   },
 
   methods: {
+    setGain(g) {
+      this.out1.gain.value = g;
+      this.out2.gain.value = g;
+    },
+
     determinePosition() {
       const x = this.$el.getBoundingClientRect().left;  // relative to viewport
       const y = this.$el.offsetTop;                     // relative to parent

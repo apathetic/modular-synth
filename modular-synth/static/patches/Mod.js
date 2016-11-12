@@ -1,152 +1,89 @@
 export default {
   'name': 'Mod',
-  'id': 5,
-  'cid': 7,
-  'connections': [{
-    'id': 0,
-    'to': {
-      'port': 1,
-      'label': 'gain',
-      'data': null,
-      'module': {
-        'id': 2,
-        'type': 'Node',
-        'x': 348,
-        'y': 145
-      }
-    },
-    'from': {
-      'module': {
+  'id': 10,
+  'connections': [
+    {
+      'id': 1,
+      'to': {
+        'port': 1,
+        'id': 2
+      },
+      'from': {
         'id': 1,
-        'type': 'Node',
-        'x': 357,
-        'y': 62
-      },
-      'port': 1,
-      'label': 'output-2',
-      'data': {}
-    }
-  }, {
-    'id': 1,
-    'to': {
-      'port': 0,
-      'label': 'freq',
-      'data': {},
-      'module': {
-        'id': 2,
-        'type': 'Node',
-        'x': 348,
-        'y': 145
+        'port': 1
       }
     },
-    'from': {
-      'module': {
+    {
+      'id': 2,
+      'to': {
+        'port': 0,
+        'id': 2
+      },
+      'from': {
         'id': 1,
-        'type': 'Node',
-        'x': 357,
-        'y': 62
-      },
-      'port': 0,
-      'label': 'output-1',
-      'data': {}
-    }
-  }, {
-    'id': 3,
-    'to': {
-      'port': 0,
-      'label': 'freq',
-      'data': {},
-      'module': {
-        'id': '3',
-        'type': 'Oscillator',
-        'x': 167,
-        'y': 459
+        'port': 0
       }
     },
-    'from': {
-      'module': {
-        'id': '4',
-        'type': 'LFO',
-        'x': 23,
-        'y': 132
+    {
+      'id': 3,
+      'to': {
+        'port': 0,
+        'id': 3
       },
-      'port': 0,
-      'label': 'output',
-      'data': {}
-    }
-  }, {
-    'id': 5,
-    'to': {
-      'port': 0,
-      'label': 'out-1',
-      'data': {},
-      'module': {
-        'type': 'MasterOut',
-        'id': 0,
-        'x': 641,
-        'y': 474
+      'from': {
+        'id': 4,
+        'port': 0
       }
     },
-    'from': {
-      'module': {
-        'id': '3',
-        'type': 'Oscillator',
-        'x': 167,
-        'y': 459
+    {
+      'id': 4,
+      'to': {
+        'port': 0,
+        'id': 0
       },
-      'port': 0,
-      'label': 'output',
-      'data': {}
-    }
-  }, {
-    'id': 6,
-    'to': {
-      'port': 1,
-      'label': 'out-2',
-      'data': {},
-      'module': {
-        'type': 'MasterOut',
-        'id': 0,
-        'x': 641,
-        'y': 474
+      'from': {
+        'id': '3',
+        'port': 0
       }
     },
-    'from': {
-      'module': {
-        'id': '3',
-        'type': 'Oscillator',
-        'x': 167,
-        'y': 459
+    {
+      'id': 5,
+      'to': {
+        'port': 1,
+        'id': 0
       },
-      'port': 0,
-      'label': 'output',
-      'data': {}
+      'from': {
+        'id': '3',
+        'port': 0
+      }
     }
-  }],
-  'modules': [{
-    'type': 'MasterOut',
-    'id': 0,
-    'x': 641,
-    'y': 474
-  }, {
-    'id': 1,
-    'type': 'Node',
-    'x': 357,
-    'y': 62
-  }, {
-    'id': 2,
-    'type': 'Node',
-    'x': 348,
-    'y': 145
-  }, {
-    'id': '3',
-    'type': 'Oscillator',
-    'x': 167,
-    'y': 459
-  }, {
-    'id': '4',
-    'type': 'LFO',
-    'x': 23,
-    'y': 132
-  }]
+  ],
+  'modules': [
+    {
+      'type': 'MasterOut',
+      'id': 0,
+      'x': 641,
+      'y': 474
+    }, {
+      'id': 6,
+      'type': 'Node',
+      'x': 357,
+      'y': 62
+    }, {
+      'id': 7,
+      'type': 'Node',
+      'x': 348,
+      'y': 145
+    }, {
+      'id': 8,
+      'type': 'Oscillator',
+      'x': 167,
+      'y': 459
+    }, {
+      'id': 9,
+      'type': 'LFO',
+      'x': 23,
+      'y': 132
+    }
+  ]
 };

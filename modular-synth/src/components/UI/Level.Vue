@@ -3,7 +3,16 @@
     <meter orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></meter>
     <meter orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></meter>
 
-    <input type="range" orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></input>
+    <input
+      type="range"
+      orient="vertical"
+      min="{{ min }"}
+      max="{{ max }}"
+      step="0.1"
+      value="0.0"
+      @input="update">
+    </input>
+    {{ value }}
     <button class="button">mute</button>
   </div>
 </template>
@@ -12,13 +21,16 @@
 <script>
 export default {
   props: {
-    'value': 0,
-    'min': 0,
-    'max': 100
+    label: '',
+    value: 0.5,
+    min: 0,
+    max: 1
   },
 
   data() {
     return {
+      levelValue: 1,
+      range: 1
     };
   },
 
@@ -27,11 +39,10 @@ export default {
 
   methods: {
     update(e) {
-      console.log(e.target);
+      const gain = e.target.value;
 
-      let change = this.startClientY - e.clientY;
-      let value = this.startValue + change;
-      console.log(value);
+      console.log(gain);
+      this.value = gain;
     }
   }
 };

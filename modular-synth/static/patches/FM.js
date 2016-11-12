@@ -11,26 +11,22 @@ export default {
       id: 3,
       from: {
         id: 1,
-        port: 0,
-        label: 'output-1'
+        port: 0
       },
       to: {
         id: 2,
-        port: 0,
-        label: 'freq'
+        port: 0
       }
     },
     {
       id: 4,
       from: {
         id: 2,
-        port: 0,
-        label: 'output-1'
+        port: 0
       },
       to: {
         id: 0,
-        port: 0,
-        label: 'out-1'
+        port: 0
       }
     }
   ]

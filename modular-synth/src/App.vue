@@ -116,7 +116,7 @@
     mixins: [sortable],
 
     vuex: {
-      getters: {
+      getters: {    // TODO these getters are already all in the store.
         editing: (state) => state.editing,
         active: (state) => state.modules.find(function(module) { return module.id === state.active; }),
         modules: (state) => state.modules.filter(function(module) { return module.id !== 0; }),
@@ -150,19 +150,15 @@
         switch (e.code) {
           case 'Delete':
           case 'Backspace':
-            console.log('delete');
             this.removeModule();
             break;
           case 'Tab':
-            console.log('tab');
             this.toggleEditMode();
             break;
           case 'Escape':
-            console.log('escape');
             this.togglePower();
             break;
           case 'Space':
-            console.log('space');
             // this.togglePlay();
             break;
           case 'ShiftLeft':
@@ -170,7 +166,6 @@
             // WE only want to rearrange the module-rack if shift is held;
             // otherwise, we probably want to play the module
             // this.toggleSorting;
-            console.log('shift');
             this.sorting = true;
             break;
           default:
@@ -223,6 +218,7 @@
 
     events: {
       'patch:load'(name) {
+        // better: use plugin and mutation observer
         console.log('I AM LOAD ', name);
         // this.bindConnections();
         // this.routeAudio();
