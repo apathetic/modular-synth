@@ -67,14 +67,15 @@ export const updateGridLocation = ({ dispatch }, id, col, row) => {
 //  CONNECTIONS
 // -----------------------------------------------
 
-export const updateConnection = ({ dispatch, state }, id, inlet) => {
-  dispatch('UPDATE_CONNECTION', id, inlet);
+export const updateConnection = ({ dispatch, state }, id, port) => {
+  dispatch('UPDATE_CONNECTION', id, port);
 };
 
 export const newConnection = ({ dispatch }, outlet) => {
-  dispatch('ADD_CONNECTION', outlet);
+  dispatch('ADD_CONNECTION', outlet.port);
 };
 
 export const removeConnection = ({ dispatch }, id) => {
+  console.log('removing cnx');
   dispatch('REMOVE_CONNECTION', id);
 };

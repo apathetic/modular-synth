@@ -18,8 +18,8 @@ const state = {
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
   connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
   editing: false,
-  selected: null,   // Hovered: Module Info, Connections.
-  active: 0         // Clicked: Dragging, Deleting.
+  selected: undefined,  // Hovered: Module Info, Connections.
+  active: 0             // Clicked: Dragging, Deleting.
 };
 
 
@@ -34,7 +34,6 @@ const mutations = {
         state[key] = newState[key];
       }
     }
-    // bindConnections();
   },
 
   TOGGLE_EDIT(state) {
@@ -45,13 +44,13 @@ const mutations = {
     state.active = id;
   },
   CLEAR_ACTIVE(state) {
-    state.active = null;
+    state.active = undefined;
   },
   SET_FOCUS(state, id) {
     state.selected = id;
   },
   CLEAR_FOCUS(state) {
-    state.selected = null;
+    state.selected = undefined;
   },
 
   ADD_MODULE(state, type) {
@@ -64,9 +63,6 @@ const mutations = {
       col: 0,       // for grid X position
       row: 0        // for grid Y position
     });
-
-    // While it could be easier to reference a specific node, having a
-    // sparse array creates "null"s, which are then problematic to iterate over (in the template).
 
     state.id++;
   },
@@ -107,22 +103,18 @@ const mutations = {
   },
 
   // 'start_connection' ?
-  ADD_CONNECTION(state, outlet) {
+  ADD_CONNECTION(state, port) {
     // find the module that contains the outlet. Ironically, we dont even use "outlet" to
     // determine this, instead relying on the "selected" module in the App.
-    const module = state.modules.find(function(m) { return m.id === state.selected; });
-    // const module = App.$children.find(function(m) { return m.$el.contains(outlet.port); });
 
     const from = {
-      id: module.id,         // ref. to module, for line (x,y) positioning
-      label: outlet.label,   // used to derive the audioNode to connect to
-      port: outlet.port      // to calculate the line y-offset
+      id: state.selected,   // TODO ?
+      port: port
     };
 
     const to = {
-      id: null,
-      label: null,
-      port: null
+      id: undefined,
+      port: undefined
     };
 
     state.connections.push({
@@ -133,14 +125,13 @@ const mutations = {
 
     state.id++;
   },
-  UPDATE_CONNECTION(state, id, inlet) {
+  UPDATE_CONNECTION(state, id, port) {
     const connection = state.connections.find(function(c) { return c.id === id; });
     // const module = state.modules.find(function(m) { return m.id === state.selected; });
 
     const to = {
-      id: state.selected,   // module.id,        // for line (x,y) positioning
-      label: inlet.label,   // used to derive the audioNode to connect to
-      port: inlet.port      // to calculate the line y-offset
+      id: state.selected,   // TODO ?
+      port: port            // to calculate the line y-offset and determine which audio outlet to connect to
     };
 
     connection.to = to;
