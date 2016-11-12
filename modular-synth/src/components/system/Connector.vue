@@ -151,13 +151,13 @@ export default {
      * Loop through these references and make sure they are updated and active.
      */
     reactify() {
-      // const modules = this.modules;    // universal getters perhaps handy here
-
       console.log('Connector: binding to node #%d from #%s', this.to.id, this.from.id);
 
       // bind visual connections
-      this.toModule = this.modules.find(function(m) { return m.id === this.to.id; });
-      this.fromModule = this.modules.find(function(m) { return m.id === this.from.id; });
+      // this.toModule = this.modules.find(function(m) { return m.id === this.to.id; });
+      // this.fromModule = this.modules.find(function(m) { return m.id === this.from.id; });
+      this.toModule = this.getModule(this.to.id);
+      this.fromModule = this.getModule(this.from.id);
 
       // and route ye olde audio
       this.routeAudio();
@@ -206,34 +206,32 @@ export default {
      */
     dragEnd(event) {
       const target = event.toElement || event.relatedTarget || event.target || false;
-      const label = target.getAttribute('data-label');
-      // const port = target.getAttribute('data-port');
+      // const label = target.getAttribute('data-label');
+      const port = target.getAttribute('data-port');
 
       document.removeEventListener('mousemove', this.drag);
       document.removeEventListener('mouseup', this.dragEnd);
+      this.cursorX = false;
+      this.cursorY = false;
 
-      if (target && label) {
-        const module = this.getModule();          // ironically, we dont even use the target to fetch the Component
-        const port = module.inlets.find((i) => { return i.label === label; }).port;
+      // if (target && label) {
+      if (target && port) {
+        this.toModule = this.getModule();          // ironically, we dont even use the target to fetch the Component
+        // const port = module.inlets.find((i) => { return i.label === label; });
 
         // we only care about referencing the module (as it has x,y and audio)
-        // does... does the Object from the Store have audio...??
-        this.toModule = module;
         // this.destination = module.inlets[port].data;
+
+        this.updateConnection(this.id, port);   // update _state_ data in the store.
 
         if (this.to.id === this.from.id) {
           this.removeConnection(this.id);         // remove if circular connection
         } else {
           this.routeAudio();
-          this.updateConnection(this.id, port);   // update _state_ data in the store.
         }
       } else {
-        console.log('anoterh');
         this.removeConnection(this.id);           // remove if connection wasn't made
       }
-
-      this.cursorX = false;
-      this.cursorY = false;
     }
   }
 };
