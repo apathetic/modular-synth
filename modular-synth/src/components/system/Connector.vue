@@ -59,7 +59,7 @@ export default {
       removeConnection
     },
     getters: {
-      modules: (state) => state.modules,   // only used to "reactify" new connections
+      // modules: (state) => state.modules,   // only used to "reactify" new connections
       selected: (state) => state.selected
     }
   },
@@ -129,8 +129,8 @@ export default {
       // const source = this.fromModule.outlets[fromPort].data;
       // const destination = this.toModule.inlets[toPort].data;
 
-      console.log(this.from, this.fromModule);
-      console.log(this.to, this.toModule);
+      // console.log(this.from, this.fromModule);
+      // console.log(this.to, this.toModule);
       const source = this.fromModule;
       const destination = this.toModule.inlets;
 
@@ -138,7 +138,7 @@ export default {
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
 
       if (source && destination) {
-        console.log('routing %s --> %s', this.from.label, this.to.label);
+        console.log('routing: module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
         // source.connect(destination);
       } else {
         console.log('audio routing failed. tried %s --> %s', this.from.label, this.to.label);
@@ -206,23 +206,11 @@ export default {
      */
     dragEnd(event) {
       const target = event.toElement || event.relatedTarget || event.target || false;
-      // const label = target.getAttribute('data-label');
       const port = target.getAttribute('data-port');
 
-      document.removeEventListener('mousemove', this.drag);
-      document.removeEventListener('mouseup', this.dragEnd);
-      this.cursorX = false;
-      this.cursorY = false;
-
-      // if (target && label) {
       if (target && port) {
-        this.toModule = this.getModule();          // ironically, we dont even use the target to fetch the Component
-        // const port = module.inlets.find((i) => { return i.label === label; });
-
-        // we only care about referencing the module (as it has x,y and audio)
-        // this.destination = module.inlets[port].data;
-
-        this.updateConnection(this.id, port);   // update _state_ data in the store.
+        this.toModule = this.getModule();         // ironically, we dont even use the target to fetch the Component
+        this.updateConnection(this.id, parseInt(port));     // update _state_ data in the store.
 
         if (this.to.id === this.from.id) {
           this.removeConnection(this.id);         // remove if circular connection
@@ -232,6 +220,12 @@ export default {
       } else {
         this.removeConnection(this.id);           // remove if connection wasn't made
       }
+
+      document.removeEventListener('mousemove', this.drag);
+      document.removeEventListener('mouseup', this.dragEnd);
+
+      this.cursorX = false;
+      this.cursorY = false;
     }
   }
 };
