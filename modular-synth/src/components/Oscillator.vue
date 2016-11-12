@@ -101,12 +101,13 @@
     },
 
     created() {
+      console.log('creating oscillator');
       this.gain = this.context.createGain();
-      this.outlets[0].data = this.gain;
-      // this.outlets[0].audio = this.gain;
       this.newOscillator();
       this.setGain(1);
 
+
+      this.outlets[0].data = this.gain;
 
       // DIRECT OUT TEST
       this.outlets[0].data.connect(this.context.destination);
@@ -149,7 +150,6 @@
         this.node = this.context.createOscillator();
         this.node.type = this.type;
         this.node.frequency.value = this.freq;
-        console.log('starting osc');
         this.node.connect(this.gain);
       },
 

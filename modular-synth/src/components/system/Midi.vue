@@ -47,6 +47,7 @@ export default {
   },
 
   created() {
+    console.log('creating midi');
     if (navigator.requestMIDIAccess !== undefined) {
       navigator.requestMIDIAccess().then((midiAccess) => {
         this.midiAccess = midiAccess;

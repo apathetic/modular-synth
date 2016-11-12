@@ -75,7 +75,7 @@ export default {
       return this.fromModule.x + cellWidth + 3;
     },
     y1() {
-      return this.fromModule.y + (this.from.port * 20) + 27; // + 80;
+      return this.fromModule.y + (this.from.port * 20) + 27;
     },
     x2() {
       return this.cursorX
@@ -85,28 +85,29 @@ export default {
     y2() {
       return this.cursorY
              ? this.cursorY
-             : this.toModule.y + (this.to.port * 20) + 27; // + 80;
+             : this.toModule.y + (this.to.port * 20) + 27;
     }
   },
 
   data() {                // reference to actual modules in the App:
     return {
-      fromModule: null,   // should be a Vue Component
-      toModule: null,     // should be a Vue Component
-      source: null,
-      destination: null,
+      fromModule: {},     // will be a Vue Component
+      toModule: {},       // will be a Vue Component
+      // source: null,
+      // destination: null,
       cursorX: false,
       cursorY: false
     };
   },
 
   created() {
+    console.log('creating connector');
     this.fromModule = this.getModule(this.from.id);
     // this.source = this.fromModule.outlets[this.from.port].data;
 
     // If created via clicking (ie. not via a load event), then one
     // end is currently being positioned by the user's cursor.
-    if (!this.to.id) {
+    if (typeof this.to.id !== 'number') {
       this.cursorX = this.fromModule.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
       this.cursorY = this.fromModule.y + (this.from.port * 20) + 27;
 
@@ -122,15 +123,14 @@ export default {
     /**
      * THE MEAT AND BONES OF THE APP. HERE. THIS IS WHERE SHIT HAPPENS.
      */
-    connect() {
+    routeAudio() {
       // const toPort = this.to.port;
       // const fromPort = this.from.port;
-      debugger;
       // const source = this.fromModule.outlets[fromPort].data;
       // const destination = this.toModule.inlets[toPort].data;
 
       console.log(this.from, this.fromModule);
-      console.log(this.to.port, this.toModule);
+      console.log(this.to, this.toModule);
       const source = this.fromModule;
       const destination = this.toModule.inlets;
 
@@ -139,7 +139,7 @@ export default {
 
       if (source && destination) {
         console.log('routing %s --> %s', this.from.label, this.to.label);
-        source.connect(destination);
+        // source.connect(destination);
       } else {
         console.log('audio routing failed. tried %s --> %s', this.from.label, this.to.label);
       }
@@ -160,7 +160,7 @@ export default {
       this.fromModule = this.modules.find(function(m) { return m.id === this.from.id; });
 
       // and route ye olde audio
-      this.connect();
+      this.routeAudio();
     },
 
     /**
@@ -171,7 +171,19 @@ export default {
     getModule(id = this.selected) {
       const App = this.$parent;
       // const module = App.$children.find((m) => { return m.$el.contains(target); });
-      return App.$children.find((m) => { return m.id === id; });
+      // return App.$children.find((m) => { return m.id === id; });
+      const module = App.$children.find((m) => { return m.id === id; });
+
+      // IF MasterOut is not yet "ready" in the App, then a lot of these connections will
+      // fail. We should um.. delay them or something?
+
+
+      if (!module) {
+        console.log('not found #', id);
+      }
+
+
+      return module;
     },
 
     /**
@@ -195,30 +207,28 @@ export default {
     dragEnd(event) {
       const target = event.toElement || event.relatedTarget || event.target || false;
       const label = target.getAttribute('data-label');
+      // const port = target.getAttribute('data-port');
 
       document.removeEventListener('mousemove', this.drag);
       document.removeEventListener('mouseup', this.dragEnd);
 
       if (target && label) {
-        const module = this.getModule();      // ironically, we dont even use the target to fetch the Component
-
-        const inlet = module.inlets.find((i) => { return i.label === label; });
-        const port = inlet.port;
+        const module = this.getModule();          // ironically, we dont even use the target to fetch the Component
+        const port = module.inlets.find((i) => { return i.label === label; }).port;
 
         // we only care about referencing the module (as it has x,y and audio)
         // does... does the Object from the Store have audio...??
         this.toModule = module;
-        this.destination = module.inlets[port].data;
+        // this.destination = module.inlets[port].data;
 
         if (this.to.id === this.from.id) {
-          this.removeConnection(this.id);         // remove is circular connection
+          this.removeConnection(this.id);         // remove if circular connection
         } else {
-          this.updateConnection(this.id, inlet);  // update _state_ data in the store. Note, this also will update the "to" prop
-          this.connect();
-          // const to = Object.assign(inlet, { id: module.id });
-          // this.updateConnection(this.id, to);
+          this.routeAudio();
+          this.updateConnection(this.id, port);   // update _state_ data in the store.
         }
       } else {
+        console.log('anoterh');
         this.removeConnection(this.id);           // remove if connection wasn't made
       }
 
