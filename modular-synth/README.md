@@ -42,7 +42,7 @@ npm test
 - NODES
   - base node mixin... or?
   - DELETE node ***
-    - audio connections ***
+    - and associated audio connections ***
 
 
 - Audio
