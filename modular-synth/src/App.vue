@@ -123,19 +123,24 @@
         connections: (state) => state.connections,
         selected: (state) => state.selected
       },
+      // getters: getters,
       actions: actions
+    },
+
+    computed: {
+      // editing() { return this.$store.getters.editing; }
     },
 
     components: {
       masterOut,
       connector,
+      midi,
       Node,
       Reverb,
       Oscillator,
       LFO,
       Filter,
-      Mixer,
-      midi
+      Mixer
     },
 
     data() {
