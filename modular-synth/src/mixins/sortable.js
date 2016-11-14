@@ -6,7 +6,7 @@
  */
 
 import GridList from '../../static/js/gridList';  // TODO more this. move static
-import { updateGridLocation } from '../store/actions';
+import { updateRackPosition } from '../store/actions';
 import { rackWidth, rackHeight } from '../dimensions';
 
 import store from '../store/store'; // .... er...
@@ -17,7 +17,7 @@ const lanes = 3;
 export const sortable = {
   vuex: {
     actions: {
-      updateGridLocation
+      updateRackPosition
     }
   },
 
@@ -118,7 +118,7 @@ export const sortable = {
       this.modules.forEach((item) => {
         // Don't interfere with the positions of the dragged items
         if (this.item !== item) {
-          this.updateGridLocation(item.id, item.col, item.row);
+          this.updateRackPosition(item.id, item.col, item.row);
         }
       });
 

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { setFocus, clearFocus, updatePosition } from '../../store/actions';
+import { setFocus, clearFocus, updateGridPosition } from '../../store/actions';
 import Level from '../UI/Level';
 
 export default {
@@ -31,7 +31,7 @@ export default {
     actions: {
       setFocus,
       clearFocus,
-      updatePosition
+      updateGridPosition
     }
   },
 
@@ -87,7 +87,7 @@ export default {
       this.x = x;
       this.y = y;
 
-      this.updatePosition(0, x, y);
+      this.updateGridPosition(0, x, y);
     }
   }
 };
