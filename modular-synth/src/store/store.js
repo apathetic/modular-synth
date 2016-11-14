@@ -17,7 +17,10 @@ export const STORAGE_KEY_CONNECTIONS = 'connections';
 const state = {
   id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
-  connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
+  // connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
+  connections: undefined,   // NOTE: this is intentional to force a delayed "loading" of the connectors. We grab them
+                            // in localStorage manually in the webAudioPlugin _after_ all the modules have loaded in
+                            // order to ensure audio-routing and visual connections will have Objects to link to / from
   editing: false,
   selected: undefined,  // Hovered: Module Info, Connections.
   active: 0             // Clicked: Dragging, Deleting.
@@ -164,6 +167,8 @@ const getters = {
 // -----------------------------------------------
 //  STORE
 // -----------------------------------------------
+
+// const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
   state,

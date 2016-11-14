@@ -7,7 +7,9 @@ const localStoragePlugin = (store) => {
     localStorage.setItem(STORAGE_KEY_MODULES, JSON.stringify(modules));
   });
   store.subscribe((mutation, { connections }) => {
-    localStorage.setItem(STORAGE_KEY_CONNECTIONS, JSON.stringify(connections));
+    if (connections !== undefined) {
+      localStorage.setItem(STORAGE_KEY_CONNECTIONS, JSON.stringify(connections));
+    }
   });
   store.subscribe((mutation, { id }) => {
     localStorage.setItem('id', id);
@@ -18,6 +20,8 @@ const webAudioPlugin = (store) => {
   store.subscribe((mutation) => {
     if (mutation.type === 'LOAD') {
       console.log('loadin');
+      store.state.connections = JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]');
+
       /**
        * Reactify the connections.
        * The connection objects stored in localStorage are just objects in JSON -- they
@@ -39,9 +43,4 @@ const webAudioPlugin = (store) => {
 };
 
 
-/* */
-export default process.env.NODE_ENV !== 'production'
-  // ? [createLogger(), webAudioPlugin, localStoragePlugin]
-  ? [webAudioPlugin, localStoragePlugin]
-  : [webAudioPlugin, localStoragePlugin];
-/* */
+export default [localStoragePlugin, webAudioPlugin];
