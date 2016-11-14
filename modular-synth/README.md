@@ -30,7 +30,7 @@ npm test
 - UI
   - ~~cannot select from dropdown; dragging intercedes~~
   - dial doesn't do floats **
-
+  - cannot dynamically add new modules
 
 - LOADING
   - ~~update masterOut position on load~~
@@ -58,6 +58,7 @@ npm test
   - ~~updated connection object. See store.js line ~142 for details~~
   - rename "data" to "audio"
   - reconcile "connector" name and "connection"
+
 
 - MIDI
   - pitch

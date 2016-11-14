@@ -34,7 +34,6 @@
   // import { node } from '../mixins/node';
   import store from '../store/store'; // .... er...
 
-
   export default {
     mixins: [draggable],
     components: { Knob },
@@ -51,6 +50,7 @@
     computed: {
       position() {
         return {
+          //     this.$store.state.editing
           left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
           top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
         };
@@ -109,7 +109,7 @@
       this.outlets[0].data = this.gain;
 
       // DIRECT OUT TEST
-      this.outlets[0].data.connect(this.context.destination);
+      // this.outlets[0].data.connect(this.context.destination);
       // -----------------
 
       this.$watch('freq', this.setFreq);

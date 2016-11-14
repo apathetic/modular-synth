@@ -115,52 +115,30 @@ export default {
       document.addEventListener('mouseup', this.dragEnd);
     } else {
       this.toModule = this.getModule(this.to.id);
+      this.routeAudio();
       // this.destination = this.toModule.inlets[this.to.port].data;
     }
   },
 
   methods: {
     /**
-     * THE MEAT AND BONES OF THE APP. HERE. THIS IS WHERE SHIT HAPPENS.
+     * Connect the actual AudioNode of the module. This is the meat-and-bones of
+     * the App, so to speak.
+     * @return {Void}
      */
     routeAudio() {
-      // const toPort = this.to.port;
-      // const fromPort = this.from.port;
-      // const source = this.fromModule.outlets[fromPort].data;
-      // const destination = this.toModule.inlets[toPort].data;
-
-      // console.log(this.from, this.fromModule);
-      // console.log(this.to, this.toModule);
-      const source = this.fromModule;
-      const destination = this.toModule.inlets;
+      const source = this.fromModule.outlets[this.from.port].data;
+      const destination = this.toModule.inlets[this.to.port].data;
 
       // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
 
       if (source && destination) {
         console.log('routing: module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
-        // source.connect(destination);
+        source.connect(destination);
       } else {
-        console.log('audio routing failed. tried %s --> %s', this.from.label, this.to.label);
+        console.log('audio routing failed. tried module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
       }
-    },
-
-    /**
-     * If the Connector is created via a "load" Event, references to a module's
-     * x,y coordinates will be static, as will the reference to its audioNode.
-     * Loop through these references and make sure they are updated and active.
-     */
-    reactify() {
-      console.log('Connector: binding to node #%d from #%s', this.to.id, this.from.id);
-
-      // bind visual connections
-      // this.toModule = this.modules.find(function(m) { return m.id === this.to.id; });
-      // this.fromModule = this.modules.find(function(m) { return m.id === this.from.id; });
-      this.toModule = this.getModule(this.to.id);
-      this.fromModule = this.getModule(this.from.id);
-
-      // and route ye olde audio
-      this.routeAudio();
     },
 
     /**
@@ -197,6 +175,8 @@ export default {
 
       if (target && port) {
         this.toModule = this.getModule();         // ironically, we dont even use the target to fetch the Component
+        this.to.id = this.toModule.id;
+        this.to.port = port;
         this.updateConnection(this.id, parseInt(port));     // update _state_ data in the store.
 
         if (this.to.id === this.from.id) {

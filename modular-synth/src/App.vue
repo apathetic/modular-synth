@@ -35,12 +35,12 @@
       </component>
 
       <svg id="connections">
-        <connector v-for="connector in connections"
-          :id="connector.id"
-          :to="connector.to"
-          :from="connector.from"
+        <connector v-for="connection in connections"
+          :id="connection.id"
+          :to="connection.to"
+          :from="connection.from"
 
-          @mousedown.stop="setActive(connector.id)">
+          @mousedown.stop="setActive(connection.id)">
         </connector>
       </svg>
 
@@ -187,19 +187,8 @@
         }
       });
 
-      this.load();                        // from actions.js
-      this.initSorting(this.$refs.grid);  // TODO why cannot move into sortable:ready() ...?
-      // this.gridList.generateGrid();
-
-      /**
-       * Reactify the connections.
-       * The connection objects stored in localStorage are just objects in JSON -- they
-       * lack the reactvity that we get when adding actual modules with bound listeners
-       * to the store; hence, we need to update all the static references.
-       */
-      // for (let connection of this.connections) {
-        // connection.reactify();
-      // }
+      this.load();
+      this.initSorting(this.$els.grid); // TODO why cannot move into sortable:ready() ...?
     },
 
     methods: {
@@ -222,15 +211,6 @@
     },
 
     events: {
-      'patch:load'(name) {
-        // better: use plugin and mutation observer
-        console.log('I AM LOAD ', name);
-        // this.bindConnections();
-        // this.routeAudio();
-      },
-      'patch:save'() {
-      },
-
       'drag:start'(coords, el) {
         if (!this.editing) {
           this.startSorting();
