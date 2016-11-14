@@ -170,23 +170,7 @@ export default {
      */
     getModule(id = this.selected) {
       const App = this.$parent;
-      // const module = App.$children.find((m) => { return m.$el.contains(target); });
-      // return App.$children.find((m) => { return m.id === id; });
-      const module = App.$children.find((m) => { return m.id === id; });
-
-      // IF MasterOut is not yet "ready" in the App, then a lot of these connections will
-      // fail. We should um.. delay them or something?
-
-      // option #1: return a Promise. Still problematic as we need to manage a bunch of Promises for the audio
-      // option #2: ensure that Connectors always load after Nodes
-
-
-      if (!module) {
-        console.log('not found #', id);
-      }
-
-
-      return module;
+      return App.$children.find((m) => { return m.id === id; });
     },
 
     /**

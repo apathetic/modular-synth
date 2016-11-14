@@ -57,7 +57,6 @@ export default {
   },
 
   created() {
-    console.log('creating masterout');
     this.out1 = this.context.createGain();
     this.out2 = this.context.createGain();
 
