@@ -101,7 +101,6 @@
     },
 
     created() {
-      console.log('creating oscillator');
       this.gain = this.context.createGain();
       this.newOscillator();
       this.setGain(1);
