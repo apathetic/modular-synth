@@ -137,8 +137,6 @@ export default {
       // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
 
-      console.log('connector. TO PORT: ', this.to.port);
-
       if (source && destination) {
         (connect) ? source.connect(destination) : source.disconnect(destination);
       } else {
@@ -151,7 +149,7 @@ export default {
      * selected Component if no id is passed in.
      * @type {Number} id The id of the module to fetch.
      */
-    getModule(id = this.selected) {
+    getModule(id = this.selected) {   // this.$store.selected
       const App = this.$parent;
       return App.$children.find((m) => { return m.id === id; });
     },

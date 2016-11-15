@@ -105,6 +105,7 @@
   import LFO from './components/LFO';
   import Filter from './components/Filter';
   import Mixer from './components/Mixer';
+  import NoteIn from './components/NoteIn';
 
   import masterOut from './components/system/MasterOut';
   import connector from './components/system/Connector';
@@ -140,7 +141,8 @@
       Oscillator,
       LFO,
       Filter,
-      Mixer
+      Mixer,
+      NoteIn
     },
 
     data() {
