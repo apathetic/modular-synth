@@ -21,10 +21,12 @@
 
 import { load } from './store/actions';
 // import * as patches from './assets/patches';
+// TODO THIS. BETTER.
 import FM from '../static/patches/FM';
 import Mod from '../static/patches/Mod';
 import Blank from '../static/patches/blank';
 import gridtest from '../static/patches/gridTest';
+import miditest from '../static/patches/midiTest';
 
 export default {
   vuex: {
@@ -46,6 +48,7 @@ export default {
     this.patches.push(Mod);
     this.patches.push(Blank);
     this.patches.push(gridtest);
+    this.patches.push(miditest);
   },
 
   methods: {
