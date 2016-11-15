@@ -73,19 +73,9 @@ const mutations = {
   REMOVE_MODULE(state) {
     const id = state.active;
 
-    // filter it out. (WHY NO WORK)
-    // state.modules = state.modules.filter((module) => {
-    //   module.id !== id;
-    // });
-
-    state.modules.some((module, i) => {
-      if (module.id === id) {
-        state.modules.splice(i, 1);
-        return true;
-      }
+    state.modules = state.modules.filter((m) => {
+      return m.id !== id;
     });
-
-    console.log('removing module #', id);
 
     state.connections.forEach((connection) => {
       if (connection.to.module.id === id || connection.from.module.id === id) {
@@ -141,12 +131,9 @@ const mutations = {
     connection.to = to;
   },
   REMOVE_CONNECTION(state, id) {
-    // let active = state.activeConnection;
-    const connection = state.connections.find(c => { return c.id === id; });
-
-    if (connection) {
-      state.connections.splice(state.modules.indexOf(connection), 1);
-    }
+    state.connections = state.connections.filter((c) => {
+      return c.id !== id;
+    });
   }
 };
 

@@ -81,6 +81,5 @@ export const newConnection = ({ dispatch }, outlet) => {
 };
 
 export const removeConnection = ({ dispatch }, id) => {
-  console.log('removing cnx');
   dispatch('REMOVE_CONNECTION', id);
 };

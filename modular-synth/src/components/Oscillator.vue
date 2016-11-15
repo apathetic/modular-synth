@@ -105,12 +105,10 @@
       this.newOscillator();
       this.setGain(1);
 
-
       this.outlets[0].data = this.gain;
 
-      // DIRECT OUT TEST
-      // this.outlets[0].data.connect(this.context.destination);
-      // -----------------
+      // this.inlets[0]['~'] = ...
+
 
       this.$watch('freq', this.setFreq);
       this.$watch('gain', this.setGain);
