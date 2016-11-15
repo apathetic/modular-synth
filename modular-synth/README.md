@@ -32,10 +32,11 @@ npm test
   - dial doesn't do floats **
   - cannot dynamically add new modules
 
+
 - LOADING
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
-  - route audio on load *** (use store plugin / store mutatin observer)
+  - ~~route audio on load *** (use store plugin / store mutatin observer)~~
   - FIX modules: dont gridify properly after 1st load ***
 
 
@@ -56,6 +57,7 @@ npm test
   - have startConnection: just draw an open-ended connection
     - addConnection will take src, dest and "replace" the user-drawn connection
   - ~~updated connection object. See store.js line ~142 for details~~
+  - ~~delete connection~~
   - rename "data" to "audio"
   - reconcile "connector" name and "connection"
 

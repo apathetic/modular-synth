@@ -38,7 +38,7 @@ Other notes:
 
 <template>
   <line
-    @click="removeConnection"
+    @click="removeConnection(this.id)"
     :x1="x1"
     :y1="y1"
     :x2="x2"
@@ -101,7 +101,6 @@ export default {
   },
 
   created() {
-    console.log('creating connector');
     this.fromModule = this.getModule(this.from.id);
     // this.source = this.fromModule.outlets[this.from.port].data;
 
@@ -134,7 +133,12 @@ export default {
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
 
       if (source && destination) {
-        console.log('routing: module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
+        const name1 = this.fromModule.name;
+        const label1 = this.fromModule.outlets[this.from.port].label;
+        const name2 = this.toModule.name;
+        const label2 = this.toModule.inlets[this.to.port].label;
+
+        console.log('routing: %s#%d (%s) --> %s#%d (%s)', name1, this.from.port, label1, name2, this.to.port, label2);
         source.connect(destination);
       } else {
         console.log('audio routing failed. tried module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
