@@ -121,11 +121,9 @@ const mutations = {
   },
   UPDATE_CONNECTION(state, id, port) {
     const connection = state.connections.find(function(c) { return c.id === id; });
-    // const module = state.modules.find(function(m) { return m.id === state.selected; });
-
     const to = {
-      id: state.selected,   // TODO ?
-      port: port            // to calculate the line y-offset and determine which audio outlet to connect to
+      id: state.selected,
+      port: port
     };
 
     connection.to = to;
