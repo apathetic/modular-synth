@@ -1,24 +1,13 @@
 <template>
-  <h3>midi infos</h3>
-  <div id="log">{{ log }}</div>
-  <div id="inputs" v-el:inputs></div>
-  <div id="outputs" v-el:outputs></div>
-
-  inputs:
-  <select>
-    <option v-for="value in devices.inputs" v-bind:value="value._uid" track-by="_uid">
-      {{ value.name }} ({{ value.manufacturer }})
-    </option>
-  </select>
-
-  outputs:
-  <select>
-    <option v-for="value in devices.outputs" v-bind:value="value._uid" track-by="_uid">
-      {{ value.name }} ({{ value.manufacturer }})
-    </option>
-  </select>
-
-  <!-- {{ devices | json }} -->
+  <div class="midi">
+    <h3>midi infos</h3>
+    <select v-model="selected" @change="select" class="midi-in">
+      <option v-for="value in devices" :value="value._uid" track-by="_uid">
+        {{ value.name }} ({{ value.manufacturer }})
+      </option>
+    </select>
+    Current: {{ selected }}
+  </div>
 </template>
 
 
@@ -26,101 +15,51 @@
 export default {
   data() {
     return {
-      // log: document.getElementById('log'),
-      // divInputs: document.getElementById('inputs'),
-      // divOutputs: document.getElementById('outputs'),
+      selected: null,
       midiIn: null,
-
-      log: '',
-      divInputs: '',
-      divOutputs: '',
       midiAccess: null,
-      checkboxMIDIInOnChange: null,
-      checkboxMIDIOutOnChange: null,
-      activeInputs: {},
-      activeOutputs: {},
-      devices: {
-        inputs: [],
-        outputs: []
-      }
+      devices: []
     };
   },
 
   created() {
-    if (navigator.requestMIDIAccess !== undefined) {
+    if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then((midiAccess) => {
         this.midiAccess = midiAccess;
-        this.showMIDIPorts();
+        this.showDevices();
         midiAccess.onstatechange = this.onstatechange;
       },
       (error) => {
-        this.divInputs = error.message;
-        this.divOutputs = '';
+        console.log('Error accessing MIDI', error);
       });
     } else {
-      this.divInputs = 'No access to MIDI devices: browser does not support WebMIDI API.';
-      this.divOutputs = '';
+      console.log('No access to MIDI devices: browser does not support WebMIDI API.');
     }
   },
 
   methods: {
-    showMIDIPorts() {
-      let html;
-      let checkbox;
-      let checkboxes;
-      let inputs;
-      let outputs;
-      // let i;
-      // let maxi;
+    showDevices() {
+      const inputs = this.midiAccess.inputs;
 
-      inputs = this.midiAccess.inputs;
-      html = '<h4>midi inputs:</h4>';
-      inputs.forEach(function(port) {
-        // console.log('in', port.name, port.id);
-        html += '<label><input type="checkbox" id="' + port.type + port.id + '">' + port.name + ' (' + port.state + ', ' + port.connection + ')</label><br>';
+      inputs.forEach((port) => {
+        console.log('type: ', port.type);
+        console.log('id:   ', port.id);
+        console.log('name: ', port.name);
+        console.log('state:', port.state);
+        console.log('manft:', port.manufacturer);
+        console.log('cnx:  ', port.connection);
+        // console.log('type', port.type, port.id, port.name, port.state, port.connection);
+
+        const device = {
+          '_uid': port.id,
+          'name': port.name,
+          'state': port.state,
+          'manufacturer': port.manufacturer || '?',
+          'connection': port.connection
+        };
+
+        this.devices.push(device);
       });
-
-      // this.divInputs.innerHTML = html;
-      this.divInputs = html;
-
-      outputs = this.midiAccess.outputs;
-      html = '<h4>midi outputs:</h4>';
-      outputs.forEach(function(port) {
-        // console.log('out', port.name, port.id);
-        html += '<label><input type="checkbox" id="' + port.type + port.id + '">' + port.name + ' (' + port.state + ', ' + port.connection + ')</label><br>';
-      });
-      // this.divOutputs.innerHTML = html;
-      this.divOutputs = html;
-
-      checkboxes = document.querySelectorAll('#inputs input[type="checkbox"]');
-      for (let i = 0, maxi = checkboxes.length; i < maxi; i++) {
-        checkbox = checkboxes[i];
-        checkbox.addEventListener('change', this.checkboxMIDIInOnChange, false);
-      }
-
-      checkboxes = document.querySelectorAll('#outputs input[type="checkbox"]');
-      for (let i = 0, maxi = checkboxes.length; i < maxi; i++) {
-        checkbox = checkboxes[i];
-        checkbox.addEventListener('change', this.checkboxMIDIOutOnChange, false);
-      }
-    },
-
-    selectMIDIIn(ev) {
-      let midiIn = this.midiIn;
-      let midiAccess = this.midiAccess;
-
-      if (midiIn) {
-        midiIn.onmidimessage = null;
-      }
-      if (typeof (midiAccess.inputs) === 'function') {   // Old Skool MIDI inputs() code
-        midiIn = midiAccess.inputs()[ev.target.selectedIndex];
-      } else {
-        let id = ev.target[ev.target.selectedIndex].value;
-        midiIn = midiAccess.inputs.get(id);
-      }
-      if (midiIn) {
-        midiIn.onmidimessage = this.midiMessageReceived;
-      }
     },
 
     midiMessageReceived(ev) {
@@ -146,28 +85,23 @@ export default {
       }
     },
 
-    noteOn() {},
-    noteOff() {},
-    controller() {},
-    polyPressure() {},
+    select(e) {
+      const id = e.target.value;
+      const selected = this.midiAccess.inputs.get(id);    // NOTE: this is not an Array. It is Array-like, and get() is a property unique to it.
+
+      if (this.midiIn) {
+        //     this.midi.onmidimessage = null;
+        this.midiIn.close();      // close current port
+      }
+      this.midiIn = selected;   // bind new port...
+      this.midiIn.onmidimessage = this.inputListener; // ... and open it
+      // this.midi.onmidimessage = this.midiMessageReceived;// ???????????
+    },
 
     // update the device list when devices get connected, disconnected, opened or closed
     onstatechange(e) {
-      var port = e.port;
-      let device = {};
-
-      if (port.state === 'disconnected') {
-        if (port.type === 'input') {
-          console.log('removing input device %s', port.id);
-          delete this.devices.inputs[port.id];
-        } else {
-          console.log('removing output device %s', port.id);
-          delete this.devices.outputs[port.id];
-        }
-        return;
-      }
-
-      device = {
+      const port = e.port;
+      const device = {
         '_uid': port.id,
         'name': port.name,
         'state': port.state,
@@ -175,12 +109,25 @@ export default {
         'connection': port.connection
       };
 
+      if (port.state === 'disconnected') {
+        if (port.type === 'input') {
+          console.log('removing input device %s', port.id);
+          delete this.devices[port.id];
+          // let i = this.devices.find((j) => { return j.id === port.id; });
+          // this.devices.splice(this.devices.indexOf(i), 1);
+        }
+        return;
+      }
+
       if (port.type === 'input') {
-        console.log('adding input device %s', port.id);
-        this.devices.inputs.push(device);
-      } else {
-        console.log('adding output device %s', port.id);
-        this.devices.outputs.push(device);
+        var found = this.devices.find((d) => { d._uid === port.id; });
+        if (!found) {
+          console.log('adding input device %s', port.id);
+          this.devices.push(device);
+        }
+      // } else {
+      //   console.log('adding output device %s', port.id);
+      //   this.devices.outputs.push(device);
       }
     },
 
@@ -202,34 +149,8 @@ export default {
           port.send(data);
         }
       }
-    },
-
-    checkboxMIDIInOnChange() {
-      // port id is the same a the checkbox id
-      var id = this.id;
-      var port = this.midiAccess.inputs.get(id.replace('input', ''));
-      if (this.checked === true) {
-        this.activeInputs[id] = port;
-        // implicitly open port by adding an onmidimessage listener
-        port.onmidimessage = this.inputListener;
-      } else {
-        delete this.activeInputs[id];
-        port.close();
-      }
-    },
-
-    checkboxMIDIOutOnChange() {
-      // port id is the same a the checkbox id
-      var id = this.id;
-      var port = this.midiAccess.outputs.get(id.replace('output', ''));
-      if (this.checked === true) {
-        this.activeOutputs[id] = port;
-        port.open();
-      } else {
-        delete this.activeOutputs[id];
-        port.close();
-      }
     }
+
   }
 };
 
@@ -237,4 +158,5 @@ export default {
 
 
 <style lang="scss">
+  select.midi-in { width: 130px; }
 </style>

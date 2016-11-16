@@ -57,17 +57,10 @@
 
         <p v-if="active">
           <strong>Current Module</strong><br>
-          type: {{ active.type }}<br>
-          id: {{ active.id }}<br>
-          x: {{ active.x }}<br>
-          y: {{ active.y }}<br>
-
-          col: {{ active.col }}<br>
-          row: {{ active.row }}<br>
-          w: {{ active.w }}<br>
-          h: {{ active.h }}<br>
-
-          details / info  ..?
+          type: {{ active.type }} (id: {{ active.id }})<br>
+          x, y: {{ active.x }}, {{ active.y }}<br>
+          col, row: {{ active.col }}, {{ active.row }}<br>
+          w, h: {{ active.w }},  {{ active.h }}<br>
         </p>
 
         <midi></midi>
@@ -79,6 +72,7 @@
         <button class="button" @click="newModule('Reverb')">reverb</button>
         <button class="button" @click="newModule('Filter')">filter</button>
         <button class="button" @click="newModule('Mixer')">mixer</button>
+        <button class="button" @click="newModule('NoteIn')">note-in</button>
 
         <br>
         <button
