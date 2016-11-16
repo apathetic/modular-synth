@@ -10,6 +10,7 @@
     </div>
 
     <div class="module-interface">
+      notein: {{ received }}
     </div>
 
     <div class="module-connections">
@@ -36,6 +37,7 @@ export default {
   data() {
     return {
       name: 'NoteIn',
+      received: '',
       outlets: [
         {
           port: 0,
@@ -89,9 +91,14 @@ export default {
     noteOff(note) {},
     controller() {},
     polyPressure() {}
+  },
+
+  events: {
+    'midi:noteOn'(num, velocity) {
+      this.received = num + ' ' + velocity;
+    }
   }
 };
-
 </script>
 
 
