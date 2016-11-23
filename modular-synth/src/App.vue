@@ -10,10 +10,10 @@
 <template>
   <main :class="editing ? 'edit-mode': 'play-mode'">
     <section
-    id="modules"
-    class="grid-container"
-    ref="grid"
-    @click="clearActive">
+      id="modules"
+      class="grid-container"
+      v-el:grid
+      @click="clearActive">
 
       <div class="position-highlight">
         <div class="inner"></div>

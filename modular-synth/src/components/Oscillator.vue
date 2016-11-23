@@ -13,9 +13,9 @@
       <select v-model="type">
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
       </select>
-      <knob label="freq" :value.sync="freq" :min="220" :max="880"></knob>
-      <knob label="sync" :value.sync="sync" :min="0"   :max="1"></knob>
-      <knob label="PW"   :value.sync="PW"   :min="0"   :max="6.28"></knob>
+      <knob label="freq" :value.sync="freq" :min="1"  :max="880"></knob>
+      <knob label="sync" :value.sync="sync" :min="0"  :max="1"></knob>
+      <knob label="PW"   :value.sync="PW"   :min="0"  :max="6.28"></knob>
     </div>
 
     <div class="module-connections">
@@ -32,7 +32,7 @@
   import { rackWidth, rackHeight } from '../dimensions';
   import Knob from './UI/Knob2';
   // import { node } from '../mixins/node';
-  import store from '../store/store'; // .... er...
+  import store from '../store/store'; // .... er...  this.$store...?
 
   export default {
     mixins: [draggable],
@@ -61,7 +61,7 @@
       return {
         name: 'Oscillator',
         w: 1, // rack width
-        h: 2, // rack height
+        h: 1, // rack height
 
         freq: 440,
         PW: 0,
@@ -101,14 +101,16 @@
     },
 
     created() {
-      this.gain = this.context.createGain();
+      // this.gain = this.context.createGain();
+      // this.setGain(1);
+      // this.outlets[0].data = this.gain;
+
+      this.inlets[0].data = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+
+      // this.outlets[0].data = this.context.createOscillator();
+      // this.inlets[0].data.connect(this.outlets[0].data.frequency);
+      // this.node = this.outlets[0].data;
       this.newOscillator();
-      this.setGain(1);
-
-      this.outlets[0].data = this.gain;
-
-      // this.inlets[0]['~'] = ...
-
 
       this.$watch('freq', this.setFreq);
       this.$watch('gain', this.setGain);
@@ -124,6 +126,10 @@
          * k-rate control of the Oscillator frequency
          * @param  {Float} f frequency
          */
+
+         // okay. okay, so. temporarily, if the freq inlet is connected
+         // to an a-rate param, that will override this. THis should provide
+         // the "base" around which to modulate
         this.node.frequency.value = f;
       },
 
@@ -144,14 +150,16 @@
       },
 
       newOscillator() {
-        this.node = this.context.createOscillator();
+        this.outlets[0].data = this.context.createOscillator();
+        this.inlets[0].data.connect(this.outlets[0].data.frequency);      // input connects to audioParam (freq) "mod"
+        this.node = this.outlets[0].data;
+
         this.node.type = this.type;
         this.node.frequency.value = this.freq;
-        this.node.connect(this.gain);
       },
 
       start() {
-        this.newOscillator();           // create a new OSC every time. They're cheap.
+        // this.newOscillator();           // create a new OSC every time. They're cheap.
         this.node.start();
       },
 
