@@ -137,19 +137,30 @@ export default {
       // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
 
+
+
       if (source && destination) {
         (connect) ? source.connect(destination) : source.disconnect(destination);
       } else {
+        let inlet = this.toModule.inlets[0];
+        let outlet = this.fromModule.outlets[0];
+        console.log('src ', outlet.label, outlet.data);
+        console.log('dest ', inlet.label, inlet.data.toString());
         console.log('audio routing failed. tried module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
+
+        // setTimeout(this.routeAudio, 10);
+        //
       }
     },
 
     /**
      * Fetch a Vue Component from the App, given a particular id. Fetch the currently
      * selected Component if no id is passed in.
+     * NOTE: we fetch the Component from the App, as that is what contains
+     *       the actual AudioNode.
      * @type {Number} id The id of the module to fetch.
      */
-    getModule(id = this.selected) {   // this.$store.selected
+    getModule(id = this.selected) {   // this.$store.state.selected
       const App = this.$parent;
       return App.$children.find((m) => { return m.id === id; });
     },
@@ -178,7 +189,7 @@ export default {
 
       if (target && port) {
         this.toModule = this.getModule();         // ironically, we dont even use the target to fetch the Component
-        this.to.id = this.toModule.id;
+        // this.to.id = this.toModule.id;
         this.to.port = port;
         this.updateConnection(this.id, parseInt(port));     // update _state_ data in the store.
 

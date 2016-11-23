@@ -1,5 +1,5 @@
 <template>
-  <div class="midi">
+  <div class="midi" v-if="devices.length">
     <h3>midi infos</h3>
     <select v-model="selected" @change="onSelect" class="midi-in">
       <option v-for="value in devices" :value="value._uid" track-by="_uid">

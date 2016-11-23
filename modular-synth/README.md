@@ -47,10 +47,9 @@ npm test
 
 
 - Audio
-  - lives in the actual components (not in the store.modules)
-    - (same problem for Connector)
+  - ~~lives in the actual components (not in the store.modules)~~
+    - ~~(same problem for Connector)~~
   - global "get (actual) component by id" method?
-  - rename "data" to "audio" or "signal"
 
 
 - Connections
@@ -58,7 +57,7 @@ npm test
     - addConnection will take src, dest and "replace" the user-drawn connection
   - ~~updated connection object. See store.js line ~142 for details~~
   - ~~delete connection~~
-  - rename "data" to "audio"
+  - rename "data" to "audio" or "signal" or '~'
   - reconcile "connector" name and "connection"
 
 
@@ -86,6 +85,7 @@ npm test
 - NODES:
   - ENV
   - OSC
+  - LFO (stop using OSC for this)
   - FILT
   - ADSR
 
