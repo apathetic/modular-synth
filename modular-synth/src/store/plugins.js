@@ -19,7 +19,8 @@ const localStoragePlugin = (store) => {
 const webAudioPlugin = (store) => {
   store.subscribe((mutation) => {
     if (mutation.type === 'LOAD') {
-      console.log('loadin');
+      console.log('AudioNodes: loading complete.');
+      console.log('Connectifying in progress...');
       store.state.connections = JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]');
 
       /**
