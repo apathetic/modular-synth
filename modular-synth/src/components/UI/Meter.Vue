@@ -1,5 +1,5 @@
 <template>
-  <div class="level">
+  <div class="meter">
     <meter orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></meter>
     <meter orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></meter>
 
@@ -29,7 +29,7 @@ export default {
 
   data() {
     return {
-      levelValue: 1,
+      level: 1,
       range: 1
     };
   },
@@ -52,7 +52,7 @@ export default {
 
 <style lang="scss">
 
-  .level {
+  .meter {
     display: inline-block;
   }
 

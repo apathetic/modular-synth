@@ -13,9 +13,10 @@
       <select v-model="type">
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
       </select>
-      <knob label="freq" :value.sync="freq" :min="1"  :max="880"></knob>
-      <knob label="sync" :value.sync="sync" :min="0"  :max="1"></knob>
-      <knob label="PW"   :value.sync="PW"   :min="0"  :max="6.28"></knob>
+      <slider label="mod"  :value.sync="mod"  :min="0" :max="100"></slider>
+      <knob   label="freq" :value.sync="freq" :min="1" :max="880"></knob>
+      <knob   label="sync" :value.sync="sync" :min="0" :max="1"></knob>
+      <knob   label="PW"   :value.sync="PW"   :min="0" :max="6.28"></knob>
     </div>
 
     <div class="module-connections">
@@ -30,13 +31,13 @@
   import { draggable } from '../mixins/draggable';
   import { newConnection } from '../store/actions';
   import { rackWidth, rackHeight } from '../dimensions';
-  import Knob from './UI/Knob2';
-  // import { node } from '../mixins/node';
+  import Knob from './UI/Knob';
+  import Slider from './UI/Slider2';
   import store from '../store/store'; // .... er...  this.$store...?
 
   export default {
     mixins: [draggable],
-    components: { Knob },
+    components: { Knob, Slider },
     vuex: {
       actions: {
         newConnection
@@ -64,10 +65,12 @@
         h: 1, // rack height
 
         freq: 440,
+        mod: 0,
         PW: 0,
         sync: 0,
         type: 'sine',
         types: ['sine', 'square', 'sawtooth', 'triangle'],
+
         inlets: [
           {
             port: 0,
@@ -101,19 +104,11 @@
     },
 
     created() {
-      // this.gain = this.context.createGain();
-      // this.setGain(1);
-      // this.outlets[0].data = this.gain;
-
       this.inlets[0].data = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
 
-      // this.outlets[0].data = this.context.createOscillator();
-      // this.inlets[0].data.connect(this.outlets[0].data.frequency);
-      // this.node = this.outlets[0].data;
-      this.newOscillator();
-
       this.$watch('freq', this.setFreq);
-      this.$watch('gain', this.setGain);
+      // this.$watch('gain', this.setGain);
+      this.$watch('mod', this.setGain);
       this.$watch('type', this.setType);
 
       this.$on('start', this.start);
@@ -126,11 +121,9 @@
          * k-rate control of the Oscillator frequency
          * @param  {Float} f frequency
          */
-
-         // okay. okay, so. temporarily, if the freq inlet is connected
-         // to an a-rate param, that will override this. THis should provide
-         // the "base" around which to modulate
-        this.node.frequency.value = f;
+        if (this.node) { // if engine is off
+          this.node.frequency.value = f;
+        }
       },
 
       setType(t) {
@@ -146,10 +139,11 @@
          * Update Oscillator gain
          * @param  {Float} g  Gain, between 0 and 1.
          */
-        this.gain.gain.value = g;
+        // this.gain.gain.value = g;
+        this.inlets[0].data.gain.value = g;
       },
 
-      newOscillator() {
+      createOscillator() {
         this.outlets[0].data = this.context.createOscillator();
         this.inlets[0].data.connect(this.outlets[0].data.frequency);      // input connects to audioParam (freq) "mod"
         this.node = this.outlets[0].data;
@@ -159,7 +153,7 @@
       },
 
       start() {
-        // this.newOscillator();           // create a new OSC every time. They're cheap.
+        this.createOscillator();           // create a new OSC every time. They're cheap.
         this.node.start();
       },
 
@@ -169,3 +163,7 @@
     }
   };
 </script>
+
+<style lang="scss">
+  .slider { float: right; }
+</style>
