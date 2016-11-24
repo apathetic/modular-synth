@@ -70,6 +70,7 @@ h3 {
 
 button {
   -webkit-appearance: none;
+  background: none;
   border: none;
   border-radius: 3px;
   color: white;
@@ -134,7 +135,11 @@ button {
 
 // dummy test
 .on {
-  background-color: blue !important;
+  // background-color: blue !important;
+  svg {
+    fill: green;
+    filter: drop-shadow(0 0px 4px rgba(153, 229, 163, 0.4));
+  }
 }
 
 
