@@ -60,11 +60,11 @@ export default {
     this.out1 = this.context.createGain();
     this.out2 = this.context.createGain();
 
-    this.out1.connect(this.context.destination);
-    this.out2.connect(this.context.destination);
-
     this.inlets[0].data = this.out1;
     this.inlets[1].data = this.out2;
+
+    this.$on('start', this.start);
+    this.$on('stop', this.stop);
   },
 
   ready() {
@@ -74,6 +74,18 @@ export default {
   },
 
   methods: {
+    // Chrome (in informal testing) is smart enough to know when there is no
+    // audio chain of connected nodes, and optimizes accordingly.
+    start() {
+      this.out1.connect(this.context.destination);
+      this.out2.connect(this.context.destination);
+    },
+
+    stop() {
+      this.out1.disconnect(this.context.destination);
+      this.out2.disconnect(this.context.destination);
+    },
+
     setGain(g) {
       this.out1.gain.value = g;
       this.out2.gain.value = g;

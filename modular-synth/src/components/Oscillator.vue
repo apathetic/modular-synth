@@ -104,15 +104,21 @@
     },
 
     created() {
-      this.inlets[0].data = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      const gain = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      const osc = this.context.createOscillator();
+
+      this.inlets[0].data = gain;
+      this.outlets[0].data = osc;
+
+      gain.connect(osc.frequency);      // input connects to audioParam (freq) "mod"
+
+      osc.type = this.type;
+      osc.frequency.value = this.freq;
+      osc.start();
 
       this.$watch('freq', this.setFreq);
-      // this.$watch('gain', this.setGain);
       this.$watch('mod', this.setGain);
       this.$watch('type', this.setType);
-
-      this.$on('start', this.start);
-      this.$on('stop', this.stop);
     },
 
     methods: {
@@ -121,9 +127,9 @@
          * k-rate control of the Oscillator frequency
          * @param  {Float} f frequency
          */
-        if (this.node) { // if engine is off
-          this.node.frequency.value = f;
-        }
+
+        // this.node.frequency.value = f;
+        this.outlets[0].data.frequency.value = f;
       },
 
       setType(t) {
@@ -131,7 +137,8 @@
          * Update wave type
          * @param  {String} t One of the pre-defined oscillator wave types
          */
-        this.node.type = t;
+        // this.node.type = t;
+        this.outlets[0].data.type = t;
       },
 
       setGain(g) {
@@ -141,25 +148,40 @@
          */
         // this.gain.gain.value = g;
         this.inlets[0].data.gain.value = g;
-      },
-
-      createOscillator() {
-        this.outlets[0].data = this.context.createOscillator();
-        this.inlets[0].data.connect(this.outlets[0].data.frequency);      // input connects to audioParam (freq) "mod"
-        this.node = this.outlets[0].data;
-
-        this.node.type = this.type;
-        this.node.frequency.value = this.freq;
-      },
-
-      start() {
-        this.createOscillator();           // create a new OSC every time. They're cheap.
-        this.node.start();
-      },
-
-      stop() {
-        this.node.stop();
       }
+
+      // createOscillator() {
+      //   // NOTE: here we "recreate" an oscillator every. single. time. the audio
+      //   // is toggle on / off.  They're cheap. However, this makes (re) routing
+      //   // the connections a pain.
+      //
+      //   // INSTEAD, let's just create the audio node _once_ and its connections
+      //   // _once_ as well, and when we wish to start / stop the audio, we instead
+      //   // disconnect the connection between MasterOut and the audio context
+      //   // destination.
+      //
+      //   // Chrome (in informal testing) is smart enough to know when there is no
+      //   // audio chain of connected nodes, and optimizes accordingly.
+      //
+      //   // To wit: create the audio node and it's connection _once_, remove start /
+      //   // stop listeners, and manage audio on / off in Master Out.
+      //
+      //   this.outlets[0].data = this.context.createOscillator();
+      //   this.inlets[0].data.connect(this.outlets[0].data.frequency);      // input connects to audioParam (freq) "mod"
+      //   this.node = this.outlets[0].data;
+      //
+      //   this.node.type = this.type;
+      //   this.node.frequency.value = this.freq;
+      // }
+
+      // start() {
+      //   this.createOscillator();           // create a new OSC every time. They're cheap.
+      //   this.node.start();
+      // },
+      //
+      // stop() {
+      //   this.node.stop();
+      // }
     }
   };
 </script>
