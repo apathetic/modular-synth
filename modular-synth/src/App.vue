@@ -193,20 +193,6 @@
         if (this.power) {
           console.log('audio on');
           this.$broadcast('start');
-
-          // HACK
-          // TODO
-          // THIS wait for all modules to initialize (ie. for the audioNode to be created). Once done,
-          // we loop through all connections and perform the relevant routing functions.
-          setTimeout(() => {
-            console.log('okay, now "reconnectifying" audio cnx');
-            this.$children.forEach((c) => {
-              if (c.routeAudio) {  // this loops through _all_ children
-                c.routeAudio();
-              }
-            });
-          }, 1000);
-          //
         } else {
           console.log('audio off');
           this.$broadcast('stop');
