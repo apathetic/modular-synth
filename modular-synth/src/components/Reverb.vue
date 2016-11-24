@@ -17,7 +17,6 @@
       <Knob :value.sync="feedback" :min="220" :max="880"></Knob>
       <Knob :value.sync="diffusion" :min="220" :max="880"></Knob>
       <Knob :value.sync="spread" :min="220" :max="880"></Knob>
-      <Level></Level>
     </div>
 
     <div class="module-connections">
@@ -32,11 +31,10 @@
 import { draggable } from '../mixins/draggable';
 import { newConnection } from '../store/actions';
 import Knob from './UI/Knob';
-import Level from './UI/Level';
 
 export default {
   props: { id: null },
-  components: { Knob, Level },
+  components: { Knob },
   mixins: [draggable],
 
   vuex: {

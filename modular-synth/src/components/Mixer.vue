@@ -10,9 +10,9 @@
     </div>
 
     <div class="module-interface">
-      <Level></Level>
-      <Level></Level>
-      <Level></Level>
+      <Meter></Meter>
+      <Meter></Meter>
+      <Meter></Meter>
     </div>
 
     <div class="module-connections">
@@ -24,12 +24,12 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import Level from './UI/Level';
+import Meter from './UI/Meter';
 
 export default {
   props: { id: null },
   mixins: [draggable],
-  components: { Level },
+  components: { Meter },
 
   data() {
     return {

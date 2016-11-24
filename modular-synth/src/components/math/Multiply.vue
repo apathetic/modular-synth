@@ -27,11 +27,11 @@
 
 <script>
 import {draggable} from '../mixins';
-import Level from './UI/Level';
+import Slider from './UI/Slider';
 
 export default {
   mixins: [draggable],
-  components: {Level},
+  components: { Slider },
 
   data() {
     return {
