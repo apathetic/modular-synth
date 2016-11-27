@@ -97,18 +97,20 @@ export default {
 
     update(e) {
       const delta = this.startClientY - e.clientY;
-      const knobValue = this.startValue + delta;
+      const knobValue = Math.min(100, Math.max(0, this.startValue + delta));
+      const value = Math.round(knobValue * this.range + this.min);
 
-      this.knobValue = Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
+      this.knobValue = knobValue; // Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
+      this.value = value;
       this.setDisplay();
     },
 
     setDisplay() {
       const rotationValue = this.knobValue * 3 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
-      const value = Math.round(this.knobValue * this.range + this.min);
+      // const value = Math.round(this.knobValue * this.range + this.min);
 
       this.$els.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
-      this.value = value;
+      // this.value = value;
     }
   }
 };
