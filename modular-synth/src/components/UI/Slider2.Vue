@@ -1,19 +1,9 @@
 <template>
-  <div class="slider" @mousedown.stop.prevent="update">
-    <!-- <input
-      type="range"
-      orient="vertical"
-      min="{{ min }"}
-      max="{{ max }}"
-      step="{{ step }}"
-      value="{{ value }}"
-      @input.stop.prevent="update">
-    </input> -->
+  <div class="slider" @mousedown.stop.prevent="start">
 
+      <div class="fill" style="bottom: {{ sliderValue }}%"></div>
 
-      <div style="fill" style="top: {{ value }}"></div>
-
-    {{ value }}
+    <!-- {{ value }} -->
   </div>
 </template>
 
@@ -35,6 +25,7 @@ export default {
       startValue: 0,
       startClientY: null,
       sliderValue: 1,
+      range: 1,
       step: 1
     };
   },
@@ -42,7 +33,8 @@ export default {
   created() {
     const self = this;
 
-    // this.range = (this.max - this.min) / 100;
+    this.range = (this.max - this.min) / 100;
+    this.sliderValue = this.value;
     // this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
 
     window.addEventListener('mouseup', (e) => {
@@ -70,9 +62,11 @@ export default {
 
     update(e) {
       const delta = this.startClientY - e.clientY;
+      const sliderValue = Math.min(100, Math.max(0, this.startValue + delta)); // 0 -> 100 internally
+      const value = Math.round(sliderValue * this.range + this.min);
 
-      this.value = this.startValue + delta;
-      console.log(this.value);
+      this.sliderValue = sliderValue;
+      this.value = value;
     }
   }
 };
@@ -86,16 +80,15 @@ export default {
     height: 48px;
     width: 10px;
     cursor: ns-resize;
-    // user-select: none;
-
-    // ...background-color: rgb(213, 45, 255); height: 20px; width: 50px; position: absolute;
+    overflow: hidden;
 
     .fill {
       opacity: 0.38;
       background-color: rgb(213, 45, 255);
       position: absolute;
       height: 100%;
-      transform: translateY(-100%);
+      width: 100%;
+      transform: translateY(100%);
     }
   }
 
