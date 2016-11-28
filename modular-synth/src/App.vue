@@ -69,6 +69,7 @@
         <button class="button" @click="newModule('Node')">add Node</button>
         <button class="button" @click="newModule('Oscillator')">osc</button>
         <button class="button" @click="newModule('LFO')">LFO</button>
+        <button class="button" @click="newModule('Env')">env</button>
         <button class="button" @click="newModule('Reverb')">reverb</button>
         <button class="button" @click="newModule('Filter')">filter</button>
         <button class="button" @click="newModule('Mixer')">mixer</button>
@@ -95,16 +96,17 @@
 <script>
   import { sortable } from './mixins/sortable';
 
-  import Node from './components/Node';
-  import Reverb from './components/Reverb';
-  import Oscillator from './components/Oscillator';
-  import LFO from './components/LFO';
+  import Env from './components/Env';
   import Filter from './components/Filter';
+  import LFO from './components/LFO';
   import Mixer from './components/Mixer';
+  import Node from './components/Node';
   import NoteIn from './components/NoteIn';
+  import Oscillator from './components/Oscillator';
+  import Reverb from './components/Reverb';
 
-  import masterOut from './components/system/MasterOut';
   import connector from './components/system/Connector';
+  import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
 
   import * as actions from './store/actions';
@@ -132,13 +134,15 @@
       masterOut,
       connector,
       midi,
-      Node,
-      Reverb,
-      Oscillator,
-      LFO,
+
+      Env,
       Filter,
+      LFO,
       Mixer,
-      NoteIn
+      Node,
+      NoteIn,
+      Oscillator,
+      Reverb
     },
 
     data() {

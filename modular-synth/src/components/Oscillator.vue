@@ -1,9 +1,13 @@
+//------------------------------------------------
+//  OSCILLATOR
+// -----------------------------------------------
+
 <template>
   <div
-  class="oscillator module"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.stop="startDragging">
+    class="oscillator module"
+    :class="dragging ? 'dragging' : ''"
+    :style="position"
+    @mousedown.stop="startDragging">
 
     <div class="module-details">
       <h3>{{ name }}</h3>
