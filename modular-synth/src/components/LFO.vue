@@ -4,17 +4,24 @@
 
 <template>
   <div
-  class="module"
+  class="lfo module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @mousedown.prevent="startDraggingNode">
+  @mousedown.prevent="startDragging">
 
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
 
     <div class="module-interface">
-      <knob :value.sync="freq" :min="0" :max="20"></knob>
+
+      <select v-model="type">
+        <option v-for="type in types" v-bind:value="type">{{ type }}</option>
+      </select>
+
+      <knob label="freq"  :value.sync="freq" :min="0" :max="20"></knob>
+      <knob label="phase" :value.sync="phase" :min="0" :max="3.14159265"></knob>
+
     </div>
 
     <div class="module-connections">
@@ -27,29 +34,46 @@
 <script>
 import { draggable } from '../mixins/draggable';
 import { newConnection } from '../store/actions';
+import { rackWidth, rackHeight } from '../dimensions';
 import Knob from './UI/Knob';   // audioParam
+import store from '../store/store'; // .... er...  this.$store...?
 
 export default {
-  props: { id: null },
-  components: { Knob },
   mixins: [draggable],
-
+  components: { Knob },
   vuex: {
     actions: {
       newConnection
     }
   },
+  computed: {
+    position() {
+      return {
+        //     this.$store.state.editing
+        left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
+        top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
+      };
+    }
+  },
+
+  props: {
+    id: null,
+    col: null,
+    row: null
+  },
 
   data() {
     return {
       name: 'LFO',
+      w: 1, // rack width
+      h: 1, // rack height
       freq: 2.0,
       type: 'sine',
       types: ['sine', 'square', 'sawtooth', 'triangle'],
       inlets: [
         {
           port: 0,
-          label: 'gate',
+          label: 'gate',    // mod?
           data: null
         }
       ],
@@ -64,43 +88,28 @@ export default {
   },
 
   created() {
-    // this.inlets[0].data = this.context.createGain();
-    this.outlets[0].data = this.context.createGain();
+    const osc = this.context.createOscillator();
 
-    // Our lovely webAudio Oscillator.
-    this.osc = this.context.createOscillator();
-    this.osc.type = this.type;
-    this.osc.frequency.value = this.freq;
-    this.osc.connect(this.outlets[0].data);
+    this.outlets[0].data = osc;
+
+    osc.type = this.type;
+    osc.frequency.value = this.freq;
+    osc.start();
 
     this.$watch('freq', this.setFreq);
-    this.$watch('depth', this.setDepth);
+    // this.$watch('depth', this.setDepth);   // gate. mod?
     this.$watch('type', this.setType);
-
-    // this.$on('start', this.start);
-    // this.$on('stop', this.stop);      // BAD. CANNOT RESTART.
   },
 
   methods: {
     setFreq(f) {
-      this.osc.frequency.value = f;
-    },
-
-    setDepth(d) {
-      this.outlets[0].gain.value = d;
+      // this.osc.frequency.value = f;
+      this.outlets[0].data.frequency.value = f;
     },
 
     setType(t) {
-      this.osc.type = t;
-    },
-
-    start() {
-      // this.osc = this.context.createOscillator();   // create a new OSC every time
-      this.osc.start();
-    },
-
-    stop() {
-      this.osc.stop();
+      // this.osc.type = t;
+      this.outlets[0].data.type = t;
     }
   }
 };
