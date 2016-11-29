@@ -66,13 +66,14 @@
         <midi></midi>
 
 
-        <button class="button" @click="newModule('Node')">add Node</button>
+        <button class="button" @click="newModule('Node')">Node</button>
         <button class="button" @click="newModule('Oscillator')">osc</button>
         <button class="button" @click="newModule('LFO')">LFO</button>
         <button class="button" @click="newModule('Env')">env</button>
         <button class="button" @click="newModule('Reverb')">reverb</button>
         <button class="button" @click="newModule('Filter')">filter</button>
         <button class="button" @click="newModule('Mixer')">mixer</button>
+        <button class="button" @click="newModule('multiply')">multiply</button>
         <button class="button" @click="newModule('NoteIn')">note-in</button>
 
         <br>
@@ -108,6 +109,7 @@
   import connector from './components/system/Connector';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
+  import multiply from './components/math/Multiply';
 
   import * as actions from './store/actions';
 
@@ -134,6 +136,7 @@
       masterOut,
       connector,
       midi,
+      multiply,
 
       Env,
       Filter,
