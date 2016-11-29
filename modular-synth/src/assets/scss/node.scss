@@ -106,5 +106,12 @@
     &-connections {
       display: none;
     }
+
+    &.math {
+      width: 0;
+      height: 0;  // hidden in play mode
+      border: 0;
+      overflow: hidden;
+    }
   }
 }

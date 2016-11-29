@@ -21,6 +21,16 @@ npm test
 
 ## TODO
 
+- INPUT TYPES
+  - in
+  - out
+  - mod (A, B, FM?)
+  - pitch (freq?)
+  - triggers or bangs:
+    - gate
+    - reset (more for sequencing)
+    - sync (ie. phase)
+
 - VUEX
   - ~~store state of app~~
   - ~~persist to localstorage and recall~~
@@ -41,7 +51,8 @@ npm test
 
 
 - NODES
-  - base node mixin... or?
+  - base node mixin...
+    - tuck away: draggable, newConnection, (vuex) col/row, (computd) left/right
   - DELETE node ***
     - and associated audio connections ***
 
@@ -50,6 +61,7 @@ npm test
   - ~~lives in the actual components (not in the store.modules)~~
     - ~~(same problem for Connector)~~
   - global "get (actual) component by id" method?
+  - master out volume control
 
 
 - Connections
@@ -83,11 +95,12 @@ npm test
 
 
 - NODES:
+  - MULT
+
   - ENV
-  - OSC
-  - LFO (stop using OSC for this)
+  - ~~OSC~~
+  - LFO
   - FILT
-  - ADSR
 
 
 - FX
