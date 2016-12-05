@@ -1,13 +1,15 @@
 <template>
   <div class="midi" v-if="devices.length">
     <h3>midi infos</h3>
-    <select v-model="selected" @change="onSelect" class="midi-in">
+    <select @change="onSelect" class="midi-in">
+      <option selected disabled>Midi Input</option>
       <option v-for="value in devices" :value="value._uid" track-by="_uid">
-        {{ value.name }} ({{ value.manufacturer }})
+        {{ value.name }}
       </option>
     </select>
-    Current: {{ selected }}
-    {{ devices | json }}
+
+    <!-- {{ devices | json }} -->
+
   </div>
 </template>
 
@@ -16,23 +18,28 @@
 export default {
   data() {
     return {
-      selected: null,
       midiIn: null,
-      midiAccess: null,
+      midi: null,
       devices: []
     };
   },
 
   created() {
     if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess().then((midiAccess) => {
-        this.midiAccess = midiAccess;
-        this.listDevices();
-        midiAccess.onstatechange = this.onStateChange;
-      },
-      (error) => {
-        console.log('Error accessing MIDI', error);
-      });
+      navigator.requestMIDIAccess({
+        sysex: false
+      }).then(
+        (midi) => {
+          this.midi = midi;
+          midi.onstatechange = this.onStateChange;
+          midi.inputs.forEach((port) => {
+            this.addDevice(port);
+          });
+        },
+        (error) => {
+          console.log('Error accessing MIDI', error);
+        }
+      );
     } else {
       console.log('No access to MIDI devices: browser does not support WebMIDI API.');
     }
@@ -44,18 +51,9 @@ export default {
         '_uid': port.id,
         'name': port.name,
         'state': port.state,
-        'manufacturer': port.manufacturer,
         'connection': port.connection
       };
       this.devices.push(device);
-    },
-
-    listDevices() {
-      const inputs = this.midiAccess.inputs;
-
-      inputs.forEach((port) => {
-        this.addDevice(port);
-      });
     },
 
     // update the device list when devices get connected, disconnected, opened or closed
@@ -80,40 +78,17 @@ export default {
 
     onSelect(event) {
       const id = event.target.value;
-      const selected = this.midiAccess.inputs.get(id);    // NOTE: this is not an Array. It is Array-like, and get() is a property unique to it.
+      const selected = this.midi.inputs.get(id);    // NOTE: this is not an Array. It is Array-like, and get() is a property unique to it.
 
       if (this.midiIn) {
-        //     this.midiIn.onmidimessage = null;
         this.midiIn.close();      // close current port
       }
 
-      console.log(this.midiIn);
       this.midiIn = selected;   // bind new port...
-      // this.midiIn.onmidimessage = this.inputListener; // ... and open it
-      this.midiIn.onmidimessage = this.midiMessageReceived;// ???????????
+      this.midiIn.onmidimessage = this.onMIDIMessage;
     },
 
-    // inputListener(midimessageEvent) {
-    //   let port;
-    //   let portId;
-    //   let data = midimessageEvent.data;
-    //   let type = data[0];
-    //   let data1 = data[1];
-    //   let data2 = data[2];
-    //
-    //   // do something graphical with the incoming midi data
-    //   // this.log.innerHTML = type + ' ' + data1 + ' ' + data2 + '<br>' + this.log.innerHTML;
-    //   this.log += type + ' ' + data1 + ' ' + data2 + '<br>';
-    //
-    //   for (portId in this.activeOutputs) {
-    //     if (this.activeOutputs.hasOwnProperty(portId)) {
-    //       port = this.activeOutputs[portId];
-    //       port.send(data);
-    //     }
-    //   }
-    // },
-
-    midiMessageReceived(event) {
+    onMIDIMessage(event) {
       let cmd = event.data[0] >> 4;
       let channel = event.data[0] & 0xf;
       let noteNumber = event.data[1];
@@ -142,9 +117,6 @@ export default {
         console.log(event.data[0] + ' ' + event.data[1] + ' ' + event.data[2]);
       }
     }
-
-
-
   }
 };
 
