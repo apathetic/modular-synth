@@ -95,7 +95,7 @@ npm test
 
 
 - NODES:
-  - MULT
+  - ~~MULT~~
 
   - ENV
   - ~~OSC~~
