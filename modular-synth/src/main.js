@@ -4,8 +4,15 @@ import App from './App';
 import FileManager from './FileManager';
 
 const context = window.AudioContext && (new window.AudioContext());
+const bus = new Vue({});
 
-window.App = App;
+Object.defineProperty(Vue.prototype, '$bus', {
+  get() {
+    return this.$root.bus;
+  }
+});
+
+// window.App = App;
 
 // All Components will have access to AudioContext
 // oh.. although *now*, that includes Connectors
@@ -25,5 +32,6 @@ Vue.partial('outlets', '<div class="outlets"><span v-for="outlet in outlets" @mo
 new Vue({
   store,
   el: 'body',
-  components: { App, FileManager }
+  components: { App, FileManager },
+  data: { bus }
 });
