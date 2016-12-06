@@ -21,11 +21,22 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-// import { newConnection } from '../store/actions';
+import { newConnection } from '../store/actions';
 import { rackWidth, rackHeight } from '../dimensions';
 
 export default {
   mixins: [draggable],
+  vuex: {
+    actions: {
+      newConnection
+    }
+  },
+  props: {
+    id: null,
+    col: null,
+    row: null
+  },
+
   computed: {
     position() {
       return {
@@ -51,6 +62,12 @@ export default {
   },
 
   ready() {
+    this.$bus.$on('midi:noteOn', this.noteOn);
+    this.$bus.$on('midi:noteOff', this.noteOff);
+    this.$bus.$on('midi:controller', this.controller);
+    this.$bus.$on('midi:pitchWheel', this.pitchWheel);
+    this.$bus.$on('midi:polyPressure', this.polyPressure);
+
     window.addEventListener('keydown', (e) => {
       switch (e.code) {
         case 'A':
@@ -63,44 +80,13 @@ export default {
   },
 
   methods: {
-
-    midiMessageReceived(event) {
-      const cmd = event.data[0] >> 4;
-      const channel = event.data[0] & 0xf;
-      const noteNumber = event.data[1];
-      const velocity = event.data[2];
-
-      if (channel === 9) { return; }
-
-      if (cmd === 8 || (cmd === 9 && velocity === 0)) { // with MIDI, note on with velocity zero is the same as note off
-        this.noteOff(noteNumber);
-      } else if (cmd === 9) {
-        this.noteOn(noteNumber, velocity / 127.0);
-      } else if (cmd === 11) {
-        this.controller(noteNumber, velocity / 127.0);
-      } else if (cmd === 14) {
-        this.pitchWheel(((velocity * 128.0 + noteNumber) - 8192) / 8192.0);
-      } else if (cmd === 10) {  // poly aftertouch
-        this.polyPressure(noteNumber, velocity / 127);
-      } else {
-        console.log(event.data[0] + ' ' + event.data[1] + ' ' + event.data[2]);
-      }
+    noteOn(note, velocity) {
+      console.log('note in:', note, velocity);
     },
-
-    noteOn() {},
     noteOff(note) {},
-    controller() {},
-    polyPressure() {}
-  },
-
-  events: {
-    'midi:noteOn'(num, velocity) {
-      this.received = num + ' ' + velocity;
-    }
+    controller(note, velocity) {},
+    pitchWheel(data) {},
+    polyPressure(note, velocity) {}
   }
 };
 </script>
-
-
-<style lang="scss">
-</style>
