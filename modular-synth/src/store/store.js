@@ -15,7 +15,7 @@ export const STORAGE_KEY_CONNECTIONS = 'connections';
 // -----------------------------------------------
 
 const state = {
-  id: localStorage.getItem('id') || 1,    // module id. Start at 1, as masterOut is 0.
+  id: parseInt(localStorage.getItem('id')) || 1,    // module id. Start at 1, as masterOut is 0.
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
   // connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
   connections: undefined,   // NOTE: this is intentional to force a delayed "loading" of the connectors. We grab them

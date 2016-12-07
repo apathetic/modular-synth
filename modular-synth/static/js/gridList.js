@@ -97,7 +97,7 @@ export default class GridList {
     var currentColumn = 0;
 
     this._options.lanes = lanes;
-    this._adjustSizeOfItems();
+    // this._adjustSizeOfItems();
 
     this._sortItemsByPosition();
     this._resetGrid();
@@ -249,40 +249,40 @@ export default class GridList {
     }.bind(this));
   }
 
-  _adjustSizeOfItems() {
-    /**
-     * Some items can have 100% height or 100% width. Those dimensions are
-     * expressed as 0. We need to ensure a valid width and height for each of
-     * those items as the number of items per lane.
-     */
-
-    for (var i = 0; i < this.items.length; i++) {
-      var item = this.items[i];
-
-      // This can happen only the first time items are checked.
-      // We need the property to have a value for all the items so that the
-      // `cloneItems` method will merge the properties properly. If we only set
-      // it to the items that need it then the following can happen:
-      //
-      // cloneItems([{id: 1, autoSize: true} {id: 2}],
-      //            [{id: 2} {id: 1, autoSize: true}]);
-      //
-      // will result in
-      //
-      // [{id: 1, autoSize: true} {id: 2, autoSize: true}]
-      if (item.autoSize === undefined) {
-        item.autoSize = item.w === 0 || item.h === 0;
-      }
-
-      if (item.autoSize) {
-        if (this._options.direction === 'horizontal') {
-          item.h = this._options.lanes;
-        } else {
-          item.w = this._options.lanes;
-        }
-      }
-    }
-  }
+  // _adjustSizeOfItems() {
+  //   /**
+  //    * Some items can have 100% height or 100% width. Those dimensions are
+  //    * expressed as 0. We need to ensure a valid width and height for each of
+  //    * those items as the number of items per lane.
+  //    */
+  //
+  //   for (var i = 0; i < this.items.length; i++) {
+  //     var item = this.items[i];
+  //
+  //     // This can happen only the first time items are checked.
+  //     // We need the property to have a value for all the items so that the
+  //     // `cloneItems` method will merge the properties properly. If we only set
+  //     // it to the items that need it then the following can happen:
+  //     //
+  //     // cloneItems([{id: 1, autoSize: true} {id: 2}],
+  //     //            [{id: 2} {id: 1, autoSize: true}]);
+  //     //
+  //     // will result in
+  //     //
+  //     // [{id: 1, autoSize: true} {id: 2, autoSize: true}]
+  //     if (item.autoSize === undefined) {
+  //       item.autoSize = item.w === 0 || item.h === 0;
+  //     }
+  //
+  //     if (item.autoSize) {
+  //       if (this._options.direction === 'horizontal') {
+  //         item.h = this._options.lanes;
+  //       } else {
+  //         item.w = this._options.lanes;
+  //       }
+  //     }
+  //   }
+  // }
 
   _resetGrid() {
     this.grid = [];

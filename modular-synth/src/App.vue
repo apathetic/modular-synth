@@ -121,8 +121,7 @@
         editing: (state) => state.editing,
         active: (state) => state.modules.find(function(module) { return module.id === state.active; }),
         modules: (state) => state.modules.filter(function(module) { return module.id !== 0; }),
-        connections: (state) => state.connections,
-        selected: (state) => state.selected
+        connections: (state) => state.connections
       },
       // getters: getters,
       actions: actions
@@ -192,8 +191,12 @@
         }
       });
 
+      // FileManager
       this.load();
-      this.initSorting(this.$els.grid); // TODO why cannot move into sortable:ready() ...?
+
+      // Sortable
+      // TODO why cannot move into sortable:ready() ...?
+      this.initSorting(this.$els.grid);
     },
 
     methods: {
@@ -212,6 +215,7 @@
 
         this.gridList.items = this.modules;
         this.gridList.generateGrid();
+        // this.generateGrid();
       }
     },
 

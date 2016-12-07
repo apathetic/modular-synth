@@ -35,19 +35,25 @@ npm test
   - ~~store state of app~~
   - ~~persist to localstorage and recall~~
   - common getters / setters (ie. active module, connection, etc)
+  - stop importing ES6 reference to store. Isn't it on the $root?
 
 
 - UI
   - ~~cannot select from dropdown; dragging intercedes~~
   - dial doesn't do floats **
   - cannot dynamically add new modules
+  - 2 modes: play / edit.
+    - ~~play: grid (packery, gridlist)~~
+    - ~~edit: draggables (dragabilly, vanillaJS)~~
+    - dotted line while creating a connection
+    - when a node is selected, all connected connections become highlighted
 
 
 - LOADING
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
   - ~~route audio on load *** (use store plugin / store mutatin observer)~~
-  - FIX modules: dont gridify properly after 1st load ***
+  - FIX modules: dont gridify properly after 1st load, adding new module ***
 
 
 - NODES
@@ -84,11 +90,6 @@ npm test
   - MIDI learn
 
 
-- UI -- 2 modes: play / edit.
-  - ~~play is grid (packery, gridlist)~~
-  - ~~edit is draggables (dragabilly, vanillaJS)~~
-  - dotted line while creating a connection
-  - when a node is selected, all connected connections become highlighted
 
 
 ----------------------------------------------------------------
