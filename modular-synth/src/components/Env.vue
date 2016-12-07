@@ -66,6 +66,9 @@ export default {
       'R': 0.1,
       // velocity = 1;
 
+      w: 1, // rack width
+      h: 1, // rack height
+
       inlets: [
         {
           port: 0,
