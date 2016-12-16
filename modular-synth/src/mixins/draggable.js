@@ -19,10 +19,11 @@ export const draggable = {
   vuex: {
     actions: {
       updateGridPosition
-    },
-    getters: {
-      module: (state) => state.modules.find(function(module) { return module.id === this.id; })
     }
+    // getters: {
+    //   editing: (state) => state.editing,
+    //   module: (state) => state.modules.find((module) => { return module.id === this.id; })
+    // }
   },
 
   props: {
