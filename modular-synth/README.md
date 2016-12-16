@@ -41,7 +41,7 @@ npm test
 - UI
   - ~~cannot select from dropdown; dragging intercedes~~
   - dial doesn't do floats **
-  - cannot dynamically add new modules
+  - ***** cannot dynamically add new modules *****
   - 2 modes: play / edit.
     - ~~play: grid (packery, gridlist)~~
     - ~~edit: draggables (dragabilly, vanillaJS)~~
@@ -52,7 +52,7 @@ npm test
 - LOADING
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
-  - ~~route audio on load *** (use store plugin / store mutatin observer)~~
+  - ~~route audio on load (use store plugin / store mutatin observer)~~
   - FIX modules: dont gridify properly after 1st load, adding new module ***
 
 
