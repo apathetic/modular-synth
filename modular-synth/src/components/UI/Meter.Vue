@@ -13,7 +13,6 @@
       @input="update">
     </input>
     {{ value }}
-    <button class="button">mute</button>
   </div>
 </template>
 

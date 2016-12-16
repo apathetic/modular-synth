@@ -57,7 +57,7 @@
 
         <p v-if="active">
           <strong>Current Module</strong><br>
-          type: {{ active.type }} (id: {{ active.id }})<br>
+          {{ active.type }} (id: {{ active.id }})<br>
           x, y: {{ active.x }}, {{ active.y }}<br>
           col, row: {{ active.col }}, {{ active.row }}<br>
           w, h: {{ active.w }},  {{ active.h }}<br>
