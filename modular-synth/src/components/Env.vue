@@ -92,16 +92,55 @@ export default {
   },
 
   created() {
-    // this.inlets[0].data = this.context.createGain();  // gate. mod?
+    // Generate (mono) buffer with 2 samples
+    const buffer = this.context.createBuffer(1, 2, this.context.sampleRate);
+    const source = this.context.createBufferSource();
 
-    this.outlets[0].data = this.context.createGain();
+    // set each sample to 1
+    buffer.getChannelData(0)[0] = 1;
+    buffer.getChannelData(0)[1] = 1;
+
+    // var data = buffer.getChannelData(0);
+    // data[0] = 1;
+    // data[1] = 1;
+    //
+    // bind source for the buffer, looping it
+    source.buffer = buffer;
+    source.loop = true;
+
+    this.voltage = source;
+
+
+    // this.inlets[0].data = this.context.createGain();  // gate?
+    // this.inlets[1].data = this.context.createGain();  // mod?
+
+    this.adsr = this.context.createGain();
+    this.outlets[0].data = this.adsr;
   },
   methods: {
 
+    start(when) {
+      var attackRampMethodName = this._getRampMethodName('attack');
+      var decayRampMethodName = this._getRampMethodName('decay');
+
+      var attackStartsAt = when + this.settings.delayTime;
+      var attackEndsAt = attackStartsAt + this.settings.attackTime;
+      var decayStartsAt = attackEndsAt + this.settings.holdTime;
+      var decayEndsAt = decayStartsAt + this.settings.decayTime;
+      var attackStartLevel = (attackRampMethodName === 'exponentialRampToValueAtTime') ? 0.001 : 0;
+
+      this.adsr.gain.setValueAtTime(attackStartLevel, when);
+      this.adsr.gain.setValueAtTime(attackStartLevel, attackStartsAt);
+      this.adsr.gain[attackRampMethodName](1, attackEndsAt);
+      this.adsr.gain.setValueAtTime(1, decayStartsAt);
+      this.adsr.gain[decayRampMethodName](this.settings.sustainLevel, decayEndsAt);
+
+      this.source.start(when);
+    },
+
     envGenOn(vcaGain, a, d, s) {
       const now = this.context.currentTime;
-      // a *= egMode;
-      // d *= egMode;
+
       vcaGain.cancelScheduledValues(0);
       vcaGain.setValueAtTime(0, now);
       vcaGain.linearRampToValueAtTime(1, now + a);
@@ -110,7 +149,7 @@ export default {
 
     envGenOff(vcaGain, r) {
       const now = this.context.currentTime;
-      // r *= egMode;
+
       vcaGain.cancelScheduledValues(0);
       vcaGain.setValueAtTime(vcaGain.value, now);
       vcaGain.linearRampToValueAtTime(0, now + r);
