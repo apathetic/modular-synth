@@ -1,7 +1,7 @@
 <template>
   <div class="slider" @mousedown.stop.prevent="start">
 
-      <div class="fill" style="bottom: {{ sliderValue }}%"></div>
+      <div class="fill" :style="bottom"></div>
 
     <!-- {{ value }} -->
   </div>
@@ -28,6 +28,10 @@ export default {
       range: 1,
       step: 1
     };
+  },
+
+  computed: {
+    bottom() { return 'bottom:' + this.sliderValue + '%'; }
   },
 
   created() {

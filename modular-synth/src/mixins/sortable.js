@@ -5,7 +5,7 @@
  * too much as the source of truth is still safe within vuex.
  *
  * NOTE: As this is a mixin, several object prpoerties are defined
- * elsewhere but referenced here. This two primary ones are:
+ * elsewhere but referenced here. The two primary ones are:
  *   this.active
  *   this.modules
 
@@ -35,10 +35,10 @@ export const sortable = {
       this.$positionHighlight = this.handle.querySelector('.position-highlight');
       this.$positionHighlight.style.display = 'none';
 
-      this.generateGrid();
+      this.setupGrid();
     },
 
-    generateGrid() {
+    setupGrid() {
       this._widestItem = Math.max.apply(null, this.modules.map(function(item) { return item.w; }));
       this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
       this.gridList = new GridList(this.modules);
