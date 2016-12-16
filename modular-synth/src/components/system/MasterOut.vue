@@ -7,6 +7,12 @@
 
     <div class="module-interface">
       <meter label="Volume" :value.sync="gain" :min="0" :max="1"></meter>
+      <button
+        class="toggle"
+        :class="isMuted ? 'toggle--active' : ''"
+        @click="toggleMute">
+          mute
+      </button>
     </div>
 
     <div class="module-connections">
@@ -41,7 +47,8 @@ export default {
       id: 0,    // MasterOut is always id 0
       x: 0,
       y: 0,
-      gain: 0.6,
+      gain: 0.5,
+      isMuted: false,
       inlets: [
         {
           port: 0,
@@ -89,6 +96,13 @@ export default {
     setGain(g) {
       this.out1.gain.value = g;
       this.out2.gain.value = g;
+    },
+
+    toggleMute() {
+      this.isMuted = !this.isMuted;
+      this.setGain(
+        this.isMuted ? 0 : this.gain
+      );
     },
 
     determinePosition() {
