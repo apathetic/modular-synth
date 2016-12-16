@@ -32,6 +32,13 @@ main {
   height: calc(100% - #{$header-height});
 }
 
+.h1, h1,
+.h2, h2,
+.h3, h3,
+.h4, h4,
+.h5, h5 { margin-bottom: 0.5em; }
+
+
 #modules {
   flex: 1;
   // overflow: auto;
@@ -54,7 +61,7 @@ main {
 }
 
 #controls {
-  flex-basis: 150px;
+  flex-basis: 140px;
   background-color: #333; // #999;
   z-index: 10000;          // as nodes will increment their z-index
 }
@@ -97,6 +104,15 @@ button {
   }
 }
 
+.toggle {
+  background-color: #999;  // inactive
+  padding: 0.5em 1em;
+
+  &--active {
+    background-color: #54bfff;
+  }
+}
+
 .mode {
   border: 1px solid #333;
   box-shadow: inset 0 0.2em 0.6em rgba(0, 0, 0, 0.3);
@@ -125,7 +141,6 @@ button {
   &:hover:after { background-color: #349fdf; }
 
   .edit-mode &:after { left: 50%; }
-
 }
 
 .play-mode .play { color: #fff; }
