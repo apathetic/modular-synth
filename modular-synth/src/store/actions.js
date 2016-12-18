@@ -44,10 +44,28 @@ export const clearFocus = ({ dispatch, state }) => {
 
 export const addModule = ({ dispatch }, type) => {
   dispatch('ADD_MODULE', type);
+  //
+  // update gridlist here?
+  //
 };
 
-export const removeModule = ({ dispatch }) => {
-  dispatch('REMOVE_MODULE');
+export const registerDimensions = ({ dispatch }, id, w, h) => {
+  dispatch('REGISTER_DIMENSIONS', id, w, h);
+};
+
+export const removeModule = ({ dispatch, state }) => {
+  // only delete active/selected modules
+  if (state.active === state.selected) {
+    const id = state.active;
+
+    dispatch('REMOVE_MODULE', id);
+
+    state.connections.forEach((connection) => {
+      if (connection.to.id === id || connection.from.id === id) {
+        dispatch('REMOVE_CONNECTION', connection.id);
+      }
+    });
+  }
 };
 
 

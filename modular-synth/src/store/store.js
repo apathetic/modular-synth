@@ -15,7 +15,7 @@ export const STORAGE_KEY_CONNECTIONS = 'connections';
 // -----------------------------------------------
 
 const state = {
-  id: parseInt(localStorage.getItem('id')) || 1,    // module id. Start at 1, as masterOut is 0.
+  id: parseInt(localStorage.getItem('id')) || 0,    // module id. Start at 1, as masterOut is 0 (we increment just prior to adding new Modules)
   modules: JSON.parse(localStorage.getItem(STORAGE_KEY_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
   // connections: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]'),
   connections: undefined,   // NOTE: this is intentional to force a delayed "loading" of the connectors. We grab them
@@ -58,28 +58,24 @@ const mutations = {
   },
 
   ADD_MODULE(state, type) {
-    console.log('adding new module %s id %d', type, state.id);
+    state.id++;
+    console.log('adding %s id %d', type, state.id);
     state.modules.push({
       id: state.id,
       type: type,
       x: 0,         // for dragging X
       y: 0,         // for dragging Y
       col: 0,       // for grid X position
-      row: 0        // for grid Y position
+      row: 0,       // for grid Y position
+      h: 0,         // for rack height
+      w: 0          // for rack width
     });
 
-    state.id++;
+    // state.id++;
   },
-  REMOVE_MODULE(state) {
-    const id = state.active;
-
+  REMOVE_MODULE(state, id) {
     state.modules = state.modules.filter((m) => {
       return m.id !== id;
-    });
-
-    state.connections.forEach((connection) => {
-      if (connection.to.module.id === id || connection.from.module.id === id) {
-      }
     });
   },
 
@@ -95,14 +91,21 @@ const mutations = {
     module.col = col;
     module.row = row;
   },
+  REGISTER_DIMENSIONS(state, id, w, h) {
+    const module = state.modules.find(function(module) { return module.id === id; });
+    // const module = state.modules.find((module) => { module.id === id; });
 
-  // 'start_connection' ?
+    module.w = w;
+    module.h = h;
+  },
+
   ADD_CONNECTION(state, port) {
     // find the module that contains the outlet. Ironically, we dont even use "outlet" to
     // determine this, instead relying on the "selected" module in the App.
+    state.id++;
 
     const from = {
-      id: state.selected,   // TODO ?
+      id: state.selected,
       port: port
     };
 
@@ -117,7 +120,7 @@ const mutations = {
       from
     });
 
-    state.id++;
+    // state.id++;
   },
   UPDATE_CONNECTION(state, id, port) {
     const connection = state.connections.find(function(c) { return c.id === id; });
