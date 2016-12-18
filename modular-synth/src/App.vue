@@ -194,7 +194,6 @@
       // FileManager
       this.load();
 
-      // Sortable
       // TODO why cannot move into sortable:ready() ...?
       this.initSorting(this.$els.grid);
     },
@@ -212,10 +211,18 @@
       },
       newModule(type) {
         this.addModule(type);
+        this.$nextTick(function() {
+          const id = this.$store.state.id;
+          const module = this.$children.find((m) => { return m.id === id; });
 
-        this.gridList.items = this.modules;
-        this.gridList.generateGrid();
-        // this.generateGrid();
+          // ADDED module has no w nor h. Update Store once module has loaded
+          this.registerDimensions(id, module.w, module.h);
+
+          this.gridList.items = this.modules;
+          this.gridList.generateGrid();
+          // console.log(this.gridList.toString());
+          // this.gridList.moveItemToPosition(this.newest, [0, 0]);
+        });
       }
     },
 
