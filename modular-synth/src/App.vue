@@ -211,6 +211,7 @@
       },
       newModule(type) {
         this.addModule(type);
+
         this.$nextTick(function() {
           const id = this.$store.state.id;
           const module = this.$children.find((m) => { return m.id === id; });
@@ -218,8 +219,14 @@
 
           this.registerDimensions(id, module.w, module.h);
 
+          module.$el.style.opacity = 0;
+
           this.gridList.items = this.modules;
           this.gridList.moveItemToPosition(item, [0, 0]);
+
+          setTimeout(() => {
+            module.$el.style.opacity = 1;
+          }, 200);
         });
       }
     },

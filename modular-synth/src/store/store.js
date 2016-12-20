@@ -59,7 +59,6 @@ const mutations = {
 
   ADD_MODULE(state, type) {
     state.id++;
-    console.log('adding %s id %d', type, state.id);
     state.modules.push({
       id: state.id,
       type: type,
@@ -70,8 +69,6 @@ const mutations = {
       h: 0,         // for rack height
       w: 0          // for rack width
     });
-
-    // state.id++;
   },
   REMOVE_MODULE(state, id) {
     state.modules = state.modules.filter((m) => {
