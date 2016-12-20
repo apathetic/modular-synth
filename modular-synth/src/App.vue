@@ -214,14 +214,12 @@
         this.$nextTick(function() {
           const id = this.$store.state.id;
           const module = this.$children.find((m) => { return m.id === id; });
+          const item = this.modules.find((m) => { return m.id === id; });
 
-          // ADDED module has no w nor h. Update Store once module has loaded
           this.registerDimensions(id, module.w, module.h);
 
           this.gridList.items = this.modules;
-          this.gridList.generateGrid();
-          // console.log(this.gridList.toString());
-          // this.gridList.moveItemToPosition(this.newest, [0, 0]);
+          this.gridList.moveItemToPosition(item, [0, 0]);
         });
       }
     },
