@@ -59,8 +59,8 @@ npm test
 - NODES
   - base node mixin...
     - tuck away: draggable, newConnection, (vuex) col/row, (computd) left/right
-  - DELETE node ***
-    - and associated audio connections ***
+  - ~~DELETE node~~
+    - ~~and associated audio connections~~
 
 
 - Audio
@@ -68,6 +68,7 @@ npm test
     - ~~(same problem for Connector)~~
   - global "get (actual) component by id" method?
   - master out volume control
+  - ~~hook up master out mute~~
 
 
 - Connections

@@ -192,4 +192,7 @@
 
 <style lang="scss">
   .slider { float: right; }
+  .oscillator {
+    // background: linear-gradient(to bottom, #f3eeee, #dbd7d6);
+  }
 </style>
