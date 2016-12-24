@@ -10,18 +10,14 @@
 <template>
   <main :class="editing ? 'edit-mode': 'play-mode'">
     <section
-    id="modules"
-    class="grid-container"
-    ref="grid"
-    @click="clearActive">
+      id="modules"
+      class="grid-container"
+      v-el:grid
+      @click="clearActive">
 
       <div class="position-highlight">
         <div class="inner"></div>
       </div>
-
-      <!-- modules: {{ modules }}<br><br> -->
-      <!-- conec: {{ connectors }} -->
-      <!-- selected: {{ selected }} -->
 
       <component v-for="(module, index) in modules"  v-if="module.id !== 0"
         :is="module.type"
@@ -39,12 +35,12 @@
       </component>
 
       <svg id="connections">
-        <connector v-for="connector in connections"
-          :id="connector.id"
-          :to="connector.to"
-          :from="connector.from"
+        <connector v-for="connection in connections"
+          :id="connection.id"
+          :to="connection.to"
+          :from="connection.from"
 
-          @mousedown.stop="setActive(connector.id)">
+          @mousedown.stop="setActive(connection.id)">
         </connector>
       </svg>
 
@@ -59,38 +55,36 @@
           <span class="edit">edit</span>
         </button>
 
-        <p v-if="module">
+        <p v-if="active">
           <strong>Current Module</strong><br>
-          type: {{ module.type }}<br>
-          id: {{ module.id }}<br>
-          x: {{ module.x }}<br>
-          y: {{ module.y }}<br>
-
-          col: {{ module.col }}<br>
-          row: {{ module.row }}<br>
-          w: {{ module.w }}<br>
-          h: {{ module.h }}<br>
-
-          details / info  ..?
+          {{ active.type }} (id: {{ active.id }})<br>
+          x, y: {{ active.x }}, {{ active.y }}<br>
+          col, row: {{ active.col }}, {{ active.row }}<br>
+          w, h: {{ active.w }},  {{ active.h }}<br>
         </p>
 
         <midi></midi>
 
 
-        <button class="button" @click="newModule('Node')">add Node</button>
+        <button class="button" @click="newModule('Node')">Node</button>
         <button class="button" @click="newModule('Oscillator')">osc</button>
         <button class="button" @click="newModule('LFO')">LFO</button>
+        <button class="button" @click="newModule('Env')">env</button>
         <button class="button" @click="newModule('Reverb')">reverb</button>
         <button class="button" @click="newModule('Filter')">filter</button>
         <button class="button" @click="newModule('Mixer')">mixer</button>
+        <button class="button" @click="newModule('multiply')">multiply</button>
+        <button class="button" @click="newModule('NoteIn')">note-in</button>
 
         <br>
         <button
           @click="togglePower"
           :class="power ? 'on' : 'off'">
             on/off
-          <!-- <object data="/static/images/reset1.svg" style="width:6em;height:3em"></object> -->
 
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40">
+            <path d="M28,18c0,6.629-5.375,12-12,12C9.371,30,4,24.629,4,18c0-5.223,3.34-9.652,8-11.301v4.41C9.617,12.496,8,15.047,8,18 c0,4.418,3.582,8,8,8s8-3.582,8-8c0-2.953-1.621-5.504-4-6.891v-4.41C24.656,8.348,28,12.777,28,18z M16,16c1.105,0,2-0.895,2-2V4 c0-1.104-0.895-2-2-2s-2,0.896-2,2v10C14,15.105,14.895,16,16,16z" />
+          </svg>
         </button>
       </div>
 
@@ -103,16 +97,19 @@
 <script>
   import { sortable } from './mixins/sortable';
 
-  import Node from './components/Node';
-  import Reverb from './components/Reverb';
-  import Oscillator from './components/Oscillator';
-  import LFO from './components/LFO';
+  import Env from './components/Env';
   import Filter from './components/Filter';
+  import LFO from './components/LFO';
   import Mixer from './components/Mixer';
+  import Node from './components/Node';
+  import NoteIn from './components/NoteIn';
+  import Oscillator from './components/Oscillator';
+  import Reverb from './components/Reverb';
 
-  import masterOut from './components/system/MasterOut';
   import connector from './components/system/Connector';
+  import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
+  import multiply from './components/math/Multiply';
 
   import * as actions from './store/actions';
 
@@ -120,26 +117,34 @@
     mixins: [sortable],
 
     vuex: {
-      getters: {
+      getters: {    // TODO these getters are already all in the store.
         editing: (state) => state.editing,
-        module: (state) => state.modules.find(function(module) { return module.id === state.active; }),
-        modules: (state) => state.modules,
-        connections: (state) => state.connections,
-        selected: (state) => state.selected
+        active: (state) => state.modules.find(function(module) { return module.id === state.active; }),
+        modules: (state) => state.modules.filter(function(module) { return module.id !== 0; }),
+        connections: (state) => state.connections
       },
+      // getters: getters,
       actions: actions
+    },
+
+    computed: {
+      // editing() { return this.$store.getters.editing; }
     },
 
     components: {
       masterOut,
       connector,
-      Node,
-      Reverb,
-      Oscillator,
-      LFO,
+      midi,
+      multiply,
+
+      Env,
       Filter,
+      LFO,
       Mixer,
-      midi
+      Node,
+      NoteIn,
+      Oscillator,
+      Reverb
     },
 
     data() {
@@ -154,19 +159,15 @@
         switch (e.code) {
           case 'Delete':
           case 'Backspace':
-            console.log('delete');
             this.removeModule();
             break;
           case 'Tab':
-            console.log('tab');
             this.toggleEditMode();
             break;
           case 'Escape':
-            console.log('escape');
             this.togglePower();
             break;
           case 'Space':
-            console.log('space');
             // this.togglePlay();
             break;
           case 'ShiftLeft':
@@ -174,7 +175,6 @@
             // WE only want to rearrange the module-rack if shift is held;
             // otherwise, we probably want to play the module
             // this.toggleSorting;
-            console.log('shift');
             this.sorting = true;
             break;
           default:
@@ -191,9 +191,11 @@
         }
       });
 
-      this.load();                        // from actions.js
-      this.initSorting(this.$refs.grid);  // TODO why cannot move into sortable:ready() ...?
-      // this.gridList.generateGrid();
+      // FileManager
+      this.load();
+
+      // TODO why cannot move into sortable:ready() ...?
+      this.initSorting(this.$refs.grid);
     },
 
     methods: {
@@ -210,20 +212,26 @@
       newModule(type) {
         this.addModule(type);
 
-        this.gridList.items = this.modules;
-        this.gridList.generateGrid();
+        this.$nextTick(function() {
+          const id = this.$store.state.id;
+          const module = this.$children.find((m) => { return m.id === id; });
+          const item = this.modules.find((m) => { return m.id === id; });
+
+          this.registerDimensions(id, module.w, module.h);
+
+          module.$el.style.opacity = 0;
+
+          this.gridList.items = this.modules;
+          this.gridList.moveItemToPosition(item, [0, 0]);
+
+          setTimeout(() => {
+            module.$el.style.opacity = 1;
+          }, 200);
+        });
       }
     },
 
     events: {
-      'patch:load'(name) {
-        console.log('I AM LOAD ', name);
-        // this.bindConnections();
-        // this.routeAudio();
-      },
-      'patch:save'() {
-      },
-
       'drag:start'(coords, el) {
         if (!this.editing) {
           this.startSorting();

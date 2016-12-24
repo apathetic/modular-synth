@@ -32,9 +32,37 @@ main {
   height: calc(100% - #{$header-height});
 }
 
+.h1, h1,
+.h2, h2,
+.h3, h3,
+.h4, h4,
+.h5, h5 { margin-bottom: 0.5em; }
+
+
 #modules {
   flex: 1;
   // overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    width: 1em;
+    height: 1em;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $color-grey-dark;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $color-grey-medium;
+    border: 2px solid $color-grey-dark;
+    border-radius: 0.5em;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: $color-grey-dark;
+  }
 }
 
 #connections {
@@ -54,7 +82,7 @@ main {
 }
 
 #controls {
-  flex-basis: 150px;
+  flex-basis: 140px;
   background-color: #333; // #999;
   z-index: 10000;          // as nodes will increment their z-index
 }
@@ -65,11 +93,16 @@ h2 {}
 h3 {
   font-size: 0.9rem;
   text-transform: uppercase;
-  text-align: center;
+  // text-align: center;
+}
+
+h3 {
+  font-weight: normal;
 }
 
 button {
   -webkit-appearance: none;
+  background: none;
   border: none;
   border-radius: 3px;
   color: white;
@@ -89,6 +122,15 @@ button {
 
   &:hover {
     background-color: #349fdf;
+  }
+}
+
+.toggle {
+  background-color: #999;  // inactive
+  padding: 0.5em 1em;
+
+  &--active {
+    background-color: #54bfff;
   }
 }
 
@@ -120,7 +162,6 @@ button {
   &:hover:after { background-color: #349fdf; }
 
   .edit-mode &:after { left: 50%; }
-
 }
 
 .play-mode .play { color: #fff; }
@@ -134,16 +175,23 @@ button {
 
 // dummy test
 .on {
-  background-color: blue !important;
+  // background-color: blue !important;
+  svg {
+    fill: green;
+    filter: drop-shadow(0 0px 4px rgba(153, 229, 163, 0.4));
+  }
 }
 
+// filter: drop-shadow(0 0 0 rgba(0,0,0,1));
+// transition: filter $transition-time linear;
 
 
 .position-highlight {
   width: $rackWidth;
   height: $rackHeight;
   border: 4px dashed grey;
-  transition: all $transition-time;
+  // transition: all $transition-time;
+  transition: left $transition-time, top $transition-time;
 }
 
 select {

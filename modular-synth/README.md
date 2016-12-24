@@ -21,41 +21,64 @@ npm test
 
 ## TODO
 
+- INPUT TYPES
+  - in
+  - out
+  - mod (A, B, FM?)
+  - pitch (freq?)
+  - triggers or bangs:
+    - gate
+    - reset (more for sequencing)
+    - sync (ie. phase)
+
 - VUEX
   - ~~store state of app~~
   - ~~persist to localstorage and recall~~
   - common getters / setters (ie. active module, connection, etc)
+  - stop importing ES6 reference to store. Isn't it on the $root?
 
 
 - UI
   - ~~cannot select from dropdown; dragging intercedes~~
   - dial doesn't do floats **
+  - ***** cannot dynamically add new modules *****
+  - 2 modes: play / edit.
+    - ~~play: grid (packery, gridlist)~~
+    - ~~edit: draggables (dragabilly, vanillaJS)~~
+    - dotted line while creating a connection
+    - when a node is selected, all connected connections become highlighted
 
 
 - LOADING
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
-  - route audio on load *** (use store plugin / store mutatin observer)
-  - FIX modules: dont gridify properly after 1st load ***
+  - ~~route audio on load (use store plugin / store mutatin observer)~~
+  - FIX modules: dont gridify properly after 1st load, adding new module ***
 
 
 - NODES
-  - base node mixin... or?
-  - DELETE node ***
-    - audio connections ***
+  - base node mixin...
+    - tuck away: draggable, newConnection, (vuex) col/row, (computd) left/right
+  - ~~DELETE node~~
+    - ~~and associated audio connections~~
 
 
 - Audio
-  - lives in the actual components (not in the store.modules)
-    - (same problem for Connector)
+  - ~~lives in the actual components (not in the store.modules)~~
+    - ~~(same problem for Connector)~~
   - global "get (actual) component by id" method?
+  - master out volume control
+  - ~~hook up master out mute~~
 
 
 - Connections
   - have startConnection: just draw an open-ended connection
     - addConnection will take src, dest and "replace" the user-drawn connection
-  - updated connection object. See store.js line ~142 for details
-  - rename "data" to "audio" 
+  - ~~updated connection object. See store.js line ~142 for details~~
+  - ~~delete connection~~
+  - rename "data" to "audio" or "signal" or '~'
+  - reconcile "connector" name and "connection"
+
 
 - MIDI
   - pitch
@@ -68,21 +91,18 @@ npm test
   - MIDI learn
 
 
-- UI -- 2 modes: play / edit.
-  - ~~play is grid (packery, gridlist)~~
-  - ~~edit is draggables (dragabilly, vanillaJS)~~
-  - dotted line while creating a connection
-  - when a node is selected, all connected connections become highlighted
 
 
 ----------------------------------------------------------------
 
 
 - NODES:
+  - ~~MULT~~
+
   - ENV
-  - OSC
+  - ~~OSC~~
+  - LFO
   - FILT
-  - ADSR
 
 
 - FX
