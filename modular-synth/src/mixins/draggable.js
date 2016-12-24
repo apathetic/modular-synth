@@ -5,7 +5,7 @@
  * @type {Object}
  */
 
-import { updatePosition } from '../store/actions';
+import { updateGridPosition } from '../store/actions';
 
 const dragObj = {
   zIndex: 0,
@@ -18,11 +18,12 @@ const dragObj = {
 export const draggable = {
   vuex: {
     actions: {
-      updatePosition
-    },
-    getters: {
-      module: (state) => state.modules.find(function(module) { return module.id === this.id; })
+      updateGridPosition
     }
+    // getters: {
+    //   editing: (state) => state.editing,
+    //   module: (state) => state.modules.find((module) => { return module.id === this.id; })
+    // }
   },
 
   props: {
@@ -68,7 +69,7 @@ export const draggable = {
       this.y = y;
 
       this.$dispatch('drag:active', [x, y], this.$el);
-      this.updatePosition(this.id, x, y);
+      this.updateGridPosition(this.id, x, y);
     },
 
     stopDragging(event) {

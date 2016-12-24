@@ -10,6 +10,34 @@
 
 
 <script>
+const size = 20;
+const x = 24; // half the css knob size
+const y = 24;
+
+// let startValue = 0;
+// let startClientY = 0;
+
+
+function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+  let angleInRadians = (angleInDegrees + 90) * Math.PI / 180.0;
+
+  return {
+    x: centerX + (radius * Math.cos(angleInRadians)),
+    y: centerY + (radius * Math.sin(angleInRadians))
+  };
+}
+
+function describeArc(x, y, radius, startAngle, endAngle) {
+  const start = polarToCartesian(x, y, radius, endAngle);
+  const end = polarToCartesian(x, y, radius, startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+
+  return [
+    'M', start.x, start.y,
+    'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y
+  ].join(' ');
+}
+
 export default {
   props: {
     label: '',
@@ -20,9 +48,11 @@ export default {
 
   data() {
     return {
-      active: false,    // to distinguish between multiple knobs
-      startValue: null,
-      startClientY: null
+      active: false,
+      startValue: 0,
+      startClientY: null,
+      knobValue: 1,
+      range: 1
     };
   },
 
@@ -33,7 +63,10 @@ export default {
   },
 
   created() {
-    var self = this;
+    const self = this;
+
+    this.range = (this.max - this.min) / 100;
+    this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
 
     window.addEventListener('mouseup', (e) => {
       window.mouseDown = false;
@@ -45,22 +78,23 @@ export default {
 
     window.addEventListener('mousemove', (e) => {
       if (window.mouseDown && self.active) {
-        let change = self.startClientY - e.clientY;
-        let value = self.startValue + change;
-
-        value = Math.min(self.max, Math.max(self.min, value));
-
-        self.value = Math.round(value);
-        self.setRotationDegrees();
+        self.update(e);
       }
     });
+  },
+
+  ready() {
+    this.$els.track.setAttribute('d', describeArc(x, y, size, 30, 330));
+    // document.getElementById('computed').setAttribute('d', describeArc(x, y, size-14, 30, end));
+
+    this.setDisplay();
   },
 
   methods: {
     start(e) {
       window.mouseDown = true;
       this.active = true;
-      this.startValue = this.value;
+      this.startValue = this.knobValue;
       this.startClientY = e.clientY;
 
       // document.body.style.webkitUserSelect = 'none';
@@ -68,16 +102,13 @@ export default {
     },
 
     update(e) {
-      console.log(e.target);
+      const delta = this.startClientY - e.clientY;
+      const knobValue = Math.min(100, Math.max(0, this.startValue + delta));
+      const value = Math.round(knobValue * this.range + this.min);
 
-      let change = this.startClientY - e.clientY;
-      let value = this.startValue + change;
-
-      // value = Math.min(this.max, Math.max(this.min, value));
-      value = Math.min(100, Math.max(0, value));
-
-      // this.value = Math.round(value);
-      this.setRotationDegrees();
+      this.knobValue = knobValue; // Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
+      this.value = value;
+      this.setDisplay();
     },
 
     /**
@@ -99,38 +130,25 @@ export default {
 
 
 <style lang="scss">
-  .knob {
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-    border: 3px #ddd solid;
-    border-radius: 30px;
-    margin: 1em;
-    cursor: pointer;
-    background: radial-gradient(ellipse at center 45%, rgba(255,255,255,1) 25%,rgba(40,40,40,0.3) 100%);
-    box-shadow: 0px 3px 2px #666;
+  // @import '../assets/scss/variables.scss';
 
-    .notch {
-      width: 2px;
-      height: 25px;
-      position: relative;
-      left: 50%;
-      background: red;
-      transform-origin: center bottom;
-      transform: rotate(-160deg);
-      margin-left: -1px;
+  .knob2 {
+    width: 48px;
+    height: 64px;
+    cursor: pointer;
+
+    text {
+      text-anchor: middle;
+      font-size: 1rem;
+      fill: #fff;
     }
 
-    span {
-      font-family: sans-serif;
-      text-align: center;
-      width: 100%;
-      display: inline-block;
-      font-size: 11px;
+    .track {
+      stroke: #444; // $color-grey-dark;
+    }
 
-      top: 2.5em;
-      position: relative;
-      // color: black;
+    .display {
+      stroke: #54bfff;
     }
   }
 </style>

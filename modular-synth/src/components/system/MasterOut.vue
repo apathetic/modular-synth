@@ -6,7 +6,13 @@
     @mouseout="clearFocus()">
 
     <div class="module-interface">
-      <Level></Level>
+      <meter label="Volume" :value.sync="gain" :min="0" :max="1"></meter>
+      <button
+        class="toggle"
+        :class="isMuted ? 'toggle--active' : ''"
+        @click="toggleMute">
+          mute
+      </button>
     </div>
 
     <div class="module-connections">
@@ -21,26 +27,28 @@
 </template>
 
 <script>
-import { setFocus, clearFocus, updatePosition } from '../../store/actions';
-import Level from '../UI/Level';
+import { setFocus, clearFocus, updateGridPosition } from '../../store/actions';
+import Meter from '../UI/Meter';
 
 export default {
-  components: { Level },
+  components: { Meter },
 
   vuex: {
     actions: {
       setFocus,
       clearFocus,
-      updatePosition
+      updateGridPosition
     }
   },
 
   data() {
     return {
       name: 'Master Out',
-      id: 0,    // only one of these
-      x: 0,     // for connections
+      id: 0,    // MasterOut is always id 0
+      x: 0,
       y: 0,
+      gain: 0.5,
+      isMuted: false,
       inlets: [
         {
           port: 0,
@@ -56,14 +64,14 @@ export default {
   },
 
   mounted() {
-    const out1 = this.context.createGain();
-    const out2 = this.context.createGain();
+    this.out1 = this.context.createGain();
+    this.out2 = this.context.createGain();
 
-    out1.connect(this.context.destination);
-    out2.connect(this.context.destination);
+    this.inlets[0].data = this.out1;
+    this.inlets[1].data = this.out2;
 
-    this.inlets[0].data = out1;
-    this.inlets[1].data = out2;
+    this.$on('start', this.start);
+    this.$on('stop', this.stop);
 
     // Vue.nextTick(function() {
     this.determinePosition();
@@ -74,6 +82,30 @@ export default {
   },
 
   methods: {
+    // Chrome (in informal testing) is smart enough to know when there is no
+    // audio chain of connected nodes, and optimizes accordingly.
+    start() {
+      this.out1.connect(this.context.destination);
+      this.out2.connect(this.context.destination);
+    },
+
+    stop() {
+      this.out1.disconnect(this.context.destination);
+      this.out2.disconnect(this.context.destination);
+    },
+
+    setGain(g) {
+      this.out1.gain.value = g;
+      this.out2.gain.value = g;
+    },
+
+    toggleMute() {
+      this.isMuted = !this.isMuted;
+      this.setGain(
+        this.isMuted ? 0 : this.gain
+      );
+    },
+
     determinePosition() {
       const x = this.$el.getBoundingClientRect().left;  // relative to viewport
       const y = this.$el.offsetTop;                     // relative to parent
@@ -81,7 +113,7 @@ export default {
       this.x = x;
       this.y = y;
 
-      this.updatePosition(0, x, y);
+      this.updateGridPosition(0, x, y);
     }
   }
 };

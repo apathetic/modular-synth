@@ -1,76 +1,85 @@
 <template>
   <div
-    class="multiply module"
+    class="math multiply module"
     :class="dragging ? 'dragging' : ''"
     :style="position"
-    @mousedown="startDraggingNode">
+    @mousedown="startDragging">
+
+    <div class="module-details">
+      <h3>{{ name }}</h3>
+    </div>
 
     <div class="module-interface">
       <h3>multiply</h3>
     </div>
 
     <div class="module-connections">
-      <div class="inlets">
-        <span v-for="inlet in inlets"
-          :data-label="inlet.label"
-          class="inlet">
-        </span>
-      </div>
-      <div class="outlets">
-        <span v-for="outlet in outlets"
-          :data-label="outlet.label"
-          class="outlet">
-        </span>
-      </div>
+      <partial name="inlets"></partial>
+      <partial name="outlets"></partial>
     </div>
+  </div>
 </template>
 
 <script>
-import {draggable} from '../mixins';
-import Level from './UI/Level';
+import { draggable } from '../../mixins/draggable';
+import { newConnection } from '../../store/actions';
 
 export default {
   mixins: [draggable],
-  components: {Level},
+  vuex: {
+    actions: {
+      newConnection
+    }
+  },
 
+  props: {
+    id: null,
+    col: null,
+    row: null
+  },
+
+  computed: {
+    position() {
+      return {
+        left: this.x + 'px',
+        top: this.y + 'px'
+      };
+    }
+  },
   data() {
     return {
-      name: 'Master Out',
+      name: 'Multiply',
+      w: 0, // 0 means it _does not appear in the rack_
+      h: 0,
       inlets: [
         {
+          port: 0,
           label: 'in 1',
-          data: this.in1,  // to
-          connections: []
+          data: null
         },
         {
+          port: 0,
           label: 'in 2',
-          data: this.in2,  // to
-          connections: []
+          data: null
         }
       ],
       outlets: [
         {
+          port: 0,
           label: 'out',
-          data: this.out,  // to
-          connections: []
+          data: null
         }
       ]
     };
   },
 
   mounted() {
-    this.in1 = this.context.createGain();
-    this.in2 = this.context.createGain();
-    this.out = this.context.createGain();
+    this.inlets[0].data = this.context.createGain();
+    this.inlets[1].data = this.context.createGain();
+    this.outlets[0].data = this.context.createGain();
 
-    this.in1.connect(this.out);
-    this.in2.connect(this.out.gain);
-
-    var e = this.$el;
-
-    e.id = 'module-' + this.idx;
-    e.style.left = '200px';
-    e.style.top = '200px';
+    this.inlets[0].data.connect(this.outlets[0].data);
+    this.inlets[1].data.connect(this.outlets[0].data.gain);
   }
 };
 </script>
