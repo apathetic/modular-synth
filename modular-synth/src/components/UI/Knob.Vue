@@ -1,11 +1,11 @@
 <template>
-  <div
-  class="knob"
-  @mousedown.stop.prevent="start">
-    <div ref="notch" class="notch"></div>
-    <span>{{ value }}</span>
-    {{ label }}
-  </div>
+  <svg class="knob2" @mousedown.stop.prevent="start">
+    <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
+    <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
+    <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
+    <text x="24" y="28">{{ value }}</text>
+    <text x="24" y="54">{{ label }}</text>
+  </svg>
 </template>
 
 
@@ -56,12 +56,6 @@ export default {
     };
   },
 
-  mounted() {
-    // Vue.nextTick(function() {
-    this.setRotationDegrees();
-    // });
-  },
-
   created() {
     const self = this;
 
@@ -109,19 +103,16 @@ export default {
       this.knobValue = knobValue; // Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
       this.value = value;
       this.setDisplay();
+
+      this.$emit('value', value);
     },
 
-    /**
-     * Set the knob's notch position
-     */
-    setRotationDegrees() {
-      let dialOffsetLow = -160;
-      let dialOffsetHigh = 160;
-      let maxDegreeShift = dialOffsetHigh - dialOffsetLow;
-      let value = (this.value - this.min) / (this.max - this.min);
-      let rotationValue = (value * maxDegreeShift) + dialOffsetLow;
+    setDisplay() {
+      const rotationValue = this.knobValue * 3 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+      // const value = Math.round(this.knobValue * this.range + this.min);
 
-      this.$refs.notch.style['transform'] = 'rotate(' + rotationValue + 'deg)';
+      this.$els.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
+      // this.value = value;
     }
   }
 };

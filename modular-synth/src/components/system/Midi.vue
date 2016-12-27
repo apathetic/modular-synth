@@ -7,9 +7,6 @@
         {{ value.name }}
       </option>
     </select>
-
-    <!-- {{ devices | json }} -->
-
   </div>
 </template>
 

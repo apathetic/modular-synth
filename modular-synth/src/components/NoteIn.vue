@@ -61,7 +61,7 @@ export default {
     };
   },
 
-  ready() {
+  mounted() {
     this.$bus.$on('midi:noteOn', this.noteOn);
     this.$bus.$on('midi:noteOff', this.noteOff);
     this.$bus.$on('midi:controller', this.controller);

@@ -23,7 +23,7 @@ export const sortable = {
     }
   },
 
-  ready() {
+  mounted() {
     // this.handle = handle;
     // this.$positionHighlight = this.handle.querySelector('.position-highlight');
     // this.$positionHighlight.style.display = 'none';
