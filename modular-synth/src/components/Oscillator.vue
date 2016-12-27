@@ -17,10 +17,10 @@
       <select v-model="type">
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
       </select>
-      <slider label="mod"  :value.sync="mod"  :min="0" :max="100"></slider>
-      <knob   label="freq" :value.sync="freq" :min="1" :max="880"></knob>
-      <knob   label="sync" :value.sync="sync" :min="0" :max="1"></knob>
-      <knob   label="PW"   :value.sync="PW"   :min="0" :max="6.28"></knob>
+      <slider label="mod"  :value="mod"  :min="0" :max="100"></slider>
+      <knob   label="freq" :value="freq" :min="1" :max="880"></knob>
+      <knob   label="sync" :value="sync" :min="0" :max="1"></knob>
+      <knob   label="PW"   :value="PW"   :min="0" :max="6.28"></knob>
     </div>
 
     <div class="module-connections">
@@ -52,6 +52,14 @@
       col: null,
       row: null
     },
+
+    events: {
+      'mod': this.updateMod,
+      'freq': this.updatefreq,
+      'sync': this.updatesync,
+      'PW': this.updatePW
+    },
+
     computed: {
       position() {
         return {
