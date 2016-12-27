@@ -1,8 +1,8 @@
 <template>
   <svg class="knob2" @mousedown.stop.prevent="start">
-    <path v-el:track class="track" fill="none" stroke-width="8" d=""></path>
-    <path v-el:display class="display" fill="none" stroke-width="8" d=""></path>
-    <path v-el:computed fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
+    <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
+    <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
+    <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
     <text x="24" y="28">{{ value }}</text>
     <text x="24" y="54">{{ label }}</text>
   </svg>
@@ -103,6 +103,8 @@ export default {
       this.knobValue = knobValue; // Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
       this.value = value;
       this.setDisplay();
+
+      this.$emit('value', value);
     },
 
     setDisplay() {

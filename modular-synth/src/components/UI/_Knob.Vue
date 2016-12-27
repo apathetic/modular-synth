@@ -2,7 +2,7 @@
   <div
   class="knob"
   @mousedown.stop.prevent="start">
-    <div v-el:notch class="notch"></div>
+    <div ref="notch" class="notch"></div>
     <span>{{ value }}</span>
     {{ label }}
   </div>

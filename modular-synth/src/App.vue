@@ -12,7 +12,7 @@
     <section
       id="modules"
       class="grid-container"
-      v-el:grid
+      ref="grid"
       @click="clearActive">
 
       <div class="position-highlight">
@@ -203,10 +203,10 @@
         this.power = !this.power;
         if (this.power) {
           console.log('audio on');
-          this.$broadcast('start');
+          // this.$broadcast('start');
         } else {
           console.log('audio off');
-          this.$broadcast('stop');
+          // this.$broadcast('stop');
         }
       },
       newModule(type) {
