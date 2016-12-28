@@ -14,14 +14,14 @@
     </div>
 
     <div class="module-interface">
-      <Knob @value="feedback = value" :min="220" :max="880"></Knob>
-      <Knob @value="diffusion = value" :min="220" :max="880"></Knob>
-      <Knob @value="spread = value" :min="220" :max="880"></Knob>
+      <Knob @value="feedback = value"  min="220" max="880"></Knob>
+      <Knob @value="diffusion = value" min="220" max="880"></Knob>
+      <Knob @value="spread = value"    min="220" max="880"></Knob>
     </div>
 
     <div class="module-connections">
-      <partial name="inlets"></partial>
-      <partial name="outlets"></partial>
+      <inlets ports="inlets"></inlets>
+      <outlets ports="outlets"></outlets>
     </div>
   </div>
 </template>

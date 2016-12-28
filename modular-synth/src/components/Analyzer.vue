@@ -14,8 +14,8 @@
     </div>
 
     <div class="module-connections">
-      <partial name="inlets"></partial>
-      <partial name="outlets"></partial>
+      <inlets ports="inlets"></inlets>
+      <outlets ports="outlets"></outlets>
     </div>
   </div>
 </template>
