@@ -24,34 +24,54 @@ Vue.mixin({
   }
 });
 
-Vue.partial('inlets', `
-  <div class="inlets">
-    <span v-for="(inlet, index) in inlets"
-      :data-label="inlet.label"
-      :data-port="index"
-      class="inlet">
-    </span>
-  </div>
-`);
-Vue.partial('outlets', `
-  <div class="outlets">
-    <span v-for="(outlet, index) in outlets"
+
+
+/* */
+Vue.component('inlets', {
+  functional: true,
+  props: ['ports'],
+  template: `
+    <div v-once class="inlets">
+      <span v-for="(inlet, index) in ports"
+        :data-label="inlet.label"
+        :data-port="index"
+        class="inlet">
+      </span>
+    </div>
+  `
+});
+
+Vue.component('outlets', {
+  functional: true,
+  props: ['ports'],
+  template: `
+  <div v-once class="outlets">
+    <span v-for="(outlet, index) in ports"
       @mousedown.stop="newConnection(outlet)"
       :data-label="outlet.label"
       :data-port="index"
       class="outlet">
     </span>
   </div>
-`);
+  `
+});
 
-// Vue.component('wrap-with-tag', {
+//
+// Vue.component('ports', {
 //   functional: true,
-//   props: ['tag'],
-//   render (h, props, children) {
-//     return h(props.tag, null, children)
-//   }
-// })
-
+//   props: ['data', 'type'],
+//   template: `
+//     <div v-once :class="(type == in) ? 'inlets' : 'outlets'">
+//       <span v-for="(port, index) in ports"
+//         :data-label="port.label"
+//         :data-port="index"
+//         :class="(type == in) ? 'inlet' : 'outlet'">">
+//         // v-if out ... @mousedown.stop="newConnection(port)"
+//       </span>
+//     </div>
+//   `
+// });
+/* */
 
 
 /* eslint-disable no-new */
