@@ -41,7 +41,7 @@ export default {
       const gain = e.target.value;
 
       this.value = gain;
-      this.$emit('value', value);
+      this.$emit('value', gain);
     }
   }
 };
