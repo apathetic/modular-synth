@@ -3,10 +3,10 @@
     <input
       type="range"
       orient="vertical"
-      min="{{ min }"}
-      max="{{ max }}"
-      step="{{ step }}"
-      value="{{ value }}"
+      :min="min"
+      :max="max"
+      :step="step"
+      :value="value"
       @input.stop.prevent="update">
     </input>
     {{ value }}

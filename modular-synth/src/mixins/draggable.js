@@ -54,7 +54,8 @@ export const draggable = {
       this.x = x;
       this.y = y;
       this.dragging = true;
-      this.$dispatch('drag:start', [x, y], this.$el);
+      // this. $ dispatch('drag:start', [x, y], this.$el);
+      this.$bus.$emit('drag:start', [x, y], this.$el);
 
       // Capture mousemove and mouseup events on the page.
       document.addEventListener('mousemove', this.whileDragging);
@@ -68,13 +69,16 @@ export const draggable = {
       this.x = x;
       this.y = y;
 
-      this.$dispatch('drag:active', [x, y], this.$el);
+      // this. $ dispatch('drag:active', [x, y], this.$el);
+      this.$bus.$emit('drag:active', [x, y], this.$el);
+
       this.updateGridPosition(this.id, x, y);
     },
 
     stopDragging(event) {
       this.dragging = false;
-      this.$dispatch('drag:end', this.id);
+      // this. $ dispatch('drag:end', this.id);
+      this.$bus.$emit('drag:end', this.id);
 
       // restore the x,y grid values on the node
       if (!this.$store.state.editing) {

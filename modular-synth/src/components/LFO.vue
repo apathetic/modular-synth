@@ -19,8 +19,8 @@
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
       </select>
 
-      <knob label="freq"  :value.sync="freq" :min="0" :max="20"></knob>
-      <knob label="phase" :value.sync="phase" :min="0" :max="3.14159265"></knob>
+      <knob label="freq"  @value="freq = value" :min="0" :max="20"></knob>
+      <knob label="phase" @value="phase = value" :min="0" :max="3.14159265"></knob>
 
     </div>
 

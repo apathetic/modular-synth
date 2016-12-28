@@ -3,7 +3,7 @@
     <h3>midi infos</h3>
     <select @change="onSelect" class="midi-in">
       <option selected disabled>Midi Input</option>
-      <option v-for="value in devices" :value="value._uid" track-by="_uid">
+      <option v-for="value in devices" :value="value._uid" :key="value._uid">
         {{ value.name }}
       </option>
     </select>
