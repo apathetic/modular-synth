@@ -6,8 +6,8 @@
     <input
       type="range"
       orient="vertical"
-      min="{{ min }"}
-      max="{{ max }}"
+      :min="min"
+      :max="max"
       step="0.1"
       value="0.0"
       @input="update">
@@ -40,8 +40,8 @@ export default {
     update(e) {
       const gain = e.target.value;
 
-      console.log(gain);
       this.value = gain;
+      this.$emit('value', value);
     }
   }
 };

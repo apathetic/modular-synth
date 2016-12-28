@@ -6,7 +6,7 @@
     @mouseout="clearFocus()">
 
     <div class="module-interface">
-      <meter label="Volume" :value.sync="gain" :min="0" :max="1"></meter>
+      <meter label="Volume" @value="gain = value" :min="0" :max="1"></meter>
       <button
         class="toggle"
         :class="isMuted ? 'toggle--active' : ''"

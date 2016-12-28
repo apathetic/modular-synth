@@ -26,7 +26,7 @@ export default {
     };
   },
 
-  ready() {
+  mounted() {
     this.setRotationDegrees();
   },
 
@@ -88,7 +88,7 @@ export default {
       let value = (this.value - this.min) / (this.max - this.min);
       let rotationValue = (value * maxDegreeShift) + dialOffsetLow;
 
-      this.$els.notch.style['transform'] = 'rotate(' + rotationValue + 'deg)';
+      this.$refs.notch.style['transform'] = 'rotate(' + rotationValue + 'deg)';
     }
   }
 };
