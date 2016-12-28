@@ -18,15 +18,16 @@
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
 
-      <slider label="mod"  @value="mod = value"  :min="0" :max="100"></slider>
-      <knob   label="freq" @value="freq = value" :min="1" :max="880"></knob>
-      <knob   label="sync" @value="sync = value" :min="0" :max="1"></knob>
-      <knob   label="PW"   @value="PW = value"   :min="0" :max="6.28"></knob>
+      <slider label="mod"  @value="mod = value"  min="0" max="100"></slider>
+      <knob   label="freq" @value="freq = value" min="1" max="880"></knob>
+      <knob   label="sync" @value="sync = value" min="0" max="1"></knob>
+      <knob   label="PW"   @value="PW = value"   min="0" max="6.28"></knob>
     </div>
 
     <div class="module-connections">
-      <partial name="inlets"></partial>
-      <partial name="outlets"></partial>
+      <inlets ports="inlets"></inlets>
+      <outlets ports="outlets"></outlets>
+      <!-- <ports data="inlets" type="in"></ports> -->
     </div>
   </div>
 </template>
@@ -53,13 +54,6 @@
       col: null,
       row: null
     },
-
-    // events: {
-    //   'mod': this.updateMod,
-    //   'freq': this.updatefreq,
-    //   'sync': this.updatesync,
-    //   'PW': this.updatePW
-    // },
 
     computed: {
       position() {

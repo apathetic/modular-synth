@@ -19,14 +19,14 @@
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
       </select>
 
-      <knob label="freq"  @value="freq = value" :min="0" :max="20"></knob>
-      <knob label="phase" @value="phase = value" :min="0" :max="3.14159265"></knob>
+      <knob label="freq"  @value="freq = value"  min="0" max="20"></knob>
+      <knob label="phase" @value="phase = value" min="0" max="3.14159265"></knob>
 
     </div>
 
     <div class="module-connections">
-      <partial name="inlets"></partial>
-      <partial name="outlets"></partial>
+      <inlets ports="inlets"></inlets>
+      <outlets ports="outlets"></outlets>
     </div>
   </div>
 </template>

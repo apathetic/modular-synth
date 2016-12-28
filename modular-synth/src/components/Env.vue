@@ -14,15 +14,15 @@
     </div>
 
     <div class="module-interface">
-      <knob label="attack"  @value="A = value" :min="0" :max="1" step="0.05"></knob>
-      <knob label="decay"   @value="D = value" :min="0" :max="1" step="0.05"></knob>
-      <knob label="sustain" @value="S = value" :min="0" :max="1" step="0.05"></knob>
-      <knob label="release" @value="R = value" :min="0" :max="1" step="0.05"></knob>
+      <knob label="attack"  @value="A = value" min="0" max="1" step="0.05"></knob>
+      <knob label="decay"   @value="D = value" min="0" max="1" step="0.05"></knob>
+      <knob label="sustain" @value="S = value" min="0" max="1" step="0.05"></knob>
+      <knob label="release" @value="R = value" min="0" max="1" step="0.05"></knob>
     </div>
 
     <div class="module-connections">
-      <partial name="inlets"></partial>
-      <partial name="outlets"></partial>
+      <inlets ports="inlets"></inlets>
+      <outlets ports="outlets"></outlets>
     </div>
   </div>
 </template>
