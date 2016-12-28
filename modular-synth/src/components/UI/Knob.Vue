@@ -77,8 +77,8 @@ export default {
     });
   },
 
-  ready() {
-    this.$els.track.setAttribute('d', describeArc(x, y, size, 30, 330));
+  mounted() {
+    this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330));
     // document.getElementById('computed').setAttribute('d', describeArc(x, y, size-14, 30, end));
 
     this.setDisplay();
@@ -103,7 +103,6 @@ export default {
       this.knobValue = knobValue; // Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
       this.value = value;
       this.setDisplay();
-
       this.$emit('value', value);
     },
 
@@ -111,7 +110,7 @@ export default {
       const rotationValue = this.knobValue * 3 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
       // const value = Math.round(this.knobValue * this.range + this.min);
 
-      this.$els.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
+      this.$ref.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
       // this.value = value;
     }
   }

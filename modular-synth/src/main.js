@@ -4,7 +4,7 @@ import App from './App';
 import FileManager from './FileManager';
 
 const context = window.AudioContext && (new window.AudioContext());
-const bus = new Vue({});
+const bus = new Vue();
 
 Object.defineProperty(Vue.prototype, '$bus', {
   get() {
@@ -24,8 +24,34 @@ Vue.mixin({
   }
 });
 
-Vue.partial('inlets', '<div class="inlets"><span v-for="inlet in inlets" data-label="{{ inlet.label }}" data-port="{{ $index }}" class="inlet"></span></div>');
-Vue.partial('outlets', '<div class="outlets"><span v-for="outlet in outlets" @mousedown.stop="newConnection(outlet)" data-label="{{ outlet.label }}" data-port="{{ $index }}" class="outlet"></span></div>');
+Vue.partial('inlets', `
+  <div class="inlets">
+    <span v-for="(inlet, index) in inlets"
+      :data-label="inlet.label"
+      :data-port="index"
+      class="inlet">
+    </span>
+  </div>
+`);
+Vue.partial('outlets', `
+  <div class="outlets">
+    <span v-for="(outlet, index) in outlets"
+      @mousedown.stop="newConnection(outlet)"
+      :data-label="outlet.label"
+      :data-port="index"
+      class="outlet">
+    </span>
+  </div>
+`);
+
+// Vue.component('wrap-with-tag', {
+//   functional: true,
+//   props: ['tag'],
+//   render (h, props, children) {
+//     return h(props.tag, null, children)
+//   }
+// })
+
 
 
 /* eslint-disable no-new */

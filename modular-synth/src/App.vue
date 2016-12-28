@@ -154,6 +154,26 @@
       };
     },
 
+    created() {
+      this.bus.$on('drag:start', (coords, el) => {
+        if (!this.editing) {
+          this.startSorting();
+        }
+      }
+
+      this.bus.$on('drag:active', (coords, el) => {
+        if (!this.editing) { //  this.sorting) {
+          this.whileSorting(el);
+        }
+      },
+
+      this.bus.$on('drag:end', () => {
+        if (!this.editing) {
+          this.stopSorting();
+        }
+      }
+    },
+
     mounted() {
       window.addEventListener('keydown', (e) => {
         switch (e.code) {
@@ -203,10 +223,10 @@
         this.power = !this.power;
         if (this.power) {
           console.log('audio on');
-          // this.$broadcast('start');
+          // this. $ broadcast('start');
         } else {
           console.log('audio off');
-          // this.$broadcast('stop');
+          // this. $ broadcast('stop');
         }
       },
       newModule(type) {
@@ -231,23 +251,23 @@
       }
     },
 
-    events: {
-      'drag:start'(coords, el) {
-        if (!this.editing) {
-          this.startSorting();
-        }
-      },
-      'drag:active'(coords, el) {
-        if (!this.editing) { //  this.sorting) {
-          this.whileSorting(el);
-        }
-      },
-      'drag:end'() {
-        if (!this.editing) {
-          this.stopSorting();
-        }
-      }
-    }
+    // events: {
+    //   'drag:start'(coords, el) {
+    //     if (!this.editing) {
+    //       this.startSorting();
+    //     }
+    //   },
+    //   'drag:active'(coords, el) {
+    //     if (!this.editing) { //  this.sorting) {
+    //       this.whileSorting(el);
+    //     }
+    //   },
+    //   'drag:end'() {
+    //     if (!this.editing) {
+    //       this.stopSorting();
+    //     }
+    //   }
+    // }
   };
 </script>
 

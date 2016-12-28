@@ -15,12 +15,13 @@
 
     <div class="module-interface">
       <select v-model="type">
-        <option v-for="type in types" v-bind:value="type">{{ type }}</option>
+        <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
-      <slider label="mod"  :value="mod"  :min="0" :max="100"></slider>
-      <knob   label="freq" :value="freq" :min="1" :max="880"></knob>
-      <knob   label="sync" :value="sync" :min="0" :max="1"></knob>
-      <knob   label="PW"   :value="PW"   :min="0" :max="6.28"></knob>
+
+      <slider label="mod"  @value="mod = value"  :min="0" :max="100"></slider>
+      <knob   label="freq" @value="freq = value" :min="1" :max="880"></knob>
+      <knob   label="sync" @value="sync = value" :min="0" :max="1"></knob>
+      <knob   label="PW"   @value="PW = value"   :min="0" :max="6.28"></knob>
     </div>
 
     <div class="module-connections">
@@ -53,12 +54,12 @@
       row: null
     },
 
-    events: {
-      'mod': this.updateMod,
-      'freq': this.updatefreq,
-      'sync': this.updatesync,
-      'PW': this.updatePW
-    },
+    // events: {
+    //   'mod': this.updateMod,
+    //   'freq': this.updatefreq,
+    //   'sync': this.updatesync,
+    //   'PW': this.updatePW
+    // },
 
     computed: {
       position() {
@@ -161,39 +162,6 @@
         // this.gain.gain.value = g;
         this.inlets[0].data.gain.value = g;
       }
-
-      // createOscillator() {
-      //   // NOTE: here we "recreate" an oscillator every. single. time. the audio
-      //   // is toggle on / off.  They're cheap. However, this makes (re) routing
-      //   // the connections a pain.
-      //
-      //   // INSTEAD, let's just create the audio node _once_ and its connections
-      //   // _once_ as well, and when we wish to start / stop the audio, we instead
-      //   // disconnect the connection between MasterOut and the audio context
-      //   // destination.
-      //
-      //   // Chrome (in informal testing) is smart enough to know when there is no
-      //   // audio chain of connected nodes, and optimizes accordingly.
-      //
-      //   // To wit: create the audio node and it's connection _once_, remove start /
-      //   // stop listeners, and manage audio on / off in Master Out.
-      //
-      //   this.outlets[0].data = this.context.createOscillator();
-      //   this.inlets[0].data.connect(this.outlets[0].data.frequency);      // input connects to audioParam (freq) "mod"
-      //   this.node = this.outlets[0].data;
-      //
-      //   this.node.type = this.type;
-      //   this.node.frequency.value = this.freq;
-      // }
-
-      // start() {
-      //   this.createOscillator();           // create a new OSC every time. They're cheap.
-      //   this.node.start();
-      // },
-      //
-      // stop() {
-      //   this.node.stop();
-      // }
     }
   };
 </script>

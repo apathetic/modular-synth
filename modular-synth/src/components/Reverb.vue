@@ -14,9 +14,9 @@
     </div>
 
     <div class="module-interface">
-      <Knob :value.sync="feedback" :min="220" :max="880"></Knob>
-      <Knob :value.sync="diffusion" :min="220" :max="880"></Knob>
-      <Knob :value.sync="spread" :min="220" :max="880"></Knob>
+      <Knob @value="feedback = value" :min="220" :max="880"></Knob>
+      <Knob @value="diffusion = value" :min="220" :max="880"></Knob>
+      <Knob @value="spread = value" :min="220" :max="880"></Knob>
     </div>
 
     <div class="module-connections">
