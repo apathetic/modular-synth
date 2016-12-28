@@ -14,7 +14,6 @@
       <slot name="interface"></slot>
     </div>
 
-    <!-- @mouseup.stop="updateConnection_(inlet)" -->
     <div class="module-connections">
       <inlets ports="inlets"></inlets>
       <outlets ports="outlets"></outlets>
