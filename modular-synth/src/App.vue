@@ -159,19 +159,19 @@
         if (!this.editing) {
           this.startSorting();
         }
-      }
+      });
 
       this.bus.$on('drag:active', (coords, el) => {
         if (!this.editing) { //  this.sorting) {
           this.whileSorting(el);
         }
-      },
+      });
 
       this.bus.$on('drag:end', () => {
         if (!this.editing) {
           this.stopSorting();
         }
-      }
+      });
     },
 
     mounted() {
@@ -249,7 +249,7 @@
           }, 200);
         });
       }
-    },
+    }
 
     // events: {
     //   'drag:start'(coords, el) {
