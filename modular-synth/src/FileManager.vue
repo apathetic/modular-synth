@@ -59,6 +59,7 @@ export default {
       this.load(patch);
     },
     save() {
+      // er... just get from store.getters...?
       const patch = {
         name: this.name,
         id: localStorage.getItem('id'),
