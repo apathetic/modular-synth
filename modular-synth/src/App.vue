@@ -107,32 +107,18 @@
   import Reverb from './components/Reverb';
 
   import connector from './components/system/Connector';
-  import masterOut from './components/system/MasterOut';
+  // import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
   import multiply from './components/math/Multiply';
 
-  import * as actions from './store/actions';
+  import { mapGetters, mapActions } from 'vuex';
+  // import * as actions from './store/actions';
 
   export default {
     mixins: [sortable],
 
-    vuex: {
-      getters: {    // TODO these getters are already all in the store.
-        editing: (state) => state.editing,
-        active: (state) => state.modules.find(function(module) { return module.id === state.active; }),
-        modules: (state) => state.modules.filter(function(module) { return module.id !== 0; }),
-        connections: (state) => state.connections
-      },
-      // getters: getters,
-      actions: actions
-    },
-
-    computed: {
-      // editing() { return this.$store.getters.editing; }
-    },
-
     components: {
-      masterOut,
+      // masterOut
       connector,
       midi,
       multiply,
@@ -147,6 +133,15 @@
       Reverb
     },
 
+    computed: {
+      ...mapGetters([
+        'editing',
+        'active',
+        'modules',
+        'connections'
+      ])
+    },
+
     data() {
       return {
         power: false,
@@ -155,19 +150,19 @@
     },
 
     created() {
-      this.bus.$on('drag:start', (coords, el) => {
+      this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
           this.startSorting();
         }
       });
 
-      this.bus.$on('drag:active', (coords, el) => {
+      this.$bus.$on('drag:active', (coords, el) => {
         if (!this.editing) { //  this.sorting) {
           this.whileSorting(el);
         }
       });
 
-      this.bus.$on('drag:end', () => {
+      this.$bus.$on('drag:end', () => {
         if (!this.editing) {
           this.stopSorting();
         }
@@ -248,26 +243,14 @@
             module.$el.style.opacity = 1;
           }, 200);
         });
-      }
-    }
+      },
 
-    // events: {
-    //   'drag:start'(coords, el) {
-    //     if (!this.editing) {
-    //       this.startSorting();
-    //     }
-    //   },
-    //   'drag:active'(coords, el) {
-    //     if (!this.editing) { //  this.sorting) {
-    //       this.whileSorting(el);
-    //     }
-    //   },
-    //   'drag:end'() {
-    //     if (!this.editing) {
-    //       this.stopSorting();
-    //     }
-    //   }
-    // }
+      ...mapActions([
+        'clearActive',
+        'toggleEditMode',
+        'load'
+      ])
+    }
   };
 </script>
 

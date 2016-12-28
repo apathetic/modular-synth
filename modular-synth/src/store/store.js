@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import plugins from './plugins';
-// import * as getters from './getters';
 
 Vue.use(Vuex);
 
@@ -143,8 +142,9 @@ const mutations = {
 const getters = {
   editing: (state) => state.editing,
   active: (state) => state.modules.find(function(module) { return module.id === state.active; }),
-  modules: (state) => state.modules,
-  connectors: (state) => state.connections,
+  // modules: (state) => state.modules,
+  modules: (state) => state.modules.filter(function(module) { return module.id !== 0; }),
+  connections: (state) => state.connections,
   selected: (state) => state.selected
 };
 

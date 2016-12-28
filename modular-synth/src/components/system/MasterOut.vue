@@ -70,9 +70,12 @@ export default {
     this.inlets[0].data = this.out1;
     this.inlets[1].data = this.out2;
 
+
+    // TODO update to bus or VUEX ***
     this.$on('start', this.start);
     this.$on('stop', this.stop);
-  },
+    // ********************
+
 
   ready() {
     this.determinePosition();

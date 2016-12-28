@@ -77,7 +77,8 @@ Vue.component('outlets', {
 /* eslint-disable no-new */
 new Vue({
   store,
-  el: 'body',
+  // el: 'body',
+  el: '#test',
   components: { App, FileManager },
   data: { bus }
 });
