@@ -1,18 +1,16 @@
 module.exports = {
   root: true,
-  // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
+  parser: 'babel-eslint',
+  parserOptions: {
+    sourceType: 'module'
+  },
   extends: 'standard',
-  // required to lint *.vue files
   plugins: [
     'html'
   ],
 
-  'globals': {
-    'localStorage': true
-  },
-
   // add your custom rules here
-  'rules': {
+  rules: {
     'semi': ['error', 'always'],
     'space-before-function-paren': ['error', 'never'],
     'no-multiple-empty-lines': ['error', {'max': 3}],
