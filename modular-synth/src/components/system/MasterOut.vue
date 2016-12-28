@@ -6,7 +6,7 @@
     @mouseout="clearFocus()">
 
     <div class="module-interface">
-      <meter label="Volume" @value="gain = value" :min="0" :max="1"></meter>
+      <level label="Volume" @value="gain = value" :min="0" :max="1"></level>
       <button
         class="toggle"
         :class="isMuted ? 'toggle--active' : ''"
@@ -28,10 +28,10 @@
 
 <script>
 import { setFocus, clearFocus, updateGridPosition } from '../../store/actions';
-import Meter from '../UI/Meter';
+import Level from '../UI/Level';
 
 export default {
-  components: { Meter },
+  components: { Level },
 
   vuex: {
     actions: {
