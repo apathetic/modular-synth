@@ -23,23 +23,17 @@
           class="inlet">
         </span>
       </div>
-    </div>
+  </div>
 </template>
 
 <script>
-import { setFocus, clearFocus, updateGridPosition } from '../../store/actions';
 import Level from '../UI/Level';
+
+// // import { setFocus, clearFocus, updateGridPosition } from '../../store/actions';
+import { mapActions } from 'vuex';
 
 export default {
   components: { Level },
-
-  vuex: {
-    actions: {
-      setFocus,
-      clearFocus,
-      updateGridPosition
-    }
-  },
 
   data() {
     return {
@@ -62,6 +56,8 @@ export default {
       ]
     };
   },
+
+  /* */
 
   mounted() {
     this.out1 = this.context.createGain();
@@ -118,8 +114,17 @@ export default {
       this.y = y;
 
       this.updateGridPosition(0, x, y);
-    }
+    },
+
+    // VUEX actions, bound as local methods:
+    ...mapActions([
+      'setFocus',
+      'clearFocus',
+      'updateGridPosition'
+    ])
   }
+
+  /* */
 };
 </script>
 
