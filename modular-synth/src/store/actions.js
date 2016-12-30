@@ -1,9 +1,9 @@
 // -----------------------------------------------
 //  BOOTSTRAP
 // -----------------------------------------------
-export const load = ({ commit }, newState = false) => {
-  commit('LOAD', newState);
-};
+// export const load = ({ commit }, newState = false) => {
+//   commit('LOAD', newState);
+// };
 
 
 // -----------------------------------------------

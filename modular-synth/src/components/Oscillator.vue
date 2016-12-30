@@ -39,7 +39,6 @@
   import { rackWidth, rackHeight } from '../dimensions';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider2';
-  // import store from '../store/store'; // .... er...  this.$store...?
 
   export default {
     mixins: [draggable],
@@ -58,7 +57,6 @@
     computed: {
       position() {
         return {
-          //     this.$store.state.editing
           left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
           top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
         };

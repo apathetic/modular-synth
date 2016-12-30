@@ -79,8 +79,9 @@
 
         <br>
         <button
-          @click="togglePower"
-          :class="power ? 'on' : 'off'">
+          class="power"
+          :class="power ? 'on' : 'off'"
+          @click="togglePower">
             on/off
 
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40">
@@ -113,8 +114,7 @@
   import midi from './components/system/Midi.vue';
   import multiply from './components/math/Multiply';
 
-  import { mapGetters, mapActions } from 'vuex';
-  // import * as actions from './store/actions';
+  import { mapMutations, mapGetters, mapActions } from 'vuex';
 
   export default {
     mixins: [sortable],
@@ -209,7 +209,8 @@
       });
 
       // FileManager
-      this.load();
+      // THIS needs to be synchronous:
+      this.$store.commit('LOAD');
 
       // TODO why cannot move into sortable:ready() ...?
       this.initSorting(this.$els.grid);
@@ -247,11 +248,15 @@
         });
       },
 
+      // VUEX mutations, bound as local methods:
+      ...mapMutations([
+        'LOAD'
+      ]),
+
       // VUEX actions, bound as local methods:
       ...mapActions([
         'clearActive',
-        'toggleEditMode',
-        'load'
+        'toggleEditMode'
       ])
     }
   };
