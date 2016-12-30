@@ -8,8 +8,9 @@
 
 
 <template>
-  <main :class="editing ? 'edit-mode': 'play-mode'">
-    <section
+  <section :class="editing ? 'edit-mode': 'play-mode'">
+
+    <div
       id="modules"
       class="grid-container"
       ref="grid"
@@ -44,7 +45,7 @@
         </connector>
       </svg>
 
-    </section>
+    </div>
 
     <aside id="controls">
       <div class="pad">
@@ -91,7 +92,8 @@
       <master-out></master-out>
 
     </aside>
-  </main>
+
+  </section>
 </template>
 
 <script>
@@ -107,7 +109,7 @@
   import Reverb from './components/Reverb';
 
   import connector from './components/system/Connector';
-  // import masterOut from './components/system/MasterOut';
+  import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
   import multiply from './components/math/Multiply';
 
@@ -118,7 +120,7 @@
     mixins: [sortable],
 
     components: {
-      // masterOut
+      masterOut,
       connector,
       midi,
       multiply,
@@ -245,6 +247,7 @@
         });
       },
 
+      // VUEX actions, bound as local methods:
       ...mapActions([
         'clearActive',
         'toggleEditMode',
