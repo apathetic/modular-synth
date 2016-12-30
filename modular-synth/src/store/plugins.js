@@ -1,4 +1,4 @@
-import { STORAGE_KEY_MODULES, STORAGE_KEY_CONNECTIONS } from './store';
+import { STORAGE_KEY_MODULES, STORAGE_KEY_CONNECTIONS } from './index';
 // import createLogger from 'vuex/logger';
 
 
