@@ -1,109 +1,100 @@
-export const getters = {
-
-  // -----------------------------------------------
-  //  BOOTSTRAP
-  // -----------------------------------------------
-
-  load({ commit }, newState = false) {
-    commit('LOAD', newState);
-  },
+// -----------------------------------------------
+//  BOOTSTRAP
+// -----------------------------------------------
+export const load = ({ commit }, newState = false) => {
+  commit('LOAD', newState);
+};
 
 
-  // -----------------------------------------------
-  //  APP
-  // -----------------------------------------------
-
-  toggleEditMode({ commit }) {
-    commit('TOGGLE_EDIT');
-  },
-
-
-  // -----------------------------------------------
-  //  UI
-  // -----------------------------------------------
+// -----------------------------------------------
+//  APP
+// -----------------------------------------------
+export const toggleEditMode = ({ commit }) => {
+  commit('TOGGLE_EDIT');
+};
 
 
-  // TODO ----------------- move to VUE BUS ?
-  setActive({ commit }, id) {
-    commit('SET_ACTIVE', id);
-  },
+// -----------------------------------------------
+//  UI
+// -----------------------------------------------
 
-  clearActive({ commit }) {
-    // commit('CLEAR_ACTIVE');
-  },
+// TODO ----------------- move to VUE BUS ?
+export const setActive = ({ commit }, id) => {
+  commit('SET_ACTIVE', id);
+};
 
-  setFocus({ commit }, id) {
-    commit('SET_FOCUS', id);
-  },
+export const clearActive = ({ commit }) => {
+  // commit('CLEAR_ACTIVE');
+};
 
-  clearFocus({ commit }) {
-    commit('CLEAR_FOCUS');
-  },
-    // ---------------------------------------
+export const setFocus = ({ commit }, id) => {
+  commit('SET_FOCUS', id);
+};
 
-
-  // -----------------------------------------------
-  //  MODULES
-  // -----------------------------------------------
-
-  addModule({ commit }, type) {
-    commit('ADD_MODULE', type);
-    //
-    // update gridlist here?
-    //
-  },
-
-  registerDimensions({ commit }, id, w, h) {
-    commit('REGISTER_DIMENSIONS', id, w, h);
-  },
-
-  removeModule({ commit, state }) {
-    // only delete active/selected modules
-    if (state.active === state.selected) {
-      const id = state.active;
-
-      commit('REMOVE_MODULE', id);
-
-      state.connections.forEach((connection) => {
-        if (connection.to.id === id || connection.from.id === id) {
-          commit('REMOVE_CONNECTION', connection.id);
-        }
-      });
-    }
-  },
+export const clearFocus = ({ commit }) => {
+  commit('CLEAR_FOCUS');
+};
+// ---------------------------------------
 
 
-  // -----------------------------------------------
-  //  POSITION
-  // -----------------------------------------------
+// -----------------------------------------------
+//  MODULES
+// -----------------------------------------------
 
-  updateGridPosition({ commit, state }, id, x, y) {
-    // if in EDIT MODE, we want to update the node AND the store
-    // if in PLAY mode, we just want to update the node
-    if (state.editing || id === 0) {
-      commit('UPDATE_GRID_POSITION', id, x, y);
-    }
-  },
+export const addModule = ({ commit }, type) => {
+  commit('ADD_MODULE', type);
+  //
+  // update gridlist here?
+  //
+};
 
-  updateRackPosition({ commit }, id, col, row) {
-    commit('UPDATE_RACK_POSITION', id, col, row);
-  },
+export const registerDimensions = ({ commit }, id, w, h) => {
+  commit('REGISTER_DIMENSIONS', id, w, h);
+};
 
+export const removeModule = ({ commit, state }) => {
+  // only delete active/selected modules
+  if (state.active === state.selected) {
+    const id = state.active;
 
-  // -----------------------------------------------
-  //  CONNECTIONS
-  // -----------------------------------------------
+    commit('REMOVE_MODULE', id);
 
-  updateConnection({ commit }, id, port) {
-    commit('UPDATE_CONNECTION', id, port);
-  },
-
-  newConnection({ commit }, outlet) {
-    commit('ADD_CONNECTION', outlet.port);
-  },
-
-  removeConnection({ commit }, id) {
-    commit('REMOVE_CONNECTION', id);
+    state.connections.forEach((connection) => {
+      if (connection.to.id === id || connection.from.id === id) {
+        commit('REMOVE_CONNECTION', connection.id);
+      }
+    });
   }
+};
 
+
+// -----------------------------------------------
+//  POSITION
+// -----------------------------------------------
+export const updateGridPosition = ({ commit, state }, id, x, y) => {
+  // if in EDIT MODE, we want to update the node AND the store
+  // if in PLAY mode, we just want to update the node
+  if (state.editing || id === 0) {
+    commit('UPDATE_GRID_POSITION', id, x, y);
+  }
+};
+
+export const updateRackPosition = ({ commit }, id, col, row) => {
+  commit('UPDATE_RACK_POSITION', id, col, row);
+};
+
+
+// -----------------------------------------------
+//  CONNECTIONS
+// -----------------------------------------------
+export const updateConnection = ({ commit }, id, port) => {
+  commit('UPDATE_CONNECTION', id, port);
+};
+
+export const newConnection = ({ commit }, outlet) => {
+  commit('ADD_CONNECTION', outlet.port);
+};
+
+export const removeConnection = ({ commit }, id) => {
+  commit('REMOVE_CONNECTION', id);
 };
