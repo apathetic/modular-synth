@@ -39,12 +39,12 @@ export const clearFocus = ({ commit }) => {
 // -----------------------------------------------
 //  MODULES
 // -----------------------------------------------
-export const addModule = ({ commit }, type) => {
-  commit('ADD_MODULE', type);
-  //
-  // update gridlist here?
-  //
-};
+// export const addModule = ({ commit }, type) => {
+//   commit('ADD_MODULE', type);
+//   //
+//   // update gridlist here?
+//   //
+// };
 
 export const registerDimensions = ({ commit }, id, w, h) => {
   commit('REGISTER_DIMENSIONS', id, w, h);
