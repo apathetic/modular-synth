@@ -6,6 +6,7 @@ import FileManager from './FileManager';
 const context = window.AudioContext && (new window.AudioContext());
 const bus = new Vue();
 
+// for midi events, drag events, and ....?  Setting/Clearing Focus/Active ...?
 Object.defineProperty(Vue.prototype, '$bus', {
   get() {
     return this.$root.bus;
@@ -77,8 +78,7 @@ Vue.component('outlets', {
 /* eslint-disable no-new */
 new Vue({
   store,
-  // el: 'body',
-  el: '#test',
+  el: 'main',
   components: { App, FileManager },
   data: { bus }
 });

@@ -6,7 +6,7 @@
 // load-friendly ie. proper ajax implementation. Or just bundle json with the App.
 
 <template>
-  <div class="pad">
+  <header class="pad">
     <button class="button" @click="save">save</button>
     <select v-model="selected">
       <option value="juno">Juno</option>
@@ -14,7 +14,7 @@
       <option v-for="patch in patches" :value="patch">{{ patch.name }}</option>
     </select>
     <button class="button" @click="loadIt">load</button>
-  </div>
+  </header>
 </template>
 
 <script>
