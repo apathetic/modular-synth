@@ -13,28 +13,24 @@
       <option value="arp">Arp</option>
       <option v-for="patch in patches" :value="patch">{{ patch.name }}</option>
     </select>
-    <button class="button" @click="loadIt">load</button>
+    <button class="button" @click="load">load</button>
   </header>
 </template>
 
 <script>
 
-import { load } from './store/actions';
+// import { load } from './store/actions';
 // import * as patches from './assets/patches';
-// TODO THIS. BETTER.
+// TODO THIS. BETTER :
 import FM from '../static/patches/FM';
 import Mod from '../static/patches/Mod';
 import Blank from '../static/patches/blank';
 import gridtest from '../static/patches/gridTest';
 import miditest from '../static/patches/midiTest';
 
-export default {
-  vuex: {
-    actions: {
-      load
-    }
-  },
+import { mapMutations } from 'vuex';
 
+export default {
   data() {
     return {
       name: 'wess',
@@ -52,12 +48,14 @@ export default {
   },
 
   methods: {
-    loadIt() {
+    load() {
       const patch = this.selected;
 
       localStorage.clear();
-      this.load(patch);
+      // this.load(patch);
+      this.$store.commit('LOAD', patch);
     },
+
     save() {
       // er... just get from store.getters...?
       const patch = {
@@ -67,7 +65,11 @@ export default {
         connections: localStorage.getItem('connections')
       };
       console.log(patch);
-    }
+    },
+
+    ...mapMutations([
+      'LOAD'
+    ])
   }
 };
 
