@@ -3,10 +3,19 @@
     class="module"
     id="master-out"
     @mouseover="setFocus(id)"
-    @mouseout="clearFocus()">
+    @mouseout="clearFocus">
 
     <div class="module-interface">
-      <level label="Volume" @value="gain = value" :min="0" :max="1"></level>
+      <!-- -->
+      <level
+        label="Volume"
+        @xxxvalue="gain = value"
+        @value="test"
+        min="0"
+        max="1"
+        >
+      </level>
+
       <button
         class="toggle"
         :class="isMuted ? 'toggle--active' : ''"
@@ -82,6 +91,9 @@ export default {
   },
 
   methods: {
+    test(val) {
+      console.log('works?: ', val);
+    },
     // Chrome (in informal testing) is smart enough to know when there is no
     // audio chain of connected nodes, and optimizes accordingly.
     start() {

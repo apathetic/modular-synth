@@ -17,7 +17,6 @@ export const toggleEditMode = ({ commit }) => {
 // -----------------------------------------------
 //  UI
 // -----------------------------------------------
-
 // TODO ----------------- move to VUE BUS ?
 export const setActive = ({ commit }, id) => {
   commit('SET_ACTIVE', id);
@@ -40,7 +39,6 @@ export const clearFocus = ({ commit }) => {
 // -----------------------------------------------
 //  MODULES
 // -----------------------------------------------
-
 export const addModule = ({ commit }, type) => {
   commit('ADD_MODULE', type);
   //

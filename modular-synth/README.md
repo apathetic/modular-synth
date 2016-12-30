@@ -34,9 +34,10 @@ npm test
 - VUEX
   - ~~store state of app~~
   - ~~persist to localstorage and recall~~
-  - common getters / setters (ie. active module, connection, etc)
+  - ~~update to 2.0~~
+    - ~~common getters / setters (ie. active module, connection, etc)~~
   - stop importing ES6 reference to store. Isn't it on the $root?
-
+  - remove FOCUS / ACTIVE from vuex --> move to BUS
 
 - UI
   - ~~cannot select from dropdown; dragging intercedes~~
