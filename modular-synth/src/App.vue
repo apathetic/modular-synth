@@ -228,7 +228,8 @@
         }
       },
       newModule(type) {
-        this.addModule(type);
+        // this.addModule(type);
+        this.$store.commit('ADD_MODULE', type);
 
         this.$nextTick(function() {
           const id = this.$store.state.id;
