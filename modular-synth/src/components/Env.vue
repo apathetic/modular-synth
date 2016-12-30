@@ -33,7 +33,7 @@ import { draggable } from '../mixins/draggable';
 import { newConnection } from '../store/actions';
 import { rackWidth, rackHeight } from '../dimensions';
 import Knob from './UI/Knob';
-import store from '../store/store'; // .... er...  this.$store...?
+// import store from '../store/store'; // .... er...  this.$store...?
 
 export default {
   mixins: [draggable],
@@ -52,8 +52,8 @@ export default {
     position() {
       return {
         //     this.$store.state.editing
-        left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
-        top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
+        left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
+        top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
       };
     }
   },
