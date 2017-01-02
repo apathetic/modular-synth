@@ -89,9 +89,7 @@ export const sortable = {
     _applyPositionToItems() {
       this.modules.forEach((item) => {
         // Don't interfere with the positions of the dragged items
-        // if (this.item !== item) {
         if (this.active !== item) {
-          // this.updateRackPosition(item.id, item.col, item.row);
           this.$store.dispatch('updateRackPosition', item.id, item.col, item.row);
         }
       });
