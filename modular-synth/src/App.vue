@@ -234,10 +234,11 @@
           const module = this.$children.find((m) => { return m.id === id; });
           const item = this.modules.find((m) => { return m.id === id; });
 
-
-          // this.registerDimensions(id, module.w, module.h);
-          this.$store.commit('REGISTER_DIMENSIONS', id, module.w, module.h);
-
+          this.$store.commit('REGISTER_DIMENSIONS', {
+            id: id,
+            w: module.w,
+            h: module.h
+          });
 
           module.$el.style.opacity = 0;
 
