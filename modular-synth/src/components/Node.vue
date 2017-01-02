@@ -14,8 +14,8 @@
     </div>
 
     <div class="module-connections">
-      <inlets ports="inlets"></inlets>
-      <outlets ports="outlets"></outlets>
+      <inlets :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
     </div>
   </div>
 </template>
@@ -23,18 +23,18 @@
 
 <script>
   import { draggable } from '../mixins/draggable';
-  import { newConnection } from '../store/actions';
-  import { rackWidth, rackHeight } from '../dimensions';
+  // import { newConnection } from '../store/actions';
+  // import { rackWidth, rackHeight } from '../dimensions';
   // import store from '../store/store'; // .... er...
 
   export default {
     mixins: [draggable],
 
-    vuex: {
-      actions: {
-        newConnection   // TODO move to outlet partial
-      }
-    },
+    // vuex: {
+    //   actions: {
+    //     newConnection   // TODO move to outlet partial
+    //   }
+    // },
 
     props: {
       id: null,
@@ -42,34 +42,34 @@
       row: null
     },
 
-    computed: {
-      position() {
-        return {
-          left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
-          top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
-        };
-      }
-    },
+    // computed: {
+    //   position() {
+    //     return {
+    //       left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
+    //       top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
+    //     };
+    //   }
+    // },
 
     data() {
       return {
         name: 'Node',
         w: 1, // width
-        h: 2, // height
+        h: 1, // height
 
         inlets: [
           {
-            port: 0,
+            // port: 0,
             label: 'freq',
             data: null // this.input
           },
           {
-            port: 1,
+            // port: 1,
             label: 'gain',
             data: null // this.input
           },
           {
-            port: 2,
+            // port: 2,
             label: 'range',
             data: null // this.input
           }
@@ -77,12 +77,12 @@
 
         outlets: [
           {
-            port: 0,
+            // port: 0,
             label: 'output-1',
             data: null // this.outputL   // src?
           },
           {
-            port: 1,
+            // port: 1,
             label: 'output-2',
             data: null // this.outputR
           }
