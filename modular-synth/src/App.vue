@@ -154,19 +154,19 @@
     created() {
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
-          this.startSorting();
+          this.startSorting();   // from sortable mixin
         }
       });
 
       this.$bus.$on('drag:active', (coords, el) => {
         if (!this.editing) { //  this.sorting) {
-          this.whileSorting(el);
+          this.whileSorting(el); // from sortable mixin
         }
       });
 
       this.$bus.$on('drag:end', () => {
         if (!this.editing) {
-          this.stopSorting();
+          this.stopSorting();    // from sortable mixin
         }
       });
     },
@@ -227,7 +227,6 @@
         }
       },
       newModule(type) {
-        // this.addModule(type);
         this.$store.commit('ADD_MODULE', type);
 
         this.$nextTick(function() {
