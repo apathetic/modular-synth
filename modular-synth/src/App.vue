@@ -23,10 +23,9 @@
       <component v-for="(module, index) in modules"
         :is="module.type"
         :id="module.id"
-        :x="module.x"
-        :y="module.y"
         :col="module.col"
         :row="module.row"
+        :coords="{ x:module.x, y:module.y }"
 
         @mousedown.native="setActive(module.id)"
         @mouseover.native="setFocus(module.id)"

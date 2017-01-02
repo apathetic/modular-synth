@@ -56,8 +56,8 @@ export const ADD_MODULE = (state, type) => {
     type: type,
     x: 0,         // for dragging X
     y: 0,         // for dragging Y
-    col: 0,       // for grid X position
-    row: 0,       // for grid Y position
+    col: 0,       // for rack X position
+    row: 0,       // for rack Y position
     h: 0,         // for rack height
     w: 0          // for rack width
   });

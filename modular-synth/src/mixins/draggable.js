@@ -5,7 +5,6 @@
  * @type {Object}
  */
 
-// import { updateGridPosition } from '../store/actions';
 import { rackWidth, rackHeight } from '../dimensions';
 
 const dragObj = {
@@ -17,25 +16,14 @@ const dragObj = {
 };
 
 export const draggable = {
-  // vuex: {
-  //   actions: {
-  //     updateGridPosition
-  //   }
-  //   // getters: {
-  //   //   editing: (state) => state.editing,
-  //   //   module: (state) => state.modules.find((module) => { return module.id === this.id; })
-  //   // }
-  // },
-
   props: {
-    x: 0,
-    y: 0
+    coords: Object
   },
 
   computed: {
     position() {
       return {
-        left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
+        left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : (this.col * rackWidth) + 'px', // * this.w
         top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
       };
     }
@@ -43,8 +31,15 @@ export const draggable = {
 
   data() {
     return {
+      x: 0,
+      y: 0,
       dragging: false
     };
+  },
+
+  created() {
+    this.x = this.coords.x;
+    this.y = this.coords.y;
   },
 
   methods: {
@@ -61,10 +56,10 @@ export const draggable = {
       dragObj.startX = x;
       dragObj.startY = y;
 
-      this.x = x;
-      this.y = y;
       this.dragging = true;
-      // this. $ dispatch('drag:start', [x, y], this.$el);
+      this.x = x;                 // necessary as the module's internal coords may be different if in play mode
+      this.y = y;
+
       this.$bus.$emit('drag:start', [x, y], this.$el);
 
       // Capture mousemove and mouseup events on the page.
@@ -76,22 +71,33 @@ export const draggable = {
       const x = dragObj.startX + event.clientX - dragObj.cursorStartX;
       const y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
+      // we _always_ want to change the module's coordinates
+      // while dragging, whether in editing mode or not:
       this.x = x;
       this.y = y;
 
       this.$bus.$emit('drag:active', [x, y], this.$el);
-      // this.$store.dispatch('updateGridPosition', this.id, module.x, module.y);
     },
 
     stopDragging(event) {
       this.dragging = false;
       this.$bus.$emit('drag:end', this.id);
 
-      this.$store.dispatch('updateGridPosition', this.id, module.x, module.y);
+      if (this.$store.state.editing) {
+        // we only want to update the Store with the
+        // new coordinates if we are in editing mode:
+        this.$store.commit('UPDATE_GRID_POSITION', {
+          id: this.id,
+          x: this.x,
+          y: this.y
+        });
+      } else {
+        // otherwise, restore the x,y coordinates -- we only want to update
+        // them if in editing mode; we don't want moving the module around
+        // in play mode to affect the position when it's in editing mode
 
-      // restore the x,y grid values on the node
-      if (!this.$store.state.editing) {
-        const module = this.$store.state.modules.find((module) => { return module.id === this.id; });
+        // could also store coords on dragObj ...?
+        const module = this.$store.state.modules.find((m) => { return m.id === this.id; });
 
         this.x = module.x;
         this.y = module.y;
