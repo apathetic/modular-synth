@@ -18,7 +18,7 @@
 export default {
   props: {
     label: 'Slider',
-    value: 0,
+    // value: 0,
     min: 0,
     max: 100
   },

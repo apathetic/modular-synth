@@ -1,22 +1,17 @@
 <template>
   <div class="slider" @mousedown.stop.prevent="start">
-
-      <div class="fill" :style="bottom"></div>
-
+    <div class="fill" :style="bottom"></div>
     <!-- {{ value }} -->
   </div>
 </template>
 
 
 <script>
-// const size = 48;  // same as knob
-
 export default {
   props: {
-    label: 'Slider',
-    value: 0,
-    min: 0,
-    max: 100
+    label: String,
+    min: null,
+    max: null
   },
 
   data() {
@@ -38,7 +33,8 @@ export default {
     const self = this;
 
     this.range = (this.max - this.min) / 100;
-    this.sliderValue = this.value;
+
+    // this.sliderValue = this.value;
     // this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
 
     window.addEventListener('mouseup', (e) => {
@@ -70,7 +66,8 @@ export default {
       const value = Math.round(sliderValue * this.range + this.min);
 
       this.sliderValue = sliderValue;
-      this.value = value;
+      // this.value = value;
+      this.$emit('value', value);
     }
   }
 };

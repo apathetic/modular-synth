@@ -9,11 +9,13 @@
       <!-- -->
       <level
         label="Volume"
-        @value="gain = $value"
         min="0"
-        max="1">
+        max="1"
+        @value="gain = $event">
       </level>
+
       {{ gain }}
+
       <button
         class="toggle"
         :class="isMuted ? 'toggle--active' : ''"
@@ -118,14 +120,16 @@ export default {
       this.x = x;
       this.y = y;
 
-      this.updateGridPosition(0, x, y);
+      // this.updateGridPosition(0, x, y);
+      // VS
+      this.$store.dispatch('updateGridPosition', 0, x, y);
     },
 
     // VUEX actions, bound as local methods:
     ...mapActions([
       'setFocus',
-      'clearFocus',
-      'updateGridPosition'
+      'clearFocus'
+      // 'updateGridPosition'
     ])
   }
 

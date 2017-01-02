@@ -40,10 +40,9 @@ function describeArc(x, y, radius, startAngle, endAngle) {
 
 export default {
   props: {
-    label: '',
-    value: 0,
-    min: 0,
-    max: 100
+    label: String,
+    min: null,
+    max: null
   },
 
   data() {
@@ -52,7 +51,8 @@ export default {
       startValue: 0,
       startClientY: null,
       knobValue: 1,
-      range: 1
+      range: 1,
+      value: 0
     };
   },
 
@@ -102,16 +102,15 @@ export default {
 
       this.knobValue = knobValue; // Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
       this.value = value;
-      this.setDisplay();
+
       this.$emit('value', value);
+      this.setDisplay();
     },
 
     setDisplay() {
       const rotationValue = this.knobValue * 3 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
-      // const value = Math.round(this.knobValue * this.range + this.min);
 
-      this.$ref.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
-      // this.value = value;
+      this.$refs.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
     }
   }
 };

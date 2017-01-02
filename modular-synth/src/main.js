@@ -57,6 +57,44 @@ Vue.component('outlets', {
   `
 });
 
+/* */
+
+Vue.component('inlets', {
+  functional: true,
+  props: { ports: {} },
+
+  // A)
+  // template: '<div>{ { name }}</div>'
+
+  // B)
+  // render: inlets.render,
+  // staticRenderFns: inlets.staticRenderFns
+
+
+  // C)
+  render: function(createElement, context) {
+    const ports = context.props.ports;
+
+    return createElement('div',
+      {
+        class: { 'inlets': true }
+      },
+      ports.map((port, i) => {
+        return createElement('span',
+          {
+            class: { 'inlet': true },
+            attrs: {
+              'data-label': port.label,
+              'data-port': i
+            }
+          }
+        );
+      })
+    );
+  }
+});
+
+
 //
 // Vue.component('ports', {
 //   functional: true,

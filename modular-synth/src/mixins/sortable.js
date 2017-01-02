@@ -13,15 +13,15 @@
 const lanes = 3;
 
 import GridList from '../../static/js/gridList';  // TODO more this. move static
-import { updateRackPosition } from '../store/actions';
+// import { updateRackPosition } from '../store/actions';
 import { rackWidth, rackHeight } from '../dimensions';
 
 export const sortable = {
-  vuex: {
-    actions: {
-      updateRackPosition
-    }
-  },
+  // vuex: {
+  //   actions: {
+  //     updateRackPosition
+  //   }
+  // },
 
   mounted() {
     // this.handle = handle;
@@ -92,7 +92,8 @@ export const sortable = {
         // Don't interfere with the positions of the dragged items
         // if (this.item !== item) {
         if (this.active !== item) {
-          this.updateRackPosition(item.id, item.col, item.row);
+          // this.updateRackPosition(item.id, item.col, item.row);
+          this.$store.dispatch('updateRackPosition', item.id, item.col, item.row);
         }
       });
 
