@@ -3,7 +3,7 @@
   class="module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @mousedown.prevent="startDragging">
+  @mousedown.stop="startDragging">
 
     <div class="module-details">
       <h3>{{ name }}</h3>
@@ -11,6 +11,13 @@
 
     <div class="module-interface">
       {{ position }}<br><br>
+      x {{ x }}<br>
+      y {{ y }}<br>
+      col {{ col }}<br>
+      row {{ row }}<br>
+      {{ position.left }}<br>
+      {{ dragging }}<br>
+      edit: {{ $store.state.editing }}
     </div>
 
     <div class="module-connections">
@@ -29,27 +36,11 @@
 
   export default {
     mixins: [draggable],
-
-    // vuex: {
-    //   actions: {
-    //     newConnection   // TODO move to outlet partial
-    //   }
-    // },
-
     props: {
       id: null,
       col: null,
       row: null
     },
-
-    // computed: {
-    //   position() {
-    //     return {
-    //       left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
-    //       top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
-    //     };
-    //   }
-    // },
 
     data() {
       return {
@@ -59,17 +50,14 @@
 
         inlets: [
           {
-            // port: 0,
             label: 'freq',
             data: null // this.input
           },
           {
-            // port: 1,
             label: 'gain',
             data: null // this.input
           },
           {
-            // port: 2,
             label: 'range',
             data: null // this.input
           }
@@ -77,7 +65,6 @@
 
         outlets: [
           {
-            // port: 0,
             label: 'output-1',
             data: null // this.outputL   // src?
           },

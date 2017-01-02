@@ -69,18 +69,21 @@ export const removeModule = ({ commit, state }) => {
 // -----------------------------------------------
 //  POSITION
 // -----------------------------------------------
-export const updateGridPosition = ({ commit, state }, id, x, y) => {
-  // if in EDIT MODE, we want to update the node AND the store
-  // if in PLAY mode, we just want to update the node
-  if (state.editing || id === 0) {
-    // commit('UPDATE_GRID_POSITION', id, x, y);
-    commit('UPDATE_GRID_POSITION', { id, x, y });
-  }
-};
+// export const updateGridPosition = ({ commit, state }, id, x, y) => {
+//   // if in EDIT MODE, we want to update the node AND the store
+//   // if in PLAY mode, we just want to update the node
+//   if (state.editing || id === 0) {
+//     commit('UPDATE_GRID_POSITION', { id, x, y });
+//   }
+// };
 
-export const updateRackPosition = ({ commit }, id, col, row) => {
-  commit('UPDATE_RACK_POSITION', { id, col, row });
-};
+// export const updateRackPosition = ({ commit }, id, col, row) => {
+//   commit('UPDATE_RACK_POSITION', {
+//     id: id,
+//     col: col,
+//     row: row
+//   });
+// };
 
 
 // -----------------------------------------------
