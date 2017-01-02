@@ -49,22 +49,11 @@ Other notes:
 </template>
 
 <script>
-import { updateConnection, removeConnection } from '../../store/actions';
 import { cellWidth } from '../../dimensions';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  vuex: {
-    actions: {
-      updateConnection,
-      removeConnection
-    },
-    getters: {
-      // modules: (state) => state.modules,   // only used to "reactify" new connections
-      selected: (state) => state.selected
-    }
-  },
-
-  props: {                // data from the Store
+  props: {
     id: Number,
     to: Object,
     from: Object
@@ -86,7 +75,10 @@ export default {
       return this.cursorY
              ? this.cursorY
              : this.toModule.y + (this.to.port * 20) + 27;
-    }
+    },
+    ...mapGetters([
+      'selected'
+    ])
   },
 
   data() {                // reference to actual modules in the App:
@@ -207,7 +199,14 @@ export default {
 
       this.cursorX = false;
       this.cursorY = false;
-    }
+    },
+
+    // VUEX actions, bound as local methods:
+    // ...mapMutations([
+    ...mapActions([
+      'updateConnection',
+      'removeConnection'
+    ])
   }
 };
 </script>

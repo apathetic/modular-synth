@@ -26,7 +26,7 @@
 
     <div class="module-connections">
       <inlets :ports="inlets"></inlets>
-      <!-- <o u tlets : ports="o utlets"></outlets> -->
+      <outlets :ports="outlets"></outlets>
       <!-- <ports data="inlets" type="in"></ports> -->
     </div>
   </div>
@@ -103,30 +103,29 @@
     },
 
     methods: {
+      /**
+       * k-rate control of the Oscillator frequency
+       * @param  {Float} f frequency
+       */
       setFreq(f) {
-        /**
-         * k-rate control of the Oscillator frequency
-         * @param  {Float} f frequency
-         */
-
         // this.node.frequency.value = f;
         this.outlets[0].data.frequency.value = f;
       },
 
+      /**
+       * Update wave type
+       * @param  {String} t One of the pre-defined oscillator wave types
+       */
       setType(t) {
-        /**
-         * Update wave type
-         * @param  {String} t One of the pre-defined oscillator wave types
-         */
         // this.node.type = t;
         this.outlets[0].data.type = t;
       },
 
+      /**
+       * Update Oscillator gain
+       * @param  {Float} g  Gain, between 0 and 1.
+       */
       setGain(g) {
-        /**
-         * Update Oscillator gain
-         * @param  {Float} g  Gain, between 0 and 1.
-         */
         // this.gain.gain.value = g;
         this.inlets[0].data.gain.value = g;
       }
