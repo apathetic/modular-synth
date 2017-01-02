@@ -80,18 +80,14 @@ export const draggable = {
       this.y = y;
 
       this.$bus.$emit('drag:active', [x, y], this.$el);
-
-      // this.updateGridPosition(this.id, x, y);
+      // this.$store.dispatch('updateGridPosition', this.id, module.x, module.y);
     },
 
     stopDragging(event) {
       this.dragging = false;
       this.$bus.$emit('drag:end', this.id);
 
-      // if (this.$store.state.editing) {
-      // this.$store.commit('UPDATE_GRID_POSITION', this.id, module.x, module.y);
       this.$store.dispatch('updateGridPosition', this.id, module.x, module.y);
-      // }
 
       // restore the x,y grid values on the node
       if (!this.$store.state.editing) {

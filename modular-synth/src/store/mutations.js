@@ -113,14 +113,13 @@ export const ADD_CONNECTION = (state, port) => {
   });
 };
 
-export const UPDATE_CONNECTION = (state, id, port) => {
-  const connection = state.connections.find(function(c) { return c.id === id; });
-  const to = {
-    id: state.selected,
-    port: port
-  };
+export const UPDATE_CONNECTION = (state, data) => {
+  const connection = state.connections.find(function(c) { return c.id === data.id; });
 
-  connection.to = to;
+  connection.to = {
+    id: state.focused,
+    port: data.port
+  };
 };
 
 export const REMOVE_CONNECTION = (state, id) => {
