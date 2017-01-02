@@ -51,8 +51,8 @@ export const clearFocus = ({ commit }) => {
 // };
 
 export const removeModule = ({ commit, state }) => {
-  // only delete active/selected modules
-  if (state.active === state.selected) {
+  // only delete active/focused modules
+  if (state.active === state.focused) {
     const id = state.active;
 
     commit('REMOVE_MODULE', id);
@@ -73,12 +73,13 @@ export const updateGridPosition = ({ commit, state }, id, x, y) => {
   // if in EDIT MODE, we want to update the node AND the store
   // if in PLAY mode, we just want to update the node
   if (state.editing || id === 0) {
-    commit('UPDATE_GRID_POSITION', id, x, y);
+    // commit('UPDATE_GRID_POSITION', id, x, y);
+    commit('UPDATE_GRID_POSITION', { id, x, y });
   }
 };
 
 export const updateRackPosition = ({ commit }, id, col, row) => {
-  commit('UPDATE_RACK_POSITION', id, col, row);
+  commit('UPDATE_RACK_POSITION', { id, col, row });
 };
 
 

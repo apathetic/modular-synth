@@ -12,8 +12,7 @@
  */
 const lanes = 3;
 
-import GridList from '../../static/js/gridList';  // TODO more this. move static
-// import { updateRackPosition } from '../store/actions';
+import GridList from '../assets/vendor/gridList';
 import { rackWidth, rackHeight } from '../dimensions';
 
 export const sortable = {

@@ -77,7 +77,7 @@ export default {
              : this.toModule.y + (this.to.port * 20) + 27;
     },
     ...mapGetters([
-      'selected'
+      'focused'
     ])
   },
 
@@ -147,12 +147,12 @@ export default {
 
     /**
      * Fetch a Vue Component from the App, given a particular id. Fetch the currently
-     * selected Component if no id is passed in.
+     * focused Component if no id is passed in.
      * NOTE: we fetch the Component from the App, as that is what contains
      *       the actual AudioNode.
      * @type {Number} id The id of the module to fetch.
      */
-    getModule(id = this.selected) {   // this.$store.state.selected
+    getModule(id = this.focused) {
       const App = this.$parent;
       return App.$children.find((m) => { return m.id === id; });
     },
