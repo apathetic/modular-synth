@@ -46,9 +46,9 @@ export const clearFocus = ({ commit }) => {
 //   //
 // };
 
-export const registerDimensions = ({ commit }, id, w, h) => {
-  commit('REGISTER_DIMENSIONS', id, w, h);
-};
+// export const registerDimensions = ({ commit }, id, w, h) => {
+//   commit('REGISTER_DIMENSIONS', id, w, h);
+// };
 
 export const removeModule = ({ commit, state }) => {
   // only delete active/selected modules

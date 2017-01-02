@@ -20,7 +20,7 @@
         <div class="inner"></div>
       </div>
 
-      <component v-for="(module, index) in modules"  v-if="module.id !== 0"
+      <component v-for="(module, index) in modules"
         :is="module.type"
         :id="module.id"
         :x="module.x"
@@ -30,7 +30,7 @@
 
         @mousedown.stop="setActive(module.id)"
         @mouseover="setFocus(module.id)"
-        @mouseout="clearFocus()"
+        @mouseout="clearFocus"
 
         track-by="index">
       </component>
@@ -101,7 +101,7 @@
   import { sortable } from './mixins/sortable';
 
   import Env from './components/Env';
-  import Filter from './components/Filter';
+  // import Filter from './components/Filter';
   import LFO from './components/LFO';
   import Mixer from './components/Mixer';
   import Node from './components/Node';
@@ -114,7 +114,7 @@
   import midi from './components/system/Midi.vue';
   import multiply from './components/math/Multiply';
 
-  import { mapMutations, mapGetters, mapActions } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
 
   export default {
     mixins: [sortable],
@@ -126,7 +126,7 @@
       multiply,
 
       Env,
-      Filter,
+      // Filter,
       LFO,
       Mixer,
       Node,
@@ -236,7 +236,10 @@
           const module = this.$children.find((m) => { return m.id === id; });
           const item = this.modules.find((m) => { return m.id === id; });
 
-          this.registerDimensions(id, module.w, module.h);
+
+          // this.registerDimensions(id, module.w, module.h);
+          this.$store.commit('REGISTER_DIMENSIONS', id, module.w, module.h);
+
 
           module.$el.style.opacity = 0;
 
@@ -250,14 +253,16 @@
       },
 
       // VUEX mutations, bound as local methods:
-      ...mapMutations([
-        'LOAD'
-      ]),
+      // ...mapMutations([
+      //   'LOAD'
+      // ]),
 
       // VUEX actions, bound as local methods:
       ...mapActions([
         'clearActive',
-        'toggleEditMode'
+        'toggleEditMode',
+        'setFocus',
+        'clearFocus'
       ])
     }
   };
