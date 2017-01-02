@@ -17,7 +17,6 @@ export const toggleEditMode = ({ commit }) => {
 // -----------------------------------------------
 //  UI
 // -----------------------------------------------
-// TODO ----------------- move to VUE BUS ?
 export const setActive = ({ commit }, id) => {
   commit('SET_ACTIVE', id);
 };
@@ -26,6 +25,7 @@ export const clearActive = ({ commit }) => {
   // commit('CLEAR_ACTIVE');
 };
 
+// TODO ----------------- move to VUE BUS ? or within App.vue only ...?
 export const setFocus = ({ commit }, id) => {
   commit('SET_FOCUS', id);
 };
@@ -89,9 +89,9 @@ export const updateConnection = ({ commit }, id, port) => {
   commit('UPDATE_CONNECTION', id, port);
 };
 
-export const newConnection = ({ commit }, outlet) => {
-  commit('ADD_CONNECTION', outlet.port);
-};
+// export const addConnection = ({ commit }, outlet) => {
+//   commit('ADD_CONNECTION', outlet.port);
+// };
 
 export const removeConnection = ({ commit }, id) => {
   commit('REMOVE_CONNECTION', id);
