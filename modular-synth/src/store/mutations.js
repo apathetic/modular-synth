@@ -94,7 +94,7 @@ export const UPDATE_RACK_POSITION = (state, id, col, row) => {
 // -----------------------------------------------
 export const ADD_CONNECTION = (state, port) => {
   // find the module that contains the outlet. Ironically, we dont even use "outlet" to
-  // determine this, instead relying on the "selected" module in the App.
+  // determine this, instead relying on the currently "selected" module in the App.
   state.id++;
 
   const from = {
@@ -112,8 +112,6 @@ export const ADD_CONNECTION = (state, port) => {
     to,
     from
   });
-
-  // state.id++;
 };
 
 export const UPDATE_CONNECTION = (state, id, port) => {

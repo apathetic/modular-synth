@@ -88,14 +88,17 @@ export const draggable = {
       this.dragging = false;
       this.$bus.$emit('drag:end', this.id);
 
+      // if (this.$store.state.editing) {
+      // this.$store.commit('UPDATE_GRID_POSITION', this.id, module.x, module.y);
+      this.$store.dispatch('updateGridPosition', this.id, module.x, module.y);
+      // }
+
       // restore the x,y grid values on the node
       if (!this.$store.state.editing) {
         const module = this.$store.state.modules.find((module) => { return module.id === this.id; });
 
         this.x = module.x;
         this.y = module.y;
-
-        this.$store.commit('UPDATE_GRID_POSITION', this.id, module.x, module.y);
       }
 
       document.removeEventListener('mousemove', this.whileDragging);
