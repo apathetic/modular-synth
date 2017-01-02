@@ -28,11 +28,11 @@
         :col="module.col"
         :row="module.row"
 
-        @mousedown.stop="setActive(module.id)"
-        @mouseover="setFocus(module.id)"
-        @mouseout="clearFocus"
+        @mousedown.native="setActive(module.id)"
+        @mouseover.native="setFocus(module.id)"
+        @mouseout.native="clearFocus"
 
-        track-by="index">
+        :key="index">
       </component>
 
       <svg id="connections">
@@ -208,8 +208,7 @@
         }
       });
 
-      // FileManager
-      // THIS needs to be synchronous:
+      // FileManager (using "commit" as it needs to be synchronous)
       this.$store.commit('LOAD');
 
       // TODO why cannot move into sortable:ready() ...?
@@ -259,8 +258,9 @@
 
       // VUEX actions, bound as local methods:
       ...mapActions([
-        'clearActive',
         'toggleEditMode',
+        'setActive',
+        'clearActive',
         'setFocus',
         'clearFocus'
       ])
