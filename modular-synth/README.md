@@ -21,15 +21,13 @@ npm test
 
 ## TODO
 
-- INPUT TYPES
-  - in
-  - out
-  - mod (A, B, FM?)
-  - pitch (freq?)
-  - triggers or bangs:
-    - gate
-    - reset (more for sequencing)
-    - sync (ie. phase)
+- Vue 2.0
+  - new parent / child events
+    - .native on components
+  - dragging / sorting is messed up
+  - connectors are messed up, dont have x,y coords
+  - convert vuex commit payloads to objects
+  
 
 - VUEX
   - ~~store state of app~~
@@ -37,17 +35,17 @@ npm test
   - ~~update to 2.0~~
     - ~~common getters / setters (ie. active module, connection, etc)~~
   - ~~stop importing ES6 reference to store. Isn't it on the $root?~~
-  - remove FOCUS / ACTIVE from vuex --> move to BUS
+  - remove FOCUS from vuex --> move to BUS
     - drag, too?
 
 - UI
   - ~~cannot select from dropdown; dragging intercedes~~
   - dial doesn't do floats **
   - ~~cannot dynamically add new modules~~
-  - 2 modes: play / edit.
+  - ~~2 modes: play / edit.~~
     - ~~play: grid (packery, gridlist)~~
     - ~~edit: draggables (dragabilly, vanillaJS)~~
-    - dotted line while creating a connection
+  - dotted line while creating a connection
     - when a node is selected, all connected connections become highlighted
 
 
@@ -59,8 +57,8 @@ npm test
 
 
 - NODES
-  - base node mixin...
-    - tuck away: draggable, newConnection, (vuex) col/row, (computd) left/right
+  - ~~base node mixin...~~
+    - ~~tuck away: draggable, newConnection, (vuex) col/row, (computd) left/right~~ solved w/ vue2.0
   - ~~DELETE node~~
     - ~~and associated audio connections~~
 
@@ -82,23 +80,23 @@ npm test
   - reconcile "connector" name and "connection"
 
 
-- MIDI
-  - pitch
-  - gate
-  - note
-  - bend
-  - velocity
-  - mod-wheel
-  - aftertouch
-  - MIDI learn
+
+---------------
+
+NOTES:
+
+- INPUT TYPES
+  - in
+  - out
+  - mod (A, B, FM?)
+  - pitch (freq?)
+  - triggers or bangs:
+    - gate
+    - reset (more for sequencing)
+    - sync (ie. phase)
 
 
-
-
-----------------------------------------------------------------
-
-
-- NODES:
+- nodes:
   - ~~MULT~~
 
   - ENV
@@ -122,3 +120,14 @@ npm test
 - routing
   - mixer (mini)
   - ~~audio out~~
+
+
+- MIDI
+  - pitch
+  - gate
+  - note
+  - bend
+  - velocity
+  - mod-wheel
+  - aftertouch
+  - MIDI learn
