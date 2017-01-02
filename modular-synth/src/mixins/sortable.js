@@ -4,7 +4,7 @@
  * clear, we can destructively mess with this data array and not worry
  * too much as the source of truth is still safe within vuex.
  *
- * NOTE: As this is a mixin, several object prpoerties are defined
+ * NOTE: As this is a mixin, several object properties are defined
  * elsewhere but referenced here. The two primary ones are:
  *   this.active
  *   this.modules
@@ -16,12 +16,6 @@ import GridList from '../assets/vendor/gridList';
 import { rackWidth, rackHeight } from '../dimensions';
 
 export const sortable = {
-  // vuex: {
-  //   actions: {
-  //     updateRackPosition
-  //   }
-  // },
-
   mounted() {
     // this.handle = handle;
     // this.$positionHighlight = this.handle.querySelector('.position-highlight');
@@ -88,9 +82,13 @@ export const sortable = {
 
     _applyPositionToItems() {
       this.modules.forEach((item) => {
-        // Don't interfere with the positions of the dragged items
+        // Don't interfere with the position of the dragged items. TODO - is this the case...?
         if (this.active !== item) {
-          this.$store.dispatch('updateRackPosition', item.id, item.col, item.row);
+          this.$store.commit('UPDATE_RACK_POSITION', {
+            id: item.id,
+            col: item.col,
+            row: item.row
+          });
         }
       });
 

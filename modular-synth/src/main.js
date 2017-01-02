@@ -3,6 +3,8 @@ import store from './store';
 import App from './App';
 import FileManager from './FileManager';
 
+// Vue.config.silent = true;
+
 const context = window.AudioContext && (new window.AudioContext());
 const bus = new Vue();
 
@@ -25,22 +27,25 @@ Vue.mixin({
   }
 });
 
+/* * /
+const inlets = Vue.compile(`
+  <div v-once class="inlets">
+    <span v-for="(inlet, index) in ports"
+      :data-label="inlet.label"
+      :data-port="index"
+      class="inlet">
+    </span>
+  </div>
+`);
 
-
-/* */
 Vue.component('inlets', {
   functional: true,
-  props: ['ports'],
-  template: `
-    <div v-once class="inlets">
-      <span v-for="(inlet, index) in ports"
-        :data-label="inlet.label"
-        :data-port="index"
-        class="inlet">
-      </span>
-    </div>
-  `
+  props: { ports: {} },
+  render: inlets.render,
+  staticRenderFns: inlets.staticRenderFns
 });
+
+/* * /
 
 Vue.component('outlets', {
   functional: true,
@@ -100,7 +105,6 @@ Vue.component('outlets', {
             on: {
               mousedown: (e) => {
                 e.stopPropagation();
-                // this.newConnection(port);
                 store.commit('ADD_CONNECTION', i);  // just port #, as the module is already ref'd in "focused"
               }
             },

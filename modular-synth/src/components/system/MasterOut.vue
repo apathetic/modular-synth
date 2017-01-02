@@ -112,16 +112,19 @@ export default {
       this.x = x;
       this.y = y;
 
-      // this.updateGridPosition(0, x, y);
+      this.$store.commit('UPDATE_GRID_POSITION', {
+        id: 0,
+        x: x,
+        y: y
+      });
       // VS
-      this.$store.dispatch('updateGridPosition', 0, x, y);
+      // this.$store.dispatch('updateGridPosition', 0, x, y);
     },
 
     // VUEX actions, bound as local methods:
     ...mapActions([
       'setFocus',
       'clearFocus'
-      // 'updateGridPosition'
     ])
   }
 
