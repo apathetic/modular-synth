@@ -17,12 +17,11 @@ export const TOGGLE_EDIT = (state) => {
   state.editing = !state.editing;
 };
 
-export const REGISTER_DIMENSIONS = (state, id, w, h) => {
-  const module = state.modules.find(function(module) { return module.id === id; });
-  // const module = state.modules.find((module) => { module.id === id; });
+export const REGISTER_DIMENSIONS = (state, data) => {
+  const module = state.modules.find((m) => { return m.id === data.id; });
 
-  module.w = w;
-  module.h = h;
+  module.w = data.w;
+  module.h = data.h;
 };
 
 
@@ -39,11 +38,11 @@ export const CLEAR_ACTIVE = (state) => {
 };
 
 export const SET_FOCUS = (state, id) => {
-  state.selected = id;
+  state.focused = id;
 };
 
 export const CLEAR_FOCUS = (state) => {
-  state.selected = undefined;
+  state.focused = undefined;
 };
 
 
@@ -74,18 +73,18 @@ export const REMOVE_MODULE = (state, id) => {
 // -----------------------------------------------
 //  POSITION
 // -----------------------------------------------
-export const UPDATE_GRID_POSITION = (state, id, x, y) => {
-  const module = state.modules.find(function(module) { return module.id === id; });
+export const UPDATE_GRID_POSITION = (state, data) => {
+  const module = state.modules.find(function(module) { return module.id === data.id; });
 
-  module.x = x;
-  module.y = y;
+  module.x = data.x;
+  module.y = data.y;
 };
 
-export const UPDATE_RACK_POSITION = (state, id, col, row) => {
-  const module = state.modules.find(function(module) { return module.id === id; });
+export const UPDATE_RACK_POSITION = (state, data) => {
+  const module = state.modules.find(function(module) { return module.id === data.id; });
 
-  module.col = col;
-  module.row = row;
+  module.col = data.col;
+  module.row = data.row;
 };
 
 
@@ -94,11 +93,11 @@ export const UPDATE_RACK_POSITION = (state, id, col, row) => {
 // -----------------------------------------------
 export const ADD_CONNECTION = (state, port) => {
   // find the module that contains the outlet. Ironically, we dont even use "outlet" to
-  // determine this, instead relying on the currently "selected" module in the App.
+  // determine this, instead relying on the currently "focused" module in the App.
   state.id++;
 
   const from = {
-    id: state.selected,
+    id: state.focused,
     port: port
   };
 

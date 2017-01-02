@@ -29,7 +29,7 @@ const state = {
                             // in localStorage manually in the webAudioPlugin _after_ all the modules have loaded in
                             // order to ensure audio-routing and visual connections will have Objects to link to / from
   editing: false,
-  selected: undefined,  // Hovered: Module Info, Connections.
+  focused: undefined,  // Hovered: Module Info, Connections.
   active: 0             // Clicked: Dragging, Deleting.
 };
 
