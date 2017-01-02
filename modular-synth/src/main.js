@@ -65,8 +65,7 @@ Vue.component('inlets', {
   render: function(createElement, context) {
     const ports = context.props.ports;
 
-    return createElement(
-      'div',
+    return createElement('div',
       {
         class: { 'inlets': true }
       },
@@ -91,8 +90,7 @@ Vue.component('outlets', {
   render: function(createElement, context) {
     const ports = context.props.ports;
 
-    return createElement(
-      'div',
+    return createElement('div',
       {
         class: { 'outlets': true }
       },
@@ -103,7 +101,7 @@ Vue.component('outlets', {
               mousedown: (e) => {
                 e.stopPropagation();
                 // this.newConnection(port);
-                store.commit('ADD_CONNECTION', i);  // just port #, as the module is already ref'd in "selected"
+                store.commit('ADD_CONNECTION', i);  // just port #, as the module is already ref'd in "focused"
               }
             },
             class: { 'outlet': true },
@@ -117,23 +115,6 @@ Vue.component('outlets', {
     );
   }
 });
-
-//
-// Vue.component('ports', {
-//   functional: true,
-//   props: ['data', 'type'],
-//   template: `
-//     <div v-once :class="(type == in) ? 'inlets' : 'outlets'">
-//       <span v-for="(port, index) in ports"
-//         :data-label="port.label"
-//         :data-port="index"
-//         :class="(type == in) ? 'inlet' : 'outlet'">">
-//         // v-if out ... @mousedown.stop="newConnection(port)"
-//       </span>
-//     </div>
-//   `
-// });
-/* */
 
 
 /* eslint-disable no-new */
