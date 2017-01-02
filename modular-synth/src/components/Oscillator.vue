@@ -18,15 +18,15 @@
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
 
-      <slider label="mod"  @value="mod = value"  min="0" max="100"></slider>
-      <knob   label="freq" @value="freq = value" min="1" max="880"></knob>
-      <knob   label="sync" @value="sync = value" min="0" max="1"></knob>
-      <knob   label="PW"   @value="PW = value"   min="0" max="6.28"></knob>
+      <slider label="mod"  @value="mod = $event"  min="0" max="100"></slider>
+      <knob   label="freq" @value="freq = $event" min="1" max="880"></knob>
+      <knob   label="sync" @value="sync = $event" min="0" max="1"></knob>
+      <knob   label="PW"   @value="PW = $event"   min="0" max="6.28"></knob>
     </div>
 
     <div class="module-connections">
-      <inlets ports="inlets"></inlets>
-      <outlets ports="outlets"></outlets>
+      <inlets :ports="inlets"></inlets>
+      <!-- <o u tlets : ports="o utlets"></outlets> -->
       <!-- <ports data="inlets" type="in"></ports> -->
     </div>
   </div>
@@ -35,32 +35,16 @@
 
 <script>
   import { draggable } from '../mixins/draggable';
-  import { newConnection } from '../store/actions';
-  import { rackWidth, rackHeight } from '../dimensions';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider2';
 
   export default {
     mixins: [draggable],
     components: { Knob, Slider },
-    vuex: {
-      actions: {
-        newConnection
-      }
-    },
     props: {
       id: null,
       col: null,
       row: null
-    },
-
-    computed: {
-      position() {
-        return {
-          left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
-          top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
-        };
-      }
     },
 
     data() {
@@ -78,31 +62,23 @@
 
         inlets: [
           {
-            port: 0,
             label: 'freq',
-            // audio: null,
-            data: null
+            data: null            // audio: null,
           },
           {
-            port: 1,
             label: 'sync',
-            // audio: null,
-            data: null
+            data: null            // audio: null,
           },
           {
-            port: 2,
             label: 'mod-A',
-            // audio: null,
-            data: null
+            data: null            // audio: null,
           }
         ],
 
         outlets: [
           {
-            port: 0,
             label: 'output',
-            // audio: null,
-            data: null
+            data: null            // audio: null,
           }
         ]
       };

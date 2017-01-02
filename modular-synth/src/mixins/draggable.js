@@ -5,7 +5,8 @@
  * @type {Object}
  */
 
-import { updateGridPosition } from '../store/actions';
+// import { updateGridPosition } from '../store/actions';
+import { rackWidth, rackHeight } from '../dimensions';
 
 const dragObj = {
   zIndex: 0,
@@ -16,19 +17,28 @@ const dragObj = {
 };
 
 export const draggable = {
-  vuex: {
-    actions: {
-      updateGridPosition
-    }
-    // getters: {
-    //   editing: (state) => state.editing,
-    //   module: (state) => state.modules.find((module) => { return module.id === this.id; })
-    // }
-  },
+  // vuex: {
+  //   actions: {
+  //     updateGridPosition
+  //   }
+  //   // getters: {
+  //   //   editing: (state) => state.editing,
+  //   //   module: (state) => state.modules.find((module) => { return module.id === this.id; })
+  //   // }
+  // },
 
   props: {
     x: 0,
     y: 0
+  },
+
+  computed: {
+    position() {
+      return {
+        left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
+        top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
+      };
+    }
   },
 
   data() {
@@ -69,15 +79,13 @@ export const draggable = {
       this.x = x;
       this.y = y;
 
-      // this. $ dispatch('drag:active', [x, y], this.$el);
       this.$bus.$emit('drag:active', [x, y], this.$el);
 
-      this.updateGridPosition(this.id, x, y);
+      // this.updateGridPosition(this.id, x, y);
     },
 
     stopDragging(event) {
       this.dragging = false;
-      // this. $ dispatch('drag:end', this.id);
       this.$bus.$emit('drag:end', this.id);
 
       // restore the x,y grid values on the node
@@ -86,6 +94,8 @@ export const draggable = {
 
         this.x = module.x;
         this.y = module.y;
+
+        this.$store.commit('UPDATE_GRID_POSITION', this.id, module.x, module.y);
       }
 
       document.removeEventListener('mousemove', this.whileDragging);

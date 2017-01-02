@@ -9,10 +9,10 @@
       min="0"
       max="1"
       step="0.1"
-      value="0.0"
+      value="initial"
       @input="update">
     </input>
-    {{ value }}
+    <!-- { { value }} -->
   </div>
 </template>
 
@@ -21,17 +21,16 @@
 export default {
   props: {
     label: '',
-    value: 0.5
+    initial: 0.5
     // min: 0,
     // max: 1
   },
 
-  data() {
-    return {
-      level: 1,
-      range: 1
-    };
-  },
+  // data() {
+  //   return {
+  //     value: 1,
+  //   };
+  // },
 
   created() {
   },
@@ -40,7 +39,7 @@ export default {
     update(e) {
       const gain = e.target.value;
 
-      this.value = gain;
+      // this.value = gain;
       this.$emit('value', gain);
     }
   }
