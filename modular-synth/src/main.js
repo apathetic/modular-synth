@@ -61,21 +61,12 @@ Vue.component('outlets', {
 
 Vue.component('inlets', {
   functional: true,
-  props: { ports: {} },
-
-  // A)
-  // template: '<div>{ { name }}</div>'
-
-  // B)
-  // render: inlets.render,
-  // staticRenderFns: inlets.staticRenderFns
-
-
-  // C)
+  props: { ports: Array },
   render: function(createElement, context) {
     const ports = context.props.ports;
 
-    return createElement('div',
+    return createElement(
+      'div',
       {
         class: { 'inlets': true }
       },
@@ -94,6 +85,38 @@ Vue.component('inlets', {
   }
 });
 
+Vue.component('outlets', {
+  functional: true,
+  props: { ports: Array },
+  render: function(createElement, context) {
+    const ports = context.props.ports;
+
+    return createElement(
+      'div',
+      {
+        class: { 'outlets': true }
+      },
+      ports.map((port, i) => {
+        return createElement('span',
+          {
+            on: {
+              mousedown: (e) => {
+                e.stopPropagation();
+                // this.newConnection(port);
+                store.commit('ADD_CONNECTION', i);  // just port #, as the module is already ref'd in "selected"
+              }
+            },
+            class: { 'outlet': true },
+            attrs: {
+              'data-label': port.label,
+              'data-port': i
+            }
+          }
+        );
+      })
+    );
+  }
+});
 
 //
 // Vue.component('ports', {

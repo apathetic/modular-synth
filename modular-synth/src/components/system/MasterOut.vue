@@ -25,13 +25,7 @@
     </div>
 
     <div class="module-connections">
-      <div class="inlets">
-        <span v-for="(inlet, index) in inlets"
-          :data-label="inlet.label"
-          :data-port="index"
-          class="inlet">
-        </span>
-      </div>
+      <inlets :ports="inlets"></inlets>
   </div>
 </template>
 
@@ -52,11 +46,9 @@ export default {
       isMuted: false,
       inlets: [
         {
-          port: 0,
           label: 'out-1',
           data: null
         }, {
-          port: 1,
           label: 'out-2',
           data: null
         }
