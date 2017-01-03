@@ -123,6 +123,8 @@ export default {
      * @return {Void}
      */
     routeAudio(connect = true) {
+      console.log(this.to.port);
+
       const source = this.fromModule.outlets[this.from.port].data;
       const destination = this.toModule.inlets[this.to.port].data;
 
@@ -148,8 +150,8 @@ export default {
     /**
      * Fetch a Vue Component from the App, given a particular id. Fetch the currently
      * focused Component if no id is passed in.
-     * NOTE: we fetch the Component from the App, as that is what contains
-     *       the actual AudioNode.
+     * NOTE: we fetch the Component from the App (not the Store), as that is what
+     *       contains the actual AudioNode.
      * @type {Number} id The id of the module to fetch.
      */
     getModule(id = this.focused) {
@@ -179,17 +181,21 @@ export default {
       const target = event.toElement || event.relatedTarget || event.target || false;
       const port = target.getAttribute('data-port');
 
-      if (target && port) {
+      if (target && port) {                       // NOTE: port is a String, so "0" is cool here
         this.toModule = this.getModule();         // ironically, we dont even use the target to fetch the Component
-        // this.to.id = this.toModule.id;
-        this.to.port = port;
-        this.updateConnection(this.id, parseInt(port));     // update _state_ data in the store.
 
-        if (this.to.id === this.from.id) {
-          this.removeConnection(this.id);         // remove if circular connection
-        } else {
-          this.routeAudio();
-        }
+        this.$store.commit('UPDATE_CONNECTION', { // update "to" in the Store, which in turn will update the Connector...
+          id: this.id,
+          port: parseInt(port)
+        });
+
+        this.$nextTick(() => {                    // ...which is why we need to wait until the update is done before moving on
+          if (this.to.id === this.from.id) {
+            this.removeConnection(this.id);       // remove if circular connection
+          } else {
+            this.routeAudio();
+          }
+        });
       } else {
         this.removeConnection(this.id);           // remove if connection wasn't made
       }
