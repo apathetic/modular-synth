@@ -25,7 +25,7 @@ npm test
   - ~~new parent / child events~~
     - ~~.native on components~~
   - ~~dragging / sorting is messed up~~
-  - connectors are messed up, dont have x,y coords
+  - ***connectors are messed up, dont have x,y coords***
   - ~~convert vuex commit payloads to objects~~
   - ~~remove module does not work~~
 
@@ -40,7 +40,7 @@ npm test
 
 - UI
   - ~~cannot select from dropdown; dragging intercedes~~
-  - dial doesn't do floats **
+  - *dial doesn't do floats*
   - ~~cannot dynamically add new modules~~
   - ~~2 modes: play / edit.~~
     - ~~play: grid (packery, gridlist)~~
@@ -98,7 +98,6 @@ NOTES:
 
 - nodes:
   - ~~MULT~~
-
   - ENV
   - ~~OSC~~
   - LFO
@@ -123,9 +122,8 @@ NOTES:
 
 
 - MIDI
-  - pitch
+  - ~~pitch~~
   - gate
-  - note
   - bend
   - velocity
   - mod-wheel
