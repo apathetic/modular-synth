@@ -27,7 +27,7 @@ npm test
   - ~~dragging / sorting is messed up~~
   - connectors are messed up, dont have x,y coords
   - ~~convert vuex commit payloads to objects~~
-  - remove module does not work
+  - ~~remove module does not work~~
 
 - VUEX
   - ~~store state of app~~
@@ -53,7 +53,7 @@ npm test
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
   - ~~route audio on load (use store plugin / store mutation observer)~~
-  - FIX modules: dont gridify properly after 1st load, adding new module ***
+  - ***FIX modules: dont gridify properly after 1st load, adding new module***
 
 
 - NODES
@@ -67,7 +67,7 @@ npm test
   - ~~lives in the actual components (not in the store.modules)~~
     - ~~(same problem for Connector)~~
   - global "get (actual) component by id" method?
-  - master out volume control
+  - ~~master out volume control~~
   - ~~hook up master out mute~~
 
 

@@ -168,9 +168,11 @@
           this.stopSorting();    // from sortable mixin
         }
       });
-    },
 
-    mounted() {
+      // },
+      //
+      // mounted() {
+
       window.addEventListener('keydown', (e) => {
         switch (e.code) {
           case 'Delete':
@@ -209,7 +211,9 @@
 
       // FileManager (using "commit" as it needs to be synchronous)
       this.$store.commit('LOAD');
+    },
 
+    mounted() {
       // TODO why cannot move into sortable:ready() ...?
       this.initSorting(this.$refs.grid);
     },
@@ -258,6 +262,7 @@
       // VUEX actions, bound as local methods:
       ...mapActions([
         'toggleEditMode',
+        'removeModule',
         'setActive',
         'clearActive',
         'setFocus',
