@@ -22,12 +22,12 @@ npm test
 ## TODO
 
 - Vue 2.0
-  - new parent / child events
-    - .native on components
-  - dragging / sorting is messed up
+  - ~~new parent / child events~~
+    - ~~.native on components~~
+  - ~~dragging / sorting is messed up~~
   - connectors are messed up, dont have x,y coords
-  - convert vuex commit payloads to objects
-  
+  - ~~convert vuex commit payloads to objects~~
+  - remove module does not work
 
 - VUEX
   - ~~store state of app~~
