@@ -21,8 +21,8 @@
     </div>
 
     <div class="module-connections">
-      <inlets ports="inlets"></inlets>
-      <outlets ports="outlets"></outlets>
+      <inlets :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
     </div>
   </div>
 </template>
@@ -30,33 +30,17 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { newConnection } from '../store/actions';
-import { rackWidth, rackHeight } from '../dimensions';
 import Knob from './UI/Knob';
-// import store from '../store/store'; // .... er...  this.$store...?
 
 export default {
   mixins: [draggable],
   components: { Knob },
-  vuex: {
-    actions: {
-      newConnection
-    }
-  },
   props: {
     id: null,
     col: null,
     row: null
   },
-  computed: {
-    position() {
-      return {
-        //     this.$store.state.editing
-        left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
-        top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
-      };
-    }
-  },
+
   data() {
     return {
       name: 'Env',

@@ -27,7 +27,6 @@
     <div class="module-connections">
       <inlets :ports="inlets"></inlets>
       <outlets :ports="outlets"></outlets>
-      <!-- <ports data="inlets" type="in"></ports> -->
     </div>
   </div>
 </template>

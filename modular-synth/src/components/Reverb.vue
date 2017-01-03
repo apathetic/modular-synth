@@ -20,8 +20,8 @@
     </div>
 
     <div class="module-connections">
-      <inlets ports="inlets"></inlets>
-      <outlets ports="outlets"></outlets>
+      <inlets :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
     </div>
   </div>
 </template>
@@ -29,18 +29,15 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { newConnection } from '../store/actions';
 import Knob from './UI/Knob';
 
 export default {
-  props: { id: null },
-  components: { Knob },
   mixins: [draggable],
-
-  vuex: {
-    actions: {
-      newConnection
-    }
+  components: { Knob },
+  props: {
+    id: null,
+    col: null,
+    row: null
   },
 
   data() {
@@ -49,11 +46,9 @@ export default {
 
       inlets: [
         {
-          port: 0,
           label: 'in-1',
           data: null
         }, {
-          port: 1,
           label: 'in-2',
           data: null
         }
@@ -61,11 +56,9 @@ export default {
 
       outlets: [
         {
-          port: 0,
           label: 'out-1',
           data: null
         }, {
-          port: 1,
           label: 'out-2',
           data: null
         }
