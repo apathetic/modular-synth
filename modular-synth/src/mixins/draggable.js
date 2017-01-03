@@ -98,6 +98,7 @@ export const draggable = {
 
         // could also store coords on dragObj ...?
         const module = this.$store.state.modules.find((m) => { return m.id === this.id; });
+        // const module = this.$store.getters.active;
 
         this.x = module.x;
         this.y = module.y;

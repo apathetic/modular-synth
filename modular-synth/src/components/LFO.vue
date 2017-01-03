@@ -14,48 +14,28 @@
     </div>
 
     <div class="module-interface">
-
       <select v-model="type">
         <option v-for="type in types" v-bind:value="type">{{ type }}</option>
       </select>
 
-      <knob label="freq"  @value="freq = value"  min="0" max="20"></knob>
-      <knob label="phase" @value="phase = value" min="0" max="3.14159265"></knob>
-
+      <knob label="freq"  @value="freq = $event"  min="0" max="20"></knob>
+      <knob label="phase" @value="phase = $event" min="0" max="3.14159265"></knob>
     </div>
 
     <div class="module-connections">
-      <inlets ports="inlets"></inlets>
-      <outlets ports="outlets"></outlets>
+      <inlets :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
     </div>
   </div>
 </template>
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { newConnection } from '../store/actions';
-import { rackWidth, rackHeight } from '../dimensions';
 import Knob from './UI/Knob';   // audioParam
-// import store from '../store/store'; // .... er...  this.$store...?
 
 export default {
   mixins: [draggable],
   components: { Knob },
-  vuex: {
-    actions: {
-      newConnection
-    }
-  },
-  computed: {
-    position() {
-      return {
-        //     this.$store.state.editing
-        left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
-        top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
-      };
-    }
-  },
-
   props: {
     id: null,
     col: null,
@@ -72,14 +52,12 @@ export default {
       types: ['sine', 'square', 'sawtooth', 'triangle'],
       inlets: [
         {
-          port: 0,
           label: 'gate',    // mod?
           data: null
         }
       ],
       outlets: [
         {
-          port: 0,
           label: 'output',
           data: null
         }
