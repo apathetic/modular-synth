@@ -114,7 +114,7 @@ export const ADD_CONNECTION = (state, port) => {
 };
 
 export const UPDATE_CONNECTION = (state, data) => {
-  const connection = state.connections.find(function(c) { return c.id === data.id; });
+  const connection = state.connections.find((c) => { return c.id === data.id; });
 
   connection.to = {
     id: state.focused,
