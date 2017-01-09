@@ -25,11 +25,11 @@ npm test
   - ~~new parent / child events~~
     - ~~.native on components~~
   - ~~dragging / sorting is messed up~~
-  - ***connectors are messed up, dont have x,y coords***
+  - ~~connectors are messed up, dont have x,y coords~~
   - ~~convert vuex commit payloads to objects~~
   - ~~remove module does not work~~
   - clicking on outlet (not drag) errors out
-  - audio no longer connecting
+  - ~~audio no longer connecting~~
 
 
 - VUEX
@@ -42,6 +42,7 @@ npm test
     - drag, too?
 
 - UI
+  - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
   - ~~cannot select from dropdown; dragging intercedes~~
   - *dial doesn't do floats*
   - ~~cannot dynamically add new modules~~
@@ -56,7 +57,7 @@ npm test
 - LOADING
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
-  - ~~route audio on load (use store plugin / store mutation observer)~~
+  - ~~route audio on load (use store plugin / store mutation observer)~~ solved with a nextTick wtf. Import Vue for this. Dont understand why.
   - ***FIX modules: dont gridify properly after 1st load, adding new module***
 
 
