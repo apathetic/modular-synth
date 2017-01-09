@@ -99,6 +99,8 @@
       this.$watch('freq', this.setFreq);
       this.$watch('mod', this.setGain);
       this.$watch('type', this.setType);
+
+      console.log('Creating Oscillator');
     },
 
     methods: {

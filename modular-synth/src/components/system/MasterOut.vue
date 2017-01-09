@@ -6,7 +6,6 @@
     @mouseout="clearFocus">
 
     <div class="module-interface">
-      <!-- -->
       <level
         label="Volume"
         min="0"
@@ -56,27 +55,21 @@ export default {
     };
   },
 
-  /* */
-
-  mounted() {
+  created() {
     this.out1 = this.context.createGain();
     this.out2 = this.context.createGain();
 
     this.inlets[0].data = this.out1;
     this.inlets[1].data = this.out2;
 
+    this.$bus.$on('audio:start', this.start);
+    this.$bus.$on('audio:stop', this.stop);
 
-    // TODO update to bus or VUEX ***
-    this.$on('start', this.start);
-    this.$on('stop', this.stop);
-    // ********************
+    console.log('Creating MasterOut');
+  },
 
-
-    // Vue.nextTick(function() {
+  mounted() {
     this.determinePosition();
-    // });
-
-    // window.addEventListener('load', this.determinePosition);
     window.addEventListener('resize', this.determinePosition);
   },
 
@@ -117,8 +110,6 @@ export default {
         x: x,
         y: y
       });
-      // VS
-      // this.$store.dispatch('updateGridPosition', 0, x, y);
     },
 
     // VUEX actions, bound as local methods:
@@ -127,8 +118,6 @@ export default {
       'clearFocus'
     ])
   }
-
-  /* */
 };
 </script>
 
