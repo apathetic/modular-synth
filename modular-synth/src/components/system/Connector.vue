@@ -35,6 +35,7 @@ With the above information, we can locate and bind a reference to the actual Vue
 Other notes:
   * there can be multiple connections from an output.
   * there can only be a single connection to an input.
+  * the connector will automatically set up audio routing between nodes when created
 
 <template>
   <line
@@ -123,15 +124,11 @@ export default {
      * @return {Void}
      */
     routeAudio(connect = true) {
-      console.log(this.to.port);
-
       const source = this.fromModule.outlets[this.from.port].data;
       const destination = this.toModule.inlets[this.to.port].data;
 
       // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
-
-
 
       if (source && destination) {
         (connect) ? source.connect(destination) : source.disconnect(destination);
@@ -156,6 +153,7 @@ export default {
      */
     getModule(id = this.focused) {
       const App = this.$parent;
+
       return App.$children.find((m) => { return m.id === id; });
     },
 
@@ -189,7 +187,7 @@ export default {
           port: parseInt(port)
         });
 
-        this.$nextTick(() => {                    // ...which is why we need to wait until the update is done before moving on
+        this.$nextTick(() => {                    // ...and we need to wait until the update cycle is done before moving on
           if (this.to.id === this.from.id) {
             this.removeConnection(this.id);       // remove if circular connection
           } else {

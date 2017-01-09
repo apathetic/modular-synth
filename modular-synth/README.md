@@ -28,6 +28,9 @@ npm test
   - ***connectors are messed up, dont have x,y coords***
   - ~~convert vuex commit payloads to objects~~
   - ~~remove module does not work~~
+  - clicking on outlet (not drag) errors out
+  - audio no longer connecting
+
 
 - VUEX
   - ~~store state of app~~
@@ -47,6 +50,7 @@ npm test
     - ~~edit: draggables (dragabilly, vanillaJS)~~
   - dotted line while creating a connection
     - when a node is selected, all connected connections become highlighted
+  - delete module causes odd grid reshuffle
 
 
 - LOADING
@@ -72,7 +76,7 @@ npm test
 
 
 - Connections
-  - have startConnection: just draw an open-ended connection
+  - **have startConnection: just draw an open-ended connection**
     - addConnection will take src, dest and "replace" the user-drawn connection
   - ~~updated connection object. See store.js line ~142 for details~~
   - ~~delete connection~~
