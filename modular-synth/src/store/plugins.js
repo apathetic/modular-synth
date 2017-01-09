@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { STORAGE_KEY_MODULES, STORAGE_KEY_CONNECTIONS } from './index';
 // import createLogger from 'vuex/logger';
 
@@ -19,26 +20,11 @@ const localStoragePlugin = (store) => {
 const webAudioPlugin = (store) => {
   store.subscribe((mutation) => {
     if (mutation.type === 'LOAD') {
-      console.log('AudioNodes: loading complete.');
-      console.log('Connectifying in progress...');
-      store.state.connections = JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]');
-
-      /**
-       * Reactify the connections.
-       * The connection objects stored in localStorage are just objects in JSON -- they
-       * lack the reactvity that we get when adding actual modules with bound listeners
-       * to the store; hence, we need to update all the static references.
-       */
-
-      // THIS IS THE JSON CONNECTOR. WE NEED THE VUE COMPONENENT CONNECTOR.
-      // const connections = store.state.connections;
-      // const modules = store.state.modules;
-
-      // for (let connection of connections) {
-      //   const connector = window.App.$children.find(function(c) { return c.id === connection.id; });
-      //
-      //   connector.reactify();
-      // }
+      Vue.nextTick(function() {   // WHYWHYWHY TODO TODO ????
+        console.log('Nodes loaded, now routing audio...');
+        store.state.connections = JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTIONS) || '[]');
+      });
+      // end of WTF ------------------------------
     }
   });
 };

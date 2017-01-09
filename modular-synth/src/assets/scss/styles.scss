@@ -176,6 +176,8 @@ button {
 // dummy test
 .power {
   svg {
+    width: 4em;
+    height: 4em;
     transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     filter: drop-shadow(0 0px 1px rgba(153, 229, 163, 0.2));
   }

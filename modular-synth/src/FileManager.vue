@@ -53,6 +53,8 @@ export default {
 
       localStorage.clear();
       // this.load(patch);
+
+      console.log('Loading patch: ', patch.name);
       this.$store.commit('LOAD', patch);
     },
 
