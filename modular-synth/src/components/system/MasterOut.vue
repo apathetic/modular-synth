@@ -13,8 +13,6 @@
         @value="gain = $event">
       </level>
 
-      {{ gain }}
-
       <button
         class="toggle"
         :class="isMuted ? 'toggle--active' : ''"
@@ -65,6 +63,9 @@ export default {
     this.$bus.$on('audio:start', this.start);
     this.$bus.$on('audio:stop', this.stop);
 
+    this.$watch('gain', this.setGain);
+    this.$watch('isMuted', () => { this.setGain(this.gain); });
+
     console.log('Creating MasterOut');
   },
 
@@ -74,8 +75,8 @@ export default {
   },
 
   methods: {
-    // Chrome (in informal testing) is smart enough to know when there is no
-    // audio chain of connected nodes, and optimizes accordingly.
+    // Chrome and FF (in informal testing) are smart enough to know when there is no
+    // audio chain of connected nodes, and optimize accordingly.
     start() {
       this.out1.connect(this.context.destination);
       this.out2.connect(this.context.destination);
@@ -87,15 +88,12 @@ export default {
     },
 
     setGain(g) {
-      this.out1.gain.value = g;
-      this.out2.gain.value = g;
+      this.out1.gain.value = this.isMuted ? 0 : g;
+      this.out2.gain.value = this.isMuted ? 0 : g;
     },
 
     toggleMute() {
       this.isMuted = !this.isMuted;
-      this.setGain(
-        this.isMuted ? 0 : this.gain
-      );
     },
 
     determinePosition() {
