@@ -36,6 +36,19 @@
 
     <div class="module-connections">
       <inlets :ports="inlets"></inlets>
+    </div>
+
+    <div class="module-power">
+      <button
+        class="power"
+        :class="power ? 'on' : 'off'"
+        @click="togglePower">
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40">
+          <path d="M28,18c0,6.629-5.375,12-12,12C9.371,30,4,24.629,4,18c0-5.223,3.34-9.652,8-11.301v4.41C9.617,12.496,8,15.047,8,18 c0,4.418,3.582,8,8,8s8-3.582,8-8c0-2.953-1.621-5.504-4-6.891v-4.41C24.656,8.348,28,12.777,28,18z M16,16c1.105,0,2-0.895,2-2V4 c0-1.104-0.895-2-2-2s-2,0.896-2,2v10C14,15.105,14.895,16,16,16z" />
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -53,6 +66,7 @@ export default {
       x: 0,
       y: 0,
       gain: 0.5,
+      power: false,
       isMuted: false,
       inlets: [
         {
@@ -115,6 +129,17 @@ export default {
       this.isMuted = !this.isMuted;
     },
 
+    togglePower() {
+      this.power = !this.power;
+      if (this.power) {
+        console.log('audio on');
+        this.$bus.$emit('audio:start');
+      } else {
+        console.log('audio off');
+        this.$bus.$emit('audio:stop');
+      }
+    },
+
     determinePosition() {
       const x = this.$el.getBoundingClientRect().left;  // relative to viewport
       const y = this.$el.offsetTop;                     // relative to parent
@@ -158,6 +183,10 @@ export default {
     .module-interface {
       padding: 2em 1em 1em 3.2em;
       visibility: visible;
+    }
+
+    .module-power {
+      text-align: center;
     }
   }
 </style>
