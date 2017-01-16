@@ -82,9 +82,13 @@ section {
 }
 
 #controls {
-  flex-basis: 140px;
+  flex-basis: 112px;
   background-color: #333; // #999;
   z-index: 10000;          // as nodes will increment their z-index
+
+  .button {
+    font-size: 0.8em;
+  }
 }
 
 
@@ -93,12 +97,14 @@ h2 {}
 h3 {
   font-size: 0.9rem;
   text-transform: uppercase;
-  // text-align: center;
-}
-
-h3 {
   font-weight: normal;
 }
+
+h4 {
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
 
 button {
   -webkit-appearance: none;

@@ -114,5 +114,5 @@ export default {
 
 
 <style lang="scss">
-  select.midi-in { width: 120px; }
+  select.midi-in { width: 92px; }
 </style>

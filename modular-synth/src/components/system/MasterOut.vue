@@ -6,12 +6,25 @@
     @mouseout="clearFocus">
 
     <div class="module-interface">
-      <level
+      <!-- <level
         label="Volume"
         min="0"
         max="1"
         @value="gain = $event">
-      </level>
+      </level> -->
+
+      <level :audio="out1"></level>
+      <level :audio="out2"></level>
+
+      <input
+        type="range"
+        orient="vertical"
+        min="0"
+        max="1"
+        step="0.1"
+        :value="gain"
+        @input="update">
+      </input>
 
       <button
         class="toggle"
@@ -87,6 +100,12 @@ export default {
       this.out2.disconnect(this.context.destination);
     },
 
+    update(e) {
+      // const gain = e.target.value;
+      this.gain = e.target.value;
+      this.setGain(this.gain);    // TODO a nice audioRamp
+    },
+
     setGain(g) {
       this.out1.gain.value = this.isMuted ? 0 : g;
       this.out2.gain.value = this.isMuted ? 0 : g;
@@ -128,7 +147,16 @@ export default {
     width: auto;
     height: auto;
 
+    button {
+      margin: 0
+    }
+
+    .toggle {
+      display: none; // mute button
+    }
+
     .module-interface {
+      padding: 2em 1em 1em 3.2em;
       visibility: visible;
     }
   }
