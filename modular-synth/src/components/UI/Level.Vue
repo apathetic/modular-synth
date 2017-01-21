@@ -16,7 +16,7 @@
  -->
     <!-- { { value }} -->
 
-    <canvas class="level" ref="meter"></canvas>
+  <canvas class="level" ref="meter"></canvas>
 
 </template>
 
@@ -35,38 +35,39 @@ export default {
 
   data() {
     return {
-      width: 500,
-      height: 50,
+      width: 12,
+      height: 150,
       meter: null
     };
   },
 
   created() {
-    console.log(this.audio);
-    // const stream = 'audio input';
-    // const mediaStreamSource = this.context.createMediaStreamSource(this.audio);
-    //
-    this.meter = AudioMeter(this.context);   // create volume meter
+    this.meter = AudioMeter(this.context);
+    this.audio.connect(this.meter);
+  },
 
-    console.log(this.meter);
-    // mediaStreamSource.connect(this.meter);
-    // this.drawLoop();
+  mounted() {
+    this.canvas = this.$refs.meter.getContext('2d');
+    this.drawLoop();
   },
 
   methods: {
-    update(e) {
-      const gain = e.target.value;
-
-      // this.value = gain;
-      this.$emit('value', gain);
-    },
+    // update(e) {
+    //   const gain = e.target.value;
+    //
+    //   // this.value = gain;
+    //   this.$emit('value', gain);
+    // },
 
     drawLoop(time) {
-      const canvas = this.$refs.canvas;
+      const canvas = this.canvas;
+      const val = this.meter.volume * 1.4142 * this.height; // 0 -> 150
+
+      // console.log(val);
 
       canvas.clearRect(0, 0, this.width, this.height);
       canvas.fillStyle = this.meter.checkClipping() ? 'red' : 'green';
-      canvas.fillRect(0, 0, this.meter.volume * this.width * 1.4, this.height);
+      canvas.fillRect(0, canvas.height - val, canvas.width, val);
 
       // set up the next visual callback
       // rafID = window.requestAnimationFrame(this.drawLoop);
