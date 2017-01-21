@@ -13,6 +13,7 @@
         @value="gain = $event">
       </level> -->
 
+      NOTE: THIS DOES NOT TURN OFF.
       <level :audio="out1"></level>
       <level :audio="out2"></level>
 
