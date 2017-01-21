@@ -55,6 +55,8 @@
     "karma-webpack": "^1.7.0",
     "lolex": "^1.4.0",
     "mocha": "^3.1.0",
+    "nightwatch": "^0.9.12",
+    "nightwatch-helpers": "^1.2.0",
     "node-sass": "^4.1.1",
     "opn": "^4.0.2",
     "ora": "^0.3.0",
