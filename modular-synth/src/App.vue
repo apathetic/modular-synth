@@ -169,10 +169,6 @@
         }
       });
 
-      // },
-      //
-      // mounted() {
-
       window.addEventListener('keydown', (e) => {
         switch (e.code) {
           case 'Delete':
@@ -186,7 +182,7 @@
           //   this.togglePower();
           //   break;
           case 'Space':
-            // this.togglePlay();
+            // this.togglePlay();  // one day, if i plug in a timeline
             break;
           case 'ShiftLeft':
           case 'ShiftRight':
@@ -208,14 +204,15 @@
             break;
         }
       });
-
-      // FileManager (using "commit" as it needs to be synchronous)
-      this.$store.commit('LOAD');
     },
 
     mounted() {
       // TODO why cannot move into sortable:ready() ...?
-      this.initSorting(this.$els.grid);
+      this.initSorting(this.$refs.grid);
+
+      this.$bus.$on('app:load', () => {
+        this.initSorting(this.$refs.grid);
+      });
     },
 
     methods: {

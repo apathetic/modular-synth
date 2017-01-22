@@ -6,16 +6,10 @@
     @mouseout="clearFocus">
 
     <div class="module-interface">
-      <!-- <level
-        label="Volume"
-        min="0"
-        max="1"
-        @value="gain = $event">
-      </level> -->
 
       NOTE: THIS DOES NOT TURN OFF.
-      <level :audio="out1"></level>
-      <level :audio="out2"></level>
+      <!-- < l evel :audio="out1"></level>
+      < l evel :audio="out2"></level> -->
 
       <input
         type="range"
