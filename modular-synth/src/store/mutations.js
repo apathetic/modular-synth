@@ -3,6 +3,7 @@
 // -----------------------------------------------
 export const LOAD = (state, newState) => {
   if (newState) {
+    // state = {};
     for (let key in newState) {
       state[key] = newState[key];
     }
