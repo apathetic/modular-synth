@@ -110,6 +110,8 @@ export const ADD_CONNECTION = (state, port) => {
     port: undefined
   };
 
+  console.log(state);
+
   state.connections.push({
     id: parseInt(state.id),
     to,

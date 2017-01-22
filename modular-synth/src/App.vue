@@ -211,7 +211,8 @@
       this.initSorting(this.$refs.grid);
 
       this.$bus.$on('app:load', () => {
-        this.initSorting(this.$refs.grid);
+        // this.initSorting(this.$refs.grid);
+        this.setupGrid();
       });
     },
 
