@@ -7,6 +7,22 @@ module.exports = {
     .url('http://localhost:' + (process.env.PORT || 8081))
       .waitForElementVisible('.message', 1000)
       .waitFor(1000) // wait for entering animation
+
+      // Assert that App loads default patches
+
+      // Assert that user can load a patch
+
+      // Assert that user can save a patch
+
+      // Assert that audio is routed correctly after load
+
+      // Assert that user can drag module in edit mode
+
+
+      /*
+      // .setValue('.js-login__username', 'demouser')
+      // .setValue('.js-login__password', 'testpass')
+
       .assert.containsText('.message', 'Ready. Detected Vue')
       .assert.elementPresent('.instance')
       .assert.containsText('.instance', 'Root')
@@ -180,7 +196,7 @@ module.exports = {
       .assert.containsText('.vuex-state-inspector', 'valid:"json"')
       .click('.import')
       .waitForElementNotPresent('.import-state', 2000)
-
+      */
       // done
       .end()
   }
