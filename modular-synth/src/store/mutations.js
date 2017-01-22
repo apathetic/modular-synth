@@ -3,7 +3,10 @@
 // -----------------------------------------------
 export const LOAD = (state, newState) => {
   if (newState) {
-    // state = {};
+    // delete state.id;
+    // delete state.connections;
+    // delete state.modules;
+    // delete state.name;
     for (let key in newState) {
       state[key] = newState[key];
     }
