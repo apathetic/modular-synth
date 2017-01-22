@@ -45,7 +45,9 @@ export default {
    * Set the drop-down to the current patch (if loaded from localStorage)
    */
   mounted() {
-    console.log(this.$store.state.name);
+    if (this.$store.state.name) {
+      console.log('Patch loaded: ', this.$store.state.name);
+    }
   },
 
   methods: {
@@ -56,6 +58,7 @@ export default {
 
       console.log('Loading patch: ', patch.name);
       this.$store.commit('LOAD', patch);
+      this.$bus.$emit('app:load');
     },
 
     save() {
