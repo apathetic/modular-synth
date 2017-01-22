@@ -60,6 +60,9 @@ npm test
   - ~~connection reactivity on load~~
   - ~~route audio on load (use store plugin / store mutation observer)~~ solved with a nextTick wtf. Import Vue for this. Dont understand why.
   - ~~FIX modules: dont gridify properly after 1st load, adding new module~~
+  - fallback for bad data, etc.
+  - glitchy
+    - connections do not load on pageload; only load event
 
 
 - NODES
@@ -96,6 +99,9 @@ NOTES:
 **EVENTS**
 - App
   - app:load
+- module
+  - module:add
+  - module:remove
 - audio
   - audio:start
   - audio:stop
