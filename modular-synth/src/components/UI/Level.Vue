@@ -1,23 +1,5 @@
 <template>
-<!--
-<div class="level">
-    <meter orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></meter>
-    <meter orient="vertical" min="0.0" max="1.0" step="0.1" value="0.0"></meter>
-    <input
-      type="range"
-      orient="vertical"
-      min="0"
-      max="1"
-      step="0.1"
-      value="initial"
-      @input="update">
-    </input>
-  </div>
- -->
-    <!-- { { value }} -->
-
   <canvas class="level" ref="meter"></canvas>
-
 </template>
 
 
@@ -26,10 +8,6 @@ import AudioMeter from '../../assets/vendor/meter';
 
 export default {
   props: {
-    // label: '',
-    // initial: 0.5
-    // min: 0,
-    // max: 1
     audio: null // AudioNode
   },
 

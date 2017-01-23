@@ -1,10 +1,3 @@
-//------------------------------------------------
-//  LOAD / SAVE
-// -----------------------------------------------
-
-// TODO this is just to get json into the App, dynamically. Will need to make more
-// load-friendly ie. proper ajax implementation. Or just bundle json with the App.
-
 <template>
   <header class="pad">
     <button class="button" @click="save">save</button>
@@ -19,32 +12,42 @@
 
 <script>
 
-// import { load } from './store/actions';
-// import * as patches from './assets/patches';
-// TODO THIS. BETTER :
-import FM from '../static/patches/FM';
-import Mod from '../static/patches/Mod';
-import Blank from '../static/patches/blank';
-import gridtest from '../static/patches/gridTest';
-import miditest from '../static/patches/midiTest';
-
 import { mapMutations } from 'vuex';
 
 export default {
   data() {
     return {
-      name: 'wess',
+      name: '',
       selected: {},
       patches: []
     };
   },
 
+  /**
+   * Immediately hit the server to fetch a list of (the users') patches.
+   */
+  created() {
+    window.fetch('/api/patches')
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      this.patches = json.patches;
+      this.parsePatches();
+      console.log('Patches loaded from server');
+    })
+    .catch((error) => {
+      console.log('Could not fetch patches: ' + error.message);
+    });
+  },
+
+  /**
+   * Set the drop-down to the current patch (if loaded from localStorage)
+   */
   mounted() {
-    this.patches.push(FM);    // dumb way for testing for now
-    this.patches.push(Mod);
-    this.patches.push(Blank);
-    this.patches.push(gridtest);
-    this.patches.push(miditest);
+    if (this.$store.state.name) {
+      console.log('Patch loaded: ', this.$store.state.name);
+    }
   },
 
   methods: {
@@ -52,10 +55,10 @@ export default {
       const patch = this.selected;
 
       localStorage.clear();
-      // this.load(patch);
 
       console.log('Loading patch: ', patch.name);
       this.$store.commit('LOAD', patch);
+      this.$bus.$emit('app:load');
     },
 
     save() {
@@ -67,6 +70,12 @@ export default {
         connections: localStorage.getItem('connections')
       };
       console.log(patch);
+    },
+
+    parsePatches() {
+      this.patches.forEach((p) => {
+
+      });
     },
 
     ...mapMutations([

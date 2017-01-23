@@ -52,13 +52,17 @@ npm test
   - dotted line while creating a connection
     - when a node is selected, all connected connections become highlighted
   - delete module causes odd grid reshuffle
+  - must press shift to sort in play mode
 
 
 - LOADING
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
   - ~~route audio on load (use store plugin / store mutation observer)~~ solved with a nextTick wtf. Import Vue for this. Dont understand why.
-  - ***FIX modules: dont gridify properly after 1st load, adding new module***
+  - ~~FIX modules: dont gridify properly after 1st load, adding new module~~
+  - fallback for bad data, etc.
+  - glitchy
+    - connections do not load on pageload; only load event
 
 
 - NODES
@@ -73,7 +77,9 @@ npm test
     - ~~(same problem for Connector)~~
   - global "get (actual) component by id" method?
   - ~~master out volume control~~
-  - ~~hook up master out mute~~
+  - ~~hook up master out mute~~ eh, removed Mute
+  - **power-off no longer kills CPU (as meters are connected)**
+    - LEVEL is ...broken? Crazy inefficient. Check meter.js where output is connected to audioContext
 
 
 - Connections
@@ -90,9 +96,32 @@ npm test
 
 NOTES:
 
-- INPUT TYPES
+**EVENTS**
+- App
+  - app:load
+- module
+  - module:add
+  - module:remove
+- audio
+  - audio:start
+  - audio:stop
+- drag
+  - drag:start
+  - drag:active
+  - drag:end
+- midi
+  - midi:noteOn
+  - midi:noteOff
+  - midi:controller
+  - midi:pitchWheel
+  - midi:polyPressure
+
+
+**ROUTING**
+- inputs
   - in
   - out
+- data types
   - mod (A, B, FM?)
   - pitch (freq?)
   - triggers or bangs:
@@ -101,13 +130,14 @@ NOTES:
     - sync (ie. phase)
 
 
-- nodes:
+**NODES**
+
+- GEN:
   - ~~MULT~~
   - ENV
   - ~~OSC~~
   - LFO
   - FILT
-
 
 - FX
   - reverb
@@ -115,16 +145,13 @@ NOTES:
   - vca
   - lfo
 
-
 - clock
   - click divider
   - quant
 
-
 - routing
   - mixer (mini)
   - ~~audio out~~
-
 
 - MIDI
   - ~~pitch~~
