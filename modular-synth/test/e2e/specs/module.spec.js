@@ -18,19 +18,23 @@ module.exports = {
 
 
       // Assert that user can add a new module (and store is updated)
-      .click('#controls .button:nth-child(2)')    // add OSC ...
+      .click('#controls .button:nth-of-type(3)')     // add OSC. Not sure why 3, though... (it's not 3rd)
       .pause(1000)
-      .assert.count('.module', 1)                 // ... there should be 1 module
-
-      // assert that user can remove a module
-      .click('.module')                           // select it
-      .keys(46)                                   // 'Delete'
-      .assert.count('.module', 0)                 // ... there should be 1 module
-
-      // assert that connections are cleaned up after removing a module
+      .assert.elementCount('#modules .module', 1)    // ... there should be 1 module. (MasterOut is in #controls)
 
 
-      .pause(2000)
+      // Assert that user can remove a module
+      .click('.module')                              // select it
+      .keys([browser.Keys.DELETE])
+      .pause(1000)
+      .assert.elementCount('#modules .module', 0)    // ...there should be 0 modules
+
+
+      // Assert that connections are cleaned up after removing a module
+
+
+
+      // .pause(2000)
       .end()
   }
 }
