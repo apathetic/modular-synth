@@ -41,7 +41,7 @@
 
 
 <script>
-import { draggable } from '../mixins';
+import { draggable } from '../mixins/draggable';
 import { newConnection } from '../store/actions';
 
 export default {

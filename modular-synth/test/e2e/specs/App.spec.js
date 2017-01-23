@@ -2,9 +2,14 @@
 
 
 module.exports = {
-  'vue-devtools e2e tests': function (browser) {
+  'App e2e tests': function (browser) {
+    // automatically uses dev Server port from /config.index.js
+    // default: http://localhost:8080
+    // see nightwatch.conf.js
+    const devServer = browser.globals.devServerURL
+
     browser
-    .url('http://localhost:' + (process.env.PORT || 8081))
+      .url(devServer)
       .waitForElementVisible('.message', 1000)
       .waitFor(1000) // wait for entering animation
 
