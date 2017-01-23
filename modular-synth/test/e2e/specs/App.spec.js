@@ -2,7 +2,7 @@
 
 
 module.exports = {
-  'App e2e tests': function (browser) {
+  'App tests': function (browser) {
     // automatically uses dev Server port from /config.index.js
     // default: http://localhost:8080
     // see nightwatch.conf.js
@@ -11,7 +11,7 @@ module.exports = {
     browser
       .url(devServer)
       .waitForElementVisible('.message', 1000)
-      .waitFor(1000) // wait for entering animation
+      .pause(1000) // wait for entering animation
 
       // Assert that App loads default patches
 
