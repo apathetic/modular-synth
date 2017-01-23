@@ -5,7 +5,7 @@
  * Test that user can login and see dashboard.
  */
 module.exports = {
-  'sortable e2e tests': function (browser) {
+  'Sortable tests': function (browser) {
     // automatically uses dev Server port from /config.index.js
     // default: http://localhost:8080
     // see nightwatch.conf.js
