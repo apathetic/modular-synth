@@ -3,6 +3,10 @@
 // -----------------------------------------------
 export const LOAD = (state, newState) => {
   if (newState) {
+    // delete state.id;
+    // delete state.connections;
+    // delete state.modules;
+    // delete state.name;
     for (let key in newState) {
       state[key] = newState[key];
     }
@@ -105,6 +109,8 @@ export const ADD_CONNECTION = (state, port) => {
     id: undefined,
     port: undefined
   };
+
+  console.log(state);
 
   state.connections.push({
     id: parseInt(state.id),
