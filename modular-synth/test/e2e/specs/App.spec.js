@@ -10,8 +10,8 @@ module.exports = {
 
     browser
       .url(devServer)
-      .waitForElementVisible('.message', 1000)
-      .pause(1000) // wait for entering animation
+      // .waitForElementVisible('.message', 1000)
+      // .pause(1000) // wait for entering animation
 
       // Assert that App loads default patches
 
