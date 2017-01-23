@@ -25,7 +25,7 @@
   import { draggable } from '../mixins/draggable';
   import { newConnection } from '../store/actions';
   import { rackWidth, rackHeight } from '../dimensions';
-  import store from '../store/store'; // .... er...
+  // import store from '../store/store'; // .... er...
 
   export default {
     mixins: [draggable],
@@ -45,8 +45,8 @@
     computed: {
       position() {
         return {
-          left: (store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
-          top: (store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
+          left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
+          top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
         };
       }
     },
@@ -134,7 +134,6 @@
                 ctx.font = "14px sans-serif";
             }
       */
-
     }
   };
 

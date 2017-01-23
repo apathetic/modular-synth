@@ -72,7 +72,7 @@ export default {
       let value = this.startValue + change;
 
       // value = Math.min(this.max, Math.max(this.min, value));
-      value = Math.min(100, Math.max(0, value));
+      this.value = Math.min(100, Math.max(0, value));
 
       // this.value = Math.round(value);
       this.setRotationDegrees();
