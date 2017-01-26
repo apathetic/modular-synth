@@ -21,7 +21,7 @@ const state = {
   name: localStorage.getItem(LS_NAME) || '',
   id: parseInt(localStorage.getItem('id')) || 0,    // NOTE: this will actually start at 1 (we increment just prior to adding new), as masterOut is 0
   modules: JSON.parse(localStorage.getItem(LS_MODULES) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
-  connections: undefined,   // NOTE: this is intentional to force a delayed "loading" of the connectors. We grab them
+  connections: [],          // NOTE: this is intentional to force a delayed "loading" of the connectors. We grab them
                             // in localStorage manually in the webAudioPlugin _after_ all the modules have loaded in
                             // order to ensure audio-routing and visual connections will have Objects to link to / from
                             // nope => connections: JSON.parse(localStorage.getItem(LS_CONNECTIONS) || '[]'),
