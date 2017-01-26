@@ -95,38 +95,48 @@ export const UPDATE_RACK_POSITION = (state, data) => {
 // -----------------------------------------------
 //  CONNECTIONS
 // -----------------------------------------------
-export const ADD_CONNECTION = (state, port) => {
-  // find the module that contains the outlet. Ironically, we dont even use "outlet" to
-  // determine this, instead relying on the currently "focused" module in the App.
+export const ADD_CONNECTION = (state, data) => {
+  // // find the module that contains the outlet. Ironically, we dont even use "outlet" to
+  // // determine this, instead relying on the currently "focused" module in the App.
+  // state.id++;
+  //
+  // const from = {
+  //   id: state.focused,
+  //   port: port
+  // };
+  //
+  // const to = {
+  //   id: undefined,
+  //   port: undefined
+  // };
+  //
+  // console.log(state);
+  //
+  // state.connections.push({
+  //   id: parseInt(state.id),
+  //   to,
+  //   from
+  // });
+  //
+
+  console.log(data);
+
   state.id++;
-
-  const from = {
-    id: state.focused,
-    port: port
-  };
-
-  const to = {
-    id: undefined,
-    port: undefined
-  };
-
-  console.log(state);
-
   state.connections.push({
     id: parseInt(state.id),
-    to,
-    from
+    to: data.to,
+    from: data.from
   });
 };
 
-export const UPDATE_CONNECTION = (state, data) => {
-  const connection = state.connections.find((c) => { return c.id === data.id; });
-
-  connection.to = {
-    id: state.focused,
-    port: data.port
-  };
-};
+// export const UPDATE_CONNECTION = (state, data) => {
+//   const connection = state.connections.find((c) => { return c.id === data.id; });
+//
+//   connection.to = {
+//     id: state.focused,
+//     port: data.port
+//   };
+// };
 
 export const REMOVE_CONNECTION = (state, id) => {
   state.connections = state.connections.filter((c) => {

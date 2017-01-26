@@ -21,7 +21,7 @@ npm test
 
 ## TODO
 
-- Vue 2.0
+- General post-vue 2.0 things
   - ~~new parent / child events~~
     - ~~.native on components~~
   - ~~dragging / sorting is messed up~~
@@ -39,9 +39,11 @@ npm test
     - ~~common getters / setters (ie. active module, connection, etc)~~
   - ~~stop importing ES6 reference to store. Isn't it on the $root?~~
   - remove FOCUS from vuex --> move to BUS
-    - drag, too?
+    - ~~drag, too?~~
 
 - UI
+  - ***Delete removes wrong module***
+    - **removing connections also throw errors**
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
   - ~~cannot select from dropdown; dragging intercedes~~
   - *dial doesn't do floats*
@@ -83,12 +85,12 @@ npm test
 
 
 - Connections
-  - **have startConnection: just draw an open-ended connection**
-    - addConnection will take src, dest and "replace" the user-drawn connection
+  - ~~have startConnection: just draw an open-ended connection~~
+    - ~~addConnection will take src, dest and "replace" the user-drawn connection~~
   - ~~updated connection object. See store.js line ~142 for details~~
   - ~~delete connection~~
   - rename "data" to "audio" or "signal" or '~'
-  - reconcile "connector" name and "connection"
+  - ~~reconcile "connector" name and "connection"~~
 
 
 
@@ -130,14 +132,15 @@ NOTES:
     - sync (ie. phase)
 
 
-**NODES**
+**NODE ROADMAP**
 
-- GEN:
+- GEN
   - ~~MULT~~
   - ENV
   - ~~OSC~~
   - LFO
   - FILT
+
 
 - FX
   - reverb
@@ -145,13 +148,16 @@ NOTES:
   - vca
   - lfo
 
+
 - clock
   - click divider
   - quant
 
+
 - routing
   - mixer (mini)
   - ~~audio out~~
+
 
 - MIDI
   - ~~pitch~~
