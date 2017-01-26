@@ -51,7 +51,7 @@ Other notes:
 
 <script>
 import { cellWidth } from '../../dimensions';
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   props: {
@@ -68,18 +68,11 @@ export default {
       return this.fromModule.y + (this.from.port * 20) + 27;
     },
     x2() {
-      return this.cursorX
-             ? this.cursorX
-             : this.toModule.x - 3;
+      return this.toModule.x - 3;
     },
     y2() {
-      return this.cursorY
-             ? this.cursorY
-             : this.toModule.y + (this.to.port * 20) + 27;
-    },
-    ...mapGetters([
-      'focused'
-    ])
+      return this.toModule.y + (this.to.port * 20) + 27;
+    }
   },
 
   data() {                // reference to actual modules in the App:
@@ -95,21 +88,11 @@ export default {
 
   created() {
     this.fromModule = this.getModule(this.from.id);
+    this.toModule = this.getModule(this.to.id);
+
     // this.source = this.fromModule.outlets[this.from.port].data;
-
-    // If created via clicking (ie. not via a load event), then one
-    // end is currently being positioned by the user's cursor.
-    if (typeof this.to.id !== 'number') {
-      this.cursorX = this.fromModule.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
-      this.cursorY = this.fromModule.y + (this.from.port * 20) + 27;
-
-      document.addEventListener('mousemove', this.drag);
-      document.addEventListener('mouseup', this.dragEnd);
-    } else {
-      this.toModule = this.getModule(this.to.id);
-      this.routeAudio();
-      // this.destination = this.toModule.inlets[this.to.port].data;
-    }
+    // this.destination = this.toModule.inlets[this.to.port].data;
+    this.routeAudio();
   },
 
   destroyed() {
@@ -135,12 +118,12 @@ export default {
       } else {
         let inlet = this.toModule.inlets[0];
         let outlet = this.fromModule.outlets[0];
-        console.log('src ', outlet.label, outlet.data);
-        console.log('dest ', inlet.label, inlet.data.toString());
-        console.log('audio routing failed. tried module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
 
-        // setTimeout(this.routeAudio, 10);
-        //
+        try {
+          if (outlet) console.log('src ', outlet.label, outlet.data);
+          if (inlet) console.log('dest ', inlet.label, inlet.data.toString());
+          console.log('audio routing failed. tried module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
+        } catch (e) {}
       }
     },
 
@@ -151,64 +134,15 @@ export default {
      *       contains the actual AudioNode.
      * @type {Number} id The id of the module to fetch.
      */
-    getModule(id = this.focused) {
+    getModule(id) {
       const App = this.$parent;
 
       return App.$children.find((m) => { return m.id === id; });
     },
 
-    /**
-     * Update the connector's position.
-     * @param  {Event} event The mousemove Event.
-     * @return {Void}
-     */
-    drag(event) {
-      this.cursorX = event.clientX;
-      this.cursorY = event.clientY - 54;  // the header height
-
-      event.preventDefault();
-      event.stopPropagation();
-    },
-
-    /**
-     * Finalize the connector's position.
-     * @param  {Event} event: The mousemove Event.
-     * @return {Void}
-     */
-    dragEnd(event) {
-      const target = event.toElement || event.relatedTarget || event.target || false;
-      const port = target.getAttribute('data-port');
-
-      if (target && port) {                       // NOTE: port is a String, so "0" is cool here
-        this.toModule = this.getModule();         // ironically, we dont even use the target to fetch the Component
-
-        this.$store.commit('UPDATE_CONNECTION', { // update "to" in the Store, which in turn will update the Connector...
-          id: this.id,
-          port: parseInt(port)
-        });
-
-        this.$nextTick(() => {                    // ...and we need to wait until the update cycle is done before moving on
-          if (this.to.id === this.from.id) {
-            this.removeConnection(this.id);       // remove if circular connection
-          } else {
-            this.routeAudio();
-          }
-        });
-      } else {
-        this.removeConnection(this.id);           // remove if connection wasn't made
-      }
-
-      document.removeEventListener('mousemove', this.drag);
-      document.removeEventListener('mouseup', this.dragEnd);
-
-      this.cursorX = false;
-      this.cursorY = false;
-    },
-
     // VUEX actions, bound as local methods:
     // ...mapMutations([
     ...mapActions([
-      'updateConnection',
       'removeConnection'
     ])
   }

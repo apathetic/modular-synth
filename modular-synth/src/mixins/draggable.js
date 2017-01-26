@@ -45,7 +45,7 @@ export const draggable = {
   methods: {
     startDragging(event) {
       const node = this.$el;
-      const x = node.offsetLeft;  // Calculate explicity because could be in play mode, in which
+      const x = node.offsetLeft;  // Calculate explicity because could be in play mode, in which ...
       const y = node.offsetTop;   // case x,y would not pertain to the actual node coords.
 
       node.style.zIndex = ++dragObj.zIndex;     // Update element's z-index.
@@ -95,10 +95,7 @@ export const draggable = {
         // otherwise, restore the x,y coordinates -- we only want to update
         // them if in editing mode; we don't want moving the module around
         // in play mode to affect the position when it's in editing mode
-
-        // could also store coords on dragObj ...?
-        const module = this.$store.state.modules.find((m) => { return m.id === this.id; });
-        // const module = this.$store.getters.active;
+        const module = this.$store.getters.active;
 
         this.x = module.x;
         this.y = module.y;

@@ -24,7 +24,8 @@ export default {
   },
 
   /**
-   * Immediately hit the server to fetch a list of (the users') patches.
+   * Immediately hit the server to populate a list of (the users') patches.
+   * While they are available, the App does not load any one at this time.
    */
   created() {
     window.fetch('/api/patches')
@@ -34,7 +35,7 @@ export default {
     .then((json) => {
       this.patches = json.patches;
       this.parsePatches();
-      console.log('Patches loaded from server');
+      console.log('Patches fetched from server');
     })
     .catch((error) => {
       console.log('Could not fetch patches: ' + error.message);
@@ -46,7 +47,7 @@ export default {
    */
   mounted() {
     if (this.$store.state.name) {
-      console.log('Patch loaded: ', this.$store.state.name);
+      console.log('Using patch: ', this.$store.state.name);
     }
   },
 

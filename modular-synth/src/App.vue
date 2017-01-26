@@ -35,13 +35,14 @@
       </component>
 
       <svg id="connections">
-        <connector v-for="connection in connections"
+        <connecting></connecting>
+        <connection v-for="connection in connections"
           :id="connection.id"
           :to="connection.to"
           :from="connection.from"
 
-          @mousedown.stop="setActive(connection.id)">
-        </connector>
+          @mousedown.native="setActive(connection.id)">
+        </connection>
       </svg>
 
     </div>
@@ -97,10 +98,10 @@
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex';
   import { sortable } from './mixins/sortable';
 
   import Env from './components/Env';
-  // import Filter from './components/Filter';
   import LFO from './components/LFO';
   import Mixer from './components/Mixer';
   import Node from './components/Node';
@@ -108,24 +109,23 @@
   import Oscillator from './components/Oscillator';
   import Reverb from './components/Reverb';
 
-  import connector from './components/system/Connector';
+  import connecting from './components/system/Connecting';
+  import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
   import multiply from './components/math/Multiply';
-
-  import { mapGetters, mapActions } from 'vuex';
 
   export default {
     mixins: [sortable],
 
     components: {
       masterOut,
-      connector,
+      connecting,
+      connection,
       midi,
       multiply,
 
       Env,
-      // Filter,
       LFO,
       Mixer,
       Node,

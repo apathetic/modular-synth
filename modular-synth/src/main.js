@@ -105,7 +105,8 @@ Vue.component('outlets', {
             on: {
               mousedown: (e) => {
                 e.stopPropagation();
-                store.commit('ADD_CONNECTION', i);  // just port #, as the module is already ref'd in "focused"
+                // store.commit('ADD_CONNECTION', i);  // just port #, as the module is already ref'd in "focused"
+                bus.$emit('connection:start', i, context.parent.id);
               }
             },
             class: { 'outlet': true },
