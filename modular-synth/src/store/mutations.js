@@ -78,6 +78,8 @@ export const REMOVE_MODULE = (state, id) => {
 //  POSITION
 // -----------------------------------------------
 export const UPDATE_GRID_POSITION = (state, data) => {
+  // TODO this is getting called on delete module, adn duplicating /
+  // confusing coords of unrelated moduels
   const module = state.modules.find(function(module) { return module.id === data.id; });
 
   module.x = data.x;
