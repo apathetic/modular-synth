@@ -63,13 +63,13 @@ export default {
     },
 
     save() {
-      // er... just get from store.getters...?
-      const patch = {
-        name: this.name,
-        id: localStorage.getItem('id'),
-        modules: localStorage.getItem('modules'),
-        connections: localStorage.getItem('connections')
-      };
+      // const patch = {
+      //   name: this.name,
+      //   id: this.$store.state.id,
+      //   modules: this.$store.state.modules,
+      //   connections: this.$store.state.connections
+      // };
+      const patch = this.$store.state;
       console.log(patch);
     },
 

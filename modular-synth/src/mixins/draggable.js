@@ -83,7 +83,9 @@ export const draggable = {
       this.dragging = false;
       this.$bus.$emit('drag:end', this.id);
 
-      if (this.$store.state.editing) {
+      console.log('dd', this.id, this.x); // this same...?
+
+      if (this.$store.state.editing) {      // TODO && cursorStartY != this.y etc
         // we only want to update the Store with the
         // new coordinates if we are in editing mode:
         this.$store.commit('UPDATE_GRID_POSITION', {
