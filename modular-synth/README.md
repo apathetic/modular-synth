@@ -91,7 +91,7 @@ npm test
   - ~~delete connection~~
   - rename "data" to "audio" or "signal" or '~'
   - ~~reconcile "connector" name and "connection"~~
-
+  - connecting to an outlet, connects to the inlet (ie. app doesn't distinguish between these -- just ID and port)
 
 
 ---------------
