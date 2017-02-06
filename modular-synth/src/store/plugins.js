@@ -1,4 +1,4 @@
-import Vue from 'vue';  // blarg why need this
+import Vue from 'vue';
 import { LS_NAME, LS_MODULES, LS_CONNECTIONS } from './index';
 // import createLogger from 'vuex/logger';
 
@@ -23,12 +23,10 @@ const localStoragePlugin = (store) => {
 const webAudioPlugin = (store) => {
   store.subscribe((mutation) => {
     if (mutation.type === 'LOAD') {
-      // WTF --------WHY WHY nextTick for connections...? TODO TODO ????
-      Vue.nextTick(function() {
+      Vue.nextTick(function() {   // ensure nodes (+ inlets/outlets) are in the DOM
         console.log('Nodes loaded, now routing audio...');
         store.state.connections = JSON.parse(localStorage.getItem(LS_CONNECTIONS) || '[]');
       });
-      // end of WTF ------------------------------
     }
   });
 };

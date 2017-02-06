@@ -16,6 +16,10 @@ npm run build
 
 # run all tests
 npm test
+
+# TEMP: you'll need to fire up the /api server:
+node server
+# This will be integrated into the main app at one point
 ```
 
 
@@ -51,8 +55,8 @@ npm test
   - ~~2 modes: play / edit.~~
     - ~~play: grid (packery, gridlist)~~
     - ~~edit: draggables (dragabilly, vanillaJS)~~
-  - dotted line while creating a connection
-    - when a node is selected, all connected connections become highlighted
+  - ~~dotted line while creating a connection~~
+  - when a node is selected, all connected connections become highlighted
   - delete module causes odd grid reshuffle
   - must press shift to sort in play mode
 
@@ -60,16 +64,16 @@ npm test
 - LOADING
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
-  - ~~route audio on load (use store plugin / store mutation observer)~~ solved with a nextTick wtf. Import Vue for this. Dont understand why.
+  - ~~route audio on load (use store plugin / store mutation observer)~~ _solved with a nextTick. Dont love need to import Vue for this_
   - ~~FIX modules: dont gridify properly after 1st load, adding new module~~
   - fallback for bad data, etc.
   - glitchy
-    - connections do not load on pageload; only load event
+    - ~~connections do not load on pageload; only load event~~
 
 
 - NODES
   - ~~base node mixin...~~
-    - ~~tuck away: draggable, newConnection, (vuex) col/row, (computd) left/right~~ solved w/ vue2.0
+    - ~~tuck away: draggable, newConnection, (vuex) col/row, (computd) left/right~~ _solved w/ vue2.0_
   - ~~DELETE node~~
     - ~~and associated audio connections~~
 
