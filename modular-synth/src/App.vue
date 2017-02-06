@@ -221,6 +221,7 @@
     },
 
     methods: {
+      // not sure. keep here, or move to masterOut ?
       // togglePower() {
       //   this.power = !this.power;
       //   if (this.power) {
@@ -255,11 +256,6 @@
           }, 200);
         });
       },
-
-      // VUEX mutations, bound as local methods:
-      // ...mapMutations([
-      //   'LOAD'
-      // ]),
 
       // VUEX actions, bound as local methods:
       ...mapActions([
