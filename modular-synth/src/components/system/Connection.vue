@@ -39,7 +39,7 @@ Other notes:
 
 <template>
   <line
-    @click="removeConnection(this.id)"
+    @click="removeConnection(id)"
     :x1="x1"
     :y1="y1"
     :x2="x2"
@@ -79,8 +79,6 @@ export default {
     return {
       fromModule: {},     // will be a Vue Component
       toModule: {},       // will be a Vue Component
-      // source: null,
-      // destination: null,
       cursorX: false,
       cursorY: false
     };
@@ -89,9 +87,6 @@ export default {
   created() {
     this.fromModule = this.getModule(this.from.id);
     this.toModule = this.getModule(this.to.id);
-
-    // this.source = this.fromModule.outlets[this.from.port].data;
-    // this.destination = this.toModule.inlets[this.to.port].data;
     this.routeAudio();
   },
 
@@ -141,7 +136,6 @@ export default {
     },
 
     // VUEX actions, bound as local methods:
-    // ...mapMutations([
     ...mapActions([
       'removeConnection'
     ])
