@@ -83,8 +83,6 @@ export const draggable = {
       this.dragging = false;
       this.$bus.$emit('drag:end', this.id);
 
-      console.log('dd', this.id, this.x); // this same...?
-
       if (this.$store.state.editing) {      // TODO && cursorStartY != this.y etc
         // we only want to update the Store with the
         // new coordinates if we are in editing mode:
@@ -94,9 +92,8 @@ export const draggable = {
           y: this.y
         });
       } else {
-        // otherwise, restore the x,y coordinates -- we only want to update
-        // them if in editing mode; we don't want moving the module around
-        // in play mode to affect the position when it's in editing mode
+        // otherwise, restore the x,y coordinates -- we don't want the
+        // module to have moved around when we switch out of play mode
         const module = this.$store.getters.active;
 
         this.x = module.x;

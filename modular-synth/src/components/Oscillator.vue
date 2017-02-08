@@ -56,6 +56,7 @@
         mod: 0,
         PW: 0,
         sync: 0,
+        phase: 0,
         type: 'sine',
         types: ['sine', 'square', 'sawtooth', 'triangle'],
 
