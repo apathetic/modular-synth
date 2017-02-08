@@ -48,6 +48,9 @@ export default {
       w: 1, // rack width
       h: 1, // rack height
       freq: 2.0,
+      min: 0.1,
+      max: 10,
+      phase: 0,
       type: 'sine',
       types: ['sine', 'square', 'sawtooth', 'triangle'],
       inlets: [
@@ -66,13 +69,19 @@ export default {
   },
 
   created() {
-    const osc = this.context.createOscillator();
+    // const osc = this.context.createOscillator();
+    //
+    // this.outlets[0].data = osc;
+    // osc.type = this.type;
+    // osc.frequency.value = this.freq;
+    // osc.start();
 
-    this.outlets[0].data = osc;
 
-    osc.type = this.type;
-    osc.frequency.value = this.freq;
-    osc.start();
+    this.outlets[0].data = this.osc = this.context.createOscillator();
+
+    this.osc.type = this.type;
+    this.osc.frequency.value = this.freq;
+    this.osc.start();
 
     this.$watch('freq', this.setFreq);
     // this.$watch('depth', this.setDepth);   // gate. mod?
@@ -81,13 +90,13 @@ export default {
 
   methods: {
     setFreq(f) {
-      // this.osc.frequency.value = f;
-      this.outlets[0].data.frequency.value = f;
+      this.osc.frequency.value = f;
+      // this.outlets[0].data.frequency.value = f;
     },
 
     setType(t) {
-      // this.osc.type = t;
-      this.outlets[0].data.type = t;
+      this.osc.type = t;
+      // this.outlets[0].data.type = t;
     }
   }
 };

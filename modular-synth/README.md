@@ -32,7 +32,7 @@ node server
   - ~~connectors are messed up, dont have x,y coords~~
   - ~~convert vuex commit payloads to objects~~
   - ~~remove module does not work~~
-  - clicking on outlet (not drag) errors out
+  - ~~clicking on outlet (not drag) errors out~~
   - ~~audio no longer connecting~~
 
 
@@ -48,6 +48,9 @@ node server
 - UI
   - ***Delete removes wrong module***
     - **removing connections also throw errors**
+    - delete module causes odd grid reshuffle
+  - ugh, regression: modules don't retain position after dragging / switching states. Cannot reliably reproduce...
+  - ~~can no longer click on a connection to delete it~~
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
   - ~~cannot select from dropdown; dragging intercedes~~
   - *dial doesn't do floats*
@@ -57,7 +60,6 @@ node server
     - ~~edit: draggables (dragabilly, vanillaJS)~~
   - ~~dotted line while creating a connection~~
   - when a node is selected, all connected connections become highlighted
-  - delete module causes odd grid reshuffle
   - must press shift to sort in play mode
 
 
@@ -123,7 +125,7 @@ NOTES:
   - midi:polyPressure
 
 
-**ROUTING**
+**ROUTING / PORT TYPES**
 - inputs
   - in
   - out
