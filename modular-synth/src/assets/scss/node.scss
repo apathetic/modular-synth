@@ -3,7 +3,8 @@
 .module {
   height: $cellHeight; // 200px;
   width: $cellWidth; // 200px;
-  border: 1px solid #666;
+  border: 1px solid #333;
+  border-radius: 4px;
   position: absolute;
   transition: all 0.2s;
   transition-timing-function: ease-in-out;
@@ -21,21 +22,22 @@
 
   &-details {
     background: #777;
+    border-bottom: 1px solid #000;
+    border-top: 1px solid #666;
     color: #000;
-    padding: 0.2em;
 
-    h3 { margin: 0; }
+    h3 {
+      font-weight: 700;
+      padding: 0 0.2em;
+      margin: 0;
+      text-shadow: 0 0 1px #ddd;
+    }
   }
 
   &-interface {
     padding: 2em 3.6em;
-    // display: none;
-
-
     visibility: hidden;
     transition: visibility 0s;    // yes you can do this (to delay the toggle of block/none);
-    // transition-delay: 4s;
-
   }
 
   &-connections {
@@ -43,7 +45,6 @@
     width: 100%;
     top: 12px;
     height: 0;
-    font-size: 10px;
 
     span {
       margin: 8px 0;
@@ -103,7 +104,6 @@
     &-interface {
       display: block;
       visibility: visible;
-      // transition-delay: 0.3s;
       transition-delay: 0.2s;
     }
 
@@ -111,11 +111,11 @@
       display: none;
     }
 
-    &.math {
-      width: 0;
-      height: 0;  // hidden in play mode
-      border: 0;
-      overflow: hidden;
-    }
+    // &.math {
+    //   width: 0;
+    //   height: 0;  // hidden in play mode
+    //   border: 0;
+    //   overflow: hidden;
+    // }
   }
 }

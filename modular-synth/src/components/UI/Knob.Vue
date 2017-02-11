@@ -129,7 +129,7 @@ export default {
     text {
       text-anchor: middle;
       font-size: 1rem;
-      fill: #fff;
+      // fill: #fff;
     }
 
     .track {

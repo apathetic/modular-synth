@@ -14,11 +14,11 @@
     </div>
 
     <div class="module-interface">
-      <select v-model="type">
+      <select @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
-
       <slider label="mod"  @value="mod = $event"  min="0" max="100"></slider>
+      <p>OSC</p>
       <knob   label="freq" @value="freq = $event" min="1" max="880"></knob>
       <knob   label="sync" @value="sync = $event" min="0" max="1"></knob>
       <knob   label="PW"   @value="PW = $event"   min="0" max="6.28"></knob>
@@ -30,7 +30,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
   import { draggable } from '../mixins/draggable';
@@ -130,14 +129,67 @@
       setGain(g) {
         // this.gain.gain.value = g;
         this.inlets[0].data.gain.value = g;
+      },
+
+
+      // Tone.Oscillator.prototype.syncFrequency = function(){
+      //   Tone.Transport.syncSignal(this.frequency);
+      //   return this;
+      // };
+
+      /**
+       * The phase of the oscillator in degrees.
+       * @type {Degrees}
+       * @name phase
+       * @example
+       * osc.phase = 180; //flips the phase of the oscillator
+       */
+      getPhase() {
+        return this._phase * (180 / Math.PI);
+      },
+
+      setPhase(phase) {
+        this._phase = phase * Math.PI / 180;
+        // reset the type
+        this.type = this._type;
       }
     }
   };
 </script>
 
 <style lang="scss">
-  .slider { float: right; }
   .oscillator {
-    // background: linear-gradient(to bottom, #f3eeee, #dbd7d6);
+    background: linear-gradient(to bottom, #f2efed 0%,#d9d7d5 98%,#959492 100%);
+    color: #000;
+
+    select {
+      position: absolute;
+      top: 14em;
+      left: 11em;
+    }
+
+    p {
+      position: absolute;
+      font-size: 4.5em;
+      font-weight: lighter;
+      font-family: Poppins;
+      color: #bbb;
+      top: 1.5em;
+      left: 2em;
+    }
+
+    text {
+      color: #000;
+    }
+
+    .knob2 {
+      float: left;
+      clear: left;
+    }
+
+    .slider {
+      position: absolute;
+      left: 9em;
+    }
   }
 </style>
