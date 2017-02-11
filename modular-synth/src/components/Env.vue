@@ -55,11 +55,9 @@ export default {
 
       inlets: [
         {
-          port: 0,
           label: 'gate',
           data: null
         }, {
-          port: 1,
           label: 'mod',
           data: null
         }
@@ -67,7 +65,6 @@ export default {
 
       outlets: [
         {
-          port: 0,
           label: 'out',
           data: null
         }

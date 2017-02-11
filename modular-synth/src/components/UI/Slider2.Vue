@@ -78,6 +78,7 @@ export default {
 <style lang="scss">
   .slider {
     background: #444;
+    border-radius: 4px;
     height: 48px;
     width: 10px;
     cursor: ns-resize;

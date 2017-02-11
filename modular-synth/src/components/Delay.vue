@@ -1,62 +1,83 @@
-	//------------------------------------------------
-	//	DELAY
-	// -----------------------------------------------
-	patch.directive("delay", function(){
-	  return {
-		 'restrict': 'E',
-		 'controller': function($scope, $element, $attrs){
-			var time = $scope.time || '100';
-			var feedback = $scope.freq || '0';
-			var output = $scope.output || 'masterOut';
+//------------------------------------------------
+//  Delay
+// -----------------------------------------------
 
-			// create an input
-			this.input = context.createGainNode();
+<template>
+  <div
+  class="module"
+  :class="dragging ? 'dragging' : ''"
+  :style="position"
+  @mousedown.prevent="startDraggingNode">
 
-			// create the filter
-			this.delay = context.createDelayNode();
-			this.delay.delayTime.value = time;
+    <div class="module-details">
+      <h3>{{ name }}</h3>
+    </div>
 
-			// this.delay.feedback.value = freq;
+    <div class="module-interface">
+      <Knob @value="feedback = value"  min="220" max="880"></Knob>
+      <Knob @value="diffusion = value" min="220" max="880"></Knob>
+      <Knob @value="spread = value"    min="220" max="880"></Knob>
+    </div>
 
-			// our input is now connected to our filter
-			this.input.connect(this.delay);
+    <div class="module-connections">
+      <inlets :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
+    </div>
+  </div>
+</template>
 
 
-			// feedback
-			// var feedback = context.createGainNode();
-			//
-			// feedback.gain = feedback;
-			// this.delay.connect(feedback);
-			// feedback.connect(this.input);
+<script>
+import { draggable } from '../mixins/draggable';
+import Knob from './UI/Knob';
 
-			// call it vars(?). Maybe makes more sense, in this context
-			// this.vars = $scope;
+export default {
+  mixins: [draggable],
+  components: { Knob },
+  props: {
+    id: null,
+    col: null,
+    row: null
+  },
 
-			// store a reference to the input on the element itself
-			$element[0].input = this.input;
+  data() {
+    return {
+      name: 'Delay',
+      delay: 0,
 
-		 },
-		 'link': function(scope, elem, attrs, controller) {
-			scope.$watch('output', function(output){
+      inlets: [
+        {
+          label: 'in-1',
+          data: null
+        }, {
+          label: 'in-2',
+          data: null
+        }
+      ],
 
-			  if (output == 'masterOut') {
-				 controller.comp.connect(masterOut);
-			  } else {
-				var destination = document.querySelector('#'+output);
-				if (destination.input) {
-				 controller.delay.connect(destination.input);
-				 } else {
-					console.log('"%s" not found or is not an audio node', output);
-				 }
-			  }
+      outlets: [
+        {
+          label: 'out-1',
+          data: null
+        }, {
+          label: 'out-2',
+          data: null
+        }
+      ]
+    };
+  },
 
-			});
+  created() {
+    // inputs
+    this.inlets[0].data = this.context.createGain();
+    this.inlets[1].data = this.context.createGain();
 
-		 },
-		 'scope': {
-			'time': '@',
-			'feedback': '@',
-			'output': '@'
-		 }
-	  }
-	});
+    // outputs
+    this.outlets[0].data = this.context.createGain();
+    this.outlets[1].data = this.context.createGain();
+
+		this.delay = this.context.createDelayNode();
+  }
+};
+
+</script>

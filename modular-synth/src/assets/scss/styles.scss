@@ -37,7 +37,11 @@ section {
 .h2, h2,
 .h3, h3,
 .h4, h4,
-.h5, h5 { margin-bottom: 0.5em; }
+.h5, h5 {
+  margin-bottom: 0.5em;
+  font-family: Poppins, sans-serif;
+}
+
 
 
 #modules {
@@ -209,6 +213,11 @@ button {
 
 select {
   margin-bottom: 1em;
+  border: 0;
+  -webkit-appearance: none;
+  border-radius: 0;
+  height: 2em;
+  padding: 0em 0.5em;
 }
 
 meter,

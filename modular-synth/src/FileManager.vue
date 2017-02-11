@@ -1,7 +1,7 @@
 <template>
   <header class="pad">
     <button class="button" @click="save">save</button>
-    <select v-model="selected">
+    <select class="patch-selector" v-model="selected">
       <option value="juno">Juno</option>
       <option value="arp">Arp</option>
       <option v-for="patch in patches" :value="patch">{{ patch.name }}</option>
@@ -88,6 +88,8 @@ export default {
 </script>
 
 <style lang="scss">
-
+  .patch-selector {
+    min-width: 8em;
+  }
 
 </style>

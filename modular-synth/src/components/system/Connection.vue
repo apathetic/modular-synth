@@ -109,15 +109,17 @@ export default {
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
 
       if (source && destination) {
-        (connect) ? source.connect(destination) : source.disconnect(destination);
-      } else {
-        let inlet = this.toModule.inlets[0];
-        let outlet = this.fromModule.outlets[0];
-
         try {
-          if (outlet) console.log('src ', outlet.label, outlet.data);
-          if (inlet) console.log('dest ', inlet.label, inlet.data.toString());
-          console.log('audio routing failed. tried module #%d (port %s) --> module #%d (port %s)', this.from.id, this.from.port, this.to.id, this.to.port);
+          (connect) ? source.connect(destination) : source.disconnect(destination);
+        } catch (e) {
+          console.log('Audio dis/connect error', e);
+        }
+      } else {
+        try {
+          console.log('Audio dis/connect error. From module: ', this.from.id);
+          console.log('Audio dis/connect error. From outlet: ', this.from.port);
+          console.log('Audio dis/connect error. To module: ', this.to.id);
+          console.log('Audio dis/connect error. to outlet: ', this.to.port);
         } catch (e) {}
       }
     },
