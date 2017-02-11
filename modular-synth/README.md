@@ -91,6 +91,7 @@ node server
 
 
 - Connections
+  - removing certain (last?) connection causes webaudio error
   - ~~have startConnection: just draw an open-ended connection~~
     - ~~addConnection will take src, dest and "replace" the user-drawn connection~~
   - ~~updated connection object. See store.js line ~142 for details~~
