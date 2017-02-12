@@ -14,9 +14,8 @@
     </div>
 
     <div class="module-interface">
-      <knob @value="feedback = $event"  min="220" max="880"></knob>
-      <knob @value="diffusion = $event" min="220" max="880"></knob>
-      <knob @value="spread = $event"    min="220" max="880"></knob>
+      <knob @value="seconds = $event" min="0" max="5"></knob>
+      <knob @value="decay = $event" min="0" max="5"></knob>
     </div>
 
     <div class="module-connections">
@@ -43,6 +42,7 @@ export default {
   data() {
     return {
       name: 'Reverb',
+
       seconds: 3,
       decay: 2,
       reverse: false,
@@ -70,8 +70,28 @@ export default {
     this.inlets[0].data = reverb;
     this.outlets[0].data = reverb;
 
+    this.$watch('seconds', this.setReverb);
+    this.$watch('decay', this.setDecay);
 
-    console.log('Creating Oscillator');
+    console.log('Creating Reverb');
+  },
+
+  methods: {
+    /**
+     * k-rate control of the Reverb
+     * @param  {Float} s reverb in seconds
+     */
+    setReverb(s) {
+      this.convolver.reverb.value = s;
+    },
+
+    /**
+     * k-rate control of the Reverb decay
+     * @param  {Float} d decay in seconds
+     */
+    setDecay(d) {
+      this.convolver.decay.value = d;
+    }
   }
 };
 
@@ -79,12 +99,7 @@ export default {
 
 <style lang="scss">
   .reverb {
-    // background: linear-gradient(top bottom, #d3cab9 0%, #d3cab9 95%, #8a8478 100%);
-
     background: linear-gradient(to bottom, #e6dcce 0%, #c9c1b0 98%, #8a8478 100%);
-
-
-    // background: #d3cab9;
     color: #000;
 
     text {

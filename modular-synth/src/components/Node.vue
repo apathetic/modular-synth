@@ -10,6 +10,7 @@
     </div>
 
     <div class="module-interface">
+      <slot name="interface"></slot>
       {{ position }}<br><br>
       x {{ x }}<br>
       y {{ y }}<br>
@@ -45,8 +46,8 @@
     data() {
       return {
         name: 'Node',
-        w: 1, // width
-        h: 1, // height
+        // w: 1, // width
+        // h: 1, // height
 
         inlets: [
           {

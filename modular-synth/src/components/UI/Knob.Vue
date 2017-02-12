@@ -1,5 +1,5 @@
 <template>
-  <svg class="knob2" @mousedown.stop.prevent="start">
+  <svg class="knob" @mousedown.stop.prevent="start">
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
     <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
     <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
@@ -121,7 +121,7 @@ export default {
 <style lang="scss">
   // @import '../assets/scss/variables.scss';
 
-  .knob2 {
+  .knob {
     width: 48px;
     height: 64px;
     cursor: pointer;

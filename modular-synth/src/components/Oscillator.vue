@@ -48,8 +48,8 @@
     data() {
       return {
         name: 'Oscillator',
-        w: 1, // rack width
-        h: 1, // rack height
+        // w: 1, // rack width
+        // h: 1, // rack height
 
         freq: 440,
         mod: 0,
@@ -172,7 +172,8 @@
       position: absolute;
       font-size: 4.5em;
       font-weight: lighter;
-      font-family: Poppins;
+      // font-family: Poppins;
+      font-family: Oxygen;
       color: #bbb;
       top: 1.5em;
       left: 2em;
@@ -182,7 +183,7 @@
       color: #000;
     }
 
-    .knob2 {
+    .knob {
       float: left;
       clear: left;
     }
