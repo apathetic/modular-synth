@@ -1,17 +1,16 @@
 <template>
   <div
-  class="module"
+  class="filter module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @mousedown.prevent="startDraggingNode">
-  <!-- @mousedown.prevent="dragStart($event, this)"> -->
+  @mousedown.stop="startDragging">
 
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
 
     <div class="module-interface">
-      <slot name="interface"></slot>
+      <!-- <slot name="interface"></slot> -->
     </div>
 
     <div class="module-connections">
@@ -24,35 +23,33 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { newConnection } from '../store/actions';
 import Knob from './UI/Knob';
 
 export default {
-  props: { id: null },
-  components: { Knob },
   mixins: [draggable],
-
-  vuex: {
-    actions: {
-      newConnection
-    }
+  components: { Knob },
+  props: {
+    id: null,
+    col: null,
+    row: null
   },
 
   data() {
     return {
       name: 'Filter',
+      // w: 1, // rack width
+      // h: 1, // rack height
+
       freq: 440,
       types: ['lowpass', 'hipass', 'bandpass', 'notch'],
       Q: 1,
 
       inlets: [
         {
-          port: 0,
-          label: 'in-1',
-          data: this.input
+          label: 'input',
+          data: null
         }, {
-          port: 1,
-          label: 'in-2',
+          label: 'input',
           data: null // this.input
         }
       ],
@@ -72,18 +69,20 @@ export default {
   },
 
   created() {
-    // inputs
-    this.inlets[0].data = this.context.createGain();
-
-
-    // create the filter
     this.filter = this.context.createBiquadFilter();
     this.filter.type = this.types[0];
     this.filter.frequency.value = this.freq;
     this.filter.Q.value = this.Q;
 
     // connect input to our filter
-    this.inlets[0].data.connect(this.filter);
+    this.inlets[0].data = this.filter;
+    this.outlets[0].data = this.filter;
+
+    // this.$watch('type', this.setReverb);
+    // this.$watch('freq', this.setDecay);
+    // this.$watch('Q', this.setDecay);
+
+    console.log('Creating Filter');
   },
 
   methods: {
@@ -98,3 +97,14 @@ export default {
 };
 
 </script>
+
+<style lang="scss">
+  .filter {
+    background: linear-gradient(to bottom, #484643 0%, #42413e 98%, #343330 100%);
+    color: #fff;
+
+    text {
+      color: #fff;
+    }
+  }
+</style>

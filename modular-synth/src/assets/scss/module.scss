@@ -23,19 +23,19 @@
   &-details {
     background: #777;
     border-bottom: 1px solid #000;
-    border-top: 1px solid #666;
+    border-top: 1px solid #999;
     color: #000;
 
     h3 {
       font-weight: 700;
-      padding: 0 0.2em;
+      padding: 0.1em 0.2em;
       margin: 0;
-      text-shadow: 0 0 1px #ddd;
+      // text-shadow: 0 0 1px #ddd;
     }
   }
 
   &-interface {
-    padding: 2em 3.6em;
+    padding: 2em 2.4em;
     visibility: hidden;
     transition: visibility 0s;    // yes you can do this (to delay the toggle of block/none);
   }

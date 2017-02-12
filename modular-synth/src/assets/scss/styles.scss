@@ -39,7 +39,8 @@ section {
 .h4, h4,
 .h5, h5 {
   margin-bottom: 0.5em;
-  font-family: Poppins, sans-serif;
+  // font-family: Poppins, sans-serif;
+  font-family: Oxygen, sans-serif;
 }
 
 
@@ -92,7 +93,7 @@ section {
   z-index: 10000;          // as nodes will increment their z-index
 
   .button {
-    font-size: 0.8em;
+    font-size: 1em;
   }
 }
 
