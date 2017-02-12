@@ -1,6 +1,6 @@
 <template>
   <div
-  class="knob"
+  class="knob_"
   @mousedown.stop.prevent="start">
     <div ref="notch" class="notch"></div>
     <span>{{ value }}</span>
@@ -97,7 +97,7 @@ export default {
 
 
 <style lang="scss">
-  .knob {
+  .knob_ {
     width: 50px;
     height: 50px;
     display: inline-block;

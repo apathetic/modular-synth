@@ -242,8 +242,8 @@
 
           this.$store.commit('REGISTER_DIMENSIONS', {
             id: id,
-            w: module.w,
-            h: module.h
+            w: module.w || 1,
+            h: module.h || 1
           });
 
           module.$el.style.opacity = 0;
@@ -273,5 +273,5 @@
 <style lang="scss">
   @import 'assets/scss/variables.scss';
   @import 'assets/scss/styles.scss';
-  @import 'assets/scss/node.scss';
+  @import 'assets/scss/module.scss';
 </style>
