@@ -242,7 +242,7 @@
 
           this.$store.commit('REGISTER_DIMENSIONS', {
             id: id,
-            w: module.w || 1,
+            w: module.w || 2,
             h: module.h || 1
           });
 

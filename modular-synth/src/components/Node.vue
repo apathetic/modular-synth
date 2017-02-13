@@ -1,6 +1,6 @@
 <template>
   <div
-  class="module"
+  class="node module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
@@ -88,3 +88,32 @@
   };
 
 </script>
+
+<style lang="scss">
+  $grey: #a8a8a8;
+  .node {
+    background-image: radial-gradient(
+      circle,
+      $grey 0%,
+      $grey  10%,
+      green 10%,
+      green 26%,
+      $grey  26%,
+      $grey  28%,
+      green 28%,
+      green 36%,
+      $grey  36%,
+      $grey  40%,
+      green 40%,
+      green 44%,
+      $grey  44%,
+      $grey  52%,
+      green 52%,
+      green 54%,
+      $grey  54%,
+      $grey  100%
+     );
+     background-position: 100% 66%;
+     background-size: 150%;
+  };
+</style>
