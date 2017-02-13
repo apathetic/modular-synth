@@ -4,7 +4,7 @@
 
 <template>
   <div
-  class="lfo module"
+  class="lfo module _1U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.prevent="startDragging">
@@ -14,8 +14,8 @@
     </div>
 
     <div class="module-interface">
-      <select v-model="type">
-        <option v-for="type in types" v-bind:value="type">{{ type }}</option>
+      <select @mousedown.stop v-model="type">
+        <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
 
       <knob label="freq"  @value="freq = $event"  min="0" max="20"></knob>
@@ -101,3 +101,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+  .lfo {
+    background: linear-gradient(to bottom, #f2efed 0%,#d9d7d5 98%,#959492 100%);
+    color: #000;
+  }
+</style>

@@ -1,8 +1,8 @@
 @import 'variables.scss';
 
 .module {
-  height: $cellHeight; // 200px;
-  width: $cellWidth; // 200px;
+  height: $cellHeight;
+  width: $cellWidth;
   border: 1px solid #333;
   border-radius: 4px;
   position: absolute;
@@ -98,8 +98,12 @@
 
 .play-mode {
   .module {
-    width: $rackWidth;
+    width: #{$rackWidth * 2};   // default rack width is 2U
     height: $rackHeight;
+
+    &._1U { width: $rackWidth; }
+    &._2U { width: #{$rackWidth * 2}; }
+    &._3U { width: #{$rackWidth * 3}; }
 
     &-interface {
       display: block;
