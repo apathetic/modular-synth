@@ -26,6 +26,7 @@ node server
 ## TODO
 
 - General post-vue 2.0 things
+  - saving patches
   - ~~new parent / child events~~
     - ~~.native on components~~
   - ~~dragging / sorting is messed up~~
@@ -50,17 +51,18 @@ node server
     - **removing connections also throw errors**
     - delete module causes odd grid reshuffle
   - ugh, regression: modules don't retain position after dragging / switching states. Cannot reliably reproduce...
-  - ~~can no longer click on a connection to delete it~~
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
-  - ~~cannot select from dropdown; dragging intercedes~~
   - *dial doesn't do floats*
+  - when a node is selected, all connected connections become highlighted
+  - must press shift to sort in play mode
+  - ~~multiple module sizes~~
+  - ~~can no longer click on a connection to delete it~~
+  - ~~cannot select from dropdown; dragging intercedes~~
   - ~~cannot dynamically add new modules~~
   - ~~2 modes: play / edit.~~
     - ~~play: grid (packery, gridlist)~~
     - ~~edit: draggables (dragabilly, vanillaJS)~~
   - ~~dotted line while creating a connection~~
-  - when a node is selected, all connected connections become highlighted
-  - must press shift to sort in play mode
 
 
 - LOADING

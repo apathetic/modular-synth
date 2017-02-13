@@ -4,7 +4,7 @@
 
 <template>
   <div
-  class="reverb module"
+  class="reverb module _2U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
@@ -42,6 +42,7 @@ export default {
   data() {
     return {
       name: 'Reverb',
+      // w: 2, // rack width
 
       seconds: 3,
       decay: 2,
