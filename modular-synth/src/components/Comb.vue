@@ -1,110 +1,121 @@
+<template>
+  <div
+  class="comb module _2U"
+  :class="dragging ? 'dragging' : ''"
+  :style="position"
+  @mousedown.stop="startDragging">
 
-	<filter type="bandpass" output="masterOut">
+    <div class="module-details">
+      <h3>{{ name }}</h3>
+    </div>
 
-		<!-- Filter Controls -->
-		<knob param="Q" default="0.8" min="0.1" max="2.0"></knob>
-		<knob param="f" default="440" min="100" max="5000"></knob>
-		<!-- <knob param="gain" default="0.8" max="1.0"></knob> -->
+    <div class="module-interface">
+      <!-- <slot name="interface"></slot> -->
+    </div>
 
-		<!-- Inputs -->
-		<oscillator type="saw">
-			<knob param="freq" default="440" max="2000"></knob>
-		</oscillator>
-
-		<oscillator type="sine">
-			<knob param="freq" default="85" max="2000"></knob>
-		</oscillator>
-
-	</filter>
-
-
-
-
-
-
-	//------------------------------------------------
-	//	FILTER
-	// -----------------------------------------------
-	patch.directive("filter", function(){
-		return {
-			'restrict': 'E',
-			'controller': function($scope, $element, $attrs){
-				var type = $scope.type || 'lowpass';
-				var freq = $scope.freq || '440';
-				var Q = $scope.Q || '1';
-				var output = $scope.output || 'masterOut';
-				/*
-				// create an input
-				this.input = context.createGain();
-
-				// create the filter
-				this.filt = context.createBiquadFilter();
-				this.filt.type = type;
-				this.filt.frequency.value = freq;
-				this.filt.Q.value = Q;
-
-				// our input is now connected to our filter
-				this.input.connect(this.filt);
-
-				// call it vars(?). Maybe makes more sense, in this context
-				this.vars = $scope;
-				*/
-				// store a reference to the audioNode on the element itself
-				// $element.audioNode = this;
-
-				// $element[0].input = this.input;
+    <div class="module-connections">
+      <inlets :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
+    </div>
+  </div>
+</template>
 
 
+<script>
+import { draggable } from '../mixins/draggable';
+import Knob from './UI/Knob';
+
+export default {
+  mixins: [draggable],
+  components: { Knob },
+  props: {
+    id: null,
+    col: null,
+    row: null
+  },
+
+  data() {
+    return {
+      name: 'Comb',
+
+      freq: 440,
+      types: ['lowpass', 'hipass', 'bandpass', 'notch'],
+      Q: 1,
+
+      inlets: [
+        {
+          label: 'input',
+          data: null
+        }, {
+          label: 'input',
+          data: null // this.input
+        }
+      ],
+
+      outlets: [
+        {
+          port: 0,
+          label: 'output-1',
+          data: null // this.outputL   // src?
+        }, {
+          port: 1,
+          label: 'output-2',
+          data: null // this.outputR
+        }
+      ]
+    };
+  },
+
+  created() {
+    this.filter = this.context.createBiquadFilter();
+    this.filter.type = this.types[0];
+    this.filter.frequency.value = this.freq;
+    this.filter.Q.value = this.Q;
+
+    // connect input to our filter
+    this.inlets[0].data = this.filter;
+    this.outlets[0].data = this.filter;
+
+    // this.$watch('type', this.setReverb);
+    // this.$watch('freq', this.setDecay);
+    // this.$watch('Q', this.setDecay);
+
+    console.log('Creating Comb');
+  },
+
+  methods: {
+    setFreq(f) {
+      this.filter.frequency.value = f;
+    },
+
+    setType(t) {
+      this.filter.type = this.types[t] || 'lowpass';
+    }
+  }
+};
+
+</script>
+
+<style lang="scss">
+  $grey: #a8a8a8;
+  $purple: #c35896;
+  .comb {
+    background:
+      linear-gradient(187deg,                  $purple 0%,  $purple 22%, transparent 22%) no-repeat,
+      linear-gradient(192deg, transparent 22%, $purple 22%, $purple 26%, transparent 26%) no-repeat,
+      linear-gradient(196deg, transparent 22%, $purple 22%, $purple 25%, transparent 25%) no-repeat,
+      linear-gradient(199deg, transparent 22%, $purple 22%, $purple 24%, transparent 24%) no-repeat,
+      linear-gradient(201deg, $grey 22%,       $purple 22%, $purple 23%, $grey 23%);
+
+    background-position: 0 0, 0 5px, 100% 16px, 100% 38px, 100% 50px;
+    background-size: 100%, 110%, 120%, 120%, 130%;
 
 
 
+    color: #fff;
 
-				// create an input
-				$scope.input = context.createGain();
-
-				// create the filter
-				$scope.filter = context.createBiquadFilter();
-				$scope.filter.type = type;
-				$scope.filter.frequency.value = freq;
-				$scope.filter.Q.value = Q;
-
-				// our input is now connected to our filter
-				$scope.input.connect($scope.filter);
-
-
-
-
-
-
-
-
-
-			 },
-			'link': function(scope, elem, attrs, controller) {
-
-				console.log('********', scope, elem);
-
-				scope.$watch('output', function(output){
-
-					if (output == 'masterOut') {
-						scope.filter.connect(masterOut);
-					} else {
-						var destination = document.querySelector('#'+output);
-						if (destination.input) {
-							scope.filter.connect(destination.input);
-						} else {
-							console.log('"%s" not found or is not an audio node', output);
-						}
-					}
-
-				});
-
-			},
-			'scope': {
-				'type': '@',
-				'freq': '@',
-				'Q': '@',
-				'output': '@'
-			}
-		}
-	});
+    text {
+      color: #fff;
+    }
+  }
+</style>
