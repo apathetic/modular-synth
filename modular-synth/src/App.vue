@@ -73,6 +73,7 @@
         <button class="button" @click="newModule('Env')">env</button>
         <button class="button" @click="newModule('Reverb')">reverb</button>
         <button class="button" @click="newModule('Filter')">filter</button>
+        <button class="button" @click="newModule('Comb')">comb</button>
         <button class="button" @click="newModule('Mixer')">mixer</button>
         <button class="button" @click="newModule('multiply')">multiply</button>
         <button class="button" @click="newModule('NoteIn')">note-in</button>
@@ -103,6 +104,8 @@
 
   import Env from './components/Env';
   import LFO from './components/LFO';
+  import Filter from './components/Filter';
+  import Comb from './components/Comb';
   import Mixer from './components/Mixer';
   import Node from './components/Node';
   import NoteIn from './components/NoteIn';
@@ -127,6 +130,8 @@
 
       Env,
       LFO,
+      Filter,
+      Comb,
       Mixer,
       Node,
       NoteIn,

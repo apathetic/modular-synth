@@ -91,25 +91,26 @@
 
 <style lang="scss">
   $grey: #a8a8a8;
+  $teal: #409d9e;
   .node {
     background-image: radial-gradient(
       circle,
       $grey 0%,
       $grey  10%,
-      green 10%,
-      green 26%,
+      $teal 10%,
+      $teal 26%,
       $grey  26%,
       $grey  28%,
-      green 28%,
-      green 36%,
+      $teal 28%,
+      $teal 36%,
       $grey  36%,
       $grey  40%,
-      green 40%,
-      green 44%,
+      $teal 40%,
+      $teal 44%,
       $grey  44%,
       $grey  52%,
-      green 52%,
-      green 54%,
+      $teal 52%,
+      $teal 54%,
       $grey  54%,
       $grey  100%
      );
