@@ -11,6 +11,11 @@
 
     <div class="module-interface">
       <!-- <slot name="interface"></slot> -->
+      <select @mousedown.stop v-model="type">
+        <option v-for="type in types" :value="type">{{ type }}</option>
+      </select>
+      <knob label="freq" @value="freq = $event" min="440" max="880"></knob>
+      <knob label="Q"    @value="Q = $event"    min="0" max="1"></knob>
     </div>
 
     <div class="module-connections">
