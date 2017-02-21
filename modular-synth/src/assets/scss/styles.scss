@@ -78,7 +78,8 @@ section {
   top: 0;
   left: 0;
   transition: opacity 0.1s;
-  transition-delay: 0.2s;
+  // transition-delay: 0.2s;
+  transition-delay: $transition-time-slow;
 
   .play-mode & {
     opacity: 0;

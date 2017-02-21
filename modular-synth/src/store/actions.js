@@ -89,12 +89,6 @@ export const removeModule = ({ commit, state }) => {
 // -----------------------------------------------
 //  CONNECTIONS
 // -----------------------------------------------
-// export const updateConnection = ({ commit }, id, port) => {
-//   commit('UPDATE_CONNECTION', {
-//     id: id,
-//     port: port
-//   });
-// };
 
 // export const addConnection = ({ commit }, outlet) => {
 //   commit('ADD_CONNECTION', outlet.port);

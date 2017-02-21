@@ -26,12 +26,11 @@
         :col="module.col"
         :row="module.row"
         :coords="{ x:module.x, y:module.y }"
+        :key="module.id"
 
         @mousedown.native="setActive(module.id)"
         @mouseover.native="setFocus(module.id)"
-        @mouseout.native="clearFocus"
-
-        :key="index">
+        @mouseout.native="clearFocus">
       </component>
 
       <svg id="connections">
@@ -40,6 +39,7 @@
           :id="connection.id"
           :to="connection.to"
           :from="connection.from"
+          :key="connection.id"
 
           @mousedown.native="setActive(connection.id)">
         </connection>
