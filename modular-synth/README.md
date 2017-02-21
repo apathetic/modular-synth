@@ -47,9 +47,10 @@ node server
     - ~~drag, too?~~
 
 - UI
-  - ***Delete removes wrong module***
-    - **removing connections also throw errors**
-    - delete module causes odd grid reshuffle
+  - ~~Delete removes wrong module~~
+  - **removing connections sometimes throw errors**
+    - ~~delete module causes odd grid reshuffle~~
+      - update rack positions on delete
   - ugh, regression: modules don't retain position after dragging / switching states. Cannot reliably reproduce...
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
   - *dial doesn't do floats*

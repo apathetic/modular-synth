@@ -108,15 +108,6 @@ export const ADD_CONNECTION = (state, data) => {
   });
 };
 
-// export const UPDATE_CONNECTION = (state, data) => {
-//   const connection = state.connections.find((c) => { return c.id === data.id; });
-//
-//   connection.to = {
-//     id: state.focused,
-//     port: data.port
-//   };
-// };
-
 export const REMOVE_CONNECTION = (state, id) => {
   state.connections = state.connections.filter((c) => {
     return c.id !== id;

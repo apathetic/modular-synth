@@ -6,7 +6,7 @@
   border: 1px solid #333;
   border-radius: 4px;
   position: absolute;
-  transition: all 0.2s;
+  transition: all $transition-time-slow;
   transition-timing-function: ease-in-out;
   z-index: 1;
 
@@ -108,7 +108,7 @@
     &-interface {
       display: block;
       visibility: visible;
-      transition-delay: 0.2s;
+      transition-delay: $transition-time-slow;
     }
 
     &-connections {
