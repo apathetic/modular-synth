@@ -183,6 +183,13 @@
           case 'Delete':
           case 'Backspace':
             this.removeModule();
+            this.$nextTick(() => {
+              // Update gridList.items. Two options:
+              this.gridList.items = this.modules;
+              // this.gridList._deleteItemPositionFromGrid(deleted);
+
+              this.gridList._pullItemsToLeft();
+            });
             break;
           case 'Tab':
             this.toggleEditMode();
