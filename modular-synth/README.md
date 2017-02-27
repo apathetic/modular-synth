@@ -27,6 +27,9 @@ node server
 
 - General post-vue 2.0 things
   - saving patches
+    - **saving settings**
+  - service workers
+    - store samples, waveforms
   - ~~new parent / child events~~
     - ~~.native on components~~
   - ~~dragging / sorting is messed up~~

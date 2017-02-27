@@ -18,8 +18,8 @@
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
 
-      <knob label="freq"  @value="freq = $event"  min="0" max="20"></knob>
-      <knob label="phase" @value="phase = $event" min="0" max="3.14159265"></knob>
+      <knob label="freq"  @value="freq = $event"  :min="0" :max="20"></knob>
+      <knob label="phase" @value="phase = $event" :min="0" :max="3.14159265"></knob>
     </div>
 
     <div class="module-connections">

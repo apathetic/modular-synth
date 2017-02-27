@@ -24,6 +24,7 @@ header {
   height: $header-height;
   width: 100%;
   background-color: #666;
+  background: linear-gradient(187deg, #000 0%, #000 22%, transparent 22%) no-repeat, linear-gradient(192deg, transparent 22%, #000 22%, #000 26%, transparent 26%) no-repeat, linear-gradient(196deg, transparent 22%, #000 22%, #000 25%, transparent 25%) no-repeat, linear-gradient(-137deg, transparent 22%, #000 22%, #000 24%, transparent 24%) no-repeat, linear-gradient(201deg, #666 22%, #000 22%, #000 23%, #666 23%);
 }
 
 section {

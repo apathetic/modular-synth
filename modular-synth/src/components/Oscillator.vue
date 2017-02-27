@@ -17,11 +17,11 @@
       <select @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
-      <slider label="mod"  @value="mod = $event"  min="0" max="100"></slider>
+      <slider label="mod"  @value="mod = $event"  :min="0" :max="100"></slider>
       <p>OSC</p>
-      <knob   label="freq" @value="freq = $event" min="1" max="880"></knob>
-      <knob   label="sync" @value="sync = $event" min="0" max="1"></knob>
-      <knob   label="PW"   @value="PW = $event"   min="0" max="6.28"></knob>
+      <knob   label="freq" @value="freq = $event" :min="1" :max="880"></knob>
+      <knob   label="sync" @value="sync = $event" :min="0" :max="1"></knob>
+      <knob   label="PW"   @value="PW = $event"   :min="0" :max="6.28"></knob>
     </div>
 
     <div class="module-connections">
@@ -95,6 +95,9 @@
       osc.type = this.type;
       osc.frequency.value = this.freq;
       osc.start();
+
+
+      // AudioParam for controlling mod, sync
 
       this.$watch('freq', this.setFreq);
       this.$watch('mod', this.setGain);
