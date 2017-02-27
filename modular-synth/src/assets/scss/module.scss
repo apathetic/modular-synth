@@ -7,11 +7,14 @@
   border-radius: 4px;
   position: absolute;
   transition: all $transition-time-slow;
+  // transition: all $transition-time;
+  // transition: left $transition-time-slow, top $transition-time-slow, border $transition-time;
   transition-timing-function: ease-in-out;
   z-index: 1;
 
   &:hover {
     border-color: lightblue;
+    // box-shadow: 0px 0 1px 2px lightblue;
   }
 
   &.dragging {
@@ -100,6 +103,7 @@
   .module {
     width: #{$rackWidth * 2};   // default rack width is 2U
     height: $rackHeight;
+    // transition: all $transition-time;
 
     &._1U { width: $rackWidth; }
     &._2U { width: #{$rackWidth * 2}; }
