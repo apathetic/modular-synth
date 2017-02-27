@@ -1,6 +1,6 @@
 <template>
   <div
-  class="filter module"
+  class="filter module _1U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
@@ -11,11 +11,11 @@
 
     <div class="module-interface">
       <!-- <slot name="interface"></slot> -->
+      <knob label="freq" @value="freq = $event" :min="100" :max="20000" log="1"></knob>
+      <knob label="Q"    @value="Q = $event"    :min="0" :max="1" :decimals="2"></knob>
       <select @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
-      <knob label="freq" @value="freq = $event" min="440" max="880"></knob>
-      <knob label="Q"    @value="Q = $event"    min="0" max="1"></knob>
     </div>
 
     <div class="module-connections">
@@ -42,11 +42,12 @@ export default {
   data() {
     return {
       name: 'Filter',
-      // w: 1, // rack width
+      w: 1, // rack width
       // h: 1, // rack height
 
       freq: 440,
-      types: ['lowpass', 'hipass', 'bandpass', 'notch'],
+      type: 'allpass',
+      types: ['allpass', 'bandpass', 'highpass', 'highshelf', 'lowpass', 'lowshelf', 'notch', 'peaking'],
       Q: 1,
 
       inlets: [
@@ -54,20 +55,15 @@ export default {
           label: 'input',
           data: null
         }, {
-          label: 'input',
+          label: 'freq',
           data: null // this.input
         }
       ],
 
       outlets: [
         {
-          port: 0,
-          label: 'output-1',
-          data: null // this.outputL   // src?
-        }, {
-          port: 1,
-          label: 'output-2',
-          data: null // this.outputR
+          label: 'output',
+          data: null
         }
       ]
     };
@@ -79,13 +75,12 @@ export default {
     this.filter.frequency.value = this.freq;
     this.filter.Q.value = this.Q;
 
-    // connect input to our filter
     this.inlets[0].data = this.filter;
     this.outlets[0].data = this.filter;
 
-    // this.$watch('type', this.setReverb);
-    // this.$watch('freq', this.setDecay);
-    // this.$watch('Q', this.setDecay);
+    this.$watch('freq', this.setFreq);
+    this.$watch('Q', this.setQ);
+    this.$watch('type', this.setType);
 
     console.log('Creating Filter');
   },
@@ -95,8 +90,13 @@ export default {
       this.filter.frequency.value = f;
     },
 
+    setQ(q) {
+      this.filter.Q.value = q;
+    },
+
     setType(t) {
-      this.filter.type = this.types[t] || 'lowpass';
+      console.log(t);
+      this.filter.type = t || 'lowpass';
     }
   }
 };
@@ -106,10 +106,28 @@ export default {
 <style lang="scss">
   .filter {
     background: linear-gradient(to bottom, #484643 0%, #42413e 98%, #343330 100%);
+    // $grey: #a8a8a8;
+    // $purple: #c35896;
+    // background:
+    //   linear-gradient(187deg,                  $purple 0%,  $purple 22%, transparent 22%) no-repeat,
+    //   linear-gradient(192deg, transparent 22%, $purple 22%, $purple 26%, transparent 26%) no-repeat,
+    //   linear-gradient(196deg, transparent 22%, $purple 22%, $purple 25%, transparent 25%) no-repeat,
+    //   linear-gradient(199deg, transparent 22%, $purple 22%, $purple 24%, transparent 24%) no-repeat,
+    //   linear-gradient(201deg, $grey 22%,       $purple 22%, $purple 23%, $grey 23%);
+    //
+    // background-position: 0 0, 0 5px, 100% 16px, 100% 38px, 100% 50px;
+    // background-size: 100%, 110%, 120%, 120%, 130%;
+    //
+
     color: #fff;
 
     text {
-      color: #fff;
+      fill: #fff;
     }
+
+    // .track {
+    //   stroke: #333;
+    // }
   }
+
 </style>

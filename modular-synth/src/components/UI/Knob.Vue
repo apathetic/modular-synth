@@ -1,3 +1,8 @@
+THE Knob allows the manipulation of a particular parameter. Internally, the
+Knob's value can vary between zero and one (0 -> 1). This value is then
+mapped to the min and max properties passed into the component, and $emit'd
+back to the parent.
+
 <template>
   <svg class="knob" @mousedown.stop.prevent="start">
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
@@ -41,8 +46,9 @@ function describeArc(x, y, radius, startAngle, endAngle) {
 export default {
   props: {
     label: String,
-    min: null,
-    max: null
+    min: Number,
+    max: Number,
+    decimals: 0
   },
 
   data() {
@@ -50,7 +56,7 @@ export default {
       active: false,
       startValue: 0,
       startClientY: null,
-      knobValue: 1,
+      knobValue: 0,         // 0 -> 1 internally
       range: 1,
       value: 0
     };
@@ -59,9 +65,10 @@ export default {
   created() {
     const self = this;
 
-    this.range = (this.max - this.min) / 100;
-    this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
+    this.range = this.max - this.min;
+    // this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
 
+    // TODO: avoid dupl w/ every knob?
     window.addEventListener('mouseup', (e) => {
       window.mouseDown = false;
       self.active = false;
@@ -96,19 +103,19 @@ export default {
     },
 
     update(e) {
-      const delta = this.startClientY - e.clientY;
-      const knobValue = Math.min(100, Math.max(0, this.startValue + delta));
-      const value = Math.round(knobValue * this.range + this.min);
+      const delta = (this.startClientY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
+      const knobValue = Math.min(1, Math.max(0, this.startValue + delta));
+      const value = knobValue * this.range + this.min;
 
-      this.knobValue = knobValue; // Math.min(100, Math.max(0, knobValue));    // internally, everything is 0 - 100
-      this.value = value;
+      this.knobValue = knobValue;
+      this.value = parseFloat(value).toFixed(this.decimals);
 
       this.$emit('value', value);
       this.setDisplay();
     },
 
     setDisplay() {
-      const rotationValue = this.knobValue * 3 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+      const rotationValue = this.knobValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
 
       this.$refs.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
     }
@@ -119,7 +126,7 @@ export default {
 
 
 <style lang="scss">
-  // @import '../assets/scss/variables.scss';
+  @import '../../assets/scss/variables.scss';
 
   .knob {
     width: 48px;
@@ -133,11 +140,11 @@ export default {
     }
 
     .track {
-      stroke: #444; // $color-grey-dark;
+      stroke: $color-grey-medium;
     }
 
     .display {
-      stroke: #54bfff;
+      stroke: $color-highlight;
     }
   }
 </style>

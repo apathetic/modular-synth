@@ -72,7 +72,7 @@
         <button class="button" @click="newModule('LFO')">LFO</button>
         <button class="button" @click="newModule('Env')">env</button>
         <button class="button" @click="newModule('Reverb')">reverb</button>
-        <button class="button" @click="newModule('Filter')">filter</button>
+        <button class="button" @click="newModule('Filtr')">filter</button>
         <button class="button" @click="newModule('Comb')">comb</button>
         <button class="button" @click="newModule('Mixer')">mixer</button>
         <button class="button" @click="newModule('multiply')">multiply</button>
@@ -104,7 +104,7 @@
 
   import Env from './components/Env';
   import LFO from './components/LFO';
-  import Filter from './components/Filter';
+  import Filtr from './components/Filter';
   import Comb from './components/Comb';
   import Mixer from './components/Mixer';
   import Node from './components/Node';
@@ -130,7 +130,7 @@
 
       Env,
       LFO,
-      Filter,
+      Filtr,
       Comb,
       Mixer,
       Node,
@@ -244,6 +244,7 @@
       //     this.$bus.$emit('audio:stop');
       //   }
       // },
+
       newModule(type) {
         this.$store.commit('ADD_MODULE', type);
 
