@@ -25,7 +25,7 @@ node server
 
 ## TODO
 
-- General post-vue 2.0 things
+- General
   - saving patches
     - **saving settings**
   - service workers
@@ -56,7 +56,7 @@ node server
       - ~~update rack positions on delete~~
   - ugh, regression: modules don't retain position after dragging / switching states. Cannot reliably reproduce...
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
-  - *dial doesn't do floats*
+  - ~~dial doesn't do floats~~
   - when a node is selected, all connected connections become highlighted
   - must press shift to sort in play mode
   - ~~multiple module sizes~~
@@ -86,7 +86,8 @@ node server
     - ~~and associated audio connections~~
 
 
-- Audio
+- AUDIO
+  - use audioParam to automate parameters
   - ~~lives in the actual components (not in the store.modules)~~
     - ~~(same problem for Connector)~~
   - global "get (actual) component by id" method?

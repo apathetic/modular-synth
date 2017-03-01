@@ -1,12 +1,24 @@
 <template>
   <header class="pad">
-    <button class="button" @click="save">save</button>
-    <select class="patch-selector" v-model="selected">
-      <option value="juno">Juno</option>
-      <option value="arp">Arp</option>
-      <option v-for="patch in patches" :value="patch">{{ patch.name }}</option>
-    </select>
-    <button class="button" @click="load">load</button>
+    <div class="patch">
+      <button class="button" @click="save">save</button>
+      <select class="patch-selector" v-model="patch">
+        <option v-for="patch in patches" :value="patch">{{ patch }}</option>
+      </select>
+      <button class="button" @click="load">load</button>
+    </div>
+
+    <div class="params">
+      {{ param.name }}
+      <select class="params-selector" v-model="param">
+        <option v-for="param in params" :value="param">{{ param.name }}</option>
+      </select>
+      <button class="button" @click="loadParameters">load</button>
+    </div>
+
+    <div class="branding">
+      ^%*
+    </div>
   </header>
 </template>
 
@@ -17,29 +29,22 @@ import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
-      name: '',
-      selected: {},
-      patches: []
+      patch: '',    // the current patch
+      patches: [],  // a list of available patches
+      //
+      param: {},    // the current patch parameters
+      params: []    // a list of parameter objects, each pertaining to the current patch
     };
   },
 
   /**
    * Immediately hit the server to populate a list of (the users') patches.
-   * While they are available, the App does not load any one at this time.
    */
   created() {
-    window.fetch('/api/patches')
-    .then((response) => {
-      return response.json();
-    })
-    .then((json) => {
-      this.patches = json.patches;
-      this.parsePatches();
-      console.log('Patches fetched from server');
-    })
-    .catch((error) => {
-      console.log('Could not fetch patches: ' + error.message);
-    });
+    this.fetchJSON('/api/patches')
+      .then((json) => {
+        this.patches = json.patches;
+      });
   },
 
   /**
@@ -52,14 +57,33 @@ export default {
   },
 
   methods: {
+    fetchJSON(path) {
+      return window.fetch(path)
+        .then((response) => {
+          return response.json();
+        })
+        .catch((error) => {
+          console.log('Could not fetch JSON from %s (%s)', path, error.message);
+        });
+    },
+
     load() {
-      const patch = this.selected;
+      const name = this.name;
 
-      localStorage.clear();
+      console.log('Loading patch: ', name);
+      this.fetchJSON('/api/patches/' + name)
+        .then((json) => {
+          // console.log(json);
+          localStorage.clear();
+          this.$store.commit('LOAD', json.patch);
+          this.$bus.$emit('app:load');
+          // this.$store.commit('LOAD_PATCH', json.patch);
+          // this.$store.commit('LOAD_PARAMS', json.params[0]);
+        });
+    },
 
-      console.log('Loading patch: ', patch.name);
-      this.$store.commit('LOAD', patch);
-      this.$bus.$emit('app:load');
+    loadParameters() {
+
     },
 
     save() {
@@ -73,12 +97,6 @@ export default {
       console.log(patch);
     },
 
-    parsePatches() {
-      this.patches.forEach((p) => {
-
-      });
-    },
-
     ...mapMutations([
       'LOAD'
     ])
@@ -88,6 +106,22 @@ export default {
 </script>
 
 <style lang="scss">
+  @import 'assets/scss/variables.scss';
+
+  header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .patch {}
+  .params {
+    width: 240px;
+    background: $color-grey-dark;
+  }
+  .branding {}
+
+
+  .params-selector,
   .patch-selector {
     min-width: 8em;
   }
