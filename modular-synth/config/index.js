@@ -22,9 +22,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api/patches': {
-        // target: 'http://brentertainment.com/oauth2',  // api server
-        target: 'http://localhost:8081/api'
+      '/api': {
+        target: 'http://localhost:8081'
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
