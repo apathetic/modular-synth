@@ -1,0 +1,12 @@
+{
+  "name": "Whoa Szzff",
+  "patch": "FM",
+  "params": {
+    "1": {
+      "type": "sine",
+      "freq": 550,
+      "mod": 34,
+      "PW": 3
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "Night Flite",
+  "patch": "Juno",
+  "params": {
+    "2": {
+      "type": "square",
+      "freq": 440,
+      "mod": 34,
+      "PW": 3
+    }
+  }
+}
