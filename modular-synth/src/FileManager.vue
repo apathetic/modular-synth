@@ -1,7 +1,7 @@
 <template>
   <header class="pad">
     <div class="patch">
-      <button class="button" @click="save">save</button>
+      <button class="button" @click="savePatch">save</button>
       <select class="patch-selector" v-model="patch">
         <option v-for="patch in patches" :value="patch">{{ patch }}</option>
       </select>
@@ -43,12 +43,15 @@ export default {
   },
 
   /**
-   * Immediately hit the server to populate a list of (the users') patches.
+   * Immediately hit the server to populate a list of (the users') available patches.
    */
   created() {
-    this.fetchJSON('/api/patches')
-      .then((json) => {
-        this.patches = json.patches;
+    api.load('/patches')
+      .then((response) => {
+        this.patches = response.val();  // val() is a firebase thing
+      })
+      .catch((err) => {
+        console.log(err);
       });
   },
 

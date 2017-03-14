@@ -8,6 +8,19 @@
 //  LOAD / SAVE
 // -----------------------------------------------
 
+// TODO merge api into this, so that it can loop in mutations:
+// export const saveXX = ({ commit }) => {
+//   database.ref('patch/' + name).update({}).then(() => {
+//     commit('TOGGLE_EDIT');
+//   });
+// };
+//
+// export const loadXX = ({ commit }) => {
+//   database.ref('patch/' + name).once().then((patch) => {
+//     commit('LOAD', patch);
+//   });
+// };
+
 
 
 // -----------------------------------------------
