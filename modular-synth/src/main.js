@@ -64,6 +64,7 @@ Vue.component('outlets', {
 
 /* */
 
+// TODO use the vue + compiler bundle for this: ...?
 Vue.component('inlets', {
   functional: true,
   props: { ports: Array },

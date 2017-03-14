@@ -13,6 +13,8 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "sw-precache": "^5.1.0",
+    "firebase": "^3.7.1",
     "vue": "^2.1.0",
     "vuex": "^2.1.1"
   },
