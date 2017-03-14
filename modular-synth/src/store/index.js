@@ -24,10 +24,12 @@ const state = {
   connections: undefined,   // NOTE: this is intentional to force a delayed "loading" of the connectors. We grab them
                             // in localStorage manually in the webAudioPlugin _after_ all the modules have loaded in
                             // order to ensure audio-routing and visual connections will have Objects to link to / from
-                            // nope => connections: JSON.parse(localStorage.getItem(LS_CONNECTIONS) || '[]'),
+                            // ie. dont do this... connections: JSON.parse(localStorage.getItem(LS_CONNECTIONS) || '[]'),
   editing: false,
   focused: undefined,       // "Hovered": for Module Info, Connections.  TODO move to $bus?
-  active: 0                 // "Clicked": for Dragging, Deleting.
+  active: 0,                // "Clicked": for Dragging, Deleting.
+  patches: [],
+  parameterSets: []
 };
 
 

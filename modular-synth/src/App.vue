@@ -158,7 +158,7 @@
     created() {
       // Important: needed to trigger LOAD mutation (which routes audio, sets up connections, etc.)
       console.log('App loading...');
-      this.$store.commit('LOAD');
+      this.$store.commit('LOAD_PATCH');
 
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
@@ -225,11 +225,7 @@
     mounted() {
       // TODO why cannot move into sortable:ready() ...?
       this.initSorting(this.$refs.grid);
-
-      this.$bus.$on('app:load', () => {
-        // this.initSorting(this.$refs.grid);
-        this.setupGrid();
-      });
+      this.setupGrid();
     },
 
     methods: {
