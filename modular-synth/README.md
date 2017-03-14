@@ -27,6 +27,7 @@ node server
 
 - General
   - saving patches
+    - add firebase
     - **saving settings**
   - service workers
     - store samples, waveforms

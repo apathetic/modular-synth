@@ -17,19 +17,24 @@
     </div>
 
     <div class="branding">
-      ^%*
+      <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <g transform="translate(0,-1036.3622)">
+          <path d="m 1,1050 4.5,-6 4.5,8 5,-6" style="stroke-linecap:butt;stroke-linejoin:miter;"/>
+          <!- - m 1,1050 4.5,-8 2.5,10 5,-6 - - >
+        </g>
+      </svg> -->
     </div>
   </header>
 </template>
 
 <script>
-
+import api from './store/api';
 import { mapMutations } from 'vuex';
 
 export default {
   data() {
     return {
-      patch: '',    // the current patch
+      patch: '',    // the current patch name
       patches: [],  // a list of available patches
       //
       param: {},    // the current patch parameters
@@ -86,7 +91,14 @@ export default {
 
     },
 
-    save() {
+    loadPatch(name) {
+      api.load('/patch/' + name).then((patch) => {
+        // ...
+        console.log(patch);
+      });
+    },
+
+    savePatch() {
       // const patch = {
       //   name: this.name,
       //   id: this.$store.state.id,
@@ -95,6 +107,10 @@ export default {
       // };
       const patch = this.$store.state;
       console.log(patch);
+    },
+
+    loadPatchList() {
+
     },
 
     ...mapMutations([
