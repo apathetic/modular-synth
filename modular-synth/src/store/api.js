@@ -33,6 +33,7 @@ export default {
   // path: ie: /users/' + userId
   load(path) {
     // var userId = auth.currentUser.uid;
+
     return database.ref(path).once('value');
   },
 
