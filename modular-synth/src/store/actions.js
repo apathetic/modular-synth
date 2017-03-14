@@ -1,3 +1,4 @@
+import api from './api';
 
 // -----------------------------------------------
 //  AUTHENTICATION
@@ -7,21 +8,51 @@
 // -----------------------------------------------
 //  LOAD / SAVE
 // -----------------------------------------------
+export const loadPatch = ({ commit, state }, name) => {
+  console.log('Loading patch: ', name);
+  // api.load('/patch/' + name).then((response) => {
+  //   const patch = response.val();  // val() is a firebase thing
+  //
+  //   commit('LOAD_PATCH', patch);
+  // });
 
-// TODO merge api into this, so that it can loop in mutations:
-// export const saveXX = ({ commit }) => {
-//   database.ref('patch/' + name).update({}).then(() => {
-//     commit('TOGGLE_EDIT');
-//   });
-// };
-//
-// export const loadXX = ({ commit }) => {
-//   database.ref('patch/' + name).once().then((patch) => {
-//     commit('LOAD', patch);
-//   });
-// };
+  if (state.patches.name) {
+    localStorage.clear();
+    commit('LOAD_PATCH', state.patches[name]);
 
+    // if (params) ...
+      // commit('LOAD_PARAMS', state.patches[name].parameterSets[0]);
+    // }
+  }
+};
 
+export const savePatch = ({ state }) => {
+  const name = state.name;
+  const patch = {
+    id: state.id,
+    modules: state.modules,
+    connections: state.connections
+  };
+
+  api.save('patch/' + name, patch);
+};
+
+export const loadPatches = ({ commit }) => {
+  api.load('/patch')
+    .then((response) => {
+      const patches = response.val();  // val() is a firebase thing
+
+      console.log('array?', patches);
+
+      commit('LOAD_PATCHES', patches);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const loadParameters = () => {
+};
 
 // -----------------------------------------------
 //  APP
