@@ -2,10 +2,11 @@
   <header class="pad">
     <div class="patch">
       <button class="button" @click="savePatch">save</button>
-      <select class="patch-selector" v-model="patch">
+      <select class="patch-selector">
+        <option value="" disabled selected hidden>Select Patch</option>
         <option v-for="patch in patches" :value="patch">{{ patch }}</option>
       </select>
-      <button class="button" @click="load">load</button>
+      <button class="button" @click="loadPatch">load</button>
     </div>
 
     <div class="params">
@@ -28,31 +29,35 @@
 </template>
 
 <script>
-import api from './store/api';
-import { mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   data() {
     return {
-      patch: '',    // the current patch name
-      patches: [],  // a list of available patches
+      // patch: '',    // the current patch name
+      // patches: [],  // a list of available patches
       //
       param: {},    // the current patch parameters
       params: []    // a list of parameter objects, each pertaining to the current patch
     };
   },
 
+  computed: {
+    patch: function(state) {
+      return state.name;
+    },
+    patches: function(state) {
+      // return Object.keys(state.patches);
+      // console.log(state.patches);
+      // return state.patches;
+    }
+  },
+
   /**
    * Immediately hit the server to populate a list of (the users') available patches.
    */
   created() {
-    api.load('/patches')
-      .then((response) => {
-        this.patches = response.val();  // val() is a firebase thing
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.loadPatches();
   },
 
   /**
@@ -65,59 +70,11 @@ export default {
   },
 
   methods: {
-    fetchJSON(path) {
-      return window.fetch(path)
-        .then((response) => {
-          return response.json();
-        })
-        .catch((error) => {
-          console.log('Could not fetch JSON from %s (%s)', path, error.message);
-        });
-    },
-
-    load() {
-      const name = this.name;
-
-      console.log('Loading patch: ', name);
-      this.fetchJSON('/api/patches/' + name)
-        .then((json) => {
-          // console.log(json);
-          localStorage.clear();
-          this.$store.commit('LOAD', json.patch);
-          this.$bus.$emit('app:load');
-          // this.$store.commit('LOAD_PATCH', json.patch);
-          // this.$store.commit('LOAD_PARAMS', json.params[0]);
-        });
-    },
-
-    loadParameters() {
-
-    },
-
-    loadPatch(name) {
-      api.load('/patch/' + name).then((patch) => {
-        // ...
-        console.log(patch);
-      });
-    },
-
-    savePatch() {
-      // const patch = {
-      //   name: this.name,
-      //   id: this.$store.state.id,
-      //   modules: this.$store.state.modules,
-      //   connections: this.$store.state.connections
-      // };
-      const patch = this.$store.state;
-      console.log(patch);
-    },
-
-    loadPatchList() {
-
-    },
-
-    ...mapMutations([
-      'LOAD'
+    ...mapActions([
+      'savePatch',
+      'loadPatch',
+      'loadPatches',
+      'loadParameters'
     ])
   }
 };
@@ -130,6 +87,11 @@ export default {
   header {
     display: flex;
     justify-content: space-between;
+
+    select {
+      background: rgba(0,0,0, 0.2);
+      color: #fff;
+    }
   }
 
   .patch {}

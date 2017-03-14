@@ -1,7 +1,7 @@
 // -----------------------------------------------
 //  BOOTSTRAP
 // -----------------------------------------------
-export const LOAD = (state, newState) => {
+export const LOAD_PATCH = (state, newState) => {
   if (newState) {
     // delete state.id;
     // delete state.connections;
@@ -13,6 +13,15 @@ export const LOAD = (state, newState) => {
   }
 };
 
+export const LOAD_PATCHES = (state, patches) => {
+  state.patches = patches;    // check if patches is an array, or ...?
+  console.log(state.patches);
+  console.log(Object.keys(state.patches));
+};
+
+export const LOAD_PARAMS = () => {
+
+};
 
 // -----------------------------------------------
 //  APP
