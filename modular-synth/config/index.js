@@ -24,6 +24,9 @@ module.exports = {
     proxyTable: {
       '/api': {
         target: 'http://localhost:8081'
+      },
+      '/_api': {
+        target: 'http://https://malformed-synth.firebaseio.com'
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
