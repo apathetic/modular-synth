@@ -1,9 +1,11 @@
-import api from './api';
+import { api, auth } from './firebase';
 
 // -----------------------------------------------
 //  AUTHENTICATION
 // -----------------------------------------------
-
+export const signIn = auth.signIn;
+export const signOut = auth.signOut;
+export const signedIn = auth.isSignedIn;
 
 // -----------------------------------------------
 //  LOAD / SAVE
@@ -27,22 +29,29 @@ export const loadPatch = ({ commit, state }, name) => {
 };
 
 export const savePatch = ({ state }) => {
-  const name = state.name;
+  const name = encodeURI(state.name.toLowerCase());
   const patch = {
     id: state.id,
+    name: state.name,
     modules: state.modules,
     connections: state.connections
   };
 
-  api.save('patch/' + name, patch);
+  console.log(patch);
+
+  api.save('patch/' + name, patch)
+    .then(() => {
+      console.log('saved');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const loadPatches = ({ commit }) => {
   api.load('/patch')
     .then((response) => {
       const patches = response.val();  // val() is a firebase thing
-
-      console.log('array?', patches);
 
       commit('LOAD_PATCHES', patches);
     })
