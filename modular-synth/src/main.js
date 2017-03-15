@@ -3,11 +3,13 @@ import store from './store';
 import Synth from './Synth';
 import Auth from './Auth';
 import PatchManager from './PatchManager';
+import { auth } from './store/firebase';
 
 // Vue.config.silent = true;
 
 const context = window.AudioContext && (new window.AudioContext());
 const bus = new Vue();
+let authenticated = false;
 
 // for midi events, drag events, and ....?  Setting/Clearing Focus/Active ...?
 Object.defineProperty(Vue.prototype, '$bus', {
@@ -16,7 +18,11 @@ Object.defineProperty(Vue.prototype, '$bus', {
   }
 });
 
-// window.App = App;
+Object.defineProperty(Vue.prototype, '$authenticated', {
+  get() {
+    return this.$root.authenticated;
+  }
+});
 
 // All Components will have access to AudioContext
 // oh.. although *now*, that includes Connectors
@@ -129,5 +135,12 @@ new Vue({
   store,
   el: 'main',
   components: { Synth, PatchManager, Auth },
-  data: { bus }
+  data: { bus, authenticated },
+  beforeCreate: function() {
+    auth().onAuthStateChanged((user) => {
+      console.log('CHANGE', user);
+      this.authenticated = !!user;
+      //   this.user = user;
+    });
+  }
 });

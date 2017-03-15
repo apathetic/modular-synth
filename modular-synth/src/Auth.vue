@@ -1,26 +1,25 @@
 <template>
   <div class="auth">
 
-    <button v-if="signedIn" @click="signOut" title="sign out" class="ring ring--active"></button>
-    <button v-else          @click="signIn"  title="sign in"  class="ring"></button>
+    <button v-if="$root.authenticated" @click="signOut" title="sign out" class="ring ring--active"></button>
+    <button v-else                     @click="signIn"  title="sign in"  class="ring"></button>
 
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { auth } from './store/firebase';
 
 export default {
-  computed: {
-    ...mapGetters([
-      'signedIn'
-    ])
-  },
   methods: {
-    ...mapActions([
-      'signIn',
-      'signOut'
-    ])
+    signIn() {
+      const provider = new auth.GoogleAuthProvider();
+      auth().signInWithPopup(provider);
+    },
+
+    signOut() {
+      auth().signOut();
+    }
   }
 };
 

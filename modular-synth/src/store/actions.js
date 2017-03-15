@@ -1,11 +1,5 @@
-import { api, auth } from './firebase';
+import { api } from './firebase';
 
-// -----------------------------------------------
-//  AUTHENTICATION
-// -----------------------------------------------
-export const signIn = auth.signIn;
-export const signOut = auth.signOut;
-export const signedIn = auth.isSignedIn;
 
 // -----------------------------------------------
 //  LOAD / SAVE
@@ -37,14 +31,12 @@ export const savePatch = ({ state }) => {
     connections: state.connections
   };
 
-  console.log(patch);
-
   api.save('patch/' + name, patch)
     .then(() => {
       console.log('saved');
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err); // NOT SIGNED IN ?
     });
 };
 
@@ -56,7 +48,7 @@ export const loadPatches = ({ commit }) => {
       commit('LOAD_PATCHES', patches);
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err); // NOT SIGNED IN ?
     });
 };
 
