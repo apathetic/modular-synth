@@ -1,5 +1,10 @@
 @import 'variables.scss';
 
+
+/* --------------------------------
+   Global
+--------------------------------- */
+
 * {
   box-sizing: border-box;
   user-select: none;
@@ -12,6 +17,9 @@ html, body {
   height: 100%;
   font-size: 10px;
 }
+
+
+
 
 main {
   height: 100%;
@@ -34,6 +42,15 @@ section {
   height: calc(100% - #{$header-height});
 }
 
+.pad {
+  padding: 1em;
+}
+
+
+/* --------------------------------
+   Typography
+--------------------------------- */
+
 .h1, h1,
 .h2, h2,
 .h3, h3,
@@ -44,7 +61,24 @@ section {
   font-family: Oxygen, sans-serif;
 }
 
+h1 {}
+h2 {}
+h3 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: normal;
+}
 
+h4 {
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+
+
+/* --------------------------------
+   Synth
+--------------------------------- */
 
 #modules {
   flex: 1;
@@ -92,7 +126,7 @@ section {
 #controls {
   flex-basis: 112px;
   background-color: #333; // #999;
-  z-index: 10000;          // as nodes will increment their z-index
+  z-index: 9999;          // as nodes will increment their z-index
 
   .button {
     font-size: 1em;
@@ -100,19 +134,13 @@ section {
 }
 
 
-h1 {}
-h2 {}
-h3 {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  font-weight: normal;
-}
 
-h4 {
-  font-size: 0.8rem;
-  font-weight: normal;
-}
 
+
+
+/* --------------------------------
+   Buttons
+--------------------------------- */
 
 button {
   -webkit-appearance: none;
@@ -136,6 +164,17 @@ button {
 
   &:hover {
     background-color: #349fdf;
+  }
+}
+
+.ring {
+  border: .5em solid #000;
+  border-radius: 50%;
+  height: 2em;
+  width: 2em;
+
+  &--active {
+    border-color: $color-green;
   }
 }
 
@@ -181,13 +220,6 @@ button {
 .play-mode .play { color: #fff; }
 .edit-mode .edit { color: #fff; }
 
-.pad {
-  padding: 1em;
-}
-
-
-
-// dummy test
 .power {
   svg {
     width: 4em;
@@ -198,12 +230,12 @@ button {
 
   &.on {
     svg {
-      fill: green;
+      fill: $color-green;
       filter: drop-shadow(0 0px 4px rgba(153, 229, 163, 0.4));
     }
   }
 }
-// ---------------------- /test
+
 
 
 .position-highlight {
@@ -214,13 +246,18 @@ button {
   transition: left $transition-time, top $transition-time;
 }
 
+
+/* --------------------------------
+   General
+--------------------------------- */
+
 select {
   margin-bottom: 1em;
   border: 0;
-  -webkit-appearance: none;
   border-radius: 0;
   height: 2em;
   padding: 0em 0.5em;
+  -webkit-appearance: none;
 }
 
 meter,

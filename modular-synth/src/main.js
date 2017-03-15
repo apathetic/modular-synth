@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import store from './store';
-import App from './App';
-import FileManager from './FileManager';
+import Synth from './Synth';
+import Auth from './Auth';
+import PatchManager from './PatchManager';
 
 // Vue.config.silent = true;
 
@@ -127,6 +128,6 @@ Vue.component('outlets', {
 new Vue({
   store,
   el: 'main',
-  components: { App, FileManager },
+  components: { Synth, PatchManager, Auth },
   data: { bus }
 });
