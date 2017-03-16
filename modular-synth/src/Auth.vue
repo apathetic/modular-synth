@@ -1,7 +1,7 @@
 <template>
   <div class="auth">
 
-    <button v-if="$root.authenticated" @click="signOut" title="sign out" class="ring ring--active"></button>
+    <button v-if="$root.authenticated" @click="signOut" title="sign out" class="ring active"></button>
     <button v-else                     @click="signIn"  title="sign in"  class="ring"></button>
 
   </div>
@@ -14,7 +14,11 @@ export default {
   methods: {
     signIn() {
       const provider = new auth.GoogleAuthProvider();
-      auth().signInWithPopup(provider);
+      auth().signInWithPopup(provider).catch((err) => {
+        if (err.code === 'auth/web-storage-unsupported') {
+          window.alert(err.message);
+        }
+      });
     },
 
     signOut() {
@@ -31,20 +35,15 @@ export default {
   .auth {
     float: left;
     margin-right: 1em;
+
+    button:not(.active) {
+      box-shadow: 0 0 0 0 rgba($color-grey-light, 0.7);
+      animation: pulse 1s infinite alternate;
+    }
   }
 
-  // .modal {
-  //   background: #000;
-  //   display: none;
-  //   z-index: 10000;
-  //   position: fixed;
-  //   top: 0;
-  //   bottom: 0;
-  //   left: 0;
-  //   right: 0;
-  //
-  //   &.active {
-  //     display: block;
-  //   }
-  // }
+  @keyframes pulse {
+    to { box-shadow: 0 0 0.4em 0.1em rgba($color-grey-light, 0.7); }
+  }
+
 </style>
