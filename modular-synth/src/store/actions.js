@@ -12,8 +12,7 @@ export const loadPatch = ({ commit, state }, name) => {
   //   commit('LOAD_PATCH', patch);
   // });
 
-  if (state.patches.name) {
-    localStorage.clear();
+  if (state.patches[name]) {
     commit('LOAD_PATCH', state.patches[name]);
 
     // if (params) ...
