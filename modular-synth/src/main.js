@@ -138,7 +138,6 @@ new Vue({
   data: { bus, authenticated },
   beforeCreate: function() {
     auth().onAuthStateChanged((user) => {
-      console.log('CHANGE', user);
       this.authenticated = !!user;
       //   this.user = user;
     });

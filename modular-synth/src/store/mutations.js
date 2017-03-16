@@ -1,14 +1,15 @@
 // -----------------------------------------------
 //  BOOTSTRAP
 // -----------------------------------------------
-export const LOAD_PATCH = (state, newState) => {
-  if (newState) {
-    // delete state.id;
-    // delete state.connections;
-    // delete state.modules;
-    // delete state.name;
-    for (let key in newState) {
-      state[key] = newState[key];
+export const LOAD_PATCH = (state, patch) => {
+  if (patch) {
+    delete state.id;
+    delete state.connections;
+    delete state.modules;
+    delete state.name;
+
+    for (let key in patch) {
+      state[key] = patch[key];
     }
   }
 };

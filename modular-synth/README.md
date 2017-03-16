@@ -16,18 +16,14 @@ npm run build
 
 # run all tests
 npm test
-
-# TEMP: you'll need to fire up the /api server:
-node server
-# This will be integrated into the main app at one point
 ```
 
 
 ## TODO
 
 - General
-  - saving patches
-    - add firebase
+  - ~~saving patches~~
+    - ~~add firebase~~
     - **saving settings**
   - service workers
     - store samples, waveforms

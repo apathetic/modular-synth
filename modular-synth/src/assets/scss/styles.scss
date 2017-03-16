@@ -173,7 +173,7 @@ button {
   height: 2em;
   width: 2em;
 
-  &--active {
+  &.active {
     border-color: $color-green;
   }
 }
@@ -252,8 +252,11 @@ button {
 --------------------------------- */
 
 select {
+  background: $color-grey-medium;
+  color: #fff;
   margin-bottom: 1em;
   border: 0;
+  border-bottom: 1px solid $color-grey;
   border-radius: 0;
   height: 2em;
   padding: 0em 0.5em;

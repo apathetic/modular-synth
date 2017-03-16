@@ -1,17 +1,16 @@
 <template>
   <div class="patch-manager">
     <div class="patch">
-      <button class="button" @click="savePatch">save</button>
-      <select class="patch-selector">
-        <option value="" disabled selected hidden>Select Patch</option>
+      <button class="button" :class="{'active': $root.authenticated}" @click="savePatch">save</button>
+      <select class="patch-selector" :class="{'active': !!selected}" @change="selectPatch" ref="patchSelector">
+        <option value="" disabled selected>Select Patch</option>
         <option v-for="patch in patches" :value="patch">{{ patch }}</option>
       </select>
-      <button class="button" @click="loadPatch">load</button>
-      {{ patch }}
+      <button class="button" :class="{'active': !!selected}" @click="activateLoad">load</button>
     </div>
 
     <div class="params">
-      <select class="params-selector" @change="changeParams">
+      <select class="params-selector" @change="changeParams" ref="paramsSelector">
         <option v-for="param in params" :value="param">{{ param }}</option>
       </select>
     </div>
@@ -26,17 +25,13 @@ import { mapActions } from 'vuex';
 export default {
   data() {
     return {
-      // patch: '',    // the current patch name
-      // patches: [],  // a list of available patches
-      //
-      param: {}        // the current patch parameters
-      // params: []    // a list of parameter objects, each pertaining to the current patch
+      selected: false
     };
   },
 
   computed: {
-    patch() {
-      return this.$store.state.name;
+    current() {
+      return encodeURI(this.$store.state.name.toLowerCase());  // see actions.js
     },
 
     patches() {
@@ -61,12 +56,28 @@ export default {
    * Set the drop-down to the current patch (if loaded from localStorage)
    */
   mounted() {
-    if (this.$store.state.name) {
-      console.log('Using patch: ', this.$store.state.name);
+    if (this.current) {
+      this.$refs.patchSelector.value = this.current;
     }
   },
 
   methods: {
+    selectPatch(e) {
+      this.selected = e.target.value;
+      this.pTimer = setTimeout(() => {
+        this.selected = false;
+        this.$refs.patchSelector.value = this.current;
+      }, 10000);    // return to default val
+    },
+
+    activateLoad() {
+      if (this.selected) {
+        clearTimeout(this.pTimer);
+        this.loadPatch(this.selected);
+        this.selected = false;
+      }
+    },
+
     changeParams(e) {
       e.target.value;
     },
@@ -88,17 +99,26 @@ export default {
   .patch-manager {
     display: flex;
     justify-content: space-between;
-  }
 
-  header {
-    select {
-      background: rgba(0,0,0, 0.2);
-      color: #fff;
+    button:not(.active) {
+      background-color: $color-hover;
+      cursor: not-allowed;
+      opacity: 0.5;
     }
-  }
 
-  .params-selector,
-  .patch-selector {
-    min-width: 8em;
+    select {
+      min-width: 8em;
+
+      &.active {
+        color: red;
+        animation: flash 2s ease-out infinite;
+      }
+    }
+
+    @keyframes flash {
+      0% { color: #fff; }
+      50% { color: $color-grey-medium; }
+      100% { color: #fff; }
+    }
   }
 </style>
