@@ -1,3 +1,5 @@
+import { moduleSize } from '../dimensions';
+
 // -----------------------------------------------
 //  BOOTSTRAP
 // -----------------------------------------------
@@ -31,12 +33,12 @@ export const TOGGLE_EDIT = (state) => {
   state.editing = !state.editing;
 };
 
-export const REGISTER_DIMENSIONS = (state, data) => {
-  const module = state.modules.find((m) => { return m.id === data.id; });
-
-  module.w = data.w;
-  module.h = data.h;
-};
+// export const REGISTER_DIMENSIONS = (state, data) => {
+//   const module = state.modules.find((m) => { return m.id === data.id; });
+//
+//   module.w = data.w;
+//   module.h = data.h;
+// };
 
 
 // -----------------------------------------------
@@ -64,16 +66,18 @@ export const CLEAR_FOCUS = (state) => {
 //  MODULES
 // -----------------------------------------------
 export const ADD_MODULE = (state, type) => {
+  const size = moduleSize[type] || [1, 1];
+
   state.id++;
   state.modules.push({
     id: state.id,
     type: type,
-    x: 0,         // for dragging X
-    y: 0,         // for dragging Y
+    x: 0,         // for dragging X position
+    y: 0,         // for dragging Y position
     col: 0,       // for rack X position
     row: 0,       // for rack Y position
-    h: 0,         // for rack height
-    w: 0          // for rack width
+    w: size[0],   // for rack width
+    h: size[1]    // for rack height
   });
 };
 
