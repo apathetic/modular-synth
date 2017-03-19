@@ -48,7 +48,7 @@
     data() {
       return {
         name: 'Oscillator',
-        // w: 2, // rack width
+        // w: 2, // rack width.   Moved to dimensions.js
         // h: 1, // rack height
 
         freq: 440,

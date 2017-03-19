@@ -27,7 +27,8 @@ npm test
     - **saving settings**
   - loading patches
     - need to destroy nodes / webAudio connections first...?
-  - ~~dont require 2U / 1U classes -- make a default~~
+    - patch loads in store, but app does not update UI
+  - ~~don't require 2U / 1U classes -- make a default~~
   - service workers
     - store samples, waveforms
   - ~~new parent / child events~~
