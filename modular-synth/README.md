@@ -25,6 +25,9 @@ npm test
   - ~~saving patches~~
     - ~~add firebase~~
     - **saving settings**
+  - loading patches
+    - need to destroy nodes / webAudio connections first...?
+  - ~~dont require 2U / 1U classes -- make a default~~
   - service workers
     - store samples, waveforms
   - ~~new parent / child events~~
@@ -36,6 +39,11 @@ npm test
   - ~~clicking on outlet (not drag) errors out~~
   - ~~audio no longer connecting~~
 
+
+- Tangental things
+  - create server that spits out OSC notes, 24/7. Different
+    styles / genres depending on time of day (like a radio
+    station). Then, hook Note-In up to it.
 
 - VUEX
   - ~~store state of app~~
