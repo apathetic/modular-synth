@@ -225,7 +225,7 @@
     mounted() {
       // TODO why cannot move into sortable:ready() ...?
       this.initSorting(this.$refs.grid);
-      this.setupGrid();
+      this.setupGrid();  // this should be after every module has registered its dimensions
     },
 
     methods: {
@@ -246,23 +246,22 @@
 
         this.$nextTick(function() {
           const id = this.$store.state.id;
-          const module = this.$children.find((m) => { return m.id === id; });
           const item = this.modules.find((m) => { return m.id === id; });
 
-          this.$store.commit('REGISTER_DIMENSIONS', {
-            id: id,
-            w: module.w || 2,
-            h: module.h || 1
-          });
-
-          module.$el.style.opacity = 0;
+          // const module = this.$children.find((m) => { return m.id === id; });
+          // this.$store.commit('REGISTER_DIMENSIONS', {
+          //   id: id,
+          //   w: module.w || 2,
+          //   h: module.h || 1
+          // });
 
           this.gridList.items = this.modules;
           this.gridList.moveItemToPosition(item, [0, 0]);
 
-          setTimeout(() => {
-            module.$el.style.opacity = 1;
-          }, 200);
+          // module.$el.style.opacity = 0;
+          // setTimeout(() => {
+          //   module.$el.style.opacity = 1;
+          // }, 200);
         });
       },
 
