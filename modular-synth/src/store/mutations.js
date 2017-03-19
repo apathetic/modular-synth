@@ -5,10 +5,14 @@ import { moduleSize } from '../dimensions';
 // -----------------------------------------------
 export const LOAD_PATCH = (state, patch) => {
   if (patch) {
-    delete state.id;
-    delete state.connections;
-    delete state.modules;
-    delete state.name;
+    // Does the delete kill Vue's reactivity stuffs ...? Answer: YES
+    // delete state.id;
+    // delete state.connections;
+    // delete state.modules;
+    // delete state.name;
+
+    // perhaps:
+    // Vue.delete(state, 'id');
 
     for (let key in patch) {
       state[key] = patch[key];
