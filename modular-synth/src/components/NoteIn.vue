@@ -14,54 +14,36 @@
     </div>
 
     <div class="module-connections">
-      <outlets ports="outlets"></outlets>
+      <outlets :ports="outlets"></outlets>
     </div>
 </template>
 
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { newConnection } from '../store/actions';
-import { rackWidth, rackHeight } from '../dimensions';
 
 export default {
   mixins: [draggable],
-  vuex: {
-    actions: {
-      newConnection
-    }
-  },
   props: {
     id: null,
     col: null,
     row: null
   },
 
-  computed: {
-    position() {
-      return {
-        left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : this.col * rackWidth + 'px',
-        top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
-      };
-    }
-  },
   data() {
     return {
       name: 'NoteIn',
       received: '',
       outlets: [
         {
-          port: 0,
           label: 'output',
-          // audio: null,   ~
-          // control: null  -
           data: null
         }
       ]
     };
   },
 
-  mounted() {
+  created() {
     this.$bus.$on('midi:noteOn', this.noteOn);
     this.$bus.$on('midi:noteOff', this.noteOff);
     this.$bus.$on('midi:controller', this.controller);
@@ -73,6 +55,16 @@ export default {
         case 'A':
           this.noteOn(63, 127);
           break;
+        case 'S':
+          this.noteOn(65, 127);
+          break;
+        case 'D':
+          this.noteOn(66, 127);
+          break;
+        case 'F':
+          this.noteOn(68, 127);
+          break;
+
         default:
           break;
       }
