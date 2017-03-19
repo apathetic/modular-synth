@@ -6,13 +6,15 @@
         <option value="" disabled selected>Select Patch</option>
         <option v-for="patch in patches" :value="patch">{{ patch }}</option>
       </select>
-      <button class="button" :class="{'active': !!selected}" @click="activateLoad">load</button>
+      <button class="button" :class="{'active': !!selected}" @click="changePatch">load</button>
     </div>
 
     <div class="params">
-      <select class="params-selector" @change="changeParams" ref="paramsSelector">
+      <select class="params-selector" @change="selectParams" ref="paramsSelector">
+        <option value="" disabled selected>Select settings</option>
         <option v-for="param in params" :value="param">{{ param }}</option>
       </select>
+      <button class="button" :class="{'active': !!selected}" @click="changeParams">load</button>
     </div>
 
     <div></div>
@@ -47,6 +49,7 @@ export default {
 
   /**
    * Immediately hit the server to populate a list of (the users') available patches.
+   * NOTE: if a patch is already stored in localStorage, it'll get loaded by default.
    */
   created() {
     this.loadPatches();
@@ -70,12 +73,20 @@ export default {
       }, 10000);    // return to default val
     },
 
-    activateLoad() {
+    changePatch() {
       if (this.selected) {
         clearTimeout(this.pTimer);
         this.loadPatch(this.selected);
         this.selected = false;
       }
+    },
+
+    selectParams(e) {
+      this.selectedParams = e.target.value;
+      this.qTimer = setTimeout(() => {
+        this.selectedParams = false;
+        this.$refs.paramsSelector.value = this.current;
+      }, 10000);    // return to default val
     },
 
     changeParams(e) {

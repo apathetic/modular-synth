@@ -5,7 +5,6 @@ import { api } from './firebase';
 //  LOAD / SAVE
 // -----------------------------------------------
 export const loadPatch = ({ commit, state }, name) => {
-  console.log('Loading patch: ', name);
   // api.load('/patch/' + name).then((response) => {
   //   const patch = response.val();  // val() is a firebase thing
   //
@@ -13,6 +12,7 @@ export const loadPatch = ({ commit, state }, name) => {
   // });
 
   if (state.patches[name]) {
+    console.log('Loading patch: ', name);
     commit('LOAD_PATCH', state.patches[name]);
 
     // if (params) ...
