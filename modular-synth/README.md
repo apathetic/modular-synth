@@ -26,8 +26,9 @@ npm test
     - ~~add firebase~~
     - **saving settings**
   - loading patches
-    - need to destroy nodes / webAudio connections first...?
-    - patch loads in store, but app does not update UI
+    - ~~need to destroy nodes / webAudio connections first...?~~
+    - ~~patch loads in store, but app does not update UI~~
+    - *connections load at same time as modules (which are not yet in the DOM), meaning the svg computes props fail.* This is not an issue on page load, however. Audio routing also fails as a result
   - ~~don't require 2U / 1U classes -- make a default~~
   - service workers
     - store samples, waveforms
@@ -40,31 +41,30 @@ npm test
   - ~~clicking on outlet (not drag) errors out~~
   - ~~audio no longer connecting~~
 
-
 - Tangental things
   - create server that spits out OSC notes, 24/7. Different
     styles / genres depending on time of day (like a radio
     station). Then, hook Note-In up to it.
 
 - VUEX
+  - remove FOCUS from vuex --> move to BUS
   - ~~store state of app~~
   - ~~persist to localstorage and recall~~
   - ~~update to 2.0~~
     - ~~common getters / setters (ie. active module, connection, etc)~~
   - ~~stop importing ES6 reference to store. Isn't it on the $root?~~
-  - remove FOCUS from vuex --> move to BUS
     - ~~drag, too?~~
 
 - UI
-  - ~~Delete removes wrong module~~
   - **removing connections sometimes throw errors**
     - ~~delete module causes odd grid reshuffle~~
       - ~~update rack positions on delete~~
   - ugh, regression: modules don't retain position after dragging / switching states. Cannot reliably reproduce...
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
-  - ~~dial doesn't do floats~~
   - when a node is selected, all connected connections become highlighted
   - must press shift to sort in play mode
+  - ~~delete removes wrong module~~
+  - ~~dial doesn't do floats~~
   - ~~multiple module sizes~~
   - ~~can no longer click on a connection to delete it~~
   - ~~cannot select from dropdown; dragging intercedes~~
@@ -76,9 +76,10 @@ npm test
 
 
 - LOADING
+  - ~~route audio on load (use store plugin / store mutation observer)~~ _solved with a nextTick. Dont love need to import Vue for this_
+    - **this doesn't work when loading new patches**
   - ~~update masterOut position on load~~
   - ~~connection reactivity on load~~
-  - ~~route audio on load (use store plugin / store mutation observer)~~ _solved with a nextTick. Dont love need to import Vue for this_
   - ~~FIX modules: dont gridify properly after 1st load, adding new module~~
   - fallback for bad data, etc.
   - glitchy
