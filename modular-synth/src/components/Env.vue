@@ -7,7 +7,7 @@
     class="env module _1U"
     :class="dragging ? 'dragging' : ''"
     :style="position"
-    @mousedown.prevent="startDragging">
+    @mousedown.stop="startDragging">
 
     <div class="module-details">
       <h3>{{ name }}</h3>
@@ -51,7 +51,7 @@ export default {
       // velocity = 1;
 
       w: 1, // rack width
-      h: 1, // rack height
+      // h: 1, // rack height
 
       inlets: [
         {
@@ -89,7 +89,12 @@ export default {
     source.buffer = buffer;
     source.loop = true;
 
-    this.voltage = source;
+    this.voltage = this.generateSignal();// source;
+
+
+    // this._sig = this.output = new Tone.TimelineSignal();
+    // this._sig.setValueAtTime(0, 0);
+
 
 
     // this.inlets[0].data = this.context.createGain();  // gate?

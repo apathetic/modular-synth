@@ -31,9 +31,6 @@
 
 <script>
   import { draggable } from '../mixins/draggable';
-  // import { newConnection } from '../store/actions';
-  // import { rackWidth, rackHeight } from '../dimensions';
-  // import store from '../store/store'; // .... er...
 
   export default {
     mixins: [draggable],
@@ -46,9 +43,6 @@
     data() {
       return {
         name: 'Node',
-        // w: 1, // width
-        // h: 1, // height
-
         inlets: [
           {
             label: 'freq',
@@ -84,6 +78,8 @@
 
       this.outlets[0].data = this.context.createGain();
       this.outlets[1].data = this.context.createGain();
+
+      console.log('Creating Node');
     }
   };
 

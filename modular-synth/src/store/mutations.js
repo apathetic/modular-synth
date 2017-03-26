@@ -14,9 +14,13 @@ export const LOAD_PATCH = (state, patch) => {
     // perhaps:
     // Vue.delete(state, 'id');
 
-    for (let key in patch) {
-      state[key] = patch[key];
-    }
+    // for (let key in patch) {
+    //   state[key] = patch[key];
+    // }
+
+    state.id = patch.id;
+    state.name = patch.name;
+    state.modules = patch.modules;
   }
 };
 
@@ -25,7 +29,7 @@ export const LOAD_PATCHES = (state, patches) => {
 };
 
 export const LOAD_PARAMS = () => {
-
+  //
 };
 
 // -----------------------------------------------
