@@ -117,9 +117,11 @@ export const UPDATE_RACK_POSITION = (state, data) => {
 // -----------------------------------------------
 //  CONNECTIONS
 // -----------------------------------------------
+export const LOAD_CONNECTIONS = (state, connections) => {
+  state.connections = connections;
+};
+
 export const ADD_CONNECTION = (state, data) => {
-  // find the module that contains the outlet. Ironically, we dont even use "outlet" to
-  // determine this, instead relying on the currently "focused" module in the App.
   state.id++;
   state.connections.push({
     id: parseInt(state.id),

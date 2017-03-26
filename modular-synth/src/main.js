@@ -4,6 +4,7 @@ import Synth from './Synth';
 import Auth from './Auth';
 import PatchManager from './PatchManager';
 import { auth } from './store/firebase';
+// import { stuffs } from './audio';
 
 // Vue.config.silent = true;
 
