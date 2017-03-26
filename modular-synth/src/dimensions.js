@@ -6,7 +6,7 @@ export const cellHeight = 90;
 export const cellWidth = 120;
 
 export const moduleSize = {
-  'Analyzer': {},
+  'Analyzer': [3, 1],
   'Clock': {},
   'Comb': [2, 1],
   'Compressor': {},
@@ -17,7 +17,8 @@ export const moduleSize = {
   'Mixer': {},
   'Node': [2, 1],
   'NoteIn': [1, 1],
-  'Oscillator': [2, 1],
   'Reverb': [2, 1],
+  'Signal': [1, 1],
+  'VCO': [2, 1],
   'VCA': {}
 };

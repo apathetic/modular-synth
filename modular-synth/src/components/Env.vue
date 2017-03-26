@@ -102,8 +102,50 @@ export default {
 
     this.adsr = this.context.createGain();
     this.outlets[0].data = this.adsr;
+
+    this.$watch('A', this.setAttack);
+    this.$watch('D', this.setDecay);
+    this.$watch('S', this.setSustain);
+    this.$watch('R', this.setRelease);
   },
+
   methods: {
+    generateSignal() {
+      // --------- taken from from Tone.js  -----------
+      // const context = this.context;
+      // const constant = context.createBufferSource();
+      // const buffer = context.createBuffer(1, 128, context.sampleRate);
+      // const arr = buffer.getChannelData(0);
+      //
+      // for (let i = 0; i < arr.length; i++) {
+      //   arr[i] = 1;
+      // }
+      //
+      // constant.channelCount = 1;
+      // constant.channelCountMode = 'explicit';
+      // constant.buffer = buffer;
+      // constant.loop = true;
+      // constant.start(0);
+
+      // vs
+
+      // Generate (mono) buffer with 2 samples
+      const buffer = this.context.createBuffer(1, 2, this.context.sampleRate);
+      const source = this.context.createBufferSource();
+
+      // set each sample to 1
+      buffer.getChannelData(0)[0] = 1;
+      buffer.getChannelData(0)[1] = 1;
+
+      // var data = buffer.getChannelData(0);
+      // data[0] = 1;
+      // data[1] = 1;
+      //
+      // bind source for the buffer, looping it
+      source.buffer = buffer;
+      source.loop = true;
+    },
+
 
     start(when) {
       var attackRampMethodName = this._getRampMethodName('attack');

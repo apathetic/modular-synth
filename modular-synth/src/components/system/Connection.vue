@@ -102,25 +102,27 @@ export default {
      * @return {Void}
      */
     routeAudio(connect = true) {
-      const source = this.fromModule.outlets[this.from.port].data;
-      const destination = this.toModule.inlets[this.to.port].data;
+      // console.log('Connector ', this.id, this.toModule.inlets, this.fromModule.outlets);
+
+      const outlets = this.fromModule.outlets;
+      const inlets = this.toModule.inlets;
 
       // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
       // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
 
-      if (source && destination) {
+      if (inlets && outlets) {
         try {
+          const source = outlets[this.from.port].data;
+          const destination = inlets[this.to.port].data;
+
           (connect) ? source.connect(destination) : source.disconnect(destination);
         } catch (e) {
           console.log('Audio dis/connect error', e);
+          console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
+          console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
         }
       } else {
-        try {
-          console.log('Audio dis/connect error. From module: ', this.from.id);
-          console.log('Audio dis/connect error. From outlet: ', this.from.port);
-          console.log('Audio dis/connect error. To module: ', this.to.id);
-          console.log('Audio dis/connect error. to outlet: ', this.to.port);
-        } catch (e) {}
+        console.log('Connection error: no inlets/outlets. Is the module in the DOM?');
       }
     },
 
