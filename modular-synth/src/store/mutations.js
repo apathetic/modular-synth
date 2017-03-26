@@ -17,8 +17,6 @@ export const LOAD_PATCH = (state, patch) => {
     for (let key in patch) {
       state[key] = patch[key];
     }
-
-    console.log(state);
   }
 };
 
