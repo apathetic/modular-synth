@@ -68,15 +68,17 @@
 
 
         <button class="button" @click="newModule('Node')">Node</button>
-        <button class="button" @click="newModule('Oscillator')">osc</button>
         <button class="button" @click="newModule('LFO')">LFO</button>
         <button class="button" @click="newModule('Env')">env</button>
         <button class="button" @click="newModule('Reverb')">reverb</button>
-        <button class="button" @click="newModule('Filtr')">filter</button>
+        <button class="button" @click="newModule('VCF')">filter</button>
+        <button class="button" @click="newModule('VCO')">osc</button>
+        <button class="button" @click="newModule('Analyser')">analyser</button>
         <button class="button" @click="newModule('Comb')">comb</button>
         <button class="button" @click="newModule('Mixer')">mixer</button>
         <button class="button" @click="newModule('multiply')">multiply</button>
         <button class="button" @click="newModule('NoteIn')">note-in</button>
+        <button class="button" @click="newModule('Signal')">note-in</button>
 
         <br>
 
@@ -102,14 +104,16 @@
   import { mapGetters, mapActions } from 'vuex';
   import { sortable } from './mixins/sortable';
 
+  import Analyser from './components/Analyser';
   import Env from './components/Env';
   import LFO from './components/LFO';
-  import Filtr from './components/Filter';
+  import VCF from './components/Filter';
   import Comb from './components/Comb';
   import Mixer from './components/Mixer';
   import Node from './components/Node';
   import NoteIn from './components/NoteIn';
-  import Oscillator from './components/Oscillator';
+  import Signal from './components/Signal';
+  import VCO from './components/VCO';
   import Reverb from './components/Reverb';
 
   import connecting from './components/system/Connecting';
@@ -130,12 +134,14 @@
 
       Env,
       LFO,
-      Filtr,
+      VCF,
+      VCO,
+      Analyser,
       Comb,
       Mixer,
       Node,
       NoteIn,
-      Oscillator,
+      Signal,
       Reverb
     },
 

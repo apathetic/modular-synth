@@ -86,6 +86,8 @@ export default {
     this.$watch('freq', this.setFreq);
     // this.$watch('depth', this.setDepth);   // gate. mod?
     this.$watch('type', this.setType);
+
+    console.log('Creating LFO');
   },
 
   methods: {
