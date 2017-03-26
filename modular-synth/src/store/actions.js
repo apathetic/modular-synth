@@ -12,6 +12,7 @@ export const loadPatch = ({ commit, state }, name) => {
   // });
 
   if (state.patches[name]) {
+    console.log('===================');
     console.log('Loading patch: ', name);
     commit('LOAD_PATCH', state.patches[name]);
 
