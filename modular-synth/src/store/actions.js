@@ -15,6 +15,7 @@ export const loadPatch = ({ commit, state }, name) => {
     console.log('===================');
     console.log('Loading patch: ', name);
     commit('LOAD_PATCH', state.patches[name]);
+    commit('LOAD_CONNECTIONS', state.patches[name].connections);
 
     // if (params) ...
       // commit('LOAD_PARAMS', state.patches[name].parameterSets[0]);
