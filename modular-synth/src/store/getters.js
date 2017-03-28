@@ -2,6 +2,7 @@
 //  GETTERS
 // -----------------------------------------------
 
+export const power = (state) => state.power;
 export const editing = (state) => state.editing;
 export const active = (state) => state.modules.find(function(module) { return module.id === state.active; });
 export const modules = (state) => state.modules.filter(function(module) { return module.id !== 0; });
