@@ -35,6 +35,10 @@ export const LOAD_PARAMS = () => {
 // -----------------------------------------------
 //  APP
 // -----------------------------------------------
+export const TOGGLE_POWER = (state) => {
+  state.power = !state.power;
+};
+
 export const TOGGLE_EDIT = (state) => {
   state.editing = !state.editing;
 };

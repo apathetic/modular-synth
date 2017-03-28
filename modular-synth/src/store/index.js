@@ -28,6 +28,7 @@ const state = {
 
   // connections: JSON.parse(localStorage.getItem(LS_CONNECTIONS) || '[]'),
 
+  power: false,
   editing: false,
   focused: undefined,       // "Hovered": for Module Info, Connections.  TODO move to $bus?
   active: 0,                // "Clicked": for Dragging, Deleting.

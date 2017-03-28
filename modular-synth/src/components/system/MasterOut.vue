@@ -48,11 +48,17 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import Level from '../UI/Level';
-import { mapActions } from 'vuex';
 
 export default {
   components: { Level },
+
+  computed: {
+    ...mapGetters([
+      'power'
+    ])
+  },
 
   data() {
     return {
@@ -61,7 +67,7 @@ export default {
       x: 0,
       y: 0,
       gain: 0.5,
-      power: false,
+      // power: false,
       isMuted: false,
       inlets: [
         {
@@ -82,8 +88,16 @@ export default {
     this.inlets[0].data = this.out1;
     this.inlets[1].data = this.out2;
 
-    this.$bus.$on('audio:start', this.start);
-    this.$bus.$on('audio:stop', this.stop);
+    // this.$bus.$on('audio:start', this.start);
+    // this.$bus.$on('audio:stop', this.stop);
+
+    this.$watch('power', (on) => {
+      if (on) {
+        this.start();
+      } else {
+        this.stop();
+      }
+    });
 
     this.$watch('gain', this.setGain);
     this.$watch('isMuted', () => { this.setGain(this.gain); });
@@ -110,7 +124,6 @@ export default {
     },
 
     update(e) {
-      // const gain = e.target.value;
       this.gain = e.target.value;
       this.setGain(this.gain);    // TODO a nice audioRamp
     },
@@ -122,17 +135,6 @@ export default {
 
     toggleMute() {
       this.isMuted = !this.isMuted;
-    },
-
-    togglePower() {
-      this.power = !this.power;
-      if (this.power) {
-        console.log('audio on');
-        this.$bus.$emit('audio:start');
-      } else {
-        console.log('audio off');
-        this.$bus.$emit('audio:stop');
-      }
     },
 
     determinePosition() {
@@ -151,6 +153,7 @@ export default {
 
     // VUEX actions, bound as local methods:
     ...mapActions([
+      'togglePower',
       'setFocus',
       'clearFocus'
     ])

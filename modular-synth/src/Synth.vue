@@ -147,6 +147,7 @@
 
     computed: {
       ...mapGetters([
+        'power',
         'editing',
         'active',
         'modules',
@@ -156,7 +157,6 @@
 
     data() {
       return {
-        // power: false,
         sorting: false
       };
     },
