@@ -21,6 +21,7 @@
 
 
 <script>
+  import { mapGetters } from 'vuex';
   import { draggable } from '../mixins/draggable';
 
   export default {
@@ -31,9 +32,16 @@
       row: null
     },
 
+    computed: {
+      ...mapGetters([
+        'power'
+      ])
+    },
+
     data() {
       return {
         name: 'Analyser',
+        // buffer: null,
         inlets: [
           {
             label: 'input',
@@ -51,11 +59,19 @@
 
       this._buffer = new Float32Array(this.analyser.frequencyBinCount);
       this._type = 'FFT';
+      this.ticking = true;
+
+      this.$watch('power', (on) => {
+        if (on) {
+          this.loop();
+        }
+      });
+
+      console.log('Creating Analyser');
     },
 
     mounted() {
-      this.canvas = this.$refs.visualization.getContext('2d');
-      this.loop();
+      this.visualizer = this.$refs.visualization.getContext('2d');
     },
 
     methods: {
@@ -81,26 +97,26 @@
         // return this._buffer;
       },
 
-      // renderFFT
+      // renderSpectrum
       render() {
+        const canvasWidth = this.visualizer.canvas.width;
+        const canvasHeight = this.visualizer.canvas.height;
+        const barWidth = canvasWidth / this.analyser.fftSize;
         const values = this._buffer;
-        const barWidth = this.canvas.width / this.analyser.fftSize;
-        const canvasWidth = this.canvas.width;
-        const canvasHeight = this.canvas.height;
 
-        this.canvas.clearRect(0, 0, canvasWidth, canvasHeight);
+        this.visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
 
         for (let i = 0, len = values.length; i < len; i++) {
           const val = values[i] / 255;
           const x = canvasWidth * (i / len);
           const y = val * canvasHeight;
 
-          this.canvas.fillStyle = 'rgba(0, 0, 0, ' + val + ')';
-          this.canvas.fillRect(x, canvasHeight - y, barWidth, canvasHeight);
+          this.visualizer.fillStyle = 'rgba(0, 0, 0, ' + val + ')';
+          this.visualizer.fillRect(x, canvasHeight - y, barWidth, canvasHeight);
         }
       },
 
-      // renderWaveform(values){
+      // renderWaveform(){
       //   //draw the waveform
       //   waveContext.clearRect(0, 0, canvasWidth, canvasHeight);
       //   var values = waveform.analyse();
@@ -117,14 +133,29 @@
       //   }
       // waveContext.stroke();
 
-
       loop() {
-        this.analyse();
-        this.render();
+        if (this.power && this.ticking) {
+          this.analyse();
+          this.render();
 
-        // window.requestAnimationFrame(this.loop);  // .bind(this)
+          // this.ticking = false;
+          window.requestAnimationFrame(this.loop);  // .bind(this)
+        }
       }
     }
   };
 
 </script>
+
+<style lang="scss">
+  .analyser {
+    .module-interface {
+      padding: 0;
+    }
+    canvas {
+      background: rgba(0,222,0, 0.2);
+      height: 223px;
+      width: 358px;
+      }
+  };
+</style>

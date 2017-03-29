@@ -6,7 +6,7 @@ export const cellHeight = 90;
 export const cellWidth = 120;
 
 export const moduleSize = {
-  'Analyzer': [3, 1],
+  'Analyser': [3, 1],
   'Clock': {},
   'Comb': [2, 1],
   'Compressor': {},
