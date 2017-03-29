@@ -34,7 +34,8 @@
 
     computed: {
       ...mapGetters([
-        'power'
+        'power',
+        'editing'
       ])
     },
 
@@ -53,7 +54,7 @@
 
     created() {
       this.analyser = this.inlets[0].data = this.context.createAnalyser();
-      this.analyser.fftSize = 1024;
+      this.analyser.fftSize = 32; // 1024;
       this.analyser.maxDecibels = 0;
       this.analyser.minDecibels = -100;
 
@@ -64,6 +65,8 @@
       this.$watch('power', (on) => {
         if (on) {
           this.loop();
+        } else {
+          // set buffer to 0 and update display
         }
       });
 
@@ -99,19 +102,20 @@
 
       // renderSpectrum
       render() {
+        const values = this._buffer;
         const canvasWidth = this.visualizer.canvas.width;
         const canvasHeight = this.visualizer.canvas.height;
-        const barWidth = canvasWidth / this.analyser.fftSize;
-        const values = this._buffer;
+        // const barWidth = canvasWidth / this.analyser.fftSize;
+        const barWidth = canvasWidth / values.length;
 
         this.visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
 
         for (let i = 0, len = values.length; i < len; i++) {
-          const val = values[i] / 255;
+          const val = values[i] / 255 * -1;
           const x = canvasWidth * (i / len);
           const y = val * canvasHeight;
 
-          this.visualizer.fillStyle = 'rgba(0, 0, 0, ' + val + ')';
+          this.visualizer.fillStyle = '#357'; // 'rgba(0, 0, 0, ' + val + ')';
           this.visualizer.fillRect(x, canvasHeight - y, barWidth, canvasHeight);
         }
       },
@@ -134,10 +138,13 @@
       // waveContext.stroke();
 
       loop() {
-        if (this.power && this.ticking) {
-          this.analyse();
-          this.render();
+        if (this.power) {
+          if (!this.editing && this.ticking) {
+            this.analyse();
+            this.render();
+          }
 
+          // console.log(this._buffer);
           // this.ticking = false;
           window.requestAnimationFrame(this.loop);  // .bind(this)
         }
@@ -153,7 +160,7 @@
       padding: 0;
     }
     canvas {
-      background: rgba(0,222,0, 0.2);
+      // background: rgba(0,222,0, 0.2);
       height: 223px;
       width: 358px;
       }
