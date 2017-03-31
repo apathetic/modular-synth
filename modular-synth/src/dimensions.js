@@ -11,7 +11,7 @@ export const moduleSize = {
   'Comb': [2, 1],
   'Compressor': {},
   'Delay': {},
-  'Env': [1, 1],
+  'Env': [2, 1],
   'Filter': [1, 1],
   'LFO': [1, 1],
   'Mixer': {},

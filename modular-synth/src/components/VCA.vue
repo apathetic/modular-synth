@@ -1,40 +1,21 @@
-//------------------------------------------------
-//  Envelope
-// -----------------------------------------------
-
 <template>
   <div
   class="module"
   :class="dragging ? 'dragging' : ''"
   :style="position"
-  @mousedown.prevent="startDraggingNode">
-  <!-- @mousedown.prevent="dragStart($event, this)"> -->
+  @mousedown.stop="startDragging">
 
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
 
     <div class="module-interface">
-      <slot name="interface"></slot>
+      VCA
     </div>
 
     <div class="module-connections">
-      <div class="inlets">
-        <span v-for="(inlet, index) in inlets"
-          :data-label="inlet.label"
-          :data-port="index"
-          class="inlet">
-        </span>
-      </div>
-
-      <div class="outlets">
-        <span v-for="(outlet, index) in outlets"
-          @mousedown.stop="newConnection(outlet)"
-          :data-label="outlet.label"
-          :data-port="index"
-          class="outlet">
-        </span>
-      </div>
+      <inlets :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
     </div>
   </div>
 </template>
@@ -42,61 +23,42 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import { newConnection } from '../store/actions';
 
 export default {
   mixins: [draggable],
-
-  vuex: {
-    actions: {
-      newConnection
-    }
-  },
-
   props: {
-    id: null
+    id: null,
+    col: null,
+    row: null
   },
 
   data() {
     return {
-      name: 'Node',
-
+      name: 'VCA',
       inlets: [
         {
-          port: 0,
-          label: 'freq',
-          data: this.input
+          label: 'signal',
+          data: null
         }, {
-          port: 1,
           label: 'gain',
-          data: null // this.input
-        }, {
-          port: 2,
-          label: 'range',
-          data: null // this.input
+          data: null
         }
       ],
 
       outlets: [
         {
-          port: 0,
-          label: 'output-1',
-          data: null // this.outputL   // src?
-        }, {
-          port: 1,
-          label: 'output-2',
-          data: null // this.outputR
+          label: 'output',
+          data: null
         }
       ]
     };
   },
 
   created() {
-    // dummy outlet for test
-    this.inlets[0].data = this.context.createGain();
+    this.inlets[0].data = this.outlets[0].data = this.context.createGain();
+    this.inlets[1].data = this.outlets[0].data.gain;
 
-    this.outlets[0].data = this.context.createGain();
-    this.outlets[1].data = this.context.createGain();
+    console.log('Creating VCA');
   }
 };
 

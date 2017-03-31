@@ -2,6 +2,7 @@
 //  APPLICATION
 // -----------------------------------------------
 // Note: much of this code inspired by:
+// https://tonejs.github.io
 // https://github.com/cwilso/WebAudio
 // https://github.com/idflood/Threenodes.js
 // https://github.com/gre/zound-live
@@ -45,6 +46,7 @@
         </connection>
       </svg>
 
+      <contextmenu :coords="menuCoords"></contextmenu>
     </div>
 
     <aside id="controls">
@@ -67,7 +69,7 @@
         <midi></midi>
 
 
-        <button class="button" @click="newModule('Node')">Node</button>
+        <!-- <button class="button" @click="newModule('Node')">Node</button>
         <button class="button" @click="newModule('LFO')">LFO</button>
         <button class="button" @click="newModule('Env')">env</button>
         <button class="button" @click="newModule('Reverb')">reverb</button>
@@ -78,7 +80,7 @@
         <button class="button" @click="newModule('Mixer')">mixer</button>
         <button class="button" @click="newModule('multiply')">multiply</button>
         <button class="button" @click="newModule('NoteIn')">note-in</button>
-        <button class="button" @click="newModule('Signal')">note-in</button>
+        <button class="button" @click="newModule('Signal')">signal</button> -->
 
         <br>
 
@@ -120,7 +122,8 @@
   import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
-  import multiply from './components/math/Multiply';
+
+  import contextmenu from './components/system/ContextMenu';
 
   export default {
     mixins: [sortable],
@@ -130,7 +133,8 @@
       connecting,
       connection,
       midi,
-      multiply,
+
+      contextmenu,
 
       Env,
       LFO,
@@ -157,7 +161,8 @@
 
     data() {
       return {
-        sorting: false
+        sorting: false,
+        menuCoords: []
       };
     },
 
@@ -226,50 +231,44 @@
             break;
         }
       });
+
+      window.addEventListener('click', (e) => {
+        this.menuCoords = [];
+      });
     },
 
     mounted() {
-      // TODO why cannot move into sortable:ready() ...?
+      // TODO why cannot move into sortable:ready() ...? A: $refs.grid is not yet in the DOM
+      // TODO2 sortable:mounted() ...?
       this.initSorting(this.$refs.grid);
       this.setupGrid();  // this should be after every module has registered its dimensions
+
+      this.$refs.grid.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+
+        const y = e.pageY - document.querySelector('header').offsetHeight;
+
+        this.menuCoords = [e.pageX, y];
+      });
     },
 
     methods: {
-      // not sure. keep here, or move to masterOut ?
-      // togglePower() {
-      //   this.power = !this.power;
-      //   if (this.power) {
-      //     console.log('audio on');
-      //     this.$bus.$emit('audio:start');
-      //   } else {
-      //     console.log('audio off');
-      //     this.$bus.$emit('audio:stop');
-      //   }
+      // newModule(type) {
+      //   this.$store.commit('ADD_MODULE', { type });
+      //
+      //   this.$nextTick(function() {
+      //     const id = this.$store.state.id;
+      //     const item = this.modules.find((m) => { return m.id === id; });
+      //
+      //     this.gridList.items = this.modules;
+      //     this.gridList.moveItemToPosition(item, [0, 0]);
+      //
+      //     // module.$el.style.opacity = 0;
+      //     // setTimeout(() => {
+      //     //   module.$el.style.opacity = 1;
+      //     // }, 200);
+      //   });
       // },
-
-      newModule(type) {
-        this.$store.commit('ADD_MODULE', type);
-
-        this.$nextTick(function() {
-          const id = this.$store.state.id;
-          const item = this.modules.find((m) => { return m.id === id; });
-
-          // const module = this.$children.find((m) => { return m.id === id; });
-          // this.$store.commit('REGISTER_DIMENSIONS', {
-          //   id: id,
-          //   w: module.w || 2,
-          //   h: module.h || 1
-          // });
-
-          this.gridList.items = this.modules;
-          this.gridList.moveItemToPosition(item, [0, 0]);
-
-          // module.$el.style.opacity = 0;
-          // setTimeout(() => {
-          //   module.$el.style.opacity = 1;
-          // }, 200);
-        });
-      },
 
       // VUEX actions, bound as local methods:
       ...mapActions([
