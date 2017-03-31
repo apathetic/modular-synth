@@ -75,15 +75,17 @@ export const CLEAR_FOCUS = (state) => {
 // -----------------------------------------------
 //  MODULES
 // -----------------------------------------------
-export const ADD_MODULE = (state, type) => {
+export const ADD_MODULE = (state, data) => {
+  const type = data.type;
+  const pos = data.coords || [0, 0];
   const size = moduleSize[type] || [1, 1];
 
   state.id++;
   state.modules.push({
     id: state.id,
     type: type,
-    x: 0,         // for dragging X position
-    y: 0,         // for dragging Y position
+    x: pos[0],    // for dragging X position
+    y: pos[1],    // for dragging Y position
     col: 0,       // for rack X position
     row: 0,       // for rack Y position
     w: size[0],   // for rack width

@@ -61,15 +61,6 @@ export const loadParameters = () => {
 // -----------------------------------------------
 
 export const togglePower = ({ commit }) => {
-  // this.power = !this.power;
-  // if (this.power) {
-  //   console.log('audio on');
-  //   this.$bus.$emit('audio:start');
-  // } else {
-  //   console.log('audio off');
-  //   this.$bus.$emit('audio:stop');
-  // }
-
   commit('TOGGLE_POWER');
 };
 
@@ -104,14 +95,10 @@ export const clearFocus = ({ commit }) => {
 //  MODULES
 // -----------------------------------------------
 // export const addModule = ({ commit }, type) => {
-//   commit('ADD_MODULE', type);
+//   commit('ADD_MODULE', { type });
 //   //
 //   // update gridlist here?
 //   //
-// };
-
-// export const registerDimensions = ({ commit }, id, w, h) => {
-//   commit('REGISTER_DIMENSIONS', id, w, h);
 // };
 
 export const removeModule = ({ commit, state }) => {
