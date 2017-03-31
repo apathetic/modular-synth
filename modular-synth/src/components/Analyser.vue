@@ -115,7 +115,7 @@
           const x = canvasWidth * (i / len);
           const y = val * canvasHeight;
 
-          this.visualizer.fillStyle = '#357'; // 'rgba(0, 0, 0, ' + val + ')';
+          this.visualizer.fillStyle = 'rgba(0, 222, 0, ' + val + ')';
           this.visualizer.fillRect(x, canvasHeight - y, barWidth, canvasHeight);
         }
       },
@@ -161,8 +161,10 @@
     }
     canvas {
       // background: rgba(0,222,0, 0.2);
-      height: 223px;
-      width: 358px;
-      }
+      height: 222px;
+      width: 356px;
+      display: block;
+      left: 1px;
+    }
   };
 </style>

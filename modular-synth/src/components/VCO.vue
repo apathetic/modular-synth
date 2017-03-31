@@ -1,7 +1,3 @@
-//------------------------------------------------
-//  OSCILLATOR
-// -----------------------------------------------
-
 <template>
   <div
     class="oscillator module _2U"
@@ -103,7 +99,7 @@
       this.$watch('mod', this.setGain);
       this.$watch('type', this.setType);
 
-      console.log('Creating Oscillator');
+      console.log('Creating VCO');
     },
 
     methods: {

@@ -168,7 +168,7 @@ button {
 }
 
 .ring {
-  border: .5em solid #000;
+  border: .2em solid #000;
   border-radius: 50%;
   height: 2em;
   width: 2em;
@@ -250,6 +250,10 @@ button {
 /* --------------------------------
    General
 --------------------------------- */
+
+.visible {
+  visibility: visible !important;
+}
 
 select {
   background: $color-grey-medium;

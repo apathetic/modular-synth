@@ -1,14 +1,14 @@
 @import 'variables.scss';
 
 /* --------------------------------
-   Module 
+   Module
 --------------------------------- */
 
 .module {
   height: $cellHeight;
   width: $cellWidth;
-  border: 1px solid #333;
-  border-radius: 4px;
+  border: 1px solid $color-grey-dark;
+  border-radius: $border-radius;
   position: absolute;
   transition: all $transition-time-slow;
   // transition: all $transition-time;
@@ -108,7 +108,7 @@
 
 .play-mode {
   .module {
-    width: #{$rackWidth * 2};   // default rack width is 2U
+    width: #{$rackWidth * 1.5};   // default rack width is 2U
     height: $rackHeight;
     // transition: all $transition-time;
 
@@ -125,12 +125,5 @@
     &-connections {
       display: none;
     }
-
-    // &.math {
-    //   width: 0;
-    //   height: 0;  // hidden in play mode
-    //   border: 0;
-    //   overflow: hidden;
-    // }
   }
 }

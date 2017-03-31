@@ -4,7 +4,7 @@
 
 <template>
   <div
-    class="env module _1U"
+    class="env module _2U"
     :class="dragging ? 'dragging' : ''"
     :style="position"
     @mousedown.stop="startDragging">
@@ -14,10 +14,10 @@
     </div>
 
     <div class="module-interface">
-      <knob label="attack"  @value="A = value" min="0" max="1" step="0.05"></knob>
-      <knob label="decay"   @value="D = value" min="0" max="1" step="0.05"></knob>
-      <knob label="sustain" @value="S = value" min="0" max="1" step="0.05"></knob>
-      <!-- <knob label="release" @value="R = value" min="0" max="1" step="0.05"></knob> -->
+      <knob label="attack"  @value="A = value" :min="0" :max="1"></knob>
+      <knob label="decay"   @value="D = value" :min="0" :max="1"></knob>
+      <knob label="sustain" @value="S = value" :min="0" :max="1"></knob>
+      <knob label="release" @value="R = value" :min="0" :max="1"></knob>
     </div>
 
     <div class="module-connections">
@@ -189,13 +189,10 @@ export default {
 
 <style lang="scss">
   .env {
-    // background: linear-gradient(to bottom, #484643 0%, #42413e 98%, #343330 100%);
     background: linear-gradient(to bottom, #383633 0%, #32312e 98%, #242320 100%);
     color: #fff;
 
     .knob {
-      float: left;
-      clear: left;
       fill: #fff;
     }
   }
