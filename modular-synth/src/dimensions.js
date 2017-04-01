@@ -14,10 +14,10 @@ export const moduleSize = {
   'Filter': [2, 1],
   'LFO': [2, 1],
   'Mixer': {},
-  'Node': [3, 1],
+  'Node': [4, 1],
   'NoteIn': [2, 1],
   'Reverb': [3, 1],
   'Signal': [2, 1],
-  'VCO': [3, 1],
+  'VCO': [4, 1],
   'VCA': {}
 };
