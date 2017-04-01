@@ -1,6 +1,6 @@
 <template>
   <div
-  class="comb module _2U"
+  class="comb module _3U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">

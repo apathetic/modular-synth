@@ -1,7 +1,7 @@
 <template>
   <div
-  class="analyser module _3U"
-  :class="dragging ? 'dragging' : ''"
+  class="analyser module _6U"
+  :class="{dragging: dragging, analysing: power}"
   :style="position"
   @mousedown.stop="startDragging">
 
@@ -155,6 +155,8 @@
 </script>
 
 <style lang="scss">
+  @import '../assets/scss/variables.scss';
+
   .analyser {
     .module-interface {
       padding: 0;
@@ -165,6 +167,14 @@
       width: 356px;
       display: block;
       left: 1px;
+      opacity: 0;
+      transition: opacity $transition-time;
+    }
+
+    &.analysing {
+      canvas {
+        opacity: 1;
+      }
     }
   };
 </style>
