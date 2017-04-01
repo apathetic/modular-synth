@@ -4,7 +4,7 @@
 
 <template>
   <div
-  class="reverb module _2U"
+  class="reverb module _3U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">

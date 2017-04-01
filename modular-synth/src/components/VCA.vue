@@ -1,6 +1,6 @@
 <template>
   <div
-  class="module"
+  class="module _2U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
@@ -63,3 +63,14 @@ export default {
 };
 
 </script>
+
+<style lang="scss">
+  .env {
+    background: linear-gradient(to bottom, #383633 0%, #32312e 98%, #242320 100%);
+    color: #fff;
+
+    .knob {
+      fill: #fff;
+    }
+  }
+</style>

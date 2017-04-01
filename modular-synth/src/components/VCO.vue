@@ -1,6 +1,6 @@
 <template>
   <div
-    class="oscillator module _2U"
+    class="oscillator module _3U"
     :class="dragging ? 'dragging' : ''"
     :style="position"
     @mousedown.stop="startDragging">
@@ -15,7 +15,7 @@
       </select>
       <slider label="mod"  @value="mod = $event"  :min="0" :max="100"></slider>
       <p>OSC</p>
-      <knob   label="freq" @value="freq = $event" :min="1" :max="880"></knob>
+      <knob   label="freq" @value="freq = $event" :min="1" :max="2000"></knob>
       <knob   label="sync" @value="sync = $event" :min="0" :max="1"></knob>
       <knob   label="PW"   @value="PW = $event"   :min="0" :max="6.28"></knob>
     </div>
