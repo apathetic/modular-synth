@@ -52,7 +52,7 @@ export default {
       inlets: [
         {
           label: 'gate',
-          data: null
+          data: this.gate
         }, {
           label: 'mod',
           data: null
@@ -93,19 +93,25 @@ export default {
 
 
 
-    // this.inlets[0].data = this.context.createGain();  // gate?
-    // this.inlets[1].data = this.context.createGain();  // mod?
+    // this.inlets[0].data = this.gate;
+    // this.inlets[1].data = function() {};  // mod?
 
     this.adsr = this.context.createGain();
-    this.outlets[0].data = this.adsr;
+    this.outlets[0].audio = this.adsr;
 
     this.$watch('A', this.setAttack);
     this.$watch('D', this.setDecay);
     this.$watch('S', this.setSustain);
     this.$watch('R', this.setRelease);
+
+    console.log('Creating Env');
   },
 
   methods: {
+    gate(velocity) {
+      console.log('ENV', velocity);
+    },
+
     generateSignal() {
       // --------- taken from from Tone.js  -----------
       // const context = this.context;
@@ -141,7 +147,6 @@ export default {
       source.buffer = buffer;
       source.loop = true;
     },
-
 
     start(when) {
       var attackRampMethodName = this._getRampMethodName('attack');
