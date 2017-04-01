@@ -42,18 +42,17 @@
     data() {
       return {
         name: 'Analyser',
-        // buffer: null,
         inlets: [
           {
-            label: 'input',
-            data: null
+            label: 'input'
+            // audio: null
           }
         ]
       };
     },
 
     created() {
-      this.analyser = this.inlets[0].data = this.context.createAnalyser();
+      this.analyser = this.inlets[0].audio = this.context.createAnalyser();
       this.analyser.fftSize = 32; // 1024;
       this.analyser.maxDecibels = 0;
       this.analyser.minDecibels = -100;

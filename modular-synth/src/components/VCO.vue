@@ -1,6 +1,6 @@
 <template>
   <div
-    class="oscillator module _3U"
+    class="oscillator module _4U"
     :class="dragging ? 'dragging' : ''"
     :style="position"
     @mousedown.stop="startDragging">
@@ -57,23 +57,23 @@
 
         inlets: [
           {
-            label: 'freq',
-            data: null            // audio: null,
+            label: 'freq'
+            // audio: null,
           },
           {
-            label: 'sync',
-            data: null            // audio: null,
+            label: 'sync'
+            // audio: null,
           },
           {
-            label: 'mod-A',
-            data: null            // audio: null,
+            label: 'mod-A'
+            // audio: null,
           }
         ],
 
         outlets: [
           {
-            label: 'output',
-            data: null            // audio: null,
+            label: 'output'
+            // audio: null,
           }
         ]
       };
@@ -83,8 +83,8 @@
       const gain = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
       const osc = this.context.createOscillator();
 
-      this.inlets[0].data = gain;
-      this.outlets[0].data = osc;
+      this.inlets[0].audio = gain;
+      this.outlets[0].audio = osc;
 
       gain.connect(osc.frequency);      // input connects to audioParam (freq) "mod"
 
@@ -109,7 +109,7 @@
        */
       setFreq(f) {
         // this.node.frequency.value = f;
-        this.outlets[0].data.frequency.value = f;
+        this.outlets[0].audio.frequency.value = f;
       },
 
       /**
@@ -118,7 +118,7 @@
        */
       setType(t) {
         // this.node.type = t;
-        this.outlets[0].data.type = t;
+        this.outlets[0].audio.type = t;
       },
 
       /**
@@ -127,7 +127,7 @@
        */
       setGain(g) {
         // this.gain.gain.value = g;
-        this.inlets[0].data.gain.value = g;
+        this.inlets[0].audio.gain.value = g;
       },
 
 

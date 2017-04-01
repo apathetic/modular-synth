@@ -44,23 +44,21 @@ export default {
 
       inlets: [
         {
-          label: 'input',
-          data: null
+          label: 'input'
+          // audio: null
         }, {
-          label: 'input',
-          data: null // this.input
+          label: 'input'
+          // audio: null
         }
       ],
 
       outlets: [
         {
-          port: 0,
-          label: 'output-1',
-          data: null // this.outputL   // src?
+          label: 'output-1'
+          // audio: null
         }, {
-          port: 1,
-          label: 'output-2',
-          data: null // this.outputR
+          label: 'output-2'
+          // audio: null
         }
       ]
     };
@@ -73,8 +71,8 @@ export default {
     this.filter.Q.value = this.Q;
 
     // connect input to our filter
-    this.inlets[0].data = this.filter;
-    this.outlets[0].data = this.filter;
+    this.inlets[0].audio = this.filter;
+    this.outlets[0].audio = this.filter;
 
     // this.$watch('type', this.setReverb);
     // this.$watch('freq', this.setDecay);

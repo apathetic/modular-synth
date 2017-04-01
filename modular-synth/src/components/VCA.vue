@@ -37,26 +37,26 @@ export default {
       name: 'VCA',
       inlets: [
         {
-          label: 'signal',
-          data: null
+          label: 'signal'
+          // audio: null
         }, {
-          label: 'gain',
-          data: null
+          label: 'gain'
+          // audio: null
         }
       ],
 
       outlets: [
         {
-          label: 'output',
-          data: null
+          label: 'output'
+          // audio: null
         }
       ]
     };
   },
 
   created() {
-    this.inlets[0].data = this.outlets[0].data = this.context.createGain();
-    this.inlets[1].data = this.outlets[0].data.gain;
+    this.inlets[0].audio = this.outlets[0].audio = this.context.createGain();
+    this.inlets[1].audio = this.outlets[0].audio.gain;
 
     console.log('Creating VCA');
   }

@@ -50,15 +50,15 @@ export default {
 
       inlets: [
         {
-          label: 'input',
-          data: null
+          label: 'input'
+          // audio: null
         }
       ],
 
       outlets: [
         {
-          label: 'output',
-          data: null
+          label: 'output'
+          // audio: null
         }
       ]
     };
@@ -68,8 +68,8 @@ export default {
     const reverb = this.convolver = this.context.createConvolver();
 
     // inputs
-    this.inlets[0].data = reverb;
-    this.outlets[0].data = reverb;
+    this.inlets[0].audio = reverb;
+    this.outlets[0].audio = reverb;
 
     this.$watch('seconds', this.setReverb);
     this.$watch('decay', this.setDecay);

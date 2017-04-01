@@ -87,11 +87,11 @@ export default {
   created() {
     this.fromModule = this.getModule(this.from.id);
     this.toModule = this.getModule(this.to.id);
-    this.routeAudio();
+    this.route();
   },
 
   destroyed() {
-    this.routeAudio(false);
+    this.route(false);
   },
 
   methods: {
@@ -101,28 +101,32 @@ export default {
      * @type {Boolean} connect Connect two nodes if true, disconnect if false.
      * @return {Void}
      */
-    routeAudio(connect = true) {
-      // console.log('Connector ', this.id, this.toModule.inlets, this.fromModule.outlets);
-
+    route(connect = true) {
       const outlets = this.fromModule.outlets;
       const inlets = this.toModule.inlets;
 
-      // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
-      // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
-
       if (inlets && outlets) {
-        try {
-          const source = outlets[this.from.port].data;
-          const destination = inlets[this.to.port].data;
 
-          (connect) ? source.connect(destination) : source.disconnect(destination);
-        } catch (e) {
-          console.log('Audio dis/connect error', e);
-          console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
-          console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
+        // AUDIO
+        if (outlets[this.from.port].audio) {
+          try {
+            const source = outlets[this.from.port].audio;
+            const destination = inlets[this.to.port].audio;
+
+            // mmm, maybe brittle.  AudioBuffer, AudioListener, AudioParam, ...etc
+            // if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
+            (connect) ? source.connect(destination) : source.disconnect(destination);
+          } catch (e) {
+            console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
+            console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
+          }
+
+        // DATA
+        } else if (outlets[this.from.port].data) {
+
         }
-      } else {
-        console.log('Connection error: no inlets/outlets. Is the module in the DOM?');
+      // } else {
+      //   console.log('Connection error: no inlets/outlets. Is the module in the DOM?');
       }
     },
 
