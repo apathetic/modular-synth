@@ -108,13 +108,13 @@
 
 .play-mode {
   .module {
-    width: #{$rackWidth * 1.5};   // default rack width is 2U
+    width: #{$rackWidth * 3};   // default rack width is 3U
     height: $rackHeight;
     // transition: all $transition-time;
 
-    &._1U { width: $rackWidth; }
     &._2U { width: #{$rackWidth * 2}; }
     &._3U { width: #{$rackWidth * 3}; }
+    &._6U { width: #{$rackWidth * 6}; }
 
     &-interface {
       display: block;

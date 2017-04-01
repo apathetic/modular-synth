@@ -4,7 +4,7 @@
 
 <template>
   <div
-  class="lfo module _1U"
+  class="lfo module _2U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.prevent="startDragging">

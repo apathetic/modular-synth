@@ -1,6 +1,6 @@
 <template>
   <div
-  class="signal module _1U"
+  class="signal module _2U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">

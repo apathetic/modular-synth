@@ -4,7 +4,7 @@
 
 <template>
   <div
-    class="env module _2U"
+    class="env module _3U"
     :class="dragging ? 'dragging' : ''"
     :style="position"
     @mousedown.stop="startDragging">
@@ -48,10 +48,6 @@ export default {
       'D': 0.1,
       'S': 0.1,
       'R': 0.1,
-      // velocity = 1;
-
-      w: 1, // rack width
-      // h: 1, // rack height
 
       inlets: [
         {
