@@ -18,7 +18,6 @@
     </div>
 </template>
 
-
 <script>
 import { draggable } from '../mixins/draggable';
 
@@ -36,12 +35,17 @@ export default {
       received: '',
       outlets: [
         {
-          label: 'pitch'
+          label: 'pitch',
+          data: 0
         },
         {
-          label: 'pitch'
+          label: 'gate',
+          data: 0
+        },
+        {
+          label: 'bend',
+          data: 0
         }
-
       ]
     };
   },
@@ -53,18 +57,20 @@ export default {
     this.$bus.$on('midi:pitchWheel', this.pitchWheel);
     this.$bus.$on('midi:polyPressure', this.polyPressure);
 
+    // this.outlets[0].data = null;
+
     window.addEventListener('keydown', (e) => {
       switch (e.code) {
-        case 'A':
+        case 'KeyA':
           this.noteOn(63, 127);
           break;
-        case 'S':
+        case 'KeyS':
           this.noteOn(65, 127);
           break;
-        case 'D':
+        case 'KeyD':
           this.noteOn(66, 127);
           break;
-        case 'F':
+        case 'KeyF':
           this.noteOn(68, 127);
           break;
 
@@ -72,13 +78,21 @@ export default {
           break;
       }
     });
+
+    console.log('Creating NoteIn');
   },
 
   methods: {
     noteOn(note, velocity) {
       console.log('note in:', note, velocity);
+      this.outlets[0].data = note;
+      this.outlets[1].data = velocity;
     },
-    noteOff(note) {},
+    noteOff(note) {
+      console.log('note off:', note);
+      // this.outlets[0].data = note;
+      this.outlets[1].data = 0;
+    },
     controller(note, velocity) {},
     pitchWheel(data) {},
     polyPressure(note, velocity) {}

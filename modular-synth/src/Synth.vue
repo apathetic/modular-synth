@@ -68,20 +68,6 @@
 
         <midi></midi>
 
-
-        <!-- <button class="button" @click="newModule('Node')">Node</button>
-        <button class="button" @click="newModule('LFO')">LFO</button>
-        <button class="button" @click="newModule('Env')">env</button>
-        <button class="button" @click="newModule('Reverb')">reverb</button>
-        <button class="button" @click="newModule('VCF')">filter</button>
-        <button class="button" @click="newModule('VCO')">osc</button>
-        <button class="button" @click="newModule('Analyser')">analyser</button>
-        <button class="button" @click="newModule('Comb')">comb</button>
-        <button class="button" @click="newModule('Mixer')">mixer</button>
-        <button class="button" @click="newModule('multiply')">multiply</button>
-        <button class="button" @click="newModule('NoteIn')">note-in</button>
-        <button class="button" @click="newModule('Signal')">signal</button> -->
-
         <br>
 
         <!-- <button
@@ -221,7 +207,7 @@
             this.sorting = true;
             break;
           default:
-            console.log(e.code);
+            // console.log(e.code);
         }
       });
 

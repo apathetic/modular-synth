@@ -67,15 +67,14 @@ export default {
       x: 0,
       y: 0,
       gain: 0.5,
-      // power: false,
       isMuted: false,
       inlets: [
         {
-          label: 'out-1',
-          data: null
+          label: 'out-1'
+          // data: null
         }, {
-          label: 'out-2',
-          data: null
+          label: 'out-2'
+          // data: null
         }
       ]
     };
@@ -85,8 +84,8 @@ export default {
     this.out1 = this.context.createGain();
     this.out2 = this.context.createGain();
 
-    this.inlets[0].data = this.out1;
-    this.inlets[1].data = this.out2;
+    this.inlets[0].audio = this.out1;
+    this.inlets[1].audio = this.out2;
 
     // this.$bus.$on('audio:start', this.start);
     // this.$bus.$on('audio:stop', this.stop);
