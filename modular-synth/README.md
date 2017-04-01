@@ -45,6 +45,7 @@ npm test
   - create server that spits out OSC notes, 24/7. Different
     styles / genres depending on time of day (like a radio
     station). Then, hook Note-In up to it.
+    ... or, every port is a different thing: disco inferno (on :8000), aleatoric wackiness (on :8001), etc
 
 - VUEX
   - remove FOCUS from vuex --> move to BUS
