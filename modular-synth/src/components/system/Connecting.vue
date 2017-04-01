@@ -70,7 +70,10 @@ export default {
 
         this.to = this.$store.state.modules.find(function(module) { return module.id === focused; });
 
-        if (this.to.id !== this.from.id) {          // if not circular connection
+        if (
+            this.to.id !== this.from.id &&          // if not circular connection
+            1                                       // TODO and is not a duplicated connection
+        ) {
           this.$store.commit('ADD_CONNECTION', {
             to: {
               id: this.to.id,

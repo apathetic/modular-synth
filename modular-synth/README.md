@@ -114,6 +114,7 @@ npm test
   - rename "data" to "audio" or "signal" or '~'
   - ~~reconcile "connector" name and "connection"~~
   - connecting to an outlet, connects to the inlet (ie. app doesn't distinguish between these -- just ID and port)
+    - also, don't add cnx if already there (ie. non-duplicated)
 
 
 ---------------
