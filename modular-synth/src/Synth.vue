@@ -116,6 +116,7 @@
   import NoteIn from './components/NoteIn';
   import Signal from './components/Signal';
   import VCO from './components/VCO';
+  import VCA from './components/VCA';
   import Reverb from './components/Reverb';
 
   import connecting from './components/system/Connecting';
@@ -140,6 +141,7 @@
       LFO,
       VCF,
       VCO,
+      VCA,
       Analyser,
       Comb,
       Mixer,
