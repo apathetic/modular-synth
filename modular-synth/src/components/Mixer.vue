@@ -37,33 +37,33 @@ export default {
 
       inlets: [
         {
-          label: 'in-1',
-          data: null
+          label: 'in-1'
+          // audio: null
         }, {
-          label: 'in-2',
-          data: null
+          label: 'in-2'
+          // audio: null
         }, {
-          label: 'in-3',
-          data: null
+          label: 'in-3'
+          // audio: null
         }, {
-          label: 'in 4',
-          data: null
+          label: 'in 4'
+          // audio: null
         }, {
-          label: 'in-5',
-          data: null
+          label: 'in-5'
+          // audio: null
         }, {
-          label: 'in-6',
-          data: null
+          label: 'in-6'
+          // audio: null
         }
       ],
 
       outlets: [
         {
-          label: 'out-1',
-          data: null
+          label: 'out-1'
+          // audio: null
         }, {
-          label: 'out-2',
-          data: null
+          label: 'out-2'
+          // audio: null
         }
       ]
     };
@@ -71,24 +71,24 @@ export default {
 
   mounted() {
     // inputs
-    this.inlets[0].data = this.context.createGain();
-    this.inlets[1].data = this.context.createGain();
-    this.inlets[2].data = this.context.createGain();
-    this.inlets[3].data = this.context.createGain();
-    this.inlets[4].data = this.context.createGain();
-    this.inlets[5].data = this.context.createGain();
+    this.inlets[0].audio = this.context.createGain();
+    this.inlets[1].audio = this.context.createGain();
+    this.inlets[2].audio = this.context.createGain();
+    this.inlets[3].audio = this.context.createGain();
+    this.inlets[4].audio = this.context.createGain();
+    this.inlets[5].audio = this.context.createGain();
 
     // outputs
-    this.outlets[0].data = this.context.createGain();
-    this.outlets[1].data = this.context.createGain();
+    this.outlets[0].audio = this.context.createGain();
+    this.outlets[1].audio = this.context.createGain();
 
     // connectify
-    this.inlets[0].data.connect(this.outlets[0].data);
-    this.inlets[1].data.connect(this.outlets[1].data);
-    this.inlets[2].data.connect(this.outlets[0].data);
-    this.inlets[3].data.connect(this.outlets[1].data);
-    this.inlets[4].data.connect(this.outlets[0].data);
-    this.inlets[5].data.connect(this.outlets[1].data);
+    this.inlets[0].audio.connect(this.outlets[0].audio);
+    this.inlets[1].audio.connect(this.outlets[1].audio);
+    this.inlets[2].audio.connect(this.outlets[0].audio);
+    this.inlets[3].audio.connect(this.outlets[1].audio);
+    this.inlets[4].audio.connect(this.outlets[0].audio);
+    this.inlets[5].audio.connect(this.outlets[1].audio);
   }
 };
 </script>

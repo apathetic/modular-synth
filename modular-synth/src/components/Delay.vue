@@ -47,21 +47,21 @@ export default {
 
       inlets: [
         {
-          label: 'in-1',
-          data: null
+          label: 'in-1'
+          // audio: null
         }, {
-          label: 'in-2',
-          data: null
+          label: 'in-2'
+          // audio: null
         }
       ],
 
       outlets: [
         {
-          label: 'out-1',
-          data: null
+          label: 'out-1'
+          // audio: null
         }, {
-          label: 'out-2',
-          data: null
+          label: 'out-2'
+          // audio: null
         }
       ]
     };
@@ -69,14 +69,15 @@ export default {
 
   created() {
     // inputs
-    this.inlets[0].data = this.context.createGain();
-    this.inlets[1].data = this.context.createGain();
+    this.inlets[0].audio = this.context.createGain();
+    this.inlets[1].audio = this.context.createGain();
+
+    this.delay = this.context.createDelayNode();
 
     // outputs
-    this.outlets[0].data = this.context.createGain();
-    this.outlets[1].data = this.context.createGain();
+    this.outlets[0].audio = this.inlets[0].audio;
+    this.outlets[1].audio = this.inlets[0].audio;
 
-		this.delay = this.context.createDelayNode();
   }
 };
 

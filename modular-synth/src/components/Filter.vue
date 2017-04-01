@@ -42,8 +42,6 @@ export default {
   data() {
     return {
       name: 'Filter',
-      w: 1, // rack width
-      // h: 1, // rack height
 
       freq: 440,
       type: 'allpass',
@@ -52,18 +50,18 @@ export default {
 
       inlets: [
         {
-          label: 'input',
-          data: null
+          label: 'input'
+          // audio: null
         }, {
-          label: 'freq',
-          data: null // this.input
+          label: 'freq'
+          // audio: null // this.input
         }
       ],
 
       outlets: [
         {
-          label: 'output',
-          data: null
+          label: 'output'
+          // audio: null
         }
       ]
     };
@@ -75,8 +73,8 @@ export default {
     this.filter.frequency.value = this.freq;
     this.filter.Q.value = this.Q;
 
-    this.inlets[0].data = this.filter;
-    this.outlets[0].data = this.filter;
+    this.inlets[0].audio = this.filter;
+    this.outlets[0].audio = this.filter;
 
     this.$watch('freq', this.setFreq);
     this.$watch('Q', this.setQ);

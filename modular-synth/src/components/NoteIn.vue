@@ -36,9 +36,12 @@ export default {
       received: '',
       outlets: [
         {
-          label: 'output',
-          data: null
+          label: 'pitch'
+        },
+        {
+          label: 'pitch'
         }
+
       ]
     };
   },
