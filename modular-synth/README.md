@@ -146,9 +146,11 @@ NOTES:
   - in
   - out
 - data types
-  - mod (A, B, FM?)
-  - pitch (freq?)
-  - triggers or bangs:
+  - audioParam
+    - pitch / freq
+    - mod (A, B, FM?)
+  - control data
+  - triggers or bangs (events?):
     - gate
     - reset (more for sequencing)
     - sync (ie. phase)
@@ -160,15 +162,15 @@ NOTES:
   - ~~MULT~~
   - ENV
   - ~~OSC~~
-  - LFO
+  - ~~LFO~~
   - FILT
+
+  - vca
 
 
 - FX
   - reverb
   - delay
-  - vca
-  - lfo
 
 
 - clock

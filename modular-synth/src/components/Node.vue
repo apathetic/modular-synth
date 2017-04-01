@@ -45,28 +45,28 @@
         name: 'Node',
         inlets: [
           {
-            label: 'freq',
-            data: null // this.input
+            label: 'freq'
+            // audio: null // this.input
           },
           {
-            label: 'gain',
-            data: null // this.input
+            label: 'gain'
+            // audio: null // this.input
           },
           {
-            label: 'range',
-            data: null // this.input
+            label: 'range'
+            // audio: null // this.input
           }
         ],
 
         outlets: [
           {
-            label: 'output-1',
-            data: null // this.outputL   // src?
+            label: 'output-1'
+            // audio: null // this.outputL   // src?
           },
           {
             // port: 1,
-            label: 'output-2',
-            data: null // this.outputR
+            label: 'output-2'
+            // audio: null // this.outputR
           }
         ]
       };
@@ -74,10 +74,10 @@
 
     created() {
       // dummy outlet for test
-      this.inlets[0].data = this.context.createGain();
+      this.inlets[0].audio = this.context.createGain();
 
-      this.outlets[0].data = this.context.createGain();
-      this.outlets[1].data = this.context.createGain();
+      this.outlets[0].audio = this.context.createGain();
+      this.outlets[1].audio = this.context.createGain();
 
       console.log('Creating Node');
     }

@@ -38,8 +38,8 @@
         name: 'Signal',
         outlets: [
           {
-            label: 'output',
-            data: null
+            label: 'output'
+            // audio: null
           }
         ]
       };
@@ -65,7 +65,7 @@
 
 
 
-      this.outlets[0].data = this.gain = context.createGain();
+      this.outlets[0].audio = this.gain = context.createGain();
       // this.inlets[0] = this.gain.gain;
       constant.connect(this.gain);
 

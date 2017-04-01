@@ -45,8 +45,6 @@ export default {
   data() {
     return {
       name: 'LFO',
-      w: 1, // rack width
-      h: 1, // rack height
       freq: 2.0,
       min: 0.1,
       max: 10,
@@ -55,29 +53,21 @@ export default {
       types: ['sine', 'square', 'sawtooth', 'triangle'],
       inlets: [
         {
-          label: 'gate',    // mod?
-          data: null
+          label: 'mod'
+          // audio: null
         }
       ],
       outlets: [
         {
-          label: 'output',
-          data: null
+          label: 'output'
+          // audio: null
         }
       ]
     };
   },
 
   created() {
-    // const osc = this.context.createOscillator();
-    //
-    // this.outlets[0].data = osc;
-    // osc.type = this.type;
-    // osc.frequency.value = this.freq;
-    // osc.start();
-
-
-    this.outlets[0].data = this.osc = this.context.createOscillator();
+    this.outlets[0].audio = this.osc = this.context.createOscillator();
 
     this.osc.type = this.type;
     this.osc.frequency.value = this.freq;
@@ -93,12 +83,10 @@ export default {
   methods: {
     setFreq(f) {
       this.osc.frequency.value = f;
-      // this.outlets[0].data.frequency.value = f;
     },
 
     setType(t) {
       this.osc.type = t;
-      // this.outlets[0].data.type = t;
     }
   }
 };

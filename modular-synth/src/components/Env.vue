@@ -61,8 +61,8 @@ export default {
 
       outlets: [
         {
-          label: 'out',
-          data: null
+          label: 'out'
+          // audio: null
         }
       ]
     };
