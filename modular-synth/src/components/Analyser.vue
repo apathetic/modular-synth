@@ -53,8 +53,8 @@
 
     created() {
       this.analyser = this.inlets[0].audio = this.context.createAnalyser();
-      this.analyser.fftSize = 32; // 1024;
-      this.analyser.maxDecibels = 0;
+      this.analyser.fftSize = 64; // 1024;
+      this.analyser.maxDecibels = -30;
       this.analyser.minDecibels = -100;
 
       this._buffer = new Float32Array(this.analyser.frequencyBinCount);
@@ -96,26 +96,26 @@
             //   }
           // }
         }
-        // return this._buffer;
       },
 
       // renderSpectrum
       render() {
         const values = this._buffer;
+        const length = values.length;
         const canvasWidth = this.visualizer.canvas.width;
         const canvasHeight = this.visualizer.canvas.height;
-        // const barWidth = canvasWidth / this.analyser.fftSize;
-        const barWidth = canvasWidth / values.length;
+        const barWidth = canvasWidth / length;
 
         this.visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
 
-        for (let i = 0, len = values.length; i < len; i++) {
-          const val = values[i] / 255 * -1;
-          const x = canvasWidth * (i / len);
-          const y = val * canvasHeight;
+        for (let i = 0, x = 0; i < length; i++) {
+          const val = values[i] + 140; // why 140? no idea. Came from Mozilla docs
 
-          this.visualizer.fillStyle = 'rgba(0, 222, 0, ' + val + ')';
-          this.visualizer.fillRect(x, canvasHeight - y, barWidth, canvasHeight);
+          this.visualizer.fillStyle = 'rgba(0, 222, 0, ' + val / 140 + ')';
+          // this.visualizer.fillStyle = 'rgb(0, 222, 0)';
+          this.visualizer.fillRect(x, canvasHeight - val, barWidth, val);
+
+          x += barWidth + 1;
         }
       },
 

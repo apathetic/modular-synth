@@ -135,12 +135,6 @@ h4 {
   flex: 1;
 }
 
-.power {
-  text-align: center;
-}
-
-
-
 
 /* --------------------------------
    Buttons
@@ -226,6 +220,8 @@ button {
 .edit-mode .edit { color: #fff; }
 
 .power {
+  text-align: center;
+
   svg {
     width: 4em;
     height: 4em;
@@ -233,7 +229,7 @@ button {
     filter: drop-shadow(0 0px 1px rgba(153, 229, 163, 0.2));
   }
 
-  &.on {
+  .on {
     svg {
       fill: $color-green;
       filter: drop-shadow(0 0px 4px rgba(153, 229, 163, 0.4));
