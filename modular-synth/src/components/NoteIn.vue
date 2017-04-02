@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { signal } from '../audio';
 import { draggable } from '../mixins/draggable';
 
 export default {
