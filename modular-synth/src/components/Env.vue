@@ -29,6 +29,8 @@
 
 
 <script>
+import { signal } from '../audio';
+
 import { draggable } from '../mixins/draggable';
 import Knob from './UI/Knob';
 
@@ -46,7 +48,7 @@ export default {
       name: 'Env',
       'A': 0.1,
       'D': 0.1,
-      'S': 0.1,
+      'S': 0.6,
       'R': 0.1,
 
       inlets: [
