@@ -6,6 +6,7 @@
 
     <h3>New Module:</h3>
     <ul>
+      <!-- <li v-for="module in modules" @click="newModule(module)">{{ module }}</li> -->
       <li @click="newModule('Node')">Node</li>
       <li @click="newModule('LFO')">LFO</li>
       <li @click="newModule('Env')">env</li>
