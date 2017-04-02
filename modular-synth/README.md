@@ -21,6 +21,12 @@ npm test
 
 ## TODO
 
+- non-audio connections
+  - noteIn -> Env -> OSC -> out
+- webworker for Meter
+
+
+
 - General
   - ~~saving patches~~
     - ~~add firebase~~

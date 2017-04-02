@@ -161,7 +161,6 @@
       padding: 0;
     }
     canvas {
-      // background: rgba(0,222,0, 0.2);
       height: 222px;
       width: 356px;
       display: block;
