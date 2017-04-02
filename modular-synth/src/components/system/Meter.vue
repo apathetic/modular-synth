@@ -71,7 +71,6 @@ export default {
       return Math.sqrt(val);
     },
 
-
     drawMeter() {
       var level = meter.value * 0.8; //scale it since values go above 1 when clipping
       meterContext.clearRect(0, 0, canvasWidth, canvasHeight);
