@@ -17,8 +17,8 @@
         min="0"
         max="1"
         step="0.1"
-        :value="gain"
-        @input="update">
+        v-model="gain"
+        >
       </input>
 
       <!-- <button
@@ -84,7 +84,7 @@ export default {
     });
 
     this.$watch('gain', this.setGain);
-    this.$watch('isMuted', () => { this.setGain(this.gain); });
+    // this.$watch('isMuted', () => { this.setGain(this.gain); });
 
     console.log('Creating MasterOut');
   },
@@ -107,19 +107,23 @@ export default {
       this.out2.disconnect(this.context.destination);
     },
 
-    update(e) {
-      this.gain = e.target.value;
-      this.setGain(this.gain);    // TODO a nice audioRamp
-    },
+    // update(e) {
+    //   this.gain = e.target.value;
+    //   this.setGain(this.gain);    // TODO a nice audioRamp
+    // },
 
     setGain(g) {
-      this.out1.gain.value = this.isMuted ? 0 : g;
-      this.out2.gain.value = this.isMuted ? 0 : g;
+      console.log(g);
+      this.out1.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
+      this.out2.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
+
+      // this.out1.gain.value = this.isMuted ? 0 : g;
+      // this.out2.gain.value = this.isMuted ? 0 : g;
     },
 
-    toggleMute() {
-      this.isMuted = !this.isMuted;
-    },
+    // toggleMute() {
+    //   this.isMuted = !this.isMuted;
+    // },
 
     determinePosition() {
       const x = this.$el.getBoundingClientRect().left;  // relative to viewport
