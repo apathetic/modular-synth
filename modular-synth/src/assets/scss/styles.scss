@@ -123,17 +123,21 @@ h4 {
   }
 }
 
-#controls {
+#sidebar {
+  display: flex;
+  flex-direction: column;
   flex-basis: 112px;
   background-color: #333; // #999;
   z-index: 9999;          // as nodes will increment their z-index
-
-  .button {
-    font-size: 1em;
-  }
 }
 
+.controls {
+  flex: 1;
+}
 
+.power {
+  text-align: center;
+}
 
 
 
@@ -150,7 +154,6 @@ button {
   color: white;
   cursor: pointer;
   display: inline-block;
-  margin-bottom: 1em;
   outline: none;
 
   &:focus {
@@ -160,6 +163,7 @@ button {
 
 .button {
   background-color: #54bfff;
+  margin-bottom: 1em;
   padding: 0.5em 1em;
 
   &:hover {
@@ -178,19 +182,20 @@ button {
   }
 }
 
-.toggle {
-  background-color: #999;  // inactive
-  padding: 0.5em 1em;
-
-  &--active {
-    background-color: #54bfff;
-  }
-}
+// .toggle {
+//   background-color: #999;  // inactive
+//   padding: 0.5em 1em;
+//
+//   &--active {
+//     background-color: #54bfff;
+//   }
+// }
 
 .mode {
   border: 1px solid #333;
   box-shadow: inset 0 0.2em 0.6em rgba(0, 0, 0, 0.3);
   background: #555;
+  margin-bottom: 1em;
 
   span {
     display: inline-block;
