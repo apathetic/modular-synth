@@ -71,35 +71,13 @@ export default {
   },
 
   created() {
-    // Generate (mono) buffer with 2 samples
-    const buffer = this.context.createBuffer(1, 2, this.context.sampleRate);
-    const source = this.context.createBufferSource();
-
-    // set each sample to 1
-    buffer.getChannelData(0)[0] = 1;
-    buffer.getChannelData(0)[1] = 1;
-
-    // var data = buffer.getChannelData(0);
-    // data[0] = 1;
-    // data[1] = 1;
-    //
-    // bind source for the buffer, looping it
-    source.buffer = buffer;
-    source.loop = true;
-
-    this.voltage = this.generateSignal();// source;
-
-
-    // this._sig = this.output = new Tone.TimelineSignal();
-    // this._sig.setValueAtTime(0, 0);
-
-
+    this.voltage = signal;
 
     // this.inlets[0].data = this.gate;
     // this.inlets[1].data = function() {};  // mod?
 
-    this.adsr = this.context.createGain();
-    this.outlets[0].audio = this.adsr;
+    // this.outlets[0].audio = this.adsr = this.context.createGain();
+    // this.voltage.connect(this.adsr);
 
     this.$watch('A', this.setAttack);
     this.$watch('D', this.setDecay);
@@ -114,76 +92,42 @@ export default {
       console.log('ENV', velocity);
     },
 
-    generateSignal() {
-      // --------- taken from from Tone.js  -----------
-      // const context = this.context;
-      // const constant = context.createBufferSource();
-      // const buffer = context.createBuffer(1, 128, context.sampleRate);
-      // const arr = buffer.getChannelData(0);
-      //
-      // for (let i = 0; i < arr.length; i++) {
-      //   arr[i] = 1;
-      // }
-      //
-      // constant.channelCount = 1;
-      // constant.channelCountMode = 'explicit';
-      // constant.buffer = buffer;
-      // constant.loop = true;
-      // constant.start(0);
+    // start(when) {
+    //   var attackRampMethodName = this._getRampMethodName('attack');
+    //   var decayRampMethodName = this._getRampMethodName('decay');
+    //
+    //   var attackStartsAt = when + this.settings.delayTime;
+    //   var attackEndsAt = attackStartsAt + this.settings.attackTime;
+    //   var decayStartsAt = attackEndsAt + this.settings.holdTime;
+    //   var decayEndsAt = decayStartsAt + this.settings.decayTime;
+    //   var attackStartLevel = (attackRampMethodName === 'exponentialRampToValueAtTime') ? 0.001 : 0;
+    //
+    //   this.adsr.gain.setValueAtTime(attackStartLevel, when);
+    //   this.adsr.gain.setValueAtTime(attackStartLevel, attackStartsAt);
+    //   this.adsr.gain[attackRampMethodName](1, attackEndsAt);
+    //   this.adsr.gain.setValueAtTime(1, decayStartsAt);
+    //   this.adsr.gain[decayRampMethodName](this.settings.sustainLevel, decayEndsAt);
+    //
+    //   this.source.start(when);
+    // },
 
-      // vs
-
-      // Generate (mono) buffer with 2 samples
-      const buffer = this.context.createBuffer(1, 2, this.context.sampleRate);
-      const source = this.context.createBufferSource();
-
-      // set each sample to 1
-      buffer.getChannelData(0)[0] = 1;
-      buffer.getChannelData(0)[1] = 1;
-
-      // var data = buffer.getChannelData(0);
-      // data[0] = 1;
-      // data[1] = 1;
-      //
-      // bind source for the buffer, looping it
-      source.buffer = buffer;
-      source.loop = true;
-    },
-
-    start(when) {
-      var attackRampMethodName = this._getRampMethodName('attack');
-      var decayRampMethodName = this._getRampMethodName('decay');
-
-      var attackStartsAt = when + this.settings.delayTime;
-      var attackEndsAt = attackStartsAt + this.settings.attackTime;
-      var decayStartsAt = attackEndsAt + this.settings.holdTime;
-      var decayEndsAt = decayStartsAt + this.settings.decayTime;
-      var attackStartLevel = (attackRampMethodName === 'exponentialRampToValueAtTime') ? 0.001 : 0;
-
-      this.adsr.gain.setValueAtTime(attackStartLevel, when);
-      this.adsr.gain.setValueAtTime(attackStartLevel, attackStartsAt);
-      this.adsr.gain[attackRampMethodName](1, attackEndsAt);
-      this.adsr.gain.setValueAtTime(1, decayStartsAt);
-      this.adsr.gain[decayRampMethodName](this.settings.sustainLevel, decayEndsAt);
-
-      this.source.start(when);
-    },
-
-    envGenOn(vcaGain, a, d, s) {
+    start() {
       const now = this.context.currentTime;
+      const adsr = this.adsr.gain;
 
-      vcaGain.cancelScheduledValues(0);
-      vcaGain.setValueAtTime(0, now);
-      vcaGain.linearRampToValueAtTime(1, now + a);
-      vcaGain.linearRampToValueAtTime(s, now + a + d);
+      adsr.cancelScheduledValues(0);
+      adsr.setValueAtTime(0, now);
+      adsr.linearRampToValueAtTime(1, now + this.A);
+      adsr.linearRampToValueAtTime(this.S, now + this.A + this.D);
     },
 
-    envGenOff(vcaGain, r) {
+    stop() {
       const now = this.context.currentTime;
+      const adsr = this.adsr.gain;
 
-      vcaGain.cancelScheduledValues(0);
-      vcaGain.setValueAtTime(vcaGain.value, now);
-      vcaGain.linearRampToValueAtTime(0, now + r);
+      adsr.cancelScheduledValues(0);
+      adsr.setValueAtTime(adsr.value, now);
+      adsr.linearRampToValueAtTime(0, now + this.R);
     }
   }
 };
