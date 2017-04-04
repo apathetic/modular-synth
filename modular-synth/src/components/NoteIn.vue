@@ -65,7 +65,7 @@ export default {
     this.$bus.$on('midi:polyPressure', this.polyPressure);
 
     this.outlets[0].data = signal; // this.note; // HERE, wes
-    this.outlets[0].data = this.velocity;
+    this.outlets[1].data = this.velocity;
 
     window.addEventListener('keydown', (e) => {
       switch (e.code) {

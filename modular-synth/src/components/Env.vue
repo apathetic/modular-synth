@@ -76,7 +76,7 @@ export default {
     // this.inlets[0].data = this.gate;
     // this.inlets[1].data = function() {};  // mod?
 
-    // this.outlets[0].audio = this.adsr = this.context.createGain();
+    this.outlets[0].audio = this.adsr = this.context.createGain();
     // this.voltage.connect(this.adsr);
 
     this.$watch('A', this.setAttack);
