@@ -72,7 +72,7 @@ export default {
 
         if (
             this.to.id !== this.from.id &&          // if not circular connection
-            1                                       // TODO and is not a duplicated connection
+            1                                       // to.port .... TODO and is not a duplicated connection
         ) {
           this.$store.commit('ADD_CONNECTION', {
             to: {

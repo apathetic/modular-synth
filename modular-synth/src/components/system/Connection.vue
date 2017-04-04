@@ -44,7 +44,7 @@ Other notes:
     :y1="y1"
     :x2="x2"
     :y2="y2"
-    stroke="white"
+    :stroke="(type === 'audio') ? 'yellow' : 'white'"
     stroke-width="3">
   </line>
 </template>
@@ -77,6 +77,7 @@ export default {
 
   data() {                // reference to actual modules in the App:
     return {
+      type: '',           // audio or data
       fromModule: {},     // will be a Vue Component
       toModule: {},       // will be a Vue Component
       cursorX: false,
@@ -102,49 +103,45 @@ export default {
      * @return {Void}
      */
     route(connect = true) {
-      const outlets = this.fromModule.outlets;
-      const inlets = this.toModule.inlets;
+      const from = this.fromModule.outlets[this.from.port];
+      const to = this.toModule.inlets[this.to.port];
 
-      if (inlets && outlets) {
-        //
-        // AUDIO
-        //
-        if (outlets[this.from.port].audio) {
-          try {
-            const source = outlets[this.from.port].audio;
-            const destination = inlets[this.to.port].audio;
+      if (to && from) {
+        try {
+          if (to.audio && from.audio) {
+            //
+            // AUDIO
+            //
+            this.type = 'audio';
+            const source = to.audio;
+            const destination = from.audio;
 
             // mmm, maybe brittle. try:   if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
             (connect) ? source.connect(destination) : source.disconnect(destination);
-          } catch (e) {
-            console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
-            console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
-          }
+          } else if (to.data && from.data) {
+            //
+            // DATA
+            //
+            this.type = 'data';
+            const sender = from.data;
+            const receiver = to.data;
 
-        //
-        // DATA
-        //
-        } else if (outlets[this.from.port].data) {
-          console.log('ddd');
-          try {
-            const sender = outlets[this.from.port].data;
-            const receiver = inlets[this.to.port].data;
-
-            console.log(this.toModule);
-            receiver.data(1234);
+            // console.log(this.toModule);
+            // receiver.data(1234);
 
             this.toModule.$watch(sender.data, receiver.data);
-          } catch (e) {
-            console.log('connect fail', e);
+          } else {
+            console.log('input / output mismatch. #%s (port %d) -> #%s (port %d)', this.from.id, this.from.port, this.to.id, this.to.port);
+            // this.removeConnection(this.id);
           }
-
-          //
-        } else {
-          console.log('Connection error: no audio or data to connect. From module %s, outlet %d', this.from.id, this.from.port);
+        } catch (e) {
+          console.log('Audio dis/connect error. #%s (port %d) -> #%s (port %d)', this.from.id, this.from.port, this.to.id, this.to.port);
+          // console.log(e);
         }
+      }
+
       // } else {
       //   console.log('Connection error: no inlets/outlets. Is the module in the DOM?');
-      }
     },
 
     /**

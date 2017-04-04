@@ -11,6 +11,8 @@
       <!-- < l evel :audio="out1"></level>
       < l evel :audio="out2"></level> -->
 
+      <!-- <canvas ref="meter"></canvas> -->
+
       <input
         type="range"
         orient="vertical"
@@ -37,11 +39,14 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import Level from '../UI/Level';
+// import { meter } from '../../mixins/meter';
+
+// import Level from '../UI/Level';
+// import { meter } from '../../audio';
 
 export default {
-  components: { Level },
-
+  // mixins: [meter],
+  // components: { Level },
   computed: {
     ...mapGetters([
       'power'
@@ -75,6 +80,8 @@ export default {
     this.inlets[0].audio = this.out1;
     this.inlets[1].audio = this.out2;
 
+    // this.meter = meter;
+
     this.$watch('power', (on) => {
       if (on) {
         this.start();
@@ -107,13 +114,7 @@ export default {
       this.out2.disconnect(this.context.destination);
     },
 
-    // update(e) {
-    //   this.gain = e.target.value;
-    //   this.setGain(this.gain);    // TODO a nice audioRamp
-    // },
-
     setGain(g) {
-      console.log(g);
       this.out1.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
       this.out2.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
 

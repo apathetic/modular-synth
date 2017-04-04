@@ -44,8 +44,6 @@
     data() {
       return {
         name: 'Oscillator',
-        // w: 2, // rack width.   Moved to dimensions.js
-        // h: 1, // rack height
 
         freq: 440,
         mod: 0,
@@ -61,11 +59,11 @@
             // audio: null,
           },
           {
-            label: 'sync'
+            label: 'mod-A'
             // audio: null,
           },
           {
-            label: 'mod-A'
+            label: 'sync'
             // audio: null,
           }
         ],
@@ -80,21 +78,16 @@
     },
 
     created() {
-      const gain = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
-      const osc = this.context.createOscillator();
+      this.inlets[1].audio = this.gain = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      this.outlets[0].audio = this.osc = this.context.createOscillator();
 
-      this.inlets[0].audio = gain;
-      this.outlets[0].audio = osc;
+      this.gain.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
 
-      gain.connect(osc.frequency);      // input connects to audioParam (freq) "mod"
+      this.osc.type = this.type;
+      this.osc.frequency.value = this.freq;
+      this.osc.start();
 
-      osc.type = this.type;
-      osc.frequency.value = this.freq;
-      osc.start();
-
-
-      // AudioParam for controlling mod, sync
-
+      // k-Param for controlling mod, sync
       this.$watch('freq', this.setFreq);
       this.$watch('mod', this.setGain);
       this.$watch('type', this.setType);
@@ -109,7 +102,7 @@
        */
       setFreq(f) {
         // this.node.frequency.value = f;
-        this.outlets[0].audio.frequency.value = f;
+        this.osc.frequency.value = f;
       },
 
       /**
@@ -117,8 +110,7 @@
        * @param  {String} t One of the pre-defined oscillator wave types
        */
       setType(t) {
-        // this.node.type = t;
-        this.outlets[0].audio.type = t;
+        this.osc.type = t;
       },
 
       /**
@@ -126,15 +118,8 @@
        * @param  {Float} g  Gain, between 0 and 1.
        */
       setGain(g) {
-        // this.gain.gain.value = g;
-        this.inlets[0].audio.gain.value = g;
+        this.gain.value = g;
       },
-
-
-      // Tone.Oscillator.prototype.syncFrequency = function(){
-      //   Tone.Transport.syncSignal(this.frequency);
-      //   return this;
-      // };
 
       /**
        * The phase of the oscillator in degrees.

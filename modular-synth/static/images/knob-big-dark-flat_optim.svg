@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 146.104 132.104">
+  <defs>
+    <path id="a" d="M-118.35 242.328h792v-612h-792"/>
+  </defs>
+  <clipPath id="b">
+    <use xlink:href="#a" overflow="visible"/>
+  </clipPath>
+  <g clip-path="url(#b)">
+    <defs>
+      <path id="c" d="M-118.35-369.672h792v612h-792"/>
+    </defs>
+    <clipPath id="d">
+      <use xlink:href="#c" overflow="visible"/>
+    </clipPath>
+    <path d="M123.403 123.403c12.886-12.886 20.856-30.688 20.856-50.35 0-39.327-31.88-71.208-71.21-71.208S1.845 33.725 1.845 73.052c0 18.473 7.034 35.303 18.57 47.956" clip-path="url(#d)" fill="none" stroke="#6D6E71" stroke-width="3.691" stroke-miterlimit="10"/>
+    <path d="M31.296 114.81c23.06 23.06 60.452 23.06 83.513 0 23.06-23.062 23.06-60.452 0-83.514-23.066-23.06-60.457-23.06-83.518 0-23.06 23.06-23.06 60.452 0 83.514" clip-path="url(#d)" fill="#6D6E71"/>
+    <path d="M37.464 109.09c19.78 19.778 51.846 19.778 71.625 0 19.773-19.78 19.773-51.847 0-71.626-19.78-19.777-51.85-19.777-71.63 0-19.778 19.78-19.778 51.847 0 71.625" clip-path="url(#d)" fill="#939598"/>
+    <path clip-path="url(#d)" fill="none" stroke="#E6E7E8" stroke-width="3.691" stroke-miterlimit="10" d="M37.464 37.465L51.74 51.74"/>
+  </g>
+</svg>
