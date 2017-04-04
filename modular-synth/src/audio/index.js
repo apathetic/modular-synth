@@ -1,6 +1,10 @@
 // base, extracted audio stuffs.
 //
 
+/**
+ * The application's audio context.
+ * @type {AudioContext}
+ */
 export const context = window.AudioContext && (new window.AudioContext());
 
 //
@@ -29,29 +33,145 @@ export const context = window.AudioContext && (new window.AudioContext());
 //   };
 //
 
-export const signal = {
-  init() {
-    // Generate (mono) buffer with 2 samples
-    const source = this.context.createBufferSource();
-    const buffer = this.context.createBuffer(1, 2, this.context.sampleRate);
-    // const buffer = context.createBuffer(1, 128, context.sampleRate);
+/**
+ * Constant stream of 1's  at the audio-rate.
+ * Allows sample-accurate manipulation of a parameter, or a way to generate ASDRs.
+ * @type {Object}
+ */
+export function signal() {
+  // Generate (mono) buffer with 2 samples
+  const source = context.createBufferSource();
+  const buffer = context.createBuffer(1, 2, context.sampleRate);
+  // const buffer = context.createBuffer(1, 128, context.sampleRate);
 
-    // set each sample to 1
-    buffer.getChannelData(0)[0] = 1;
-    buffer.getChannelData(0)[1] = 1;
-    // for (let i = 0; i < buffer.length; i++) {
-    //   buffer.getChannelData(0)[i] = 1;
-    // }
+  // set each sample to 1
+  buffer.getChannelData(0)[0] = 1;
+  buffer.getChannelData(0)[1] = 1;
+  // for (let i = 0; i < buffer.length; i++) {
+  //   buffer.getChannelData(0)[i] = 1;
+  // }
 
+  source.channelCountMode = 'explicit';
+  source.channelCount = 1;
+  source.buffer = buffer;
+  source.loop = true;
 
-    source.channelCountMode = 'explicit';
-    source.channelCount = 1;
-    source.buffer = buffer;
-    source.loop = true;
+  source.start(0);
 
-    source.start(0);
-  }
+  // return source;
+  return context.createConstantSource(1);
 };
 
+/**
+ * Audio VU meter. Uses deprecated ScriptNode, tho'
+ * @param {[type]} audioContext [description]
+ * @param {[type]} clipLevel    [description]
+ * @param {[type]} averaging    [description]
+ * @param {[type]} clipLag      [description]
+ */
+export function audioMeter(audioContext, clipLevel, averaging, clipLag) {
+  const processor = audioContext.createScriptProcessor(512);
 
-export const stuffs = {};
+  processor.clipping = false;
+  processor.lastClip = 0;
+  processor.volume = 0;
+  processor.clipLevel = clipLevel || 0.98;
+  processor.averaging = averaging || 0.95;
+  processor.clipLag = clipLag || 750;
+
+  // ----------------------------- [wes] commented:
+  // this will have no effect, since we don't copy the input to the output,
+  // but works around a current Chrome bug.
+  // processor.connect(audioContext.destination);
+  // ---------------------------------------------
+
+  processor.onaudioprocess = function(event) {
+    var buf = event.inputBuffer.getChannelData(0);
+    var bufLength = buf.length;
+    var sum = 0;
+    var x;
+
+    // Do a root-mean-square on the samples: sum up the squares...
+    for (let i = 0; i < bufLength; i++) {
+      x = buf[i];
+      if (Math.abs(x) >= this.clipLevel) {
+        this.clipping = true;
+        this.lastClip = window.performance.now();
+      }
+      sum += x * x;
+    }
+
+    // ... then take the square root of the sum.
+    var rms = Math.sqrt(sum / bufLength);
+
+    // Now smooth this out with the averaging factor applied
+    // to the previous sample - take the max here because we
+    // want "fast attack, slow release."
+    this.volume = Math.max(rms, this.volume * this.averaging);
+  };
+
+  processor.checkClipping = function() {
+    if (!this.clipping) {
+      return false;
+    }
+    if ((this.lastClip + this.clipLag) < window.performance.now()) {
+      this.clipping = false;
+    }
+    return this.clipping;
+  };
+
+  processor.shutdown = function() {
+    this.disconnect();
+    this.onaudioprocess = null;
+  };
+
+  return processor;
+}
+
+
+
+/*
+//
+//
+//
+function setupNodeMessaging(node) {
+  // This handles communication back from the volume meter
+  node.onmessage = function(event) {
+    if (event.data instanceof Object) {
+      if (event.data.hasOwnProperty('clip')) {
+        this.clip = event.data.clip;
+      }
+      if (event.data.hasOwnProperty('volume')) {
+        this.volume = event.data.volume;
+      }
+    }
+  };
+
+  // Set up some default configuration parameters
+  node.postMessage({
+    'smoothing': 0.9,   // Smoothing parameter
+    'clipLevel': 0.9,   // Level to consider 'clipping'
+    'clipLag': 750,     // How long to keep 'clipping' lit up after clip (ms)
+    'updating': 100      // How frequently to update volume and clip param (ms)
+  });
+
+  // Set up volume and clip attributes.  These will be updated by our onmessage.
+  node.volume = 0;
+  node.clip = false;
+}
+
+var meter = null; // well.... that won't work as it's statically bound at runtime...
+// , vuFactory;
+context.createAudioWorker('workers/meter.js').then(function(factory) {
+  // cache 'factory' in case you want to create more nodes!
+  // vuFactory = factory;
+  meter = factory.createNode([1], []); // we don't need an output, and let's force to mono
+  setupNodeMessaging(meter);
+});
+
+// window.requestAnimationFrame( function(timestamp) {
+//   if (vuNode) {
+//   // Draw a bar based on vuNode.volume and vuNode.clip
+//   }
+// });
+*/

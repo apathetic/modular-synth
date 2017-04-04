@@ -9,7 +9,10 @@ module.exports = {
     'html'
   ],
   globals: {
-    'localStorage': true
+    'localStorage': true,
+    'Worker': true,
+    'URL': true,
+    'Blob': true
   },
 
   // check if imports actually resolve
