@@ -77,7 +77,6 @@ export default {
 
   data() {                // reference to actual modules in the App:
     return {
-      type: '',           // audio or data
       fromModule: {},     // will be a Vue Component
       toModule: {},       // will be a Vue Component
       cursorX: false,
@@ -118,30 +117,33 @@ export default {
 
             // mmm, maybe brittle. try:   if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
             (connect) ? source.connect(destination) : source.disconnect(destination);
-          } else if (to.data && from.data) {
-            //
-            // DATA
-            //
-            this.type = 'data';
-            const sender = from.data;
-            const receiver = to.data;
-
-            // console.log(this.toModule);
-            // receiver.data(1234);
-
-            this.toModule.$watch(sender.data, receiver.data);
-          } else {
-            console.log('input / output mismatch. #%s (port %d) -> #%s (port %d)', this.from.id, this.from.port, this.to.id, this.to.port);
-            // this.removeConnection(this.id);
+          } catch (e) {
+            console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
+            console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
           }
-        } catch (e) {
-          console.log('Audio dis/connect error. #%s (port %d) -> #%s (port %d)', this.from.id, this.from.port, this.to.id, this.to.port);
-          // console.log(e);
+
+        //
+        // DATA
+        //
+        // } else if (outlets[this.from.port].data) {
+          // console.log('ddd');
+          // try {
+          //   const sender = outlets[this.from.port].data;
+          //   const receiver = inlets[this.to.port].data;
+          //
+          //   console.log(this.toModule);
+          //   receiver.data(1234);
+          //
+          //   this.toModule.$watch(sender.data, receiver.data);
+          // } catch (e) {
+          //   console.log('connect fail', e);
+          // }
+
+          //
+        } else {
+          console.log('Connection error: no audio or data to connect. From module %s, outlet %d', this.from.id, this.from.port);
         }
       }
-
-      // } else {
-      //   console.log('Connection error: no inlets/outlets. Is the module in the DOM?');
     },
 
     /**
