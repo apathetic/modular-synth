@@ -38,28 +38,34 @@ export const context = window.AudioContext && (new window.AudioContext());
  * Allows sample-accurate manipulation of a parameter, or a way to generate ASDRs.
  * @type {Object}
  */
-export function signal() {
-  // Generate (mono) buffer with 2 samples
-  const source = context.createBufferSource();
-  const buffer = context.createBuffer(1, 2, context.sampleRate);
-  // const buffer = context.createBuffer(1, 128, context.sampleRate);
+let signals = {};  // memoize this shizz
+export function signal(value = 1) {
+  if (signals[value]) {
+    return signals[value];
+  } else {
+    // Generate (mono) buffer with 2 samples
+    const signal = context.createBufferSource();
+    const buffer = context.createBuffer(1, 2, context.sampleRate);
+    // const buffer = context.createBuffer(1, 128, context.sampleRate);
 
-  // set each sample to 1
-  buffer.getChannelData(0)[0] = 1;
-  buffer.getChannelData(0)[1] = 1;
-  // for (let i = 0; i < buffer.length; i++) {
-  //   buffer.getChannelData(0)[i] = 1;
-  // }
+    // set each sample to 1
+    buffer.getChannelData(0)[0] = value;    // 2 items, as Safari chokes on 1
+    buffer.getChannelData(0)[1] = value;
+    // for (let i = 0; i < buffer.length; i++) {
+    //   buffer.getChannelData(0)[i] = value;
+    // }
 
-  source.channelCountMode = 'explicit';
-  source.channelCount = 1;
-  source.buffer = buffer;
-  source.loop = true;
+    signal.channelCountMode = 'explicit';
+    signal.channelCount = 1;
+    signal.buffer = buffer;
+    signal.loop = true;
+    signal.start(0);
 
-  source.start(0);
+    signals[value] = signal;
 
-  // return source;
-  return context.createConstantSource(1);
+    return signal;
+    // return context.createConstantSource(1);  // one day
+  }
 };
 
 /**

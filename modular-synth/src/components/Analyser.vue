@@ -61,18 +61,19 @@
       this._type = 'FFT';
       this.ticking = true;
 
-      console.log('Creating Analyser');
-    },
-
-    mounted() {
-      this.visualizer = this.$refs.visualizer.getContext('2d');
-      this.$watch('power', (on) => {    // only $watch once the visualizer is ready
+      this.$watch('power', (on) => {
         if (on) {
           this.loop();
         } else {
           // set buffer to 0 and update display
         }
       });
+
+      console.log('Creating Analyser');
+    },
+
+    mounted() {
+      this.visualizer = this.$refs.visualization.getContext('2d');
     },
 
     methods: {
