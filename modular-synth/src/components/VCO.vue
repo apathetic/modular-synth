@@ -61,10 +61,6 @@
           {
             label: 'mod-A'
             // audio: null,
-          },
-          {
-            label: 'sync'
-            // audio: null,
           }
         ],
 
