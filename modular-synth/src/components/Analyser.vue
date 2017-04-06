@@ -10,7 +10,7 @@
     </div>
 
     <div class="module-interface">
-      <canvas ref="visualizer"></canvas>
+      <canvas ref="visualization"></canvas>
     </div>
 
     <div class="module-connections">
@@ -157,6 +157,8 @@
   @import '../assets/scss/variables.scss';
 
   .analyser {
+    overflow: hidden;
+
     .module-interface {
       padding: 0;
     }
