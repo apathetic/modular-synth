@@ -102,18 +102,17 @@ export default {
      * @return {Void}
      */
     route(connect = true) {
-      const from = this.fromModule.outlets[this.from.port];
-      const to = this.toModule.inlets[this.to.port];
+      const outlet = this.fromModule.outlets[this.from.port];
+      const inlet = this.toModule.inlets[this.to.port];
 
-      if (to && from) {
-        try {
-          if (to.audio && from.audio) {
-            //
-            // AUDIO
-            //
-            this.type = 'audio';
-            const source = to.audio;
-            const destination = from.audio;
+      if (inlet && outlet) {
+        if (inlet.audio && outlet.audio) {
+          //
+          // AUDIO
+          //
+          try {
+            const source = outlet.audio;
+            const destination = inlet.audio;
 
             // mmm, maybe brittle. try:   if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
             (connect) ? source.connect(destination) : source.disconnect(destination);
@@ -121,27 +120,26 @@ export default {
             console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
             console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
           }
+        } else if (inlet.hasOwnProperty('data') && outlet.hasOwnProperty('data')) {
+          //
+          // DATA
+          //
+          try {
+            const sender = outlet.data; // STRING OR FN
+            const receiver = inlet.data;
 
-        //
-        // DATA
-        //
-        // } else if (outlets[this.from.port].data) {
-          // console.log('ddd');
-          // try {
-          //   const sender = outlets[this.from.port].data;
-          //   const receiver = inlets[this.to.port].data;
-          //
-          //   console.log(this.toModule);
-          //   receiver.data(1234);
-          //
-          //   this.toModule.$watch(sender.data, receiver.data);
-          // } catch (e) {
-          //   console.log('connect fail', e);
-          // }
+            if (typeof receiver === 'function') {
+              // unwatch is a fn that removes itself
+              this.unwatch = this.fromModule.$watch(sender, receiver);
+            }
+          } catch (e) {
+            console.log('connect fail', e);
+          }
 
           //
         } else {
-          console.log('Connection error: no audio or data to connect. From module %s, outlet %d', this.from.id, this.from.port);
+          const type = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
+          console.log('Connection error: type mismatch (or undefined). From id %s (=> %d, %s)', this.from.id, this.from.port, type);
         }
       }
     },

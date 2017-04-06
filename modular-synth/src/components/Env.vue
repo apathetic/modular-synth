@@ -54,9 +54,9 @@ export default {
       inlets: [
         {
           label: 'gate',
-          data: this.gate
+          data: 999
         }, {
-          label: 'mod',
+          label: 'mod-A',
           data: null
         }
       ],
