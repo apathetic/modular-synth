@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { signal } from '../audio';
+// import { signal } from '../audio';
 import { draggable } from '../mixins/draggable';
 
 export default {
@@ -46,12 +46,10 @@ export default {
           data: 0
         },
         {
-          label: 'gate',
-          data: 0
+          label: 'gate'
         },
         {
-          label: 'bend',
-          data: 0
+          label: 'bend'
         }
       ]
     };
@@ -64,8 +62,8 @@ export default {
     this.$bus.$on('midi:pitchWheel', this.pitchWheel);
     this.$bus.$on('midi:polyPressure', this.polyPressure);
 
-    this.outlets[0].data = signal; // this.note; // HERE, wes
-    this.outlets[1].data = this.velocity;
+    this.outlets[0].data = 'note';  // string of the value to connect
+    this.outlets[1].data = 'velocity';
 
     window.addEventListener('keydown', (e) => {
       switch (e.code) {

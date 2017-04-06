@@ -24,7 +24,7 @@ const webAudioPlugin = (store) => {
   store.subscribe((mutation) => {
     if (mutation.type === 'LOAD_PATCH') {
       Vue.nextTick(function() {   // ensure nodes (+ inlets/outlets) are in the DOM
-        console.log('Nodes loaded, now routing audio...');
+        console.log('All modules loaded, now routing audio...');
         store.state.connections = JSON.parse(localStorage.getItem(LS_CONNECTIONS) || '[]');
       });
     }
