@@ -47,6 +47,17 @@ export default {
     ])
   },
 
+
+  // mounted() {
+  //   this.$refs.grid.addEventListener('contextmenu', (e) => {
+  //     e.preventDefault();
+  //
+  //     const y = e.pageY - document.querySelector('header').offsetHeight;
+  //
+  //     this.menuCoords = [e.pageX, y];
+  //   });
+  // },
+
   methods: {
     newModule(type) {
       this.$store.commit('ADD_MODULE', { type, coords: this.coords });

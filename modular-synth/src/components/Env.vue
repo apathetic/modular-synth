@@ -71,7 +71,7 @@ export default {
   },
 
   created() {
-    // this.inlets[0].data = this.gate;
+    this.inlets[0].data = this.gate;
     // this.inlets[1].data = function() {};  // mod?
 
     this.outlets[0].audio = this.adsr = this.context.createGain();
@@ -87,7 +87,11 @@ export default {
 
   methods: {
     gate(velocity) {
-      console.log('ENV', velocity);
+      if (velocity) {
+        this.start();
+      } else {
+        this.stop();
+      }
     },
 
     // start(when) {
@@ -107,7 +111,7 @@ export default {
     //   this.adsr.gain[decayRampMethodName](this.settings.sustainLevel, decayEndsAt);
     // },
 
-    start() {
+    start() {   // "trigger" ?
       const now = this.context.currentTime;
       const adsr = this.adsr.gain;
 
@@ -117,7 +121,7 @@ export default {
       adsr.linearRampToValueAtTime(this.S, now + this.A + this.D);
     },
 
-    stop() {
+    stop() {    // "release"
       const now = this.context.currentTime;
       const adsr = this.adsr.gain;
 
