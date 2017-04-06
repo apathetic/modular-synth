@@ -203,9 +203,10 @@
           case 'Tab':
             this.toggleEditMode();
             break;
-          // case 'Escape':
-          //   this.togglePower();
-          //   break;
+          case 'Escape':
+            this.menuCoords = [];
+            // this.togglePower();
+            break;
           case 'Space':
             // this.togglePlay();  // one day, if i plug in a timeline
             break;

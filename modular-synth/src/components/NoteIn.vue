@@ -39,6 +39,7 @@ export default {
       received: '',
       active: 0,
       note: 0,
+      freq: 0,
       velocity: 0,
       outlets: [
         {
@@ -49,7 +50,7 @@ export default {
           label: 'gate'
         },
         {
-          label: 'bend'
+          label: 'freq'
         }
       ]
     };
@@ -64,6 +65,7 @@ export default {
 
     this.outlets[0].data = 'note';  // string of the value to connect
     this.outlets[1].data = 'velocity';
+    this.outlets[2].data = 'freq';
 
     window.addEventListener('keydown', (e) => {
       switch (e.code) {
@@ -114,6 +116,7 @@ export default {
       // this.outlets[1].data = velocity;
       this.note = note;
       this.velocity = velocity;
+      this.freq = 440 * (Math.pow(2, ((note - 69) / 12)));
 
       this.active = note;
     },

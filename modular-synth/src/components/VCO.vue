@@ -79,7 +79,7 @@
 
     created() {
       // this.inlets[0].audio = this.temp;
-      this.inlets[0].data = this.temp;
+      this.inlets[0].data = this.setFreq;
 
       this.inlets[1].audio = this.gain = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
       this.outlets[0].audio = this.osc = this.context.createOscillator();
@@ -99,10 +99,6 @@
     },
 
     methods: {
-      temp(val) {
-        console.log('freq received ', val);
-      },
-
       /**
        * k-rate control of the Oscillator frequency
        * @param  {Float} f frequency
