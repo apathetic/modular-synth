@@ -110,10 +110,11 @@
   import Mixer from './components/Mixer';
   import Node from './components/Node';
   import NoteIn from './components/NoteIn';
-  import Signal from './components/Signal';
+  // import Signal from './components/Signal';
   import VCO from './components/VCO';
   import VCA from './components/VCA';
   import Reverb from './components/Reverb';
+  import Debugger from './components/Debugger';
 
   import connecting from './components/system/Connecting';
   import connection from './components/system/Connection';
@@ -139,11 +140,12 @@
       VCO,
       VCA,
       Analyser,
+      Debugger,
       Comb,
       Mixer,
       Node,
       NoteIn,
-      Signal,
+      // Signal,
       Reverb
     },
 
@@ -244,7 +246,6 @@
 
       this.$refs.grid.addEventListener('contextmenu', (e) => {
         e.preventDefault();
-
         const y = e.pageY - document.querySelector('header').offsetHeight;
 
         this.menuCoords = [e.pageX, y];
