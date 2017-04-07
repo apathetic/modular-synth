@@ -81,6 +81,9 @@ export default {
         case 'KeyF':
           this.noteOn(68, 127);
           break;
+        case 'KeyG':
+          this.noteOn(70, 127);
+          break;
 
         default:
           break;
@@ -100,6 +103,9 @@ export default {
           break;
         case 'KeyF':
           this.noteOff(68);
+          break;
+        case 'KeyG':
+          this.noteOff(70);
           break;
 
         default:

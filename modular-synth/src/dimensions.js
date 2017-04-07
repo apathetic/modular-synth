@@ -9,6 +9,7 @@ export const moduleSize = {
   'Clock': {},
   'Comb': [3, 1],
   'Compressor': {},
+  'Debugger': [1, 1],
   'Delay': {},
   'Env': [3, 1],
   'Filter': [2, 1],
