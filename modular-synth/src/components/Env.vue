@@ -75,6 +75,7 @@ export default {
     // this.inlets[1].data = function() {};  // mod?
 
     this.outlets[0].audio = this.adsr = this.context.createGain();
+    this.adsr.gain.value = 0;
     signal(1).connect(this.adsr);
 
     this.$watch('A', this.setAttack);

@@ -112,6 +112,7 @@
     height: $rackHeight;
     // transition: all $transition-time;
 
+    &._1U { width: #{$rackWidth * 1}; }
     &._2U { width: #{$rackWidth * 2}; }
     &._3U { width: #{$rackWidth * 3}; }
     &._4U { width: #{$rackWidth * 4}; }

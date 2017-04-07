@@ -55,8 +55,12 @@ export default {
   },
 
   created() {
-    this.inlets[0].audio = this.outlets[0].audio = this.context.createGain();
-    this.inlets[1].audio = this.outlets[0].audio.gain;
+    const vca = this.context.createGain();
+
+    this.inlets[0].audio = vca;
+    this.inlets[1].audio = vca.gain;
+
+    this.outlets[0].audio = vca;
 
     console.log('Creating VCA');
   }
