@@ -4,12 +4,12 @@
 
 <template>
   <section :class="editing ? 'edit-mode': 'play-mode'">
-
     <div
       id="modules"
       class="grid-container"
       ref="grid"
-      @click="clearActive">
+      @click.left="clearActive"
+      @click.right.prevent="contextmenu">
 
       <div class="position-highlight">
         <div class="inner"></div>
@@ -246,7 +246,12 @@
     },
 
     methods: {
-      // VUEX actions, bound as local methods:
+      contextmenu(e) {
+        // const y = e.pageY - document.querySelector('header').offsetHeight;
+        //
+        // this.menuCoords = [e.pageX, y];
+      },
+
       ...mapActions([
         'togglePower',
         'toggleEditMode',
