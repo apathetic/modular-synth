@@ -97,18 +97,18 @@
   import { sortable } from './mixins/sortable';
 
   import Analyser from './components/Analyser';
+  import Delay from './components/Delay';
   import Env from './components/Env';
   import LFO from './components/LFO';
-  import VCF from './components/Filter';
-  import Comb from './components/Comb';
   import Mixer from './components/Mixer';
-  import Node from './components/Node';
   import NoteIn from './components/NoteIn';
-  // import Signal from './components/Signal';
+  import Reverb from './components/Reverb';
+  import VCF from './components/Filter';
   import VCO from './components/VCO';
   import VCA from './components/VCA';
-  import Reverb from './components/Reverb';
+
   import Debugger from './components/Debugger';
+  import Node from './components/Node';
 
   import connecting from './components/system/Connecting';
   import connection from './components/system/Connection';
@@ -135,11 +135,10 @@
       VCA,
       Analyser,
       Debugger,
-      Comb,
+      Delay,
       Mixer,
       Node,
       NoteIn,
-      // Signal,
       Reverb
     },
 
