@@ -48,7 +48,7 @@ export function signal(value = 1) {
     const buffer = context.createBuffer(1, 2, context.sampleRate);
     // const buffer = context.createBuffer(1, 128, context.sampleRate);
 
-    // set each sample to 1
+    // // set each sample to 1
     buffer.getChannelData(0)[0] = value;    // 2 items, as Safari chokes on 1
     buffer.getChannelData(0)[1] = value;
     // for (let i = 0; i < buffer.length; i++) {
@@ -64,7 +64,7 @@ export function signal(value = 1) {
     signals[value] = signal;
 
     return signal;
-    // return context.createConstantSource(1);  // one day
+    // return context.createConstantSource(value);  // one day
   }
 };
 

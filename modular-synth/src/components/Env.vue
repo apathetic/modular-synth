@@ -14,10 +14,10 @@
     </div>
 
     <div class="module-interface">
-      <knob label="attack"  @value="A = value" :min="0" :max="1"></knob>
-      <knob label="decay"   @value="D = value" :min="0" :max="1"></knob>
-      <knob label="sustain" @value="S = value" :min="0" :max="1"></knob>
-      <knob label="release" @value="R = value" :min="0" :max="1"></knob>
+      <knob label="attack"  @value="A = $event" :min="0" :max="1" :decimals="2"></knob>
+      <knob label="decay"   @value="D = $event" :min="0" :max="1" :decimals="2"></knob>
+      <knob label="sustain" @value="S = $event" :min="0" :max="1" :decimals="2"></knob>
+      <knob label="release" @value="R = $event" :min="0" :max="1" :decimals="2"></knob>
     </div>
 
     <div class="module-connections">

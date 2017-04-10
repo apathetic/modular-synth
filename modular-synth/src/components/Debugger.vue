@@ -114,18 +114,18 @@
         this.volume = Math.max(rms, this.volume * this.averaging);
       }
 
-
-      // this.inlets[0].audio.connect(processor);
       this.inlets[0].audio = processor;
-
       this.loop();
     },
     methods: {
       loop() {
         this.peak = this.processor.volume.toFixed(3);
+        // this.clipping = this.processor.clipping;
+
+        if (this.peak > 1.0) { console.log('Debugger %s: clipped', this.id); }
         // set up the next visual callback
         window.requestAnimationFrame(this.loop);
-        // window.setTimeout(this.loop, 100);
+        // window.setTimeout(this.loop, 250);
       }
     }
   };
