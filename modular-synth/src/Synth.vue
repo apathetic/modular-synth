@@ -1,12 +1,6 @@
 //------------------------------------------------
 //  APPLICATION
 // -----------------------------------------------
-// Note: much of this code inspired by:
-// https://tonejs.github.io
-// https://github.com/cwilso/WebAudio
-// https://github.com/idflood/Threenodes.js
-// https://github.com/gre/zound-live
-
 
 <template>
   <section :class="editing ? 'edit-mode': 'play-mode'">
