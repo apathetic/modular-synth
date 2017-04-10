@@ -235,7 +235,7 @@
       // TODO why cannot move into sortable:ready() ...? A: $refs.grid is not yet in the DOM
       // TODO2 sortable:mounted() ...?
       this.initSorting(this.$refs.grid);
-      this.setupGrid();  // this should be after every module has registered its dimensions
+      // this.setupGrid();  // this should be after every module has registered its dimensions
 
       this.$refs.grid.addEventListener('contextmenu', (e) => {
         e.preventDefault();
