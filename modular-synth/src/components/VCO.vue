@@ -106,6 +106,7 @@
       setFreq(f) {
         // this.node.frequency.value = f;
         this.osc.frequency.value = f;
+        // this.osc.frequency.setValueAtTime(f, context.currentTime);
       },
 
       /**

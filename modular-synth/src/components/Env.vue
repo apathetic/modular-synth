@@ -78,10 +78,10 @@ export default {
     this.adsr.gain.value = 0;
     signal(1).connect(this.adsr);
 
-    this.$watch('A', this.setAttack);
-    this.$watch('D', this.setDecay);
-    this.$watch('S', this.setSustain);
-    this.$watch('R', this.setRelease);
+    // this.$watch('A', this.setAttack);
+    // this.$watch('D', this.setDecay);
+    // this.$watch('S', this.setSustain);
+    // this.$watch('R', this.setRelease);
 
     console.log('Creating Env');
   },

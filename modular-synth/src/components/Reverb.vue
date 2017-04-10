@@ -5,7 +5,7 @@
 <template>
   <div
   class="reverb module _3U"
-  :class="dragging ? 'dragging' : ''"
+  :class="{dragging: 'dragging'}"
   :style="position"
   @mousedown.stop="startDragging">
 
@@ -42,23 +42,24 @@ export default {
   data() {
     return {
       name: 'Reverb',
-      // w: 2, // rack width
-
       seconds: 3,
       decay: 2,
-      reverse: false,
 
       inlets: [
         {
-          label: 'input'
-          // audio: null
+          label: 'input-1'
+        },
+        {
+          label: 'input-2'
         }
       ],
 
       outlets: [
         {
-          label: 'output'
-          // audio: null
+          label: 'output-1'
+        },
+        {
+          label: 'output-2'
         }
       ]
     };
