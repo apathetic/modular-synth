@@ -1,26 +1,45 @@
 import { api } from './firebase';
+import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY } from './index';
+// import { NAME_KEY, MODULES_KEY } from './index';
 
 
 // -----------------------------------------------
 //  LOAD / SAVE
 // -----------------------------------------------
 export const loadPatch = ({ commit, state }, name) => {
-  // api.load('/patch/' + name).then((response) => {
-  //   const patch = response.val();  // val() is a firebase thing
-  //
-  //   commit('LOAD_PATCH', patch);
+  let patch;
+  let connections;
+
+  if (name && state.patches[name]) {
+    console.log('Loading patch: ', name);
+    patch = state.patches[name];
+    connections = state.patches[name].connections;
+  } else {
+    console.log('Loading patch from localStorage');
+    patch = {
+      name: localStorage.getItem(NAME_KEY) || '_default',
+      id: parseInt(localStorage.getItem('id')) || 0,
+      modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}]
+    };
+    connections = JSON.parse(localStorage.getItem(CONNECTIONS_KEY) || '[]');
+  }
+
+
+  commit('LOAD_PATCH', patch);
+
+  setTimeout(function() {
+    commit('LOAD_CONNECTIONS', connections);
+  }, 2000);
+
+  // Vue.nextTick(function() {   // ensure nodes (+ inlets/outlets) are in the DOM
+  //   console.log('All modules loaded, now routing audio...');
+  //   store.state.connections = JSON.parse(localStorage.getItem(CONNECTIONS_KEY) || '[]');
   // });
 
-  if (state.patches[name]) {
-    console.log('===================');
-    console.log('Loading patch: ', name);
-    commit('LOAD_PATCH', state.patches[name]);
-    commit('LOAD_CONNECTIONS', state.patches[name].connections);
 
-    // if (params) ...
-      // commit('LOAD_PARAMS', state.patches[name].parameterSets[0]);
-    // }
-  }
+  // if (params) ...
+    // commit('LOAD_PARAMS', state.patches[name].parameterSets[0]);
+  // }
 };
 
 export const savePatch = ({ state }) => {
@@ -41,19 +60,19 @@ export const savePatch = ({ state }) => {
     });
 };
 
-export const loadPatches = ({ commit }) => {
+export const fetchPatches = ({ commit }) => {
   api.load('/patch')
     .then((response) => {
       const patches = response.val();  // val() is a firebase thing
 
       commit('LOAD_PATCHES', patches);
     })
-    .catch((err) => {
-      console.log(err); // NOT SIGNED IN ?
+    .catch(() => {
+      console.log('Not signed in.'); // NOT SIGNED IN ?
     });
 };
 
-export const loadParameters = () => {
+export const fetchParameters = () => {
 };
 
 // -----------------------------------------------
