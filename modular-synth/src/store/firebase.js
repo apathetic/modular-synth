@@ -7,17 +7,16 @@ firebase.initializeApp(config);
 
 const database = firebase.database();
 
-export const auth = firebase.auth;
+export const auth = firebase.auth();
+export const provider = new firebase.auth.GoogleAuthProvider();
 export const api = {
   // Load data ONCE (ie. no "listeners")
   // path: ie: /users/' + userId
   load(path) {
+    // if (auth.currentUser) {
     return database.ref(path).once('value');
+    // }
   },
-
-  // list(path) {
-  //   return database.ref(path + '?shallow=true');  // NOTE just to illustrate what trying to do. this won't work
-  // },
 
   // note: destructive. Will overwrite if anything happens to be at this path
   create(name, data) {
@@ -29,7 +28,6 @@ export const api = {
   },
 
   add(path, data) {
-    // const currentUser = _auth.currentUser;
     const items = database.ref(path);   // ie. patch, or patch/juno/parameterSets
 
     // Add a new message entry to the Firebase Database.

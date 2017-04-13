@@ -137,7 +137,7 @@ new Vue({
   components: { Synth, PatchManager, Auth },
   data: { bus, authenticated },
   beforeCreate: function() {
-    auth().onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((user) => {
       this.authenticated = !!user;
       //   this.user = user;
     });
