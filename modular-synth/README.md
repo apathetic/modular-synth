@@ -31,102 +31,104 @@ npm test
 ## APPLICATION NOTES:
 
 **EVENTS**
-- App
-  - app:load
-- module
-  - module:add
-  - module:remove
-- audio
-  - audio:start
-  - audio:stop
-- drag
-  - drag:start
-  - drag:active
-  - drag:end
-- midi
-  - midi:noteOn
-  - midi:noteOff
-  - midi:controller
-  - midi:pitchWheel
-  - midi:polyPressure
+  - App
+    - app:load
+  - module
+    - module:add
+    - module:remove
+  - audio
+    - audio:start
+    - audio:stop
+  - drag
+    - drag:start
+    - drag:active
+    - drag:end
+  - midi
+    - midi:noteOn
+    - midi:noteOff
+    - midi:controller
+    - midi:pitchWheel
+    - midi:polyPressure
 
 
 **ROUTING / PORT TYPES**
-- inlets:
-  - in
-  - out
-- data types:
-  - audioParam (a-rate)
-    - pitch / freq
-    - mod (A, B, FM?)
-  - control data (k-rate)
-    - triggers or bangs (events?):
-      - gate
-      - reset (more for sequencing)
-      - sync (ie. phase)
+  - inlets:
+    - in
+    - out
+  - data types:
+    - audioParam (a-rate)
+      - pitch / freq
+      - mod (A, B, FM?)
+    - control data (k-rate)
+      - triggers or bangs (events?):
+        - gate
+        - reset (more for sequencing)
+        - sync (ie. phase)
 
 
 **NODE ROADMAP**
-
-- BASE
-  - ~~ENV~~
-  - OSC
-    - ~~simple~~
-    - fat osc
-    - pwm osc
-    - fm osc
-  - ~~LFO~~
-  - FILT
-    - ~~simple~~
-    - resonant
-    - moog
-    - comb
-  - ~~VCA~~
-    - ~~MULT (deprecated)~~
-
-
-- FX
-  - reverb
-    - simple
-  - delay
-    - simple
-    - ping pong
-  - bitcrusher
+  - BASE
+    - ~~ENV~~
+    - OSC
+      - ~~simple~~
+      - fat osc
+      - pwm osc
+      - fm osc
+    - ~~LFO~~
+    - FILT
+      - ~~simple~~
+      - resonant
+      - moog
+      - comb
+    - ~~VCA~~
+      - ~~MULT (deprecated)~~
 
 
-- timing
-  - clock
-  - stepper / arpeggiator
-  - click divider(maybe?)
-  - quant(maybe?)
+  - FX
+    - reverb
+      - simple
+    - delay
+      - simple
+      - ping pong
+    - bitcrusher
 
 
-- routing
-  - mixer (mini)
-  - ~~audio out~~
+  - timing
+    - clock
+    - stepper / arpeggiator
+    - click divider(maybe?)
+    - quant(maybe?)
 
 
-- MIDI
-  - noteIn
-    - ~~pitch~~
-    - ~~gate~~
-  - bend
-  - velocity
-  - mod-wheel
-  - aftertouch
-  - MIDI learn
+  - routing
+    - mixer (mini)
+    - ~~audio out~~
 
+
+  - MIDI
+    - noteIn
+      - ~~pitch~~
+      - ~~gate~~
+    - bend
+    - velocity
+    - mod-wheel
+    - aftertouch
+    - MIDI learn
 
 
 ## TODO
 
 - General
-  - ~~saving patches~~
+  - saving patches
+    - load everything via firebase
+    - can have ONE patch in localstorage
     - **saving settings**
   - loading patches
     - *connections load at same time as modules (which are not yet in the DOM), meaning the svg computes props fail.* This is not an issue on page load, however. Audio routing also fails as a result
+  - web workers
+    - offload heavy calcs, etc.
   - service workers
-    - store samples, waveforms
+    - store samples, waveforms, and... stuff
 
 
 - MODULES
