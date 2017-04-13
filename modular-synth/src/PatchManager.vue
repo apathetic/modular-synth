@@ -106,8 +106,8 @@ export default {
     ...mapActions([
       'savePatch',
       'loadPatch',
-      'loadPatches',
-      'loadParameters'
+      'fetchPatches',
+      'fetchParameters'
     ])
   }
 };
