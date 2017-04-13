@@ -4,7 +4,7 @@
 
 <template>
   <div
-  class="delay module _3U"
+  class="delay module _4U"
   :class="{dragging: 'dragging'}"
   :style="position"
   @mousedown.stop="startDragging">
@@ -81,8 +81,8 @@ export default {
       feedback: params.feedback.default,
       cutoff: params.cutoff.default,
 
-      inlets: [{ label: 'in-1' }],
-      outlets: [{ label: 'out-1' }]
+      inlets: [{ label: 'input' }],
+      outlets: [{ label: 'output' }]
     };
   },
 
