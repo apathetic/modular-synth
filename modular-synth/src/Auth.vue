@@ -8,13 +8,12 @@
 </template>
 
 <script>
-import { auth } from './store/firebase';
+import { auth, provider } from './store/firebase';
 
 export default {
   methods: {
     signIn() {
-      const provider = new auth.GoogleAuthProvider();
-      auth().signInWithPopup(provider).catch((err) => {
+      auth.signInWithPopup(provider).catch((err) => {
         if (err.code === 'auth/web-storage-unsupported') {
           window.alert(err.message);
         }
@@ -22,7 +21,7 @@ export default {
     },
 
     signOut() {
-      auth().signOut();
+      auth.signOut();
     }
   }
 };
