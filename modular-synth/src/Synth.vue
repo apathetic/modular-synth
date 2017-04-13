@@ -160,9 +160,8 @@
     },
 
     created() {
-      // Important: needed to trigger LOAD mutation (which routes audio, sets up connections, etc.)
       console.log('App loading...');
-      this.$store.commit('LOAD_PATCH');
+      this.loadPatch();
 
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
@@ -253,6 +252,7 @@
       },
 
       ...mapActions([
+        'loadPatch',
         'togglePower',
         'toggleEditMode',
         'removeModule',
