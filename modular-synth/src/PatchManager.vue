@@ -1,23 +1,22 @@
 <template>
   <div class="patch-manager">
-    <div class="patch">
-      <button class="button" :class="{'active': $root.authenticated}" @click="savePatch">save</button>
-      <select class="patch-selector" :class="{'active': !!selected}" @change="selectPatch" ref="patchSelector">
-        <option value="" disabled selected>Select Patch</option>
+    <div class="patch" :class="{'active': $root.authenticated}">
+      <button class="button" @click="savePatch">save</button>
+      <select class="patch-selector" :class="{'active': !!selectedPatch}" v-model="currentPatch" @change="selectPatch" ref="xxx">
+        <option value="x" disabled>Select Patch</option>
         <option v-for="patch in patches" :value="patch">{{ patch }}</option>
       </select>
-      <button class="button" :class="{'active': !!selected}" @click="changePatch">load</button>
+      <button class="button" :class="{'active': !!selectedPatch}" @click="changePatch">load</button>
     </div>
 
     <div class="params">
-      <select class="params-selector" @change="selectParams" ref="paramsSelector">
+      <select class="params-selector" :value="currentParams" @change="selectParams">
         <option value="" disabled selected>Select settings</option>
         <option v-for="param in params" :value="param">{{ param }}</option>
       </select>
-      <button class="button" :class="{'active': !!selected}" @click="changeParams">load</button>
+      <button class="button" :class="{'active': !!selectedParams}" @click="changeParams">load</button>
     </div>
 
-    <div></div>
   </div>
 </template>
 
@@ -27,14 +26,17 @@ import { mapActions } from 'vuex';
 export default {
   data() {
     return {
-      selected: false
+      selectedPatch: false,
+      selectedParams: false,
+      currentPatch: 'x',
+      currentParams: ''
     };
   },
 
   computed: {
-    current() {
-      return encodeURI(this.$store.state.name.toLowerCase());  // see actions.js
-    },
+    // current() {
+    //   return encodeURI(this.$store.state.name.toLowerCase());  // see actions.js
+    // },
 
     patches() {
       return Object.keys(this.$store.state.patches);
@@ -52,32 +54,40 @@ export default {
    * NOTE: if a patch is already stored in localStorage, it'll get loaded by default.
    */
   created() {
-    this.loadPatches();
+    this.fetchPatches();
   },
 
   /**
    * Set the drop-down to the current patch (if loaded from localStorage)
    */
   mounted() {
-    if (this.current) {
-      this.$refs.patchSelector.value = this.current;
+    const current = encodeURI(this.$store.state.name.toLowerCase()) || false;
+
+    if (current) {
+      this.currentPatch = current;
+
+      // this.$refs.xxx.value = current; // WHY WHY WHY WHWY WHYWYYY
+      console.log(this.currentPatch, current);
     }
   },
 
   methods: {
     selectPatch(e) {
-      this.selected = e.target.value;
+      const temp = this.currentPatch;
+
+      this.currentPatch = e.target.value;
+      this.selectedPatch = true;
       this.pTimer = setTimeout(() => {
-        this.selected = false;
-        this.$refs.patchSelector.value = this.current;
+        this.currentPatch = temp;
+        this.selectedPatch = false;
       }, 10000);    // return to default val
     },
 
     changePatch() {
-      if (this.selected) {
+      if (this.selectedPatch) {
         clearTimeout(this.pTimer);
-        this.loadPatch(this.selected);
-        this.selected = false;
+        this.loadPatch(this.currentPatch);
+        this.selectedPatch = false;
       }
     },
 
@@ -85,7 +95,7 @@ export default {
       this.selectedParams = e.target.value;
       this.qTimer = setTimeout(() => {
         this.selectedParams = false;
-        this.$refs.paramsSelector.value = this.current;
+        // this.$refs.paramsSelector.value = this.currentParams;
       }, 10000);    // return to default val
     },
 
@@ -111,20 +121,21 @@ export default {
     display: flex;
     justify-content: space-between;
 
-    button:not(.active) {
-      background-color: $color-hover;
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+    // button:not(.active) {
+    //   background-color: $color-hover;
+    //   cursor: not-allowed;
+    //   opacity: 0.5;
+    // }
 
     select {
       min-width: 8em;
 
       &.active {
-        color: red;
         animation: flash 2s ease-out infinite;
       }
     }
+
+    .patch:not(.active) { display: none; }
 
     @keyframes flash {
       0% { color: #fff; }
