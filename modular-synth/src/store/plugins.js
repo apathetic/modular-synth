@@ -1,4 +1,3 @@
-// import Vue from 'vue';
 import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY } from './index';
 // import createLogger from 'vuex/logger';
 

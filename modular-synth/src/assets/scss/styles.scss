@@ -18,9 +18,6 @@ html, body {
   font-size: 10px;
 }
 
-
-
-
 main {
   height: 100%;
   color: #fff;
@@ -31,6 +28,7 @@ main {
 header {
   height: $header-height;
   width: 100%;
+  border-bottom: 2px solid $color-grey-medium;
   background-color: #666;
   background: linear-gradient(187deg, #000 0%, #000 22%, transparent 22%) no-repeat, linear-gradient(192deg, transparent 22%, #000 22%, #000 26%, transparent 26%) no-repeat, linear-gradient(196deg, transparent 22%, #000 22%, #000 25%, transparent 25%) no-repeat, linear-gradient(-137deg, transparent 22%, #000 22%, #000 24%, transparent 24%) no-repeat, linear-gradient(201deg, #666 22%, #000 22%, #000 23%, #666 23%);
 }
@@ -157,7 +155,7 @@ button {
 
 .button {
   background-color: #54bfff;
-  margin-bottom: 1em;
+  // margin-bottom: 1em;
   padding: 0.5em 1em;
 
   &:hover {
@@ -259,10 +257,11 @@ button {
 select {
   background: $color-grey-medium;
   color: #fff;
-  margin-bottom: 1em;
   border: 0;
   border-bottom: 1px solid $color-grey;
   border-radius: 0;
+  font-family: Oxygen, Helvetica, sans-serif;
+  font-weight: 300;
   height: 2em;
   padding: 0em 0.5em;
   -webkit-appearance: none;
