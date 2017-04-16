@@ -226,14 +226,22 @@ button {
 .power {
   text-align: center;
 
+  button {
+    padding: 0 2em;
+    border: 1px solid #222;
+    border-radius: 1em;
+  }
+
   svg {
-    width: 4em;
+    width: 3.2em;
     height: 4em;
     transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     filter: drop-shadow(0 0px 1px rgba(153, 229, 163, 0.2));
   }
 
   .on {
+    border-color: #252;
+
     svg {
       fill: $color-green;
       filter: drop-shadow(0 0px 4px rgba(153, 229, 163, 0.4));
