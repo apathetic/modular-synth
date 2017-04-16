@@ -4,10 +4,14 @@ import { moduleSize } from '../dimensions';
 //  BOOTSTRAP
 // -----------------------------------------------
 export const LOAD_PATCH = (state, patch) => {
+  // NOTE: for now, Objects in the patch are copied to the root of the store.
+  // Will need to update so that App can just reference the current patch
+  // within patches: {}
   if (patch) {
-    state.id = patch.id;
-    state.name = patch.name;
+    state.id = patch.id || 0;
+    state.name = patch.name || '_default';
     state.modules = patch.modules;
+    state.parameterSets = patch.parameterSets || [];
   }
 };
 
@@ -15,9 +19,9 @@ export const LOAD_PATCHES = (state, patches) => {
   state.patches = patches;    // check if patches is an array, or ...?
 };
 
-export const LOAD_PARAMS = () => {
-  //
-};
+// export const LOAD_PARAMS = (state, parameters) => {
+//   state.parameterSets = parameters || [];
+// };
 
 // -----------------------------------------------
 //  APP
@@ -29,13 +33,6 @@ export const TOGGLE_POWER = (state) => {
 export const TOGGLE_EDIT = (state) => {
   state.editing = !state.editing;
 };
-
-// export const REGISTER_DIMENSIONS = (state, data) => {
-//   const module = state.modules.find((m) => { return m.id === data.id; });
-//
-//   module.w = data.w;
-//   module.h = data.h;
-// };
 
 
 // -----------------------------------------------

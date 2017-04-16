@@ -10,6 +10,7 @@ Vue.use(Vuex);
 export const NAME_KEY = 'name';
 export const MODULES_KEY = 'modules';
 export const CONNECTIONS_KEY = 'connections';
+export const PARAMETERS_KEY = 'parameters';
 
 
 // -----------------------------------------------
@@ -17,25 +18,17 @@ export const CONNECTIONS_KEY = 'connections';
 // -----------------------------------------------
 
 const state = {
-  // name: localStorage.getItem(NAME_KEY) || '',
-  // id: parseInt(localStorage.getItem('id')) || 0,    // NOTE: this will actually start at 1 (we increment just prior to adding new), as masterOut is 0
-  // modules: JSON.parse(localStorage.getItem(MODULES_KEY) || '[{"type": "MasterOut", "id": 0, "x": 0, "y": 0}]'),
-  // connections: undefined,   // NOTE: this is intentional to force a delayed "loading" of the connectors. We grab them
-                            // in localStorage manually in the webAudioPlugin _after_ all the modules have loaded in
-                            // order to ensure audio-routing and visual connections will have Objects to link to / from.
-                            // ie. dont do this... connections: JSON.parse(localStorage.getItem(CONNECTIONS_KEY) || '[]'),
-
-  name: '_default',         // NOTE: this is overwritten in the loadPatch, in actions.js
+  name: '_default',         // NOTE: this is overwritten in loadPatch(), in actions.js
   id: 0,
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-  connections: undefined,
+  connections: [],
+  parameterSets: [],
 
   power: false,
   editing: false,
   focused: undefined,       // "Hovered": for Module Info, Connections.  TODO move to $bus?
   active: 0,                // "Clicked": for Dragging, Deleting.
-  patches: {}
-  // parameterSets: []
+  patches: {}               // all available patches, cached here
 };
 
 

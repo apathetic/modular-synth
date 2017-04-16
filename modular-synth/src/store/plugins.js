@@ -1,4 +1,4 @@
-import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY } from './index';
+import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY, PARAMETERS_KEY } from './index';
 // import createLogger from 'vuex/logger';
 
 
@@ -10,9 +10,12 @@ const localStoragePlugin = (store) => {
     localStorage.setItem(MODULES_KEY, JSON.stringify(modules));
   });
   store.subscribe((mutation, { connections }) => {
-    if (connections !== undefined) {
-      localStorage.setItem(CONNECTIONS_KEY, JSON.stringify(connections));
-    }
+    // if (connections !== undefined) {
+    localStorage.setItem(CONNECTIONS_KEY, JSON.stringify(connections));
+    // }
+  });
+  store.subscribe((mutation, { parameterSets }) => {
+    localStorage.setItem(PARAMETERS_KEY, JSON.stringify(parameterSets));
   });
   store.subscribe((mutation, { id }) => {
     localStorage.setItem('id', id);
