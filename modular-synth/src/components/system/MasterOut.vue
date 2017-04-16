@@ -11,16 +11,15 @@
       <!-- < l evel :audio="out1"></level>
       < l evel :audio="out2"></level> -->
 
-      <!-- <canvas ref="meter"></canvas> -->
+      <canvas ref="meter"></canvas>
 
       <input
         type="range"
         orient="vertical"
         min="0"
         max="1"
-        step="0.1"
-        v-model="gain"
-        >
+        step="0.05"
+        v-model="gain">
       </input>
 
       <!-- <button
@@ -42,7 +41,7 @@ import { mapGetters, mapActions } from 'vuex';
 // import { meter } from '../../mixins/meter';
 
 // import Level from '../UI/Level';
-// import { meter } from '../../audio';
+import { meter } from '../../audio';
 
 export default {
   // mixins: [meter],
@@ -97,6 +96,10 @@ export default {
   },
 
   mounted() {
+    const X = this.$refs.meter;
+
+    this.meter = meter(X);
+
     this.determinePosition();
     window.addEventListener('resize', this.determinePosition);
   },
@@ -107,11 +110,13 @@ export default {
     start() {
       this.out1.connect(this.context.destination);
       this.out2.connect(this.context.destination);
+      this.meter.on();
     },
 
     stop() {
       this.out1.disconnect(this.context.destination);
       this.out2.disconnect(this.context.destination);
+      this.meter.off();
     },
 
     setGain(g) {
@@ -158,6 +163,11 @@ export default {
     bottom: 0;
     width: auto;
     height: auto;
+
+    canvas {
+      width: 20px;
+      height: 132px;
+    }
 
     .module-interface {
       padding: 2em 1em 1em 3.2em;
