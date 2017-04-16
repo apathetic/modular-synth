@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { api } from './firebase';
-import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY } from './index';
+import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY, PARAMETERS_KEY } from './index';
 
 
 // -----------------------------------------------
@@ -11,17 +11,18 @@ export const loadPatch = ({ commit, state }, name) => {
   let connections;
 
   if (name && state.patches[name]) {
-    console.log('Loading patch: ', name);
+    console.log('  Loading patch: ', name);
     patch = state.patches[name];
     connections = state.patches[name].connections;
   } else {
-    console.log('Loading patch from localStorage');
+    console.log('  Loading patch from localStorage');
     patch = {
       name: localStorage.getItem(NAME_KEY) || '_default',
       id: parseInt(localStorage.getItem('id')) || 0,
-      modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}]
+      modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+      parameterSets: JSON.parse(localStorage.getItem(PARAMETERS_KEY)) || []
     };
-    connections = JSON.parse(localStorage.getItem(CONNECTIONS_KEY) || '[]');
+    connections = JSON.parse(localStorage.getItem(CONNECTIONS_KEY)) || [];
   }
 
 
@@ -31,12 +32,8 @@ export const loadPatch = ({ commit, state }, name) => {
   Vue.nextTick(function() {
     console.log('All modules loaded, now routing audio...');
     commit('LOAD_CONNECTIONS', connections);
+    // commit('LOAD_PARAMS', patch.parameterSets[0] || []);
   });
-
-
-  // if (params) ...
-    // commit('LOAD_PARAMS', state.patches[name].parameterSets[0]);
-  // }
 };
 
 export const savePatch = ({ state }) => {
@@ -128,26 +125,6 @@ export const removeModule = ({ commit, state }) => {
     });
   }
 };
-
-
-// -----------------------------------------------
-//  POSITION
-// -----------------------------------------------
-// export const updateGridPosition = ({ commit, state }, id, x, y) => {
-//   // if in EDIT MODE, we want to update the node AND the store
-//   // if in PLAY mode, we just want to update the node
-//   if (state.editing || id === 0) {
-//     commit('UPDATE_GRID_POSITION', { id, x, y });
-//   }
-// };
-
-// export const updateRackPosition = ({ commit }, id, col, row) => {
-//   commit('UPDATE_RACK_POSITION', {
-//     id: id,
-//     col: col,
-//     row: row
-//   });
-// };
 
 
 // -----------------------------------------------

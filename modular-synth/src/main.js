@@ -3,6 +3,7 @@ import store from './store';
 import Synth from './Synth';
 // import Auth from './Auth';
 import PatchManager from './PatchManager';
+import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
 
@@ -136,10 +137,19 @@ new Vue({
   el: 'main',
   components: { Synth, PatchManager },
   data: { bus, authenticated },
+  methods: {
+    ...mapActions([
+      'fetchPatches'
+    ])
+  },
   beforeCreate: function() {
     auth.onAuthStateChanged((user) => {
       this.authenticated = !!user;
       //   this.user = user;
+
+      // TODO
+      this.fetchPatches();
+      //
     });
   }
 });
