@@ -5,20 +5,22 @@
       <button class="button" @click="savePatch">save</button>
     </div>
 
+    {{ currentPatch }}-{{currentParams}}
     <div class="patch selector" :class="{'active': $root.authenticated}">
       <span>{{ patchNum }}</span>
-      <select v-model="currentPatch" @change="selectPatch">
+      <select :value="currentPatch" @change="selectPatch">
         <option value="" disabled>&lt;select patch&gt;</option>
-        <option v-for="patch in patchNames" :value="patch">{{ patch }}</option>
+        <!-- <option v-for="patch in patchNames" :value="patch">{{ patch }}</option> -->
+        <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
       </select>
       <!-- <button class="button" :class="{'active': !!selectedPatch}" @click="changePatch">load</button> -->
     </div>
 
     <div class="params selector">
       <span>{{ paramsNum }}</span>
-      <select v-model="currentParams" @change="selectParams">
+      <select :value="currentParams" @change="selectParams">
         <option value="" disabled>&lt;select settings&gt;</option>
-        <option v-for="param in paramNames" :value="param">{{ param }}</option>
+        <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
       </select>
       <!-- <button class="button" :class="{'active': !!selectedParams}" @click="changeParams">load</button> -->
     </div>
@@ -36,16 +38,20 @@ export default {
 
   data() {
     return {
-      // selectedPatch: false,
-      // selectedParams: false,
       currentPatch: '',
       currentParams: ''
     };
   },
 
   computed: {
+    patches() { return this.$store.state.patches; },
+    parameterSets() { return this.$store.state.parameterSets; },
+
     patchNames() {
       return Object.keys(this.$store.state.patches);
+      // return this.$store.state.patches.map((patch) => {
+      //   return patch.name;
+      // });
     },
 
     patchNum() {
@@ -53,9 +59,9 @@ export default {
     },
 
     paramNames() {
-      const patch = this.$store.state.patches[this.currentPatch];
+      const params = this.$store.state.parameterSets;
 
-      return (!patch) ? [] : patch.parameterSets.map((params) => {
+      return (!params) ? [] : params.map((params) => {
         return params.name;
       });
     },
@@ -78,53 +84,29 @@ export default {
    */
   mounted() {
     const current = encodeURI(this.$store.state.name.toLowerCase()) || false;
+    // const selects = document.querySelector('header select');
 
     if (current) {
-      // const patch = this.$store.state.patches[current];
+      setTimeout(() => {
+        this.currentPatch = current;
+        this.currentParams = this.$store.state.parameterSets[0];
+      }, 2000);
 
-      this.currentPatch = current;
-      // this.currentParams = patch.parameterSets[0];
-      console.log('----- mounted', current);
-      console.log(this.currentPatch, current);
+      // selects[0] = this.currentPatch;   // WHY? Isn't data-driven, here for some reason
+      // selects[1] = this.currentParams;
     }
   },
 
   methods: {
     selectPatch(e) {
+      this.currentPatch = e.target.value;
       this.loadPatch(this.currentPatch);
-
-      // const temp = this.currentPatch;
-      //
-      // this.currentPatch = e.target.value;
-      // this.selectedPatch = true;
-      // this.pTimer = setTimeout(() => {
-      //   this.currentPatch = temp;
-      //   this.selectedPatch = false;
-      // }, 10000);    // return to default val
     },
-
-    // changePatch() {
-    //   if (this.selectedPatch) {
-    //     clearTimeout(this.pTimer);
-    //     this.loadPatch(this.currentPatch);
-    //     this.selectedPatch = false;
-    //   }
-    // },
 
     selectParams(e) {
-      // this.loadParamaters(this.currentParams);
-
-
-      // this.selectedParams = e.target.value;
-      // this.qTimer = setTimeout(() => {
-      //   this.selectedParams = false;
-      //   // this.$refs.paramsSelector.value = this.currentParams;
-      // }, 10000);    // return to default val
+      this.currentParams = e.target.value;
+      // this.loadParameters(this.currentParams);
     },
-
-    // changeParams(e) {
-    //   e.target.value;
-    // },
 
     ...mapActions([
       'savePatch',
