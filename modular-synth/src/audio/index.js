@@ -75,15 +75,24 @@ export function signal(value = 1) {
  * @param {[type]} averaging    [description]
  * @param {[type]} clipLag      [description]
  */
-export function audioMeter(audioContext, clipLevel, averaging, clipLag) {
-  const processor = audioContext.createScriptProcessor(512);
+export function meter(canvas, clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
+  if (!context) { return; }
+  const processor = context.createScriptProcessor(512);
+  const width = canvas.width;
+  const height = canvas.height;
+  const meterContext = canvas.getContext('2d');
+  const meterGraident = meterContext.createLinearGradient(0, 0, width, height);
 
   processor.clipping = false;
   processor.lastClip = 0;
   processor.volume = 0;
-  processor.clipLevel = clipLevel || 0.98;
-  processor.averaging = averaging || 0.95;
-  processor.clipLag = clipLag || 750;
+  processor.clipLevel = clipLevel; //  || 0.98;
+  processor.averaging = averaging; //  || 0.95;
+  processor.clipLag = clipLag; //  || 750;
+
+  meterGraident.addColorStop(0, '#BFFF02');
+  meterGraident.addColorStop(0.8, '#02FF24');
+  meterGraident.addColorStop(1, '#FF0202');
 
   // ----------------------------- [wes] commented:
   // this will have no effect, since we don't copy the input to the output,
@@ -129,6 +138,33 @@ export function audioMeter(audioContext, clipLevel, averaging, clipLag) {
   processor.shutdown = function() {
     this.disconnect();
     this.onaudioprocess = null;
+  };
+
+  processor.drawMeter = function() {
+    const level = processor.volume; //  * 0.8; // scale it since values go above 1 when clipping
+
+    meterContext.clearRect(0, 0, width, height);
+    meterContext.fillStyle = meterGraident;
+    meterContext.fillRect(0, 0, width, height);
+    meterContext.fillStyle = 'white';
+    meterContext.fillRect(width * level, 0, width, height);
+  };
+
+  processor.loop = function() {
+    if (processor.on) {
+      // this.analyse();
+      processor.drawMeter();
+      window.requestAnimationFrame(processor.loop);
+    }
+  };
+
+  processor.on = function() {
+    processor.on = true;
+    processor.loop();
+  };
+
+  processor.off = function() {
+    processor.on = false;
   };
 
   return processor;
