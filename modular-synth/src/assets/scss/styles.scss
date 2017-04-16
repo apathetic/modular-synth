@@ -26,11 +26,18 @@ main {
 }
 
 header {
+  border-bottom: 1px solid $color-grey-dark;
+  // border-bottom: 1px solid $color-grey-medium;
+  box-shadow: inset 0 -2px 4px $color-grey-medium;
   height: $header-height;
   width: 100%;
-  border-bottom: 2px solid $color-grey-medium;
   background-color: #666;
-  background: linear-gradient(187deg, #000 0%, #000 22%, transparent 22%) no-repeat, linear-gradient(192deg, transparent 22%, #000 22%, #000 26%, transparent 26%) no-repeat, linear-gradient(196deg, transparent 22%, #000 22%, #000 25%, transparent 25%) no-repeat, linear-gradient(-137deg, transparent 22%, #000 22%, #000 24%, transparent 24%) no-repeat, linear-gradient(201deg, #666 22%, #000 22%, #000 23%, #666 23%);
+  background: linear-gradient(187deg, #000 0%, #000 22%, transparent 22%) no-repeat,
+              linear-gradient(190deg, transparent 22%, #000 22%, #000 26%, transparent 26%) no-repeat,
+              linear-gradient(196deg, transparent 22%, #000 22%, #000 25%, transparent 25%) no-repeat,
+              linear-gradient(-137deg, transparent 22%, #000 22%, #000 24%, transparent 24%) no-repeat,
+              linear-gradient(230deg, #666 22%, #000 22%, #000 23%, #666 23%);
+  background-position: 0 0, 17px 0, 14px 0, 36px 0, 80px 0;
 }
 
 section {
@@ -55,8 +62,7 @@ section {
 .h4, h4,
 .h5, h5 {
   margin-bottom: 0.5em;
-  // font-family: Poppins, sans-serif;
-  font-family: Oxygen, sans-serif;
+  font-family: $font-secondary;
 }
 
 h1 {}
@@ -260,7 +266,7 @@ select {
   border: 0;
   border-bottom: 1px solid $color-grey;
   border-radius: 0;
-  font-family: Oxygen, Helvetica, sans-serif;
+  font-family: $font-secondary;
   font-weight: 300;
   height: 2em;
   padding: 0em 0.5em;

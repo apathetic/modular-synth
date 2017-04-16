@@ -49,7 +49,7 @@ export default {
     },
 
     patchNum() {
-      return this.patchNames.indexOf(this.currentPatch) + 1;
+      return this.patchNames.indexOf(this.currentPatch) + 1 || '-';
     },
 
     paramNames() {
@@ -61,7 +61,7 @@ export default {
     },
 
     paramsNum() {
-      return this.paramNames.indexOf(this.currentParams) + 1;
+      return this.paramNames.indexOf(this.currentParams) + 1 || '-';
     }
   },
 
@@ -171,7 +171,7 @@ export default {
     }
 
     span {
-      font-family: Oxygen, Helvetica, sans-serif;
+      font-family: $font-secondary;
       font-size: 1.8em;
       line-height: 1.6;
       opacity: 0.2;
