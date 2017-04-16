@@ -11,6 +11,7 @@
 
     <div class="module-interface">
       {{ peak }}
+      <!-- {{ clipping }} -->
     </div>
 
     <div class="module-connections">

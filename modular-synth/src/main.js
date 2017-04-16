@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import store from './store';
 import Synth from './Synth';
-import Auth from './Auth';
+// import Auth from './Auth';
 import PatchManager from './PatchManager';
 import { auth } from './store/firebase';
 import { context } from './audio';
@@ -134,7 +134,7 @@ Vue.component('outlets', {
 new Vue({
   store,
   el: 'main',
-  components: { Synth, PatchManager, Auth },
+  components: { Synth, PatchManager },
   data: { bus, authenticated },
   beforeCreate: function() {
     auth.onAuthStateChanged((user) => {

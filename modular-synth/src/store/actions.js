@@ -1,6 +1,6 @@
+import Vue from 'vue';
 import { api } from './firebase';
 import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY } from './index';
-// import { NAME_KEY, MODULES_KEY } from './index';
 
 
 // -----------------------------------------------
@@ -27,14 +27,11 @@ export const loadPatch = ({ commit, state }, name) => {
 
   commit('LOAD_PATCH', patch);
 
-  setTimeout(function() {
+  // ensure nodes (+ inlets/outlets) are in the DOM
+  Vue.nextTick(function() {
+    console.log('All modules loaded, now routing audio...');
     commit('LOAD_CONNECTIONS', connections);
-  }, 2000);
-
-  // Vue.nextTick(function() {   // ensure nodes (+ inlets/outlets) are in the DOM
-  //   console.log('All modules loaded, now routing audio...');
-  //   store.state.connections = JSON.parse(localStorage.getItem(CONNECTIONS_KEY) || '[]');
-  // });
+  });
 
 
   // if (params) ...
@@ -70,9 +67,6 @@ export const fetchPatches = ({ commit }) => {
     .catch(() => {
       console.log('Not signed in.'); // NOT SIGNED IN ?
     });
-};
-
-export const fetchParameters = () => {
 };
 
 // -----------------------------------------------
