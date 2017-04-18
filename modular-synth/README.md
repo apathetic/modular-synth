@@ -119,12 +119,13 @@ npm test
 ## TODO
 
 - General
+  - load patch
+    - turn off power 
   - saving patches
     - load everything via firebase
     - can have ONE patch in localstorage
     - **saving settings**
-  - loading patches
-    - *connections load at same time as modules (which are not yet in the DOM), meaning the svg computes props fail.* This is not an issue on page load, however. Audio routing also fails as a result
+    - **loading settings**
   - web workers
     - offload heavy calcs, etc.
   - service workers
@@ -181,9 +182,11 @@ npm test
 
 
   - General
+    - ~~loading patches~~
+      - ~~*connections load at same time as modules (which are not yet in the DOM), meaning the svg computes props fail.* This is not an issue on page load, however. Audio routing also fails as a result~~
     - ~~saving patches~~
       - ~~add firebase~~
-    - loading patches
+    - ~~loading patches~~
       - ~~need to destroy nodes / webAudio connections first...?~~
       - ~~patch loads in store, but app does not update UI~~
     - ~~don't require 2U / 1U classes -- make a default~~

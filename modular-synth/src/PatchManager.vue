@@ -5,11 +5,10 @@
       <button class="button" @click="savePatch">save</button>
     </div>
 
-    {{ currentPatch }}-{{currentParams}}
     <div class="patch selector" :class="{'active': $root.authenticated}">
       <span>{{ patchNum }}</span>
       <select :value="currentPatch" @change="selectPatch">
-        <option value="" disabled>&lt;select patch&gt;</option>
+        <option value="" disabled selected>&lt;select patch&gt;</option>
         <!-- <option v-for="patch in patchNames" :value="patch">{{ patch }}</option> -->
         <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
       </select>
@@ -19,7 +18,7 @@
     <div class="params selector">
       <span>{{ paramsNum }}</span>
       <select :value="currentParams" @change="selectParams">
-        <option value="" disabled>&lt;select settings&gt;</option>
+        <option value="" disabled selected>&lt;select settings&gt;</option>
         <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
       </select>
       <!-- <button class="button" :class="{'active': !!selectedParams}" @click="changeParams">load</button> -->
@@ -105,12 +104,13 @@ export default {
 
     selectParams(e) {
       this.currentParams = e.target.value;
-      // this.loadParameters(this.currentParams);
+      this.loadParameters(this.currentParams);
     },
 
     ...mapActions([
       'savePatch',
       'loadPatch',
+      'loadParameters',
       'fetchPatches'
     ])
   }

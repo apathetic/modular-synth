@@ -7,11 +7,13 @@
 
     <div class="module-interface">
 
-      NOTE: THIS DOES NOT TURN OFF.
       <!-- < l evel :audio="out1"></level>
       < l evel :audio="out2"></level> -->
 
-      <canvas ref="meter"></canvas>
+      <canvas ref="meter-1"></canvas>
+      <canvas ref="meter-2"></canvas>
+
+      <VU :audio="out1" />
 
       <input
         type="range"
@@ -21,6 +23,7 @@
         step="0.05"
         v-model="gain">
       </input>
+
 
       <!-- <button
         class="toggle"
@@ -38,14 +41,15 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-// import { meter } from '../../mixins/meter';
+import VU from '../system/VU';
 
-// import Level from '../UI/Level';
-import { meter } from '../../audio';
+// import { meter } from '../../mixins/meter';
+// import { meter } from '../../audio';
 
 export default {
   // mixins: [meter],
-  // components: { Level },
+  components: { VU },
+
   computed: {
     ...mapGetters([
       'power'
@@ -96,9 +100,10 @@ export default {
   },
 
   mounted() {
-    const X = this.$refs.meter;
+    // const X = this.$refs.meter;
 
-    this.meter = meter(X);
+    // this.meter = meter(X);
+    // console.log(this.meter);
 
     this.determinePosition();
     window.addEventListener('resize', this.determinePosition);
@@ -110,13 +115,17 @@ export default {
     start() {
       this.out1.connect(this.context.destination);
       this.out2.connect(this.context.destination);
-      this.meter.on();
+
+      // this.out1.connect(this.meter);
+      // this.meter.on();
     },
 
     stop() {
       this.out1.disconnect(this.context.destination);
       this.out2.disconnect(this.context.destination);
-      this.meter.off();
+
+      // this.out1.disconnect(this.meter);
+      // this.meter.off();
     },
 
     setGain(g) {
