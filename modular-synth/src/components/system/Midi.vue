@@ -2,7 +2,7 @@
   <div class="midi" v-if="devices.length">
     <h3>midi infos</h3>
     <select @change="onSelect" class="midi-in">
-      <option selected disabled>Midi Input</option>
+      <option selected disabled>&lt;select input&gt;</option>
       <option v-for="value in devices" :value="value._uid" :key="value._uid">
         {{ value.name }}
       </option>

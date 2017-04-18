@@ -7,34 +7,8 @@
  */
 export const context = window.AudioContext && (new window.AudioContext());
 
-//
-//
-// export function connect() {
-//   this.output.connect(unit, outputNum, inputNum);
-// }
-//
-//
-// export function disconnect(output){
-//   if (Array.isArray(this.output)){
-//     output = this.defaultArg(output, 0);
-//     this.output[output].disconnect();
-//   } else if (!this.isUndef(output)){
-//     this.output.disconnect(output);
-//   } else {
-//     this.output.disconnect();
-//   }
-//   return this;
-// };
-
-// *  use carefully. circumvents JS and WebAudio's normal Garbage Collection behavior
-//   Tone.prototype.noGC = function(){
-//     this.output.connect(_silentNode);
-//     return this;
-//   };
-//
-
 /**
- * Constant stream of 1's  at the audio-rate.
+ * Constant stream of 1's at the audio-rate.
  * Allows sample-accurate manipulation of a parameter, or a way to generate ASDRs.
  * @type {Object}
  */
@@ -70,37 +44,34 @@ export function signal(value = 1) {
 
 /**
  * Audio VU meter. Uses deprecated ScriptNode, tho'
- * @param {[type]} audioContext [description]
- * @param {[type]} clipLevel    [description]
- * @param {[type]} averaging    [description]
- * @param {[type]} clipLag      [description]
+ * @param {AudioContext} audioContext The webaudio context.
+ * @param {Float} clipLevel    The rms peak at which it is considered to clip.
+ * @param {Float} averaging    [description]
+ * @param {Integer} clipLag    The release time, in ms, after clipping.
  */
-export function meter(canvas, clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
-  if (!context) { return; }
-  const processor = context.createScriptProcessor(512);
-  const width = canvas.width;
-  const height = canvas.height;
-  const meterContext = canvas.getContext('2d');
-  const meterGraident = meterContext.createLinearGradient(0, 0, width, height);
+export class Meter {
 
-  processor.clipping = false;
-  processor.lastClip = 0;
-  processor.volume = 0;
-  processor.clipLevel = clipLevel; //  || 0.98;
-  processor.averaging = averaging; //  || 0.95;
-  processor.clipLag = clipLag; //  || 750;
+  constructor(canvas, clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
+    if (!context) { return; }
 
-  meterGraident.addColorStop(0, '#BFFF02');
-  meterGraident.addColorStop(0.8, '#02FF24');
-  meterGraident.addColorStop(1, '#FF0202');
+    const processor = this.processor = context.createScriptProcessor(512);
 
-  // ----------------------------- [wes] commented:
-  // this will have no effect, since we don't copy the input to the output,
-  // but works around a current Chrome bug.
-  // processor.connect(audioContext.destination);
-  // ---------------------------------------------
+    processor.clipping = false;
+    processor.lastClip = 0;
+    processor.volume = 0;
+    processor.clipLevel = clipLevel; //  || 0.98;
+    processor.averaging = averaging; //  || 0.95;
+    processor.clipLag = clipLag; //  || 750;
 
-  processor.onaudioprocess = function(event) {
+    // this will have no effect, since we don't copy the input to the output,
+    // but works around a current Chrome bug.
+    // processor.connect(audioContext.destination);
+    // ---------------------------------------------
+
+    return processor;
+  }
+
+  onaudioprocess(event) {
     var buf = event.inputBuffer.getChannelData(0);
     var bufLength = buf.length;
     var sum = 0;
@@ -125,7 +96,7 @@ export function meter(canvas, clipLevel = 0.98, averaging = 0.95, clipLag = 750)
     this.volume = Math.max(rms, this.volume * this.averaging);
   };
 
-  processor.checkClipping = function() {
+  checkClipping() {
     if (!this.clipping) {
       return false;
     }
@@ -134,42 +105,16 @@ export function meter(canvas, clipLevel = 0.98, averaging = 0.95, clipLag = 750)
     }
     return this.clipping;
   };
-
-  processor.shutdown = function() {
-    this.disconnect();
-    this.onaudioprocess = null;
-  };
-
-  processor.drawMeter = function() {
-    const level = processor.volume; //  * 0.8; // scale it since values go above 1 when clipping
-
-    meterContext.clearRect(0, 0, width, height);
-    meterContext.fillStyle = meterGraident;
-    meterContext.fillRect(0, 0, width, height);
-    meterContext.fillStyle = 'white';
-    meterContext.fillRect(width * level, 0, width, height);
-  };
-
-  processor.loop = function() {
-    if (processor.on) {
-      // this.analyse();
-      processor.drawMeter();
-      window.requestAnimationFrame(processor.loop);
-    }
-  };
-
-  processor.on = function() {
-    processor.on = true;
-    processor.loop();
-  };
-
-  processor.off = function() {
-    processor.on = false;
-  };
-
-  return processor;
 }
 
+
+
+// *  use carefully. circumvents JS and WebAudio's normal Garbage Collection behavior
+//   Tone.prototype.noGC = function(){
+//     this.output.connect(_silentNode);
+//     return this;
+//   };
+//
 
 
 /*

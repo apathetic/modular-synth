@@ -36,6 +36,7 @@
       return {
         name: 'Debugger',
         peak: 0,
+        clipping: false,
         inlets: [
           {
             label: 'input'
