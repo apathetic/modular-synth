@@ -3,7 +3,7 @@ Make this into a webworker
 https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-clip-detector
 
 <template>
-  <canvas class="vu" ref="vu">
+  <canvas class="vu" ref="vu"></canvas>
 </template>
 
 <script>
@@ -37,56 +37,39 @@ export default {
 
   mounted() {
     const meterContext = this.meterContext = this.$refs.vu.getContext('2d');
-    let meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 20, 132);
+    let meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, 132);
 
     this.audio.connect && this.audio.connect(this.meter);
 
-    meterGraident = meterContext.createLinearGradient(0, 0, 20, 132);
+    meterContext.canvas.width = 20;
+    meterContext.canvas.height = 132;
+
     meterGraident.addColorStop(0, '#BFFF02');
     meterGraident.addColorStop(0.8, '#02FF24');
     meterGraident.addColorStop(1, '#FF0202');
   },
 
   methods: {
-    // analyse() {
-    //   const signal = this.meter.analyse();
-    //   const unity = 0.35;
-    //   let sum = 0;
-    //   let rms;
-    //
-    //   for (let i = 0; i < signal.length; i++) {
-    //     sum += Math.pow(signal[i], 2);
-    //   }
-    //
-    //   rms = Math.sqrt(sum / signal.length);
-    //   rms = Math.max(rms, this._lastValue * this.smoothing); // smooth it
-    //
-    //   this._lastValue = rms;
-    //
-    //   // scale the output curve
-    //   return Math.sqrt(rms / unity);
-    // },
-
     draw() {
-      const level = this.meter.value * 0.8; // scale it since values go above 1 when clipping
+      const level = this.meter.volume; // * 0.8; // scale it since values go above 1 when clipping
       const meterContext = this.meterContext;
 
+      //                     x, y, width, height
       meterContext.clearRect(0, 0, 20, 132);
       meterContext.fillStyle = this.meterGraident;
       meterContext.fillRect(0, 0, 20, 132);
-      meterContext.fillStyle = 'white';
-      meterContext.fillRect(20 * level, 0, 20, 132);
+      meterContext.fillStyle = 'black';
+      meterContext.fillRect(0, 132 * level, 20, 132);
     },
 
     loop() {
       if (this.power) {
         if (!this.editing && this.ticking) {
-          // this.analyse();
           this.draw();
         }
 
-        // this.ticking = false;
-        window.requestAnimationFrame(this.loop);  // .bind(this)
+        this.ticking = !this.ticking;
+        window.requestAnimationFrame(this.loop);
       }
     }
   }
@@ -96,7 +79,9 @@ export default {
 
 <style lang="scss">
   canvas.vu {
+    background: black;
     width: 20px;
     height: 132px;
+    transform: rotate(180deg); // meh, i dont feel like figuring out the math in the x,y drawing
   }
 </style>
