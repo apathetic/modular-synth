@@ -6,15 +6,7 @@
     @mouseout="clearFocus">
 
     <div class="module-interface">
-
-      <!-- < l evel :audio="out1"></level>
-      < l evel :audio="out2"></level> -->
-
-      <canvas ref="meter-1"></canvas>
-      <canvas ref="meter-2"></canvas>
-
       <VU :audio="out1" />
-
       <input
         type="range"
         orient="vertical"
@@ -23,14 +15,7 @@
         step="0.05"
         v-model="gain">
       </input>
-
-
-      <!-- <button
-        class="toggle"
-        :class="isMuted ? 'toggle--active' : ''"
-        @click="toggleMute">
-          mute
-      </button> -->
+      <VU :audio="out2" />
     </div>
 
     <div class="module-connections">
@@ -173,6 +158,7 @@ export default {
     width: auto;
     height: auto;
 
+    input[type="range"],
     canvas {
       width: 20px;
       height: 132px;
@@ -181,6 +167,18 @@ export default {
     .module-interface {
       padding: 2em 1em 1em 3.2em;
       visibility: visible;
+      display: flex;
+      justify-content: center;
+    }
+
+    input[type="range"] {
+      margin: 0 -5px;
+      z-index: 1;
+      -webkit-appearance: slider-vertical; /* WebKit */
+
+      &:focus {
+        outline: none;
+      }
     }
   }
 </style>
