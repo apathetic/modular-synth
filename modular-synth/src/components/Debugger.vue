@@ -11,7 +11,6 @@
 
     <div class="module-interface">
       {{ peak }}
-      <!-- {{ clipping }} -->
     </div>
 
     <div class="module-connections">
@@ -36,7 +35,6 @@
       return {
         name: 'Debugger',
         peak: 0,
-        clipping: false,
         inlets: [
           {
             label: 'input'
@@ -142,20 +140,6 @@
 
     .module-interface {
       padding: 0;
-    }
-    canvas {
-      height: 222px;
-      width: 356px;
-      display: block;
-      left: 1px;
-      opacity: 0;
-      transition: opacity $transition-time;
-    }
-
-    &.analysing {
-      canvas {
-        opacity: 1;
-      }
     }
   };
 </style>

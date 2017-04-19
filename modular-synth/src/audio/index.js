@@ -52,10 +52,11 @@ export function signal(value = 1) {
 export class Meter {
 
   constructor(canvas, clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
-    if (!context) { return; }
+    // if (!context) { return; }
 
     const processor = this.processor = context.createScriptProcessor(512);
 
+    processor.onaudioprocess = this.processAudio;
     processor.clipping = false;
     processor.lastClip = 0;
     processor.volume = 0;
@@ -65,13 +66,13 @@ export class Meter {
 
     // this will have no effect, since we don't copy the input to the output,
     // but works around a current Chrome bug.
-    // processor.connect(audioContext.destination);
+    processor.connect(context.destination);
     // ---------------------------------------------
 
     return processor;
   }
 
-  onaudioprocess(event) {
+  processAudio(event) {
     var buf = event.inputBuffer.getChannelData(0);
     var bufLength = buf.length;
     var sum = 0;
@@ -95,16 +96,16 @@ export class Meter {
     // want "fast attack, slow release."
     this.volume = Math.max(rms, this.volume * this.averaging);
   };
-
-  checkClipping() {
-    if (!this.clipping) {
-      return false;
-    }
-    if ((this.lastClip + this.clipLag) < window.performance.now()) {
-      this.clipping = false;
-    }
-    return this.clipping;
-  };
+  //
+  // checkClipping() {
+  //   if (!this.clipping) {
+  //     return false;
+  //   }
+  //   if ((this.lastClip + this.clipLag) < window.performance.now()) {
+  //     this.clipping = false;
+  //   }
+  //   return this.clipping;
+  // };
 }
 
 
