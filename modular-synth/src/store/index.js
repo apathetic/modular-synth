@@ -19,15 +19,17 @@ export const PARAMETERS_KEY = 'parameters';
 
 const state = {
   name: '_default',         // NOTE: this is overwritten in loadPatch(), in actions.js
-  id: 0,
+  id: 0,                    // for modules or connections
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
   parameterSets: [],
+  pid: 0,                   // for active parameter set
 
   power: false,
   editing: false,
   focused: undefined,       // "Hovered": for Module Info, Connections.  TODO move to $bus?
   active: 0,                // "Clicked": for Dragging, Deleting.
+
   patches: {}               // all available patches, cached here
 };
 
