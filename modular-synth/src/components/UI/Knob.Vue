@@ -3,13 +3,20 @@ Knob's value can vary between zero and one (0 -> 1). This value is then
 mapped to the min and max properties passed into the component, and $emit'd
 back to the parent.
 
+Additionally, all parameter changes are automatically persisted to the vuex
+store.
+
+Notes: the "param" property _must_ match the name of the data it represents
+in the parent component. For example, Knob param="freq" implies that there
+is a "freq" parameter in the Component.
+
 <template>
   <svg class="knob" @mousedown.stop.prevent="start">
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
     <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
     <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
     <text x="24" y="28">{{ value }}</text>
-    <text x="24" y="54">{{ label }}</text>
+    <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
 
@@ -45,7 +52,8 @@ function describeArc(x, y, radius, startAngle, endAngle) {
 
 export default {
   props: {
-    label: String,
+    // label: String,
+    param: String,
     min: Number,
     max: Number,
     decimals: 0
@@ -68,7 +76,7 @@ export default {
     this.range = this.max - this.min;
     // this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
 
-    // TODO: avoid dupl w/ every knob?
+    // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App
     window.addEventListener('mouseup', (e) => {
       window.mouseDown = false;
       self.active = false;
@@ -112,6 +120,18 @@ export default {
 
       this.$emit('value', value);
       this.setDisplay();
+
+      this.$store.commit('SET_PARAMETER', {
+        id: this.$parent.id,
+        name: this.param,
+        value: value
+      });
+
+      // TODO: alternatively, every module in vue as a _uid... could just use that?
+      // commit('SET_APRAMTER', {
+      //  id: _uid,
+      //  value: value
+      // });
     },
 
     setDisplay() {

@@ -42,7 +42,8 @@ export const savePatch = ({ state }) => {
     id: state.id,
     name: state.name,
     modules: state.modules,
-    connections: state.connections
+    connections: state.connections,
+    parameterSets: {}
   };
 
   api.save('patch/' + name, patch)

@@ -2,7 +2,7 @@
   <div class="patch-manager">
     <div class="actions">
       <auth></auth>
-      <button class="button" @click="savePatch">save</button>
+      <button class="button" @click="save">save</button>
     </div>
 
     <div class="patch selector" :class="{'active': $root.authenticated}">
@@ -28,7 +28,7 @@
 
 <script>
 import Auth from './Auth';
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   components: {
@@ -67,7 +67,11 @@ export default {
 
     paramsNum() {
       return this.paramNames.indexOf(this.currentParams) + 1 || '-';
-    }
+    },
+
+    ...mapGetters([
+      'modules'
+    ])
   },
 
   /**
@@ -97,6 +101,21 @@ export default {
   },
 
   methods: {
+    save() {
+      // let o = {
+      //   name: 'xxxx',
+      //   params: {}
+      // };
+      //
+      // const paramsets = this.modules.map((m) => {
+      //   console.log(m, m.name, m.id);
+      //   o.params[m.id] = m.parameterize();
+      // });
+      //
+      // console.log(paramsets);
+      this.savePatch();
+    },
+
     selectPatch(e) {
       this.currentPatch = e.target.value;
       this.loadPatch(this.currentPatch);

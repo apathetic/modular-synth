@@ -2,7 +2,7 @@
 // http://nightwatchjs.org/guide#usage
 
 /**
- * Test that user can login and see dashboard.
+ * Test
  */
 module.exports = {
   'Sortable tests': function (browser) {
