@@ -15,9 +15,9 @@
       </select>
       <slider label="mod"  @value="mod = $event"  :min="0" :max="100"></slider>
       <p>OSC</p>
-      <knob   label="freq" @value="freq = $event" :min="1" :max="2000"></knob>
-      <knob   label="sync" @value="sync = $event" :min="0" :max="1"></knob>
-      <knob   label="PW"   @value="PW = $event"   :min="0" :max="6.28"></knob>
+      <knob   param="freq" @value="freq = $event" :min="1" :max="2000"></knob>
+      <knob   param="sync" @value="sync = $event" :min="0" :max="1"></knob>
+      <knob   param="PW"   @value="PW = $event"   :min="0" :max="6.28"></knob>
     </div>
 
     <div class="module-connections">
@@ -92,7 +92,7 @@
 
       // k-Param for controlling mod, sync
       this.$watch('freq', this.setFreq);
-      this.$watch('mod', this.setGain);
+      this.$watch('mod', this.setMod);
       this.$watch('type', this.setType);
 
       console.log('Creating VCO');
@@ -121,8 +121,13 @@
        * Update Oscillator gain
        * @param  {Float} g  Gain, between 0 and 1.
        */
-      setGain(g) {
+      setMod(g) {
         this.gain.value = g;
+
+        // this.$store.commit('SET_PARAMETER', this.id, {
+        //   name: 'mod',
+        //   value: g
+        // });
       },
 
       /**

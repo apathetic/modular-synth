@@ -75,6 +75,10 @@ export const ADD_MODULE = (state, data) => {
     w: size[0],   // for rack width
     h: size[1]    // for rack height
   });
+
+  let parameterSet = state.parameterSets.find((p) => { p.id === state.pid; });
+
+  parameterSet.params[state.id] = {}; // ensure there is a corresponding (currently empty) params Object
 };
 
 export const REMOVE_MODULE = (state, id) => {
@@ -124,4 +128,24 @@ export const REMOVE_CONNECTION = (state, id) => {
   state.connections = state.connections.filter((c) => {
     return c.id !== id;
   });
+};
+
+// -----------------------------------------------
+//  PARAMETERS
+// -----------------------------------------------
+export const ADD_PARAMETERS = (state, name) => {
+  state.parameterSets.push({
+    name: name,
+    id: ++state.pid,
+    params: {}
+  });
+};
+
+export const SET_PARAMETER = (state, param) => {
+  console.log('asfdfsafsdasdf', param);
+  let params = state.parameterSets.find((p) => { p.id === state.pid; });
+
+  if (params && params[param.id] && param.name) {
+    params[param.id][param.name] = param.value;
+  }
 };
