@@ -11,7 +11,6 @@ export const LOAD_PATCH = (state, patch) => {
     state.id = patch.id || 0;
     state.name = patch.name || '_default';
     state.modules = patch.modules;
-    state.parameterSets = patch.parameterSets || [];
   }
 };
 
@@ -71,10 +70,6 @@ export const ADD_MODULE = (state, data) => {
     w: size[0],   // for rack width
     h: size[1]    // for rack height
   });
-
-  let parameterSet = state.parameterSets.find((p) => { p.id === state.pid; });
-
-  parameterSet.params[state.id] = {}; // ensure there is a corresponding (currently empty) params Object
 };
 
 export const REMOVE_MODULE = (state, id) => {
@@ -129,28 +124,31 @@ export const REMOVE_CONNECTION = (state, id) => {
 // -----------------------------------------------
 //  PARAMETERS
 // -----------------------------------------------
-export const ADD_PARAMETERS = (state, name) => {
-  state.parameterSets.push({
-    name: name,
-    id: ++state.pid,
-    params: {}
-  });
-};
-
-export const SET_PARAMETER = (state, param) => {
-  // let params = state.parameterSets.find((p) => { return p.id === state.pid; });
-  let params = state.parameterSets[state.pid].params;  // for now: dont filter by id, just use array index to directly access params object (assumes id is equal to array index)
-
-  if (params && params[param.id] && param.name) {
-    params[param.id][param.name] = param.value;
-  }
-};
-
-export const LOAD_PARAM = (state, parameterSet) => {
-  state.parameterSets = parameterSet || [];
-};
-
-
-// export const LOAD_PARAMS = (state, parameters) => {
-//   state.parameterSets = parameters || [];
+// export const ADD_PARAMETERS = (state, name) => {
+//   state.parameterSets.push({
+//     name: name,
+//     id: ++state.pid,
+//     params: {}
+//   });
 // };
+
+// export const LOAD_PARAMETERS = (state, parameters) => {
+export const LOAD_PARAMETERS = (state, name) => {
+  const parameterSets = state.patches[state.patch].parameterSets;
+  const parameterSet = parameterSets.find((p) => { return p.name === name; });
+
+  state.parameters = parameterSet.parameters || {};
+};
+
+export const ADD_PARAMETER = (state, id) => {
+  state.parameters[id] = 0;
+};
+
+export const SET_PARAMETER = (state, id, value) => {
+  state.parameters[id] = value;
+};
+
+export const REMOVE_PARAMETER = (state, id) => {
+  delete state.parameters[id];
+  // Vue.delete(state.parameters, id);
+};
