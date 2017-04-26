@@ -22,6 +22,8 @@ const state = {
   id: 0,                    // for modules or connections
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
+  parameters: [],
+
   parameterSets: [],
   pid: 0,                   // for active parameter set
 

@@ -77,10 +77,11 @@ export default {
   /**
    * Immediately hit the server to populate a list of (the users') available patches.
    * NOTE: if a patch is already stored in localStorage, it'll get loaded by default.
+   * NOTE: this is now in main.js
    */
-  created() {
-    this.fetchPatches();
-  },
+  // created() {
+  //   this.fetchPatches();
+  // },
 
   /**
    * Set the drop-down to the current patch (if loaded from localStorage)
