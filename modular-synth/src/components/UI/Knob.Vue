@@ -88,6 +88,10 @@ export default {
   },
 
   created() {
+    this.id = this.$parent.id + '-' + this.param;
+    this.$store.commit('ADD_PARAMETER', this.id);
+
+
     const self = this;
 
     this.range = this.max - this.min;
@@ -116,6 +120,10 @@ export default {
     this.setDisplay();
   },
 
+  destroyed() {
+    this.$store.commit('REMOVE_PARAMETER', this.id);
+  },
+
   methods: {
     start(e) {
       window.mouseDown = true;
@@ -138,11 +146,7 @@ export default {
       this.$emit('value', value);
       this.setDisplay();
 
-      this.$store.commit('SET_PARAMETER', {
-        id: this.$parent.id,
-        name: this.param,
-        value: value
-      });
+      this.$store.commit('SET_PARAMETER', this.id, value);
 
       // TODO: alternatively, every module in vue as a _uid... could just use that?
       // commit('SET_APRAMTER', {
