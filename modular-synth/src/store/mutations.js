@@ -19,10 +19,6 @@ export const LOAD_PATCHES = (state, patches) => {
   state.patches = patches;    // check if patches is an array, or ...?
 };
 
-// export const LOAD_PARAMS = (state, parameters) => {
-//   state.parameterSets = parameters || [];
-// };
-
 // -----------------------------------------------
 //  APP
 // -----------------------------------------------
@@ -142,10 +138,19 @@ export const ADD_PARAMETERS = (state, name) => {
 };
 
 export const SET_PARAMETER = (state, param) => {
-  console.log('asfdfsafsdasdf', param);
-  let params = state.parameterSets.find((p) => { p.id === state.pid; });
+  // let params = state.parameterSets.find((p) => { return p.id === state.pid; });
+  let params = state.parameterSets[state.pid].params;  // for now: dont filter by id, just use array index to directly access params object (assumes id is equal to array index)
 
   if (params && params[param.id] && param.name) {
     params[param.id][param.name] = param.value;
   }
 };
+
+export const LOAD_PARAM = (state, parameterSet) => {
+  state.parameterSets = parameterSet || [];
+};
+
+
+// export const LOAD_PARAMS = (state, parameters) => {
+//   state.parameterSets = parameters || [];
+// };

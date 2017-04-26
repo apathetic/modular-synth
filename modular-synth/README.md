@@ -120,7 +120,7 @@ npm test
 
 - General
   - load patch
-    - turn off power 
+    - turn off power
   - saving patches
     - load everything via firebase
     - can have ONE patch in localstorage
@@ -146,6 +146,7 @@ npm test
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
   - when a node is selected, all connected connections become highlighted
   - must press shift to sort in play mode
+  - single click on Module fire sortable; should only be onDrag
 
 
 - LOADING
