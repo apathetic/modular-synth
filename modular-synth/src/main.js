@@ -147,9 +147,11 @@ new Vue({
       this.authenticated = !!user;
       //   this.user = user;
 
-      // TODO
-      this.fetchPatches();
-      //
+      // TODO.  We want to fetch patches if the user logs
+      // in / out; not just when the app loads
+      if (this.authenticated) {
+        this.fetchPatches();
+      }
     });
   }
 });

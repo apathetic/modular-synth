@@ -13,9 +13,10 @@ export const api = {
   // Load data ONCE (ie. no "listeners")
   // path: ie: /users/' + userId
   load(path) {
-    // if (auth.currentUser) {
-    return database.ref(path).once('value');
-    // }
+    console.log('firebase api, auth', !!auth.currentUser);
+    if (auth.currentUser) {
+      return database.ref(path).once('value');
+    }
   },
 
   // note: destructive. Will overwrite if anything happens to be at this path

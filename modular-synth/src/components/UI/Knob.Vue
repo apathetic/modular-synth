@@ -1,3 +1,20 @@
+All knobs have uid (er, just state.id++).
+
+computed: {
+  value() {
+    return this.state.parameters.find(this.id);
+  }
+}
+
+
+
+
+
+
+
+
+
+
 THE Knob allows the manipulation of a particular parameter. Internally, the
 Knob's value can vary between zero and one (0 -> 1). This value is then
 mapped to the min and max properties passed into the component, and $emit'd
