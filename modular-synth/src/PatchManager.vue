@@ -9,20 +9,19 @@
       <span>{{ patchNum }}</span>
       <select :value="currentPatch" @change="selectPatch">
         <option value="" disabled selected>&lt;select patch&gt;</option>
-        <!-- <option v-for="patch in patchNames" :value="patch">{{ patch }}</option> -->
         <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
       </select>
-      <!-- <button class="button" :class="{'active': !!selectedPatch}" @click="changePatch">load</button> -->
     </div>
 
     <div class="params selector">
       <span>{{ paramsNum }}</span>
       <select :value="currentParams" @change="selectParams">
         <option value="" disabled selected>&lt;select settings&gt;</option>
-        <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
+        <option v-for="(params, index) in parameterSets" :value="params.name">{{ params.name }}</option>
       </select>
-      <!-- <button class="button" :class="{'active': !!selectedParams}" @click="changeParams">load</button> -->
     </div>
+
+    {{ parameterSets }}
   </div>
 </template>
 
@@ -44,7 +43,7 @@ export default {
 
   computed: {
     patches() { return this.$store.state.patches; },
-    parameterSets() { return this.$store.state.parameterSets; },
+    parameterSets() { return this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets || []; },
 
     patchNames() {
       return Object.keys(this.$store.state.patches);
@@ -58,15 +57,21 @@ export default {
     },
 
     paramNames() {
-      const params = this.$store.state.parameterSets;
-
-      return (!params) ? [] : params.map((params) => {
-        return params.name;
-      });
+      // return this.parameterSets.map((params, index) => {
+      //   return params.name;
+      // });
     },
 
     paramsNum() {
-      return this.paramNames.indexOf(this.currentParams) + 1 || '-';
+      // return this.paramNames.indexOf(this.currentParams) + 1 || '-';
+      // let i;
+      //
+      // this.parameterSets.forEach((params, index) => {
+      //   if (params.name === this.currentParams) {
+      //     i = index;
+      //   };
+      // });
+      // return i;
     },
 
     ...mapGetters([
@@ -88,16 +93,12 @@ export default {
    */
   mounted() {
     const current = encodeURI(this.$store.state.name.toLowerCase()) || false;
-    // const selects = document.querySelector('header select');
 
     if (current) {
       setTimeout(() => {
         this.currentPatch = current;
-        this.currentParams = this.$store.state.parameterSets[0];
+        this.currentParams = this.parameterSets[0];
       }, 2000);
-
-      // selects[0] = this.currentPatch;   // WHY? Isn't data-driven, here for some reason
-      // selects[1] = this.currentParams;
     }
   },
 
@@ -124,7 +125,13 @@ export default {
 
     selectParams(e) {
       this.currentParams = e.target.value;
-      this.loadParameters(this.currentParams);
+
+      // const parameterSets = this.$store.state.patches[this.currentPatch].parameterSets;
+      // const parameterSet = parameterSets.find((p) => { return p.name === this.currentParams; });
+      // const parameters = parameterSet.parameters || [];
+
+      // this.$store.commit('LOAD_PARAMETERS', parameters);
+      this.$store.commit('LOAD_PARAMETERS', this.currentParams);
     },
 
     ...mapActions([

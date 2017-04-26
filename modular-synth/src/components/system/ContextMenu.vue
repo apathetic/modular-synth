@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   props: {
@@ -61,7 +61,8 @@ export default {
 
   methods: {
     newModule(type) {
-      this.$store.commit('ADD_MODULE', { type, coords: this.coords });
+      // this.$store.commit('ADD_MODULE', { type, coords: this.coords });
+      this.addModule({ type, coords: this.coords });
 
       // this.$nextTick(function() {
       //   const id = this.$store.state.id;
@@ -70,7 +71,11 @@ export default {
       //   this.gridList.items = this.modules;
       //   this.gridList.moveItemToPosition(item, [0, 0]);
       // });
-    }
+    },
+
+    ...mapActions([
+      'addModule'
+    ])
   }
 };
 </script>

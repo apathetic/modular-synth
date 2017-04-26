@@ -32,7 +32,7 @@ export const loadPatch = ({ commit, state }, name) => {
   Vue.nextTick(function() {
     console.log('All modules loaded, now routing audio...');
     commit('LOAD_CONNECTIONS', connections);
-    // commit('LOAD_PARAMS', patch.parameterSets[0] || []);
+    // commit('LOAD_PARAMETERS', patch.parameterSets[0] || []);
   });
 };
 
@@ -67,28 +67,23 @@ export const fetchPatches = ({ commit }) => {
     });
 };
 
-export const loadParameters = ({ state }, id) => {
-  // const params = state.parameterSets.find((p) => { return p.id === id; }).params || [];
-  const _params = state.parameterSets[id].params;  // for now: dont filter by id, just use array index to directly access params object (assumes id is equal to array index)
-
-  for (let [mid, params] of Object.entries(_params)) {
-    // option 1. Data driven
-    // find each module sequentually, then find knobs / children
-    const mod = window.synth.$children.find((m) => { return m.id === mid; });
-    for (let [param, value] in params) {
-      let knob = mod.$children.find(k => { return k.name === param; });
-
-      console.log(mod);
-      knob.update(value);
-    }
-
-    // option 2
-    // find all knobs, then filter by each module
-    // knobs = App.$childen.filter(m => m.type == knob);
-    // ...
-    // knobs.filter((k) => { k is $child of module });
-  }
-};
+// export const loadParameters = ({ commit, state }, id) => {
+//   // const params = state.parameterSets.find((p) => { return p.id === id; }).params || [];
+//   const _params = state.parameterSets[id].params;  // for now: dont filter by id, just use array index to directly access params object (assumes id is equal to array index)
+//
+//   for (let [mid, params] of Object.entries(_params)) {
+//     // option 1. Data driven
+//     // find each module sequentually, then find knobs / children
+//     const mod = window.synth.$children.find((m) => { return m.id === mid; });
+//     for (let [param, value] in params) {
+//       let knob = mod.$children.find(k => { return k.name === param; });
+//
+//       knob.update(value);
+//     }
+//   }
+//
+//
+// };
 
 // -----------------------------------------------
 //  APP
@@ -128,12 +123,15 @@ export const clearFocus = ({ commit }) => {
 // -----------------------------------------------
 //  MODULES
 // -----------------------------------------------
-// export const addModule = ({ commit }, type) => {
+export const addModule = ({ commit }, data) => {
+  commit('ADD_MODULE', data);
+  // commit('ADD_PARAMS');
+
 //   commit('ADD_MODULE', { type });
 //   //
 //   // update gridlist here?
 //   //
-// };
+};
 
 export const removeModule = ({ commit, state }) => {
   // only delete active/focused modules
