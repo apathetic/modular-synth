@@ -1,27 +1,12 @@
-All knobs have uid (er, just state.id++).
-
-computed: {
-  value() {
-    return this.state.parameters.find(this.id);
-  }
-}
-
-
-
-
-
-
-
-
-
 
 THE Knob allows the manipulation of a particular parameter. Internally, the
 Knob's value can vary between zero and one (0 -> 1). This value is then
 mapped to the min and max properties passed into the component, and $emit'd
 back to the parent.
 
-Additionally, all parameter changes are automatically persisted to the vuex
-store.
+When init'd the Knob "registers" itself with the store, via ADD_PARAMETER.
+Settings, updates, etc. are tracked this way i.e. all parameter changes
+are automatically persisted to the vuex store.
 
 Notes: the "param" property _must_ match the name of the data it represents
 in the parent component. For example, Knob param="freq" implies that there
@@ -32,7 +17,7 @@ is a "freq" parameter in the Component.
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
     <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
     <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
-    <text x="24" y="28">{{ value }}</text>
+    <text x="24" y="28">{{ value }} {{ _value }}</text>
     <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
@@ -74,6 +59,12 @@ export default {
     min: Number,
     max: Number,
     decimals: 0
+  },
+
+  computed: {
+    _value() {
+      return this.$store.state.parameters[this.id] || 0;
+    }
   },
 
   data() {
@@ -146,13 +137,10 @@ export default {
       this.$emit('value', value);
       this.setDisplay();
 
-      this.$store.commit('SET_PARAMETER', this.id, value);
-
-      // TODO: alternatively, every module in vue as a _uid... could just use that?
-      // commit('SET_APRAMTER', {
-      //  id: _uid,
-      //  value: value
-      // });
+      this.$store.commit('SET_PARAMETER', {
+        id: this.id,
+        value
+      });
     },
 
     setDisplay() {
