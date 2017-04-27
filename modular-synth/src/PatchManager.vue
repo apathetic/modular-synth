@@ -6,18 +6,18 @@
     </div>
 
     <div class="patch selector" :class="{'active': $root.authenticated}">
-      <span>{{ patchNum }}</span>
+      <span>{{ patchIndex }}</span>
       <select :value="currentPatch" @change="selectPatch">
         <option value="" disabled selected>&lt;select patch&gt;</option>
-        <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
+        <option v-for="(patch, index) in patches" :value="index">{{ patch.name }}</option>
       </select>
     </div>
 
     <div class="params selector">
-      <span>{{ paramsNum }}</span>
+      <span>{{ parameterIndex }}</span>
       <select :value="currentParams" @change="selectParams">
         <option value="" disabled selected>&lt;select settings&gt;</option>
-        <option v-for="(params, index) in parameterSets" :value="params.name">{{ params.name }}</option>
+        <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
       </select>
     </div>
 
@@ -35,43 +35,16 @@ export default {
 
   data() {
     return {
-      currentPatch: '',
-      currentParams: ''
+      currentPatch: null,
+      currentParams: 0
     };
   },
 
   computed: {
     patches() { return this.$store.state.patches; },
     parameterSets() { return this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets || []; },
-
-    patchNames() {
-      return Object.keys(this.$store.state.patches);
-      // return this.$store.state.patches.map((patch) => {
-      //   return patch.name;
-      // });
-    },
-
-    patchNum() {
-      return this.patchNames.indexOf(this.currentPatch) + 1 || '-';
-    },
-
-    paramNames() {
-      // return this.parameterSets.map((params, index) => {
-      //   return params.name;
-      // });
-    },
-
-    paramsNum() {
-      // return this.paramNames.indexOf(this.currentParams) + 1 || '-';
-      // let i;
-      //
-      // this.parameterSets.forEach((params, index) => {
-      //   if (params.name === this.currentParams) {
-      //     i = index;
-      //   };
-      // });
-      // return i;
-    },
+    patchIndex() { return +this.currentPatch + 1 || '-'; },
+    parameterIndex() { return +this.currentParams + 1 || '-'; },
 
     ...mapGetters([
       'modules'
@@ -79,57 +52,27 @@ export default {
   },
 
   /**
-   * Immediately hit the server to populate a list of (the users') available patches.
-   * NOTE: if a patch is already stored in localStorage, it'll get loaded by default.
-   * NOTE: this is now in main.js
-   */
-  // created() {
-  //   this.fetchPatches();
-  // },
-
-  /**
    * Set the drop-down to the current patch (if loaded from localStorage)
    */
   mounted() {
-    const current = encodeURI(this.$store.state.name.toLowerCase()) || false;
+    const current = this.$store.state.patches.find((p) => { return p.name === this.$store.state.name; });
 
-    if (current) {
-      setTimeout(() => {
-        this.currentPatch = current;
-        this.currentParams = this.parameterSets[0];
-      }, 2000);
-    }
+    this.currentPatch = this.$store.state.patches.indexOf(current);
   },
 
   methods: {
     save() {
-      // let o = {
-      //   name: 'xxxx',
-      //   params: {}
-      // };
-      //
-      // const paramsets = this.modules.map((m) => {
-      //   console.log(m, m.name, m.id);
-      //   o.params[m.id] = m.parameterize();
-      // });
-      //
-      // console.log(paramsets);
       this.savePatch();
     },
 
     selectPatch(e) {
       this.currentPatch = e.target.value;
       this.loadPatch(this.currentPatch);
+      this.currentParams = this.parameterSets.length ? 0 : null;
     },
 
     selectParams(e) {
       this.currentParams = e.target.value;
-
-      // const parameterSets = this.$store.state.patches[this.currentPatch].parameterSets;
-      // const parameterSet = parameterSets.find((p) => { return p.name === this.currentParams; });
-      // const parameters = parameterSet.parameters || [];
-
-      // this.$store.commit('LOAD_PARAMETERS', parameters);
       this.$store.commit('LOAD_PARAMETERS', this.currentParams);
     },
 

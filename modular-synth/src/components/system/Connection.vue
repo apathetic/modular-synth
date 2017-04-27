@@ -44,7 +44,7 @@ Other notes:
     :y1="y1"
     :x2="x2"
     :y2="y2"
-    :stroke="(type === 'audio') ? 'yellow' : 'white'"
+    stroke="white"
     stroke-width="3">
   </line>
 </template>
