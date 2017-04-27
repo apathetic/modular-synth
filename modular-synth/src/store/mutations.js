@@ -144,8 +144,8 @@ export const ADD_PARAMETER = (state, id) => {
   state.parameters[id] = 0;
 };
 
-export const SET_PARAMETER = (state, id, value) => {
-  state.parameters[id] = value;
+export const SET_PARAMETER = (state, data) => {
+  state.parameters[data.id] = data.value;
 };
 
 export const REMOVE_PARAMETER = (state, id) => {
