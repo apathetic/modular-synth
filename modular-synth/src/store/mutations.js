@@ -132,16 +132,22 @@ export const REMOVE_CONNECTION = (state, id) => {
 //   });
 // };
 
-// export const LOAD_PARAMETERS = (state, parameters) => {
-export const LOAD_PARAMETERS = (state, name) => {
+// export const LOAD_PARAMETERS = (state, name) => {
+//   const patch = state.patches.find((patch) => { return patch.name === state.name; });
+//   const parameterSet = patch.parameterSets && patch.parameterSets.find((p) => { return p.name === name; });
+//
+//   state.parameters = parameterSet.parameters || {};
+// };
+
+export const LOAD_PARAMETERS = (state, id) => {
   const patch = state.patches.find((patch) => { return patch.name === state.name; });
-  const parameterSet = patch.parameterSets && patch.parameterSets.find((p) => { return p.name === name; });
+  const parameterSet = patch.parameterSets && patch.parameterSets[id];
 
   state.parameters = parameterSet.parameters || {};
 };
 
 export const ADD_PARAMETER = (state, id) => {
-  state.parameters[id] = 0;
+  state.parameters[id] = null;
 };
 
 export const SET_PARAMETER = (state, data) => {
