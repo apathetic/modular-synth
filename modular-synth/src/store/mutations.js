@@ -14,7 +14,7 @@ export const LOAD_PATCH = (state, patch) => {
   }
 };
 
-export const LOAD_PATCHES = (state, patches) => {
+export const SET_PATCHES = (state, patches) => {
   state.patches = patches;    // check if patches is an array, or ...?
 };
 
@@ -134,8 +134,8 @@ export const REMOVE_CONNECTION = (state, id) => {
 
 // export const LOAD_PARAMETERS = (state, parameters) => {
 export const LOAD_PARAMETERS = (state, name) => {
-  const parameterSets = state.patches[state.patch].parameterSets;
-  const parameterSet = parameterSets.find((p) => { return p.name === name; });
+  const patch = state.patches.find((patch) => { return patch.name === state.name; });
+  const parameterSet = patch.parameterSets && patch.parameterSets.find((p) => { return p.name === name; });
 
   state.parameters = parameterSet.parameters || {};
 };

@@ -20,7 +20,7 @@ export const loadPatch = ({ commit, state }, name) => {
       name: localStorage.getItem(NAME_KEY) || '_default',
       id: parseInt(localStorage.getItem('id')) || 0,
       modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-      parameterSets: JSON.parse(localStorage.getItem(PARAMETERS_KEY)) || []
+      parameterSets: JSON.parse(localStorage.getItem(PARAMETERS_KEY)) || {}
     };
     connections = JSON.parse(localStorage.getItem(CONNECTIONS_KEY)) || [];
   }
@@ -60,7 +60,7 @@ export const fetchPatches = ({ commit }) => {
     .then((response) => {
       const patches = response.val();  // val() is a firebase thing
 
-      commit('LOAD_PATCHES', patches);
+      commit('SET_PATCHES', patches);
     })
     .catch(() => {
       console.log('Not signed in.'); // NOT SIGNED IN ?

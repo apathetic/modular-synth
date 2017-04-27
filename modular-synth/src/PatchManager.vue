@@ -21,7 +21,6 @@
       </select>
     </div>
 
-    {{ parameterSets }}
   </div>
 </template>
 
