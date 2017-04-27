@@ -21,7 +21,7 @@
     </div>
 
     <div class="module-connections">
-      <inlets :ports="inlets"></inlets>
+      <inlets  :ports="inlets"></inlets>
       <outlets :ports="outlets"></outlets>
     </div>
   </div>
