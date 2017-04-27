@@ -22,7 +22,7 @@ const state = {
   id: 0,                    // for modules AND connections
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
-  parameters: [],
+  parameters: {},
 
   // parameterSets: [],
   // pid: 0,                   // for active parameter set
@@ -32,7 +32,7 @@ const state = {
   focused: undefined,       // "Hovered": for Module Info, Connections.  TODO move to $bus?
   active: 0,                // "Clicked": for Dragging, Deleting.
 
-  patches: {}               // all available patches, cached here
+  patches: []               // all available patches, cached here
 };
 
 

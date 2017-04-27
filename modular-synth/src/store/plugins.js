@@ -14,8 +14,8 @@ const localStoragePlugin = (store) => {
     localStorage.setItem(CONNECTIONS_KEY, JSON.stringify(connections));
     // }
   });
-  store.subscribe((mutation, { parameterSets }) => {
-    localStorage.setItem(PARAMETERS_KEY, JSON.stringify(parameterSets));
+  store.subscribe((mutation, { parameters }) => {
+    localStorage.setItem(PARAMETERS_KEY, JSON.stringify(parameters));
   });
   store.subscribe((mutation, { id }) => {
     localStorage.setItem('id', id);
