@@ -36,6 +36,8 @@ npm test
   - module
     - module:add
     - module:remove
+  - parameters
+    - parameters:load
   - audio
     - audio:start
     - audio:stop
