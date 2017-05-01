@@ -81,6 +81,7 @@ export default {
       toModule: {},       // will be a Vue Component
       cursorX: false,
       cursorY: false
+      // unwatch: () => {}
     };
   },
 

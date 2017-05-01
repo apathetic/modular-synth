@@ -74,6 +74,7 @@ export default {
     selectParams(e) {
       this.currentParams = e.target.value;
       this.$store.commit('LOAD_PARAMETERS', this.currentParams);
+      this.$bus.$emit('parameters:load');
     },
 
     ...mapActions([
