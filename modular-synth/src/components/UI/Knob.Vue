@@ -29,7 +29,7 @@ const x = 24; // half the css knob size
 const y = 24;
 
 // let startValue = 0;
-// let startClientY = 0;
+// let startY = 0;
 
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -61,17 +61,11 @@ export default {
     decimals: 0
   },
 
-  computed: {
-    _value() {
-      return this.$store.state.parameters[this.id] || 0;
-    }
-  },
-
   data() {
     return {
       active: false,
       startValue: 0,
-      startClientY: null,
+      startY: null,
       knobValue: 0,         // 0 -> 1 internally
       range: 1,
       value: 0
@@ -86,9 +80,9 @@ export default {
     const self = this;
 
     this.range = this.max - this.min;
-    // this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
 
     // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App
+    //       or: just add / remove dynamically as needed?
     window.addEventListener('mouseup', (e) => {
       window.mouseDown = false;
       self.active = false;
@@ -101,6 +95,13 @@ export default {
       if (window.mouseDown && self.active) {
         self.update(e);
       }
+    });
+
+    this.$bus.$on('parameters:load', () => {
+      this.value = this.$store.state.parameters[this.id] || 0;
+      this.knobValue = (this.value - this.min) / this.range;  // derive internal knobValue from value
+      this.$emit('value', this.value);                        // update parent w/ new value
+      this.setDisplay();
     });
   },
 
@@ -120,26 +121,25 @@ export default {
       window.mouseDown = true;
       this.active = true;
       this.startValue = this.knobValue;
-      this.startClientY = e.clientY;
+      this.startY = e.clientY;
 
       // document.body.style.webkitUserSelect = 'none';
       // document.body.style.userSelect = 'none';
     },
 
     update(e) {
-      const delta = (this.startClientY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
+      const delta = (this.startY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
       const knobValue = Math.min(1, Math.max(0, this.startValue + delta));
-      const value = knobValue * this.range + this.min;
 
       this.knobValue = knobValue;
-      this.value = parseFloat(value).toFixed(this.decimals);
+      this.value = parseFloat(knobValue * this.range + this.min);
 
-      this.$emit('value', value);
+      this.$emit('value', this.value);
       this.setDisplay();
 
       this.$store.commit('SET_PARAMETER', {
         id: this.id,
-        value
+        value: this.value
       });
     },
 
