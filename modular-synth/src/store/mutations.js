@@ -4,12 +4,12 @@ import { moduleSize } from '../dimensions';
 //  BOOTSTRAP
 // -----------------------------------------------
 export const LOAD_PATCH = (state, patch) => {
-  // NOTE: for now, Objects in the patch are copied to the root of the store.
-  // Will need to update so that App can just reference the current patch
-  // within patches: {}
+  // Modules / Connections / Parameters in the patch are copied
+  // to the root of the store. Will need to update so that App
+  // can just reference the current patch  within patches ...?
   if (patch) {
+    // state.name = patch.name || '_default';
     state.id = patch.id || 0;
-    state.name = patch.name || '_default';
     state.modules = patch.modules;
   }
 };
@@ -17,6 +17,7 @@ export const LOAD_PATCH = (state, patch) => {
 export const SET_PATCHES = (state, patches) => {
   state.patches = patches;    // check if patches is an array, or ...?
 };
+
 
 // -----------------------------------------------
 //  APP
@@ -121,6 +122,7 @@ export const REMOVE_CONNECTION = (state, id) => {
   });
 };
 
+
 // -----------------------------------------------
 //  PARAMETERS
 // -----------------------------------------------
@@ -131,14 +133,6 @@ export const REMOVE_CONNECTION = (state, id) => {
 //     params: {}
 //   });
 // };
-
-// export const LOAD_PARAMETERS = (state, name) => {
-//   const patch = state.patches.find((patch) => { return patch.name === state.name; });
-//   const parameterSet = patch.parameterSets && patch.parameterSets.find((p) => { return p.name === name; });
-//
-//   state.parameters = parameterSet.parameters || {};
-// };
-
 export const LOAD_PARAMETERS = (state, id) => {
   const patch = state.patches.find((patch) => { return patch.name === state.name; });
   const parameterSet = patch.parameterSets && patch.parameterSets[id];
