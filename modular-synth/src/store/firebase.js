@@ -9,6 +9,9 @@ const database = firebase.database();
 
 export const auth = firebase.auth();
 export const provider = new firebase.auth.GoogleAuthProvider();
+export function generateKey(str) {
+  return str.toLowerCase().trim().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
+}
 export const api = {
   // Load data ONCE (ie. no "listeners")
   // path: ie: /users/' + userId

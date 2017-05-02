@@ -18,14 +18,12 @@ export const PARAMETERS_KEY = 'parameters';
 // -----------------------------------------------
 
 const state = {
-  name: '_default',        // NOTE: this is overwritten in loadPatch(), in actions.js
-  id: 0,                    // for modules AND connections
+  key: 'blank',            // key of active patch
+  // name: 'Blank',        // NOTE: this is overwritten in actions.js > loadPatch()
+  id: 0,                   // for keeping track of modules AND connections
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
-  parameters: {},
-
-  // parameterSets: [],
-  // pid: 0,                   // for active parameter set
+  parameters: JSON.parse(localStorage.getItem(PARAMETERS_KEY) || '{}'),
 
   power: false,
   editing: false,
