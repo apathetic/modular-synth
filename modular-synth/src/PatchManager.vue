@@ -45,7 +45,6 @@ export default {
     parameterSets() { return this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets || []; },
     patchIndex() { return +this.currentPatch + 1 || '-'; },
     parameterIndex() { return +this.currentParams + 1 || '-'; },
-
     ...mapGetters([
       'modules'
     ])
@@ -57,7 +56,9 @@ export default {
   mounted() {
     const current = this.$store.state.patches.find((p) => { return p.name === this.$store.state.name; });
 
+    console.log('PatchManager: loading patch', this.$store.state.patches.length);
     this.currentPatch = this.$store.state.patches.indexOf(current);
+    this.$bus.$emit('parameters:load');
   },
 
   methods: {
@@ -66,9 +67,10 @@ export default {
     },
 
     selectPatch(e) {
-      this.currentPatch = e.target.value;
+      this.currentPatch = e.target.value; // integer, index
       this.loadPatch(this.currentPatch);
       this.currentParams = this.parameterSets.length ? 0 : null;
+      this.$bus.$emit('parameters:load');
     },
 
     selectParams(e) {
@@ -80,8 +82,7 @@ export default {
     ...mapActions([
       'savePatch',
       'loadPatch',
-      'loadParameters',
-      'fetchPatches'
+      'loadParameters'
     ])
   }
 };
