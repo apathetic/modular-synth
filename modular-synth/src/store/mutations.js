@@ -133,11 +133,14 @@ export const REMOVE_CONNECTION = (state, id) => {
 //     params: {}
 //   });
 // };
-export const LOAD_PARAMETERS = (state, id) => {
-  const patch = state.patches.find((patch) => { return patch.name === state.name; });
-  const parameterSet = patch.parameterSets && patch.parameterSets[id];
+export const LOAD_PARAMETERS = (state, id = 0) => {
+  try {
+    // const patch = state.patches.find((patch) => { return patch.key === state.key; });
+    const patch = state.patches[state.key];
+    const parameterSet = patch.parameterSets && patch.parameterSets[id];
 
-  state.parameters = parameterSet.parameters || {};
+    state.parameters = parameterSet.parameters || {};
+  } catch (e) {}
 };
 
 export const ADD_PARAMETER = (state, id) => {
