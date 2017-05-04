@@ -1,26 +1,28 @@
 <template>
   <div class="patch-manager">
-    <div class="actions">
-      <auth></auth>
-      <button class="button" @click="save">save</button>
-    </div>
+    <auth></auth>
 
-    <div class="patch selector" :class="{'active': $root.authenticated}">
-      <span>{{ patchIndex }}</span>
-      <select :value="currentPatch" @change="selectPatch">
-        <option value="" disabled selected>&lt;select patch&gt;</option>
-        <option v-for="(patch, index) in patches" :value="index">{{ patch.name }}</option>
-      </select>
-    </div>
+    <div class="menu" :class="{'active': $root.authenticated}">
 
-    <div class="params selector">
-      <span>{{ parameterIndex }}</span>
-      <select :value="currentParams" @change="selectParams">
-        <option value="" disabled selected>&lt;select settings&gt;</option>
-        <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
-      </select>
-    </div>
+      <button class="save button" @click="save">save</button>
 
+      <div class="patch selector">
+        <span>{{ patchIndex }}</span>
+        <select :value="currentPatch" @change="selectPatch">
+          <option value="" disabled selected>&lt;select patch&gt;</option>
+          <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
+        </select>
+      </div>
+
+      <div class="params selector">
+        <span>{{ parameterIndex }}</span>
+        <select :value="currentParams" @change="selectParams">
+          <option value="" disabled selected>&lt;select settings&gt;</option>
+          <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
+        </select>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -54,10 +56,12 @@ export default {
    * Set the drop-down to the current patch (if loaded from localStorage)
    */
   mounted() {
-    const current = this.$store.state.patches.find((p) => { return p.name === this.$store.state.name; });
+    // const current = this.$store.state.patches.find((p) => { return p.name === this.$store.state.name; });
+    // const current = this.$store.state.patches[this.$store.state.key];
+    //
+    // this.currentPatch = this.$store.state.patches.indexOf(current);
+    // pos = myArray.map(function(e) { return e.hello; }).indexOf('stevie');
 
-    console.log('PatchManager: loading patch', this.$store.state.patches.length);
-    this.currentPatch = this.$store.state.patches.indexOf(current);
     this.$bus.$emit('parameters:load');
   },
 
@@ -67,14 +71,14 @@ export default {
     },
 
     selectPatch(e) {
-      this.currentPatch = e.target.value; // integer, index
+      this.currentPatch = e.target.value;  // key, cleaned name
       this.loadPatch(this.currentPatch);
       this.currentParams = this.parameterSets.length ? 0 : null;
       this.$bus.$emit('parameters:load');
     },
 
     selectParams(e) {
-      this.currentParams = e.target.value;
+      this.currentParams = e.target.value;  // integer, index
       this.$store.commit('LOAD_PARAMETERS', this.currentParams);
       this.$bus.$emit('parameters:load');
     },
@@ -93,18 +97,14 @@ export default {
   @import 'assets/scss/variables.scss';
 
   .patch-manager {
-    display: flex;
-    justify-content: center;
+    .menu {
+      display: flex;
+      justify-content: center;
 
-    // button:not(.active) {
-    //   background-color: $color-hover;
-    //   cursor: not-allowed;
-    //   opacity: 0.5;
-    // }
+      &:not(.active) { display: none; }
+    }
 
-    .patch:not(.active) { display: none; }
-
-    .actions {
+    .save {
       position: absolute;
       left: 0;
     }
@@ -117,10 +117,6 @@ export default {
       font-size: 1.5em;
       min-width: 8em;
       padding: 0em 0.5em 0 1.8em;
-      //
-      // &.active {
-      //   animation: flash 2s ease-out infinite;
-      // }
     }
 
     span {
@@ -133,11 +129,4 @@ export default {
       z-index: 1;
     }
   }
-  //
-  // @keyframes flash {
-  //   0% { color: #fff; }
-  //   50% { color: $color-grey-medium; }
-  //   100% { color: #fff; }
-  // }
-
 </style>

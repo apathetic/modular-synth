@@ -6,6 +6,11 @@ import { MODULES_KEY, CONNECTIONS_KEY } from './index';
 // -----------------------------------------------
 //  LOAD / SAVE
 // -----------------------------------------------
+
+// THIS is important: we cannot load modules, connections, parameters
+// all at once. Modules must be mounted _first_, so that the AudioNode
+// is a available to the Connections; likewise with the Modules'
+// settings being availble to the Parameters.
 export const loadPatch = ({ commit, state }, key) => {
   let patch;
   let connections;
@@ -30,6 +35,7 @@ export const loadPatch = ({ commit, state }, key) => {
   Vue.nextTick(function() {
     console.log('All modules loaded, now routing audio...');
     commit('LOAD_CONNECTIONS', connections);
+    commit('LOAD_PARAMETERS');
   });
 };
 
