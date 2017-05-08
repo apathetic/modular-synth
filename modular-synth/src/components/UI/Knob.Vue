@@ -98,6 +98,12 @@ export default {
     });
 
     this.$bus.$on('parameters:load', () => {
+      // TODO fix $refs(?) when changing paramSets
+      if (!this.$refs.display) {
+        console.log('undefined knob: ', this.id);
+        return;
+      }
+
       this.value = this.$store.state.parameters[this.id] || 0;
       this.knobValue = (this.value - this.min) / this.range;  // derive internal knobValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
@@ -106,9 +112,8 @@ export default {
   },
 
   mounted() {
-    this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330));
+    this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330));  // draw track
     // document.getElementById('computed').setAttribute('d', describeArc(x, y, size-14, 30, end));
-
     this.setDisplay();
   },
 
