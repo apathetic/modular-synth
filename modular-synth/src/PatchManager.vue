@@ -56,16 +56,12 @@ export default {
    * Set the drop-down to the current patch (if loaded from localStorage)
    */
   mounted() {
-    // const current = this.$store.state.patches.find((p) => { return p.name === this.$store.state.name; });
     // const current = this.$store.state.patches[this.$store.state.key];
-    //
-    // this.currentPatch = this.$store.state.patches.indexOf(current);
-    // pos = myArray.map(function(e) { return e.hello; }).indexOf('stevie');
-
     this.$bus.$emit('parameters:load');
   },
 
   methods: {
+    temp() { },
     save() {
       this.savePatch();
     },
@@ -73,7 +69,7 @@ export default {
     selectPatch(e) {
       this.currentPatch = e.target.value;  // key, cleaned name
       this.loadPatch(this.currentPatch);
-      this.currentParams = this.parameterSets.length ? 0 : null;
+      this.currentParams = this.parameterSets.length ? 0 : null;  // always select 1st set
       this.$bus.$emit('parameters:load');
     },
 
