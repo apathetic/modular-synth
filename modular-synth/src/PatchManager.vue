@@ -37,8 +37,8 @@ export default {
 
   data() {
     return {
-      currentPatch: null,
-      currentParams: 0
+      currentPatch: '',   // key (cleaned patch name)
+      currentParams: 0    // integer index
     };
   },
 
@@ -57,17 +57,28 @@ export default {
    */
   mounted() {
     // const current = this.$store.state.patches[this.$store.state.key];
+    const key = this.$store.state.key;
+
+    if (key) {
+      // let xxx = this.patches.indexOf(key);
+      // console.log(xxx);
+
+      // TODO 100 WTFs. I really have no idea why this needs setTImeout:
+      setTimeout(() => {
+        this.currentPatch = key;
+      }, 1000);
+    }
+
     this.$bus.$emit('parameters:load');
   },
 
   methods: {
-    temp() { },
     save() {
       this.savePatch();
     },
 
     selectPatch(e) {
-      this.currentPatch = e.target.value;  // key, cleaned name
+      this.currentPatch = e.target.value;  // key, (cleaned name)
       this.loadPatch(this.currentPatch);
       this.currentParams = this.parameterSets.length ? 0 : null;  // always select 1st set
       this.$bus.$emit('parameters:load');
