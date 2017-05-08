@@ -14,9 +14,11 @@ import { MODULES_KEY, CONNECTIONS_KEY } from './index';
 export const loadPatch = ({ commit, state }, key) => {
   let patch;
 
+  // if loading patch via a specific key
   if (key && state.patches[key]) {
     console.log('  Loading patch: ', key);
     patch = state.patches[key];
+    commit('SET_KEY', key);
   } else {
     console.log('  Loading patch from localStorage');
     patch = {
@@ -26,7 +28,6 @@ export const loadPatch = ({ commit, state }, key) => {
     };
   }
 
-  commit('SET_KEY', key);
   commit('LOAD_PATCH', patch);
 
   // ensure nodes (+ inlets/outlets) are in the DOM

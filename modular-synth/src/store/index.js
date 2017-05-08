@@ -11,6 +11,7 @@ export const NAME_KEY = 'name';
 export const MODULES_KEY = 'modules';
 export const CONNECTIONS_KEY = 'connections';
 export const PARAMETERS_KEY = 'parameters';
+export const PATCH_KEY = 'key';
 
 
 // -----------------------------------------------
@@ -18,8 +19,7 @@ export const PARAMETERS_KEY = 'parameters';
 // -----------------------------------------------
 
 const state = {
-  key: 'blank',            // key of active patch
-  // name: 'Blank',        // NOTE: this is overwritten in actions.js > loadPatch()
+  key: localStorage.getItem(PATCH_KEY) || 'blank',     // key of active patch
   id: 0,                   // for keeping track of modules AND connections
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
