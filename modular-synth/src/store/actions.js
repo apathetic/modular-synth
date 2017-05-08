@@ -1,43 +1,46 @@
 import Vue from 'vue';
 import { api } from './firebase';
-import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY, PARAMETERS_KEY } from './index';
+import { MODULES_KEY, CONNECTIONS_KEY } from './index';
 
 
 // -----------------------------------------------
 //  LOAD / SAVE
 // -----------------------------------------------
-export const loadPatch = ({ commit, state }, name) => {
-  let patch;
-  let connections;
 
-  if (name && state.patches[name]) {
-    console.log('  Loading patch: ', name);
-    patch = state.patches[name];
-    connections = state.patches[name].connections;
+// THIS is important: we cannot load modules, connections, parameters
+// all at once. Modules must be mounted _first_, so that the AudioNode
+// is a available to the Connections; likewise with the Modules'
+// settings being availble to the Parameters.
+export const loadPatch = ({ commit, state }, key) => {
+  let patch;
+
+  // if loading patch via a specific key
+  if (key && state.patches[key]) {
+    console.log('  Loading patch: ', key);
+    patch = state.patches[key];
+    commit('SET_KEY', key);
   } else {
     console.log('  Loading patch from localStorage');
     patch = {
-      name: localStorage.getItem(NAME_KEY) || '_default',
       id: parseInt(localStorage.getItem('id')) || 0,
       modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-      parameterSets: JSON.parse(localStorage.getItem(PARAMETERS_KEY)) || {}
+      connections: JSON.parse(localStorage.getItem(CONNECTIONS_KEY)) || []
     };
-    connections = JSON.parse(localStorage.getItem(CONNECTIONS_KEY)) || [];
   }
-
 
   commit('LOAD_PATCH', patch);
 
   // ensure nodes (+ inlets/outlets) are in the DOM
   Vue.nextTick(function() {
     console.log('All modules loaded, now routing audio...');
-    commit('LOAD_CONNECTIONS', connections);
-    // commit('LOAD_PARAMETERS', patch.parameterSets[0] || []);
+    commit('LOAD_CONNECTIONS', patch);    // connections);
+    commit('LOAD_PARAMETERS');
   });
 };
 
 export const savePatch = ({ state }) => {
-  const name = encodeURI(state.name.toLowerCase());
+  // const key = generateKey(state.patches name);
+  const key = state.key;
   const patch = {
     id: state.id,
     name: state.name,
@@ -46,7 +49,7 @@ export const savePatch = ({ state }) => {
     parameterSets: {}
   };
 
-  api.save('patch/' + name, patch)
+  api.save('patch/' + key, patch)
     .then(() => {
       console.log('saved');
     })
@@ -67,23 +70,6 @@ export const fetchPatches = ({ commit }) => {
     });
 };
 
-// export const loadParameters = ({ commit, state }, id) => {
-//   // const params = state.parameterSets.find((p) => { return p.id === id; }).params || [];
-//   const _params = state.parameterSets[id].params;  // for now: dont filter by id, just use array index to directly access params object (assumes id is equal to array index)
-//
-//   for (let [mid, params] of Object.entries(_params)) {
-//     // option 1. Data driven
-//     // find each module sequentually, then find knobs / children
-//     const mod = window.synth.$children.find((m) => { return m.id === mid; });
-//     for (let [param, value] in params) {
-//       let knob = mod.$children.find(k => { return k.name === param; });
-//
-//       knob.update(value);
-//     }
-//   }
-//
-//
-// };
 
 // -----------------------------------------------
 //  APP

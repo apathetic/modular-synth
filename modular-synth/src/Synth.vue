@@ -162,6 +162,7 @@
     created() {
       console.log('App loading...');
       this.loadPatch();
+      // this.$bus.$emit('parameters:load');
 
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
