@@ -149,6 +149,9 @@ export default {
 </script>
 
 <style lang="scss">
+  @import '../../assets/scss/variables.scss';
+  $height: 132px;
+
   #master-out {
     position: relative;
     border-width: 1px 0 0 0;
@@ -158,10 +161,9 @@ export default {
     width: auto;
     height: auto;
 
-    input[type="range"],
     canvas {
       width: 20px;
-      height: 132px;
+      height: $height;
     }
 
     .module-interface {
@@ -171,14 +173,36 @@ export default {
       justify-content: center;
     }
 
-    input[type="range"] {
-      margin: 0 -5px;
-      z-index: 1;
-      -webkit-appearance: slider-vertical; /* WebKit */
+  }
 
-      &:focus {
-        outline: none;
-      }
+  // .slider,
+  input[type="range"] {
+    z-index: 1;
+    width: $height;
+    height: 40px;
+    margin-top: 46px;
+    position: absolute;
+    cursor: pointer;
+    -webkit-transform: rotate(-90deg);
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-slider-runnable-track {
+      height: 5px;
+      background: $color-grey-dark;
+      border: none;
+    }
+
+    &::-webkit-slider-thumb {
+      // border: none;
+      // height: 1em;
+      // width: 1em;
+      // border-radius: 50%;
+      background: red;
+      margin-top: -5px;
+      -webkit-appearance: none;
     }
   }
 </style>
