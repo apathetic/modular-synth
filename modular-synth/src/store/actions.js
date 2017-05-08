@@ -13,28 +13,26 @@ import { MODULES_KEY, CONNECTIONS_KEY } from './index';
 // settings being availble to the Parameters.
 export const loadPatch = ({ commit, state }, key) => {
   let patch;
-  let connections;
 
   if (key && state.patches[key]) {
     console.log('  Loading patch: ', key);
     patch = state.patches[key];
-    connections = state.patches[key].connections;
   } else {
     console.log('  Loading patch from localStorage');
     patch = {
-      // name: localStorage.getItem(NAME_KEY) || '',
       id: parseInt(localStorage.getItem('id')) || 0,
-      modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}]
+      modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+      connections: JSON.parse(localStorage.getItem(CONNECTIONS_KEY)) || []
     };
-    connections = JSON.parse(localStorage.getItem(CONNECTIONS_KEY)) || [];
   }
 
+  commit('SET_KEY', key);
   commit('LOAD_PATCH', patch);
 
   // ensure nodes (+ inlets/outlets) are in the DOM
   Vue.nextTick(function() {
     console.log('All modules loaded, now routing audio...');
-    commit('LOAD_CONNECTIONS', connections);
+    commit('LOAD_CONNECTIONS', patch);    // connections);
     commit('LOAD_PARAMETERS');
   });
 };

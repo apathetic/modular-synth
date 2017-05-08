@@ -1,21 +1,24 @@
 import { moduleSize } from '../dimensions';
 
 // -----------------------------------------------
-//  BOOTSTRAP
+//  PATCH
 // -----------------------------------------------
 export const LOAD_PATCH = (state, patch) => {
   // Modules / Connections / Parameters in the patch are copied
   // to the root of the store. Will need to update so that App
   // can just reference the current patch  within patches ...?
   if (patch) {
-    // state.name = patch.name || '_default';
-    state.id = patch.id || 0;
+    state.id = patch.id;
     state.modules = patch.modules;
   }
 };
 
 export const SET_PATCHES = (state, patches) => {
   state.patches = patches;    // check if patches is an array, or ...?
+};
+
+export const SET_KEY = (state, key) => {
+  state.key = key;
 };
 
 
@@ -103,8 +106,8 @@ export const UPDATE_RACK_POSITION = (state, data) => {
 // -----------------------------------------------
 //  CONNECTIONS
 // -----------------------------------------------
-export const LOAD_CONNECTIONS = (state, connections) => {
-  state.connections = connections;
+export const LOAD_CONNECTIONS = (state, patch) => {
+  state.connections = patch.connections;
 };
 
 export const ADD_CONNECTION = (state, data) => {
