@@ -167,7 +167,7 @@ export default {
     }
 
     .module-interface {
-      padding: 2em 1em 1em 3.2em;
+      padding: 2em 1em 1em;
       visibility: visible;
       display: flex;
       justify-content: center;
