@@ -13,8 +13,7 @@ import { Meter } from '../../audio';
 export default {
   computed: {
     ...mapGetters([
-      'power',
-      'editing'
+      'power'
     ])
   },
 
@@ -64,12 +63,14 @@ export default {
 
     loop() {
       if (this.power) {
-        if (!this.editing && this.ticking) {
+        if (this.ticking) {
           this.draw();
         }
 
         this.ticking = !this.ticking;
         window.requestAnimationFrame(this.loop);
+      } else {
+        // this.draw();    // draw one final to clear canvas
       }
     }
   }

@@ -8,15 +8,15 @@
 
       <div class="patch selector">
         <span>{{ patchIndex }}</span>
-        <select :value="currentPatch" @change="selectPatch">
+        <select :value="currentPatch" @change="selectPatch" ref="patch">
           <option value="" disabled selected>&lt;select patch&gt;</option>
           <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
         </select>
       </div>
 
       <div class="params selector">
-        <span>{{ parameterIndex }}</span>
-        <select :value="currentParams" @change="selectParams">
+        <span>{{ paramsIndex }}</span>
+        <select :value="currentParams" @change="selectParams" ref="params">
           <option value="" disabled selected>&lt;select settings&gt;</option>
           <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
         </select>
@@ -38,15 +38,18 @@ export default {
   data() {
     return {
       currentPatch: '',   // key (cleaned patch name)
-      currentParams: 0    // integer index
+      currentParams: 0,    // integer index
+
+      patchIndex: '-'
+      // paramsIndex: '-'
     };
   },
 
   computed: {
     patches() { return this.$store.state.patches; },
     parameterSets() { return this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets || []; },
-    patchIndex() { return +this.currentPatch + 1 || '-'; },
-    parameterIndex() { return +this.currentParams + 1 || '-'; },
+    // patchIndex() { return this.$refs.patch.selectedIndex || '-'; },
+    paramsIndex() { return +this.currentParams + 1 || '-'; },
     ...mapGetters([
       'modules'
     ])
@@ -56,13 +59,9 @@ export default {
    * Set the drop-down to the current patch (if loaded from localStorage)
    */
   mounted() {
-    // const current = this.$store.state.patches[this.$store.state.key];
     const key = this.$store.state.key;
 
     if (key) {
-      // let xxx = this.patches.indexOf(key);
-      // console.log(xxx);
-
       // TODO 100 WTFs. I really have no idea why this needs setTImeout:
       setTimeout(() => {
         this.currentPatch = key;
@@ -80,13 +79,15 @@ export default {
     selectPatch(e) {
       this.currentPatch = e.target.value;  // key, (cleaned name)
       this.loadPatch(this.currentPatch);
-      this.currentParams = this.parameterSets.length ? 0 : null;  // always select 1st set
+      this.currentParams = this.parameterSets.length ? 0 : -1;  // always select 1st set
+      this.patchIndex = this.$refs.patch.selectedIndex;
       this.$bus.$emit('parameters:load');
     },
 
     selectParams(e) {
       this.currentParams = e.target.value;  // integer, index
       this.$store.commit('LOAD_PARAMETERS', this.currentParams);
+      // this.paramsIndex = this.$refs.params.selectedIndex;
       this.$bus.$emit('parameters:load');
     },
 
