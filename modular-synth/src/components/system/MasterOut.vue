@@ -95,30 +95,17 @@ export default {
     start() {
       this.out1.connect(this.context.destination);
       this.out2.connect(this.context.destination);
-
-      // this.out1.connect(this.meter);
-      // this.meter.on();
     },
 
     stop() {
       this.out1.disconnect(this.context.destination);
       this.out2.disconnect(this.context.destination);
-
-      // this.out1.disconnect(this.meter);
-      // this.meter.off();
     },
 
     setGain(g) {
       this.out1.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
       this.out2.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
-
-      // this.out1.gain.value = this.isMuted ? 0 : g;
-      // this.out2.gain.value = this.isMuted ? 0 : g;
     },
-
-    // toggleMute() {
-    //   this.isMuted = !this.isMuted;
-    // },
 
     determinePosition() {
       const x = this.$el.getBoundingClientRect().left;  // relative to viewport

@@ -69,7 +69,7 @@ export default {
 
         this.ticking = !this.ticking;
         window.requestAnimationFrame(this.loop);
-      } else {
+        // } else {
         // this.draw();    // draw one final to clear canvas
       }
     }
