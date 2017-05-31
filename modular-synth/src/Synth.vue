@@ -160,7 +160,7 @@
     },
 
     created() {
-      console.log('App loading...');
+      console.log('◌ App loading...');
       this.loadPatch();
       // this.$bus.$emit('parameters:load');
 

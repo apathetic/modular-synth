@@ -20,11 +20,12 @@ export function signal(value = 1) {
     // Generate (mono) buffer with 2 samples
     const signal = context.createBufferSource();
     const buffer = context.createBuffer(1, 2, context.sampleRate);
-    // const buffer = context.createBuffer(1, 128, context.sampleRate);
 
     // // set each sample to 1
     buffer.getChannelData(0)[0] = value;    // 2 items, as Safari chokes on 1
     buffer.getChannelData(0)[1] = value;
+
+    // const buffer = context.createBuffer(1, 128, context.sampleRate);
     // for (let i = 0; i < buffer.length; i++) {
     //   buffer.getChannelData(0)[i] = value;
     // }

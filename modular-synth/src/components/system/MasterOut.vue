@@ -52,10 +52,8 @@ export default {
       inlets: [
         {
           label: 'out-1'
-          // data: null
         }, {
           label: 'out-2'
-          // data: null
         }
       ]
     };
@@ -68,8 +66,6 @@ export default {
     this.inlets[0].audio = this.out1;
     this.inlets[1].audio = this.out2;
 
-    // this.meter = meter;
-
     this.$watch('power', (on) => {
       if (on) {
         this.start();
@@ -79,7 +75,6 @@ export default {
     });
 
     this.$watch('gain', this.setGain);
-    // this.$watch('isMuted', () => { this.setGain(this.gain); });
 
     console.log('Creating MasterOut');
   },
