@@ -116,7 +116,10 @@
 
       this.inlets[0].audio = processor;
       this.loop();
+
+      console.log('Creating Debugger');
     },
+
     methods: {
       loop() {
         this.peak = this.processor.volume.toFixed(3);

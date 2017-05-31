@@ -37,6 +37,11 @@ Other notes:
   * there can only be a single connection to an input.
   * the connector will automatically set up audio routing between nodes when created
 
+
+THOUGHTS:
+* a connection may contain BOTH audio and CONTROL data. For example, a signal (audio), and a frequency (integer, data).
+This (the k-rate data) might be used to visually display controls / drive other effects
+
 <template>
   <line
     @click="removeConnection(id)"
@@ -118,12 +123,14 @@ export default {
 
             // mmm, maybe brittle. try:   if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
             (connect) ? source.connect(destination) : source.disconnect(destination);
-            console.log('  %s --> %s', this.fromModule.name, this.toModule.name);
+            console.log(' • %s ⟹ %s', this.fromModule.name, this.toModule.name);
           } catch (e) {
             console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
             console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
           }
-        } else if (inlet.hasOwnProperty('data') && outlet.hasOwnProperty('data')) {
+        }
+
+        if (inlet.hasOwnProperty('data') && outlet.hasOwnProperty('data')) {
           //
           // DATA
           //

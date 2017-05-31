@@ -14,10 +14,10 @@
     </div>
 
     <div class="module-interface">
-      <knob param="attack"  @value="A = $event" :min="0" :max="1" :decimals="2"></knob>
-      <knob param="decay"   @value="D = $event" :min="0" :max="1" :decimals="2"></knob>
-      <knob param="sustain" @value="S = $event" :min="0" :max="1" :decimals="2"></knob>
-      <knob param="release" @value="R = $event" :min="0" :max="1" :decimals="2"></knob>
+      <knob param="attack"  @value="A = $event" :min="0.1" :max="1" :decimals="2"></knob>
+      <knob param="decay"   @value="D = $event" :min="0.1" :max="1" :decimals="2"></knob>
+      <knob param="sustain" @value="S = $event" :min="0.1" :max="1" :decimals="2"></knob>
+      <knob param="release" @value="R = $event" :min="0.1" :max="1" :decimals="2"></knob>
     </div>
 
     <div class="module-connections">
@@ -71,11 +71,13 @@ export default {
   },
 
   created() {
-    this.inlets[0].data = this.gate;
+    this.adsr = this.context.createGain();
+    this.adsr.gain.value = 0;
+
+    this.inlets[0].data = this.gate;      // input is mapped to gate fn
     // this.inlets[1].data = function() {};  // mod?
 
-    this.outlets[0].audio = this.adsr = this.context.createGain();
-    this.adsr.gain.value = 0;
+    this.outlets[0].audio = this.adsr;
     signal(1).connect(this.adsr);
 
     // this.$watch('A', this.setAttack);
