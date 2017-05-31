@@ -16,7 +16,7 @@ export const api = {
   // Load data ONCE (ie. no "listeners")
   // path: ie: /users/' + userId
   load(path) {
-    console.log('firebase api, auth', !!auth.currentUser);
+    console.log('Firebase authentication', !!auth.currentUser);
     if (auth.currentUser) {
       return database.ref(path).once('value');
     }

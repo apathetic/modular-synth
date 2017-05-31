@@ -37,7 +37,7 @@ export default {
 
   data() {
     return {
-      currentPatch: '',   // key (cleaned patch name)
+      currentPatch: '',    // key (cleaned patch name)
       currentParams: 0,    // integer index
 
       patchIndex: '-'

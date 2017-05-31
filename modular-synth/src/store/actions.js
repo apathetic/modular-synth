@@ -14,13 +14,15 @@ import { MODULES_KEY, CONNECTIONS_KEY } from './index';
 export const loadPatch = ({ commit, state }, key) => {
   let patch;
 
+  console.log('-----------------------------');
+
   // if loading patch via a specific key
   if (key && state.patches[key]) {
-    console.log('  Loading patch: ', key);
+    console.log('Loading patch: ', key);
     patch = state.patches[key];
     commit('SET_KEY', key);
   } else {
-    console.log('  Loading patch from localStorage');
+    console.log('Loading patch from localStorage');
     patch = {
       id: parseInt(localStorage.getItem('id')) || 0,
       modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
