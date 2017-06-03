@@ -2,24 +2,23 @@
 
 ## TODO
 
+
+
+- Some sort of Module base (ie node). So much duplication atm
+
 - General
-  - ~~Grid is wonky, doesn't get component dimensions~~
   - load patch
     - turn off power
   - saving patches
-    - load everything via firebase
-    - can have ONE patch in localstorage
     - **saving settings**
-    - **loading settings**
   - web workers
     - offload heavy calcs, etc.
   - service workers
     - store samples, waveforms, and... stuff
-  - Delete Debuggers leaves ScriptNode behind
+  - Deleting Debuggers leaves ScriptNode behind
 
 
 - MODULES
-  - VCA: WTF. Order of inputs matters? Don't understand. Gain not seeming to multiply input signal. ie. gain of 0 (from env) results in no attenuation.
   - ENV: breaks unless each ADSR have been set
 
 
@@ -35,12 +34,11 @@
   - must press shift to sort in play mode
   - single click on Module fire sortable; should only be onDrag
   - Digit appears on parameterSets, when no params
+  - Knobs with tiny "min" render backwards
 
 - LOADING
-  - ~~route audio on load (use store plugin / store mutation observer)~~ _solved with a nextTick. Dont love need to import Vue for this_
-    - **this doesn't work when loading new patches**
-    - glitchy
-      - fallback for bad data, etc.
+  - glitchy
+    - fallback for bad data, etc.
 
 
 - AUDIO
@@ -48,10 +46,10 @@
   - global "get (actual) component by id" method?
   - **power-off no longer kills CPU (as meters are connected)**
     - LEVEL is ...broken? Crazy inefficient. Check meter.js where output is connected to audioContext
-
+  - click sound on ADSR
+  - VCO / FM not working as modulators
 
 - Connections
-  - removing certain (last?) connection causes webaudio error
   - connecting to an outlet, connects to the inlet (ie. app doesn't distinguish between these -- just ID and port)
     - also, don't add cnx if already there (ie. non-duplicated)
 
@@ -77,6 +75,7 @@
     - ~~loading patches~~
       - ~~need to destroy nodes / webAudio connections first...?~~
       - ~~patch loads in store, but app does not update UI~~
+      - ~~**loading settings**~~
     - ~~don't require 2U / 1U classes -- make a default~~
     - ~~new parent / child events~~
       - ~~.native on components~~
@@ -98,6 +97,7 @@
 
 
   - UI
+    - ~~Grid is wonky, doesn't get component dimensions~~
     - ~~removing connections sometimes throw errors~~
       - ~~delete module causes odd grid reshuffle~~
         - ~~update rack positions on delete~~
@@ -120,6 +120,10 @@
     - ~~FIX modules: dont gridify properly after 1st load, adding new module~~
     - glitchy
       - ~~connections do not load on pageload; only load event~~
+    - ~~load everything via firebase~~
+    - ~~can have ONE patch in localstorage~~
+    - ~~route audio on load (use store plugin / store mutation observer)~~ _solved with a nextTick. Dont love need to import Vue for this_
+      - ~~**this doesn't work when loading new patches**~~
 
 
   - MODULES
@@ -127,6 +131,7 @@
       - ~~tuck away: draggable, newConnection, (vuex) col/row, (computd) left/right~~ _solved w/ vue2.0_
     - ~~DELETE node~~
       - ~~and associated audio connections~~
+    - ~~VCA: WTF. Order of inputs matters? Don't understand. Gain not seeming to multiply input signal. ie. gain of 0 (from env) results in no attenuation. Solved!~~
 
 
   - AUDIO
@@ -145,6 +150,7 @@
     - ~~reconcile "connector" name and "connection"~~
     - ~~non-audio connections
       - ~~eg: noteIn -> Env -> OSC -> out~~
+    - ~~removing certain (last?) connection causes webaudio error~~
 
 
   ---------------
