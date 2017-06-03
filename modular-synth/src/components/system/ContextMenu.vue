@@ -7,20 +7,20 @@
     <h3>New Module:</h3>
     <ul>
       <!-- <li v-for="module in modules" @click="newModule(module)">{{ module }}</li> -->
-      <li @click="newModule('Analyser')">analyser</li>
-      <li @click="newModule('Comb')">comb</li>
-      <li @click="newModule('Delay')">delay</li>
-      <li @click="newModule('Env')">ENV</li>
-      <li @click="newModule('LFO')">LFO</li>
-      <li @click="newModule('Mixer')">mixer</li>
-      <li @click="newModule('NoteIn')">note-in</li>
-      <li @click="newModule('Reverb')">reverb</li>
-      <li @click="newModule('Signal')">signal</li>
-      <li @click="newModule('VCO')">OSC</li>
-      <li @click="newModule('VCA')">VCA</li>
-      <li @click="newModule('VCF')">VCF / filter</li>
-      <li @click="newModule('Node')">Node</li>
-      <li @click="newModule('Debugger')">debugger</li>
+      <li @click="newModule('Analyser')">• analyser</li>
+      <li @click="newModule('Comb')">• comb</li>
+      <li @click="newModule('Delay')">• delay</li>
+      <li @click="newModule('Env')">• ENV</li>
+      <li @click="newModule('LFO')">• LFO</li>
+      <li @click="newModule('Mixer')">• mixer</li>
+      <li @click="newModule('NoteIn')">• note-in</li>
+      <li @click="newModule('Reverb')">• reverb</li>
+      <li @click="newModule('VCO')">• OSC</li>
+      <li @click="newModule('VCA')">• VCA</li>
+      <li @click="newModule('VCF')">• VCF</li>
+      <li>---</li>
+      <li @click="newModule('Node')">• Node</li>
+      <li @click="newModule('Debugger')">• debugger</li>
     </ul>
   </div>
 </template>

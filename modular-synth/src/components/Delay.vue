@@ -1,11 +1,7 @@
-//------------------------------------------------
-//  Delay
-// -----------------------------------------------
-
 <template>
   <div
   class="delay module _4U"
-  :class="{dragging: 'dragging'}"
+  :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
 
@@ -108,7 +104,7 @@ export default {
 
     filter.type = 'lowpass';
 
-    this.$watch('delay', this.setFreq);
+    // this.$watch('delay', this.setFreq);
     this.$watch('wet', this.setWet);
     this.$watch('dry', this.setDry);
     this.$watch('feedback', this.setFeedback);
