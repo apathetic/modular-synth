@@ -176,6 +176,26 @@
         }
       });
 
+      this.$bus.$on('module:add', () => {
+        console.log('module add');
+        this.$nextTick(function() {
+          const item = this.modules.slice(-1)[0]; // get last (newest) item
+
+          this.gridList.items = this.modules;
+          this.gridList.moveItemToPosition(item, [0, 0]);
+        });
+      });
+      this.$bus.$on('module:remove', () => {
+        console.log('module remove');
+        this.$nextTick(() => {
+          // const deleted = this.modules[this.$store.state.active];
+          // this.gridList._deleteItemPositionFromGrid(deleted);
+
+          this.gridList.items = this.modules;
+          this.gridList._pullItemsToLeft();
+        });
+      });
+
       this.$bus.$on('drag:end', () => {
         if (!this.editing) {
           this.stopSorting();    // from sortable mixin
@@ -187,13 +207,7 @@
           case 'Delete':
           case 'Backspace':
             this.removeModule();
-            this.$nextTick(() => {
-              // Update gridList.items. Two options:
-              this.gridList.items = this.modules;
-              // this.gridList._deleteItemPositionFromGrid(deleted);
-
-              this.gridList._pullItemsToLeft();
-            });
+            this.$bus.$emit('module:remove');
             break;
           case 'Tab':
             this.toggleEditMode();
@@ -246,12 +260,6 @@
     },
 
     methods: {
-      contextmenu(e) {
-        // const y = e.pageY - document.querySelector('header').offsetHeight;
-        //
-        // this.menuCoords = [e.pageX, y];
-      },
-
       ...mapActions([
         'loadPatch',
         'togglePower',
