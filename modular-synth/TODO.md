@@ -3,6 +3,7 @@
 ## TODO
 
 - General
+  - ~~Grid is wonky, doesn't get component dimensions~~
   - load patch
     - turn off power
   - saving patches
@@ -14,6 +15,7 @@
     - offload heavy calcs, etc.
   - service workers
     - store samples, waveforms, and... stuff
+  - Delete Debuggers leaves ScriptNode behind
 
 
 - MODULES

@@ -84,6 +84,7 @@
       this.inlets[1].audio = this.gain = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
       this.outlets[0].audio = this.osc = this.context.createOscillator();
 
+      this.gain.value = 0;
       this.gain.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
 
       this.osc.type = this.type;
@@ -123,11 +124,6 @@
        */
       setMod(g) {
         this.gain.value = g;
-
-        // this.$store.commit('SET_PARAMETER', this.id, {
-        //   name: 'mod',
-        //   value: g
-        // });
       },
 
       /**

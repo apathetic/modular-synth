@@ -63,6 +63,7 @@ export default {
     newModule(type) {
       // this.$store.commit('ADD_MODULE', { type, coords: this.coords });
       this.addModule({ type, coords: this.coords });
+      this.$bus.$emit('module:add');
 
       // this.$nextTick(function() {
       //   const id = this.$store.state.id;
