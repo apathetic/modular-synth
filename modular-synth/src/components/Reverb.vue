@@ -1,11 +1,7 @@
-//------------------------------------------------
-//  Reverb
-// -----------------------------------------------
-
 <template>
   <div
   class="reverb module _3U"
-  :class="{dragging: 'dragging'}"
+  :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
 
@@ -14,12 +10,12 @@
     </div>
 
     <div class="module-interface">
-      <knob @value="seconds = $event" min="0" max="5"></knob>
-      <knob @value="decay = $event" min="0" max="5"></knob>
+      <knob param="seconds" @value="seconds = $event" :min="0" :max="5"></knob>
+      <knob param="decay" @value="decay = $event"     :min="0" :max="5"></knob>
     </div>
 
     <div class="module-connections">
-      <inlets :ports="inlets"></inlets>
+      <inlets  :ports="inlets"></inlets>
       <outlets :ports="outlets"></outlets>
     </div>
   </div>
@@ -84,7 +80,7 @@ export default {
      * @param  {Float} s reverb in seconds
      */
     setReverb(s) {
-      this.convolver.reverb.value = s;
+      // this.convolver.reverb.value = s;
     },
 
     /**
@@ -92,7 +88,7 @@ export default {
      * @param  {Float} d decay in seconds
      */
     setDecay(d) {
-      this.convolver.decay.value = d;
+      // this.convolver.decay.value = d;
     }
   }
 };

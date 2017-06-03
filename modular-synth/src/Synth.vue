@@ -97,6 +97,7 @@
   import { sortable } from './mixins/sortable';
 
   import Analyser from './components/Analyser';
+  import Comb from './components/Comb';
   import Delay from './components/Delay';
   import Env from './components/Env';
   import LFO from './components/LFO';
@@ -134,6 +135,7 @@
       VCO,
       VCA,
       Analyser,
+      Comb,
       Debugger,
       Delay,
       Mixer,
@@ -185,6 +187,7 @@
           this.gridList.moveItemToPosition(item, [0, 0]);
         });
       });
+
       this.$bus.$on('module:remove', () => {
         console.log('module remove');
         this.$nextTick(() => {
