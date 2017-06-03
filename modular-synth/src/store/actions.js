@@ -31,7 +31,6 @@ export const loadPatch = ({ commit, state }, key) => {
   }
 
   commit('LOAD_PATCH', patch);
-  updateGrid();
 
   // ensure nodes (+ inlets/outlets) are in the DOM
   Vue.nextTick(function() {
@@ -114,7 +113,6 @@ export const clearFocus = ({ commit }) => {
 // -----------------------------------------------
 export const addModule = ({ commit }, data) => {
   commit('ADD_MODULE', data);
-  updateGrid();
 };
 
 export const removeModule = ({ commit, state }) => {
