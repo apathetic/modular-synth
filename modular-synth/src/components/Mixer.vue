@@ -1,9 +1,9 @@
 <template>
   <div
-    class="mixer module"
+    class="mixer module _4U"
     :class="dragging ? 'dragging' : ''"
     :style="position"
-    @mousedown.prevent="startDraggingNode">
+    @mousedown.stop="startDragging">
 
     <div class="module-details">
       <h3>{{ name }}</h3>
@@ -16,8 +16,8 @@
     </div>
 
     <div class="module-connections">
-      <inlets ports="inlets"></inlets>
-      <outlets ports="outlets"></outlets>
+      <inlets  :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
     </div>
   </div>
 </template>
@@ -25,11 +25,16 @@
 <script>
 import { draggable } from '../mixins/draggable';
 // import Level from './UI/Level';
+// import Slider from './UI/Slider2';
 
 export default {
-  props: { id: null },
   mixins: [draggable],
   // components: { Level },
+  props: {
+    id: null,
+    col: null,
+    row: null
+  },
 
   data() {
     return {

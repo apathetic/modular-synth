@@ -10,7 +10,8 @@
     </div>
 
     <div class="module-interface">
-      <!-- <slot name="interface"></slot> -->
+      <knob param="resonance" @value="resonance = $event" :min="0" :max="100"></knob>
+      <knob param="cutoff"    @value="cutoff = $event"    :min="40" :max="16000" scale="log"></knob>
     </div>
 
     <div class="module-connections">

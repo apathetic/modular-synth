@@ -34,7 +34,7 @@
   - when a node is selected, all connected connections become highlighted
   - must press shift to sort in play mode
   - single click on Module fire sortable; should only be onDrag
-
+  - Digit appears on parameterSets, when no params
 
 - LOADING
   - ~~route audio on load (use store plugin / store mutation observer)~~ _solved with a nextTick. Dont love need to import Vue for this_
