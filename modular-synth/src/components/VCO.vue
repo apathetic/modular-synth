@@ -99,6 +99,10 @@
       console.log('Creating VCO');
     },
 
+    destroyed() {
+      console.log('Destroying VCO ', this.id);
+    },
+
     methods: {
       /**
        * k-rate control of the Oscillator frequency
