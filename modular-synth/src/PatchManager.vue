@@ -69,7 +69,6 @@ export default {
     }
 
     this.$bus.$emit('parameters:load');
-    // this.loadParameters();
   },
 
   methods: {
@@ -82,35 +81,19 @@ export default {
       this.loadPatch(this.currentPatch);
       this.currentParams = this.parameterSets.length ? 0 : -1;  // always select 1st set
       this.patchIndex = this.$refs.patch.selectedIndex;
-
-      // this.$bus.$emit('parameters:load');
-      // this.loadParameters();
-      // this.$nextTick(() => {    // nextTick here so that event isn't emitted before current Knob(s) have a chance to be destroyed
-      // setTimeout(() => {
       this.$bus.$emit('parameters:load');
-      // }, 1000);
-      // });
     },
 
     selectParams(e) {
       this.currentParams = e.target.value;  // integer, index
       this.$store.commit('LOAD_PARAMETERS', this.currentParams);
       // this.paramsIndex = this.$refs.params.selectedIndex;
-
       this.$bus.$emit('parameters:load');
-      // this.loadParameters();
     },
-
-    // loadParameters() {
-    //   this.$nextTick(() => {
-    //     this.$bus.$emit('parameters:load');
-    //   });
-    // },
 
     ...mapActions([
       'savePatch',
       'loadPatch'
-      // 'loadParameters'
     ])
   }
 };
