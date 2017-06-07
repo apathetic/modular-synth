@@ -116,6 +116,16 @@ export default {
     console.log('Creating NoteIn');
   },
 
+  destroyed() {
+    this.$bus.$off('midi:noteOn', this.noteOn);
+    this.$bus.$off('midi:noteOff', this.noteOff);
+    this.$bus.$off('midi:controller', this.controller);
+    this.$bus.$off('midi:pitchWheel', this.pitchWheel);
+    this.$bus.$off('midi:polyPressure', this.polyPressure);
+
+    console.log('Destroying NoteIn');
+  },
+
   methods: {
     noteOn(note, velocity) {
       // this.outlets[0].data = note;

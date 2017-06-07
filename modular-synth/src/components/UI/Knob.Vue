@@ -16,7 +16,7 @@ is a "freq" parameter in the Component.
   <svg class="knob" @mousedown.stop.prevent="start">
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
     <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
-    <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path>
+    <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
     <text x="24" y="28">{{ value.toFixed(this.decimals) }}</text>
     <text x="24" y="54">{{ param }}</text>
   </svg>
@@ -73,13 +73,11 @@ export default {
   },
 
   created() {
-    this.id = this.$parent.id + '-' + this.param;
-    this.$store.commit('ADD_PARAMETER', this.id);
-
-
     const self = this;
 
     this.range = this.max - this.min;
+    this.id = this.$parent.id + '-' + this.param;
+    this.$store.commit('ADD_PARAMETER', this.id);
 
     // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App
     //       or: just add / remove dynamically as needed?
@@ -97,28 +95,20 @@ export default {
       }
     });
 
-    this.$bus.$on('parameters:load', () => {
-      // TODO fix $refs(?) when changing paramSets
-      if (!this.$refs.display) {
-        console.log('undefined knob: ', this.id);
-        return;
-      }
-
-      this.value = this.$store.state.parameters[this.id] || 0;
-      this.knobValue = (this.value - this.min) / this.range;  // derive internal knobValue from value
-      this.$emit('value', this.value);                        // update parent w/ new value
-      this.setDisplay();
-    });
+    // fetch the knob's value from the Store parameterSet, update itself as well as the (parent) Component
+    this.$bus.$on('parameters:load', this.fetchValue);
   },
 
   mounted() {
     this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330));  // draw track
-    // document.getElementById('computed').setAttribute('d', describeArc(x, y, size-14, 30, end));
+    // this.$refs.computed.setAttribute('d', describeArc(x, y, size - 4, 30, 330));  // "actual" value, from varying inputs, etc.
     this.setDisplay();
   },
 
   destroyed() {
+    console.log('Destroying Knob ', this.id);
     this.$store.commit('REMOVE_PARAMETER', this.id);
+    this.$bus.$off('parameters:load', this.fetchValue);
   },
 
   methods: {
@@ -152,7 +142,21 @@ export default {
       const rotationValue = this.knobValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
 
       this.$refs.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
+    },
+
+    fetchValue() {
+      // TODO fix $refs(?) when changing paramSets
+      if (!this.$refs.display) {
+        console.warn('undefined knob: ', this.id);
+        return;
+      }
+
+      this.value = this.$store.state.parameters[this.id] || 0;
+      this.knobValue = this.value / this.range;               // derive internal knobValue from value
+      this.$emit('value', this.value);                        // update parent w/ new value
+      this.setDisplay();
     }
+
   }
 };
 
