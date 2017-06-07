@@ -162,9 +162,12 @@
     },
 
     created() {
-      console.log('◌ App loading...');
+      console.log('◌ App: loading...');
       this.loadPatch();
       // this.$bus.$emit('parameters:load');
+
+      console.log('◌ App: binding events...');
+
 
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
@@ -249,6 +252,7 @@
     },
 
     mounted() {
+      console.log('◌ App: mounting...');
       // TODO why cannot move into sortable:ready() ...? A: $refs.grid is not yet in the DOM
       // TODO2 sortable:mounted() ...?
       this.initSorting(this.$refs.grid);
