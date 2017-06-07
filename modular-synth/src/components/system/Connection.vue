@@ -128,9 +128,7 @@ export default {
             console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
             console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
           }
-        }
-
-        if (inlet.hasOwnProperty('data') && outlet.hasOwnProperty('data')) {
+        } else if (inlet.hasOwnProperty('data') && outlet.hasOwnProperty('data')) {
           //
           // DATA
           //
