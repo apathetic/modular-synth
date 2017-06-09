@@ -13,7 +13,7 @@
       <!-- <slot name="interface"></slot> -->
       <knob label="freq" @value="freq = $event" :min="100" :max="20000" log="1"></knob>
       <knob label="Q"    @value="Q = $event"    :min="0" :max="1" :decimals="2"></knob>
-      <select @mousedown.stop v-model="type">
+      <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
     </div>

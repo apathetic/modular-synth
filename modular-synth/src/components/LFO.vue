@@ -14,7 +14,7 @@
     </div>
 
     <div class="module-interface">
-      <select @mousedown.stop v-model="type">
+      <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
 
