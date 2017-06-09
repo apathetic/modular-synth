@@ -2,13 +2,10 @@
 
 ## TODO
 
-
-
-- Some sort of Module base (ie node). So much duplication atm
-
 - General
+  - Some sort of Module base (ie node). Currently so much duplication atm
   - load patch
-    - turn off power
+    - turn off power. Problematic now that Meters plug directly into MasterOut due to Chrome bug.
   - saving patches
     - **saving settings**
   - web workers
@@ -32,11 +29,13 @@
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
   - when a node is selected, all connected connections become highlighted
   - must press shift to sort in play mode
-  - single click on Module fire sortable; should only be onDrag
+  - single click on Module fires sortable; should only be onDrag
   - Digit appears on parameterSets, when no params
-  - Knobs with tiny "min" render backwards
+  - knob: linear/log
+
 
 - LOADING
+  - grid doesn't gridify after loading new patch
   - glitchy
     - fallback for bad data, etc.
 
@@ -57,7 +56,7 @@
 - RANDOM
   - create server that spits out OSC notes, 24/7. Different
     styles / genres depending on time of day (like a radio
-    station). Then, hook Note-In up to it.
+    station). Then, modify Note-In to stream from it.
     ... or, every port is a different thing: disco inferno (on :8000), aleatoric wackiness (on :8001), etc
   - webworker (audiolet?) for Meter, etc.
 
@@ -111,10 +110,12 @@
       - ~~play: grid (packery, gridlist)~~
       - ~~edit: draggables (dragabilly, vanillaJS)~~
     - ~~dotted line while creating a connection~~
+    - ~~Knobs with tiny "min" render backwards~~
 
 
   - LOADING
-    - ~~route audio on load (use store plugin / store mutation observer)~~ _solved with a nextTick. Dont love need to import Vue for this_
+    - ~~route audio on load (use store plugin / store mutation observer)~~
+      - ~~_solved with a nextTick. Dont love need to import Vue for this_~~ _update: solved more better-er by consecutively loading pieces via the load action_
     - ~~update masterOut position on load~~
     - ~~connection reactivity on load~~
     - ~~FIX modules: dont gridify properly after 1st load, adding new module~~
@@ -122,7 +123,8 @@
       - ~~connections do not load on pageload; only load event~~
     - ~~load everything via firebase~~
     - ~~can have ONE patch in localstorage~~
-    - ~~route audio on load (use store plugin / store mutation observer)~~ _solved with a nextTick. Dont love need to import Vue for this_
+    - ~~route audio on load (use store plugin / store mutation observer)~~
+      - ~~_solved with a nextTick. Dont love need to import Vue for this_~~ _update: solved more better-er by consecutively loading pieces via the load action_
       - ~~**this doesn't work when loading new patches**~~
 
 
