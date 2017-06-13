@@ -12,9 +12,23 @@ export const provider = new firebase.auth.GoogleAuthProvider();
 export function generateKey(str) {
   return str.toLowerCase().trim().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
 }
+// export function generateKey() {
+//   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+//     const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+//
+//     return v.toString(16);
+//   });
+// }
+
+/**
+ * Simple Firebase API (CRUD) wrapper.
+ * @type {Object}
+ */
 export const api = {
-  // Load data ONCE (ie. no "listeners")
-  // path: ie: /users/' + userId
+  /**
+   * Fetch data from Firebase. This happens only once (ie. no "listeners")
+   * @return {Promise} A Firebase Promise, actually.
+   */
   load(path) {
     console.log('Firebase authentication', !!auth.currentUser);
     if (auth.currentUser) {
@@ -22,15 +36,26 @@ export const api = {
     }
   },
 
-  // note: destructive. Will overwrite if anything happens to be at this path
+  /**
+   * Create a new Object in the database.
+   * NOTE: destructive operation, will overwrite if anything happens to be at this path.
+   * @return {Promise} A Firebase Promise, actually.
+   */
   create(name, data) {
-    return database.ref('patch/' + name).set({});
+    return database.ref('patch/' + name).set(data);
   },
 
+  /**
+   * Save / update an exiting Object in the database.
+   * @return {Promise} A Firebase Promise, actually.
+   */
   save(path, data) {
     return database.ref(path).update(data);
   },
 
+  /**
+   *
+   */
   add(path, data) {
     const items = database.ref(path);   // ie. patch, or patch/juno/parameterSets
 
