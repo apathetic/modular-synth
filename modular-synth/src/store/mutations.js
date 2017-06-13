@@ -9,6 +9,7 @@ export const LOAD_PATCH = (state, patch) => {
   // can just reference the current patch  within patches ...?
   if (patch) {
     state.id = patch.id;
+    state.name = patch.name;
     state.modules = patch.modules;
   }
 };
@@ -17,8 +18,12 @@ export const SET_PATCHES = (state, patches) => {
   state.patches = patches;    // check if patches is an array, or ...?
 };
 
+export const SET_NAME = (state, name) => {
+  state.name = name;
+};
+
 export const SET_KEY = (state, key) => {
-  state.key = key;
+  state.patchKey = key;
 };
 
 
@@ -129,22 +134,26 @@ export const REMOVE_CONNECTION = (state, id) => {
 // -----------------------------------------------
 //  PARAMETERS
 // -----------------------------------------------
-// export const ADD_PARAMETERS = (state, name) => {
-//   state.parameterSets.push({
-//     name: name,
-//     id: ++state.pid,
-//     params: {}
-//   });
-// };
-export const LOAD_PARAMETERS = (state, id = 0) => {
+export const SET_PARAMETERS_KEY = (state, key) => {
+  state.parameterKey = key;
+};
+
+export const ADD_PARAMETERS = (state, name) => {      // ADD_PARAMETER_SET
+  // state.parameterSets.push({
+  //   name: name,
+  //   params: {...}
+  // });
+};
+
+export const LOAD_PARAMETERS = (state, id = 0) => { // LOAD_PARAMETER_SET
   try {
-    // const patch = state.patches.find((patch) => { return patch.key === state.key; });
-    const patch = state.patches[state.key];
+    const patch = state.patches[state.patchKey];    // TODO use getter, here
     const parameterSet = patch.parameterSets && patch.parameterSets[id];
 
     state.parameters = parameterSet.parameters || {};
   } catch (e) {}
 };
+
 
 export const ADD_PARAMETER = (state, id) => {
   state.parameters[id] = null;

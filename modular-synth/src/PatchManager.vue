@@ -68,7 +68,7 @@ export default {
    * Set the drop-down to the current patch (if loaded from localStorage)
    */
   mounted() {
-    const key = this.$store.state.key;
+    const key = this.$store.state.patchKey;
 
     if (key) {
       // TODO 100 WTFs. I really have no idea why this needs setTImeout:

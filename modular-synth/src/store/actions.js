@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { api } from './firebase';
-import { MODULES_KEY, CONNECTIONS_KEY } from './index';
+// import { parameterSets } from './getters';
+import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY } from './index';
 
 
 // -----------------------------------------------
@@ -25,6 +26,7 @@ export const loadPatch = ({ commit, state }, key) => {
     console.log('Loading patch from localStorage');
     patch = {
       id: parseInt(localStorage.getItem('id')) || 0,
+      name: parseInt(localStorage.getItem(NAME_KEY)) || 'Hello World',
       modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
       connections: JSON.parse(localStorage.getItem(CONNECTIONS_KEY)) || []
     };
@@ -42,13 +44,18 @@ export const loadPatch = ({ commit, state }, key) => {
 
 export const savePatch = ({ state }) => {
   // const key = generateKey(state.patches name);
-  const key = state.key;
+  const key = state.patchKey;
+
+  // const parameterSets = ..... whatever [];
+  //
+  // parameterSets[currentParamsSet].parameters = state.parameters;
+
   const patch = {
     id: state.id,
     name: state.name,
     modules: state.modules,
     connections: state.connections,
-    parameterSets: {}
+    parameterSets: []       // gaaah. Save all parameterSets... or just current?
   };
 
   api.save('patch/' + key, patch)
