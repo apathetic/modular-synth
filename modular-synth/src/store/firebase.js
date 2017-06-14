@@ -27,12 +27,28 @@ export function generateKey(str) {
 export const api = {
   /**
    * Fetch data from Firebase. This happens only once (ie. no "listeners")
-   * @return {Promise} A Firebase Promise, actually.
+   * @return {Promise} The loaded data.
    */
   load(path) {
     console.log('Firebase authentication', !!auth.currentUser);
     if (auth.currentUser) {
-      return database.ref(path).once('value');
+      // return database.ref(path).once('value');
+
+      const getSnapshot = database.ref(path).once('value');
+
+      return new Promise((resolve, reject) => {
+        getSnapshot.then((response) => {
+          const responseObject = response.val();
+          // let data = [];
+          //
+          // for (let item in responseObject) {
+          //   data.push(item);
+          // }
+          //
+          // resolve(data);
+          resolve(responseObject);
+        });
+      });
     }
   },
 
