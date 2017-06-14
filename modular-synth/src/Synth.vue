@@ -163,11 +163,7 @@
 
     created() {
       console.log('◌ App: loading...');
-      this.loadPatch();
-      // this.$bus.$emit('parameters:load');
-
-      console.log('◌ App: binding events...');
-
+      // this.loadPatch();
 
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
@@ -268,7 +264,7 @@
 
     methods: {
       ...mapActions([
-        'loadPatch',
+        // 'loadPatch',
         'togglePower',
         'toggleEditMode',
         'removeModule',

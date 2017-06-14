@@ -20,7 +20,7 @@
         <span>{{ paramsIndex }}</span>
         <select :value="currentParams" @change="selectParams" ref="params">
           <option value="" disabled selected>&lt;select settings&gt;</option>
-          <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
+          <option v-for="(params, index) in patch.parameterSets" :value="index">{{ params.name }}</option>
         </select>
         <input type="text" v-model="currentParamsName" @change="updateParamsName">
       </div>
@@ -40,43 +40,55 @@ export default {
 
   data() {
     return {
-      currentPatch: '',    // key ("cleaned" patch name)
+      currentPatch: '',    // key
       currentPatchName: '',
       currentParams: 0,    // integer index
-      currentParamsName: '',
+      currentParamsName: ''
 
-      patchIndex: '-'
+      // patchIndex: '-'
       // paramsIndex: '-'
     };
   },
 
   computed: {
-    patches() { return this.$store.state.patches; },
-    parameterSets() { return this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets || []; },
-    // patchIndex() { return this.$refs.patch.selectedIndex || '-'; },    // *sigh* cannot reference $refs inside computed prop
-    paramsIndex() { return +this.currentParams + 1 || '-'; },
 
-    // currentPatchName() { return this.patches[this.currentPatch].name; },
+    // parameterSets() { return this.patch.parameterSets || []; },
+
+    patchIndex() { return this.$refs.patch && this.$refs.patch.selectedIndex || '-'; },    // *sigh* cannot reference $refs inside computed prop
+    // paramsIndex() { return this.$refs.params.selectedIndex || '-'; },    // *sigh* cannot reference $refs inside computed prop
+    paramsIndex() { return this.currentParams ? this.currentParams + 1 : '-'; },
+
+    // currentPatchName() { return this.patches[this.currentPatch].name; // this.$store.state.name; },
     // currentParamsName() { return this.patches[this.currentPatch].parameterSets[this.currentParams].name; },
 
     ...mapGetters([
-      'modules'
+      'patches',
+      'patch',
+      'parameters'
     ])
   },
 
-  /**
-   * Set the drop-down to the current patch (if loaded from localStorage)
-   */
-  mounted() {
+  // watch: {
+  //   currentPatch: function(name) {
+  //     this.currentPatchName = name;
+  //   }
+  // },
+
+  created() {
     const key = this.$store.state.patchKey;
 
     if (key) {
       // TODO 100 WTFs. I really have no idea why this needs setTImeout:
+      // https://github.com/vuejs/vue/issues/3842
       setTimeout(() => {
         this.currentPatch = key;
+        this.load();
+        this.$bus.$emit('parameters:load');
       }, 1000);
     }
+  },
 
+  mounted() {
     this.$bus.$emit('parameters:load');
   },
 
@@ -85,30 +97,37 @@ export default {
       this.savePatch();
     },
 
+    load() {
+      this.loadPatch(this.currentPatch);
+      this.currentPatchName = this.patch.name;
+      // this.patchIndex = this.$refs.patch.selectedIndex;
+
+      this.currentParams = this.patch.parameterSets.length ? 0 : -1;  // always select 1st set
+      // this.$bus.$emit('parameters:load');
+      // this.paramsIndex = this.$refs.params.selectedIndex;
+      // this.currentParamsName = this.parameters && this.parameters.name;
+    },
+
     updatePatchName(e) {
-      this.patches[this.currentPatch].name = e.target.value;
+      this.patch.name = e.target.value;
     },
 
     updateParamsName(e) {
-      this.patches[this.currentPatch].parameterSets[this.currentParams].name = e.target.value;
+      this.parameters.name = e.target.value;
     },
 
     selectPatch(e) {
       this.currentPatch = e.target.value;  // key, (cleaned name)
-      this.loadPatch(this.currentPatch);
-      this.currentParams = this.parameterSets.length ? 0 : -1;  // always select 1st set
-      this.patchIndex = this.$refs.patch.selectedIndex;
-
-      this.$bus.$emit('parameters:load');
-      this.currentPatchName = this.patches[this.currentPatch].name; // TODO make computed
+      this.load();
     },
 
     selectParams(e) {
       this.currentParams = e.target.value;  // integer, index
       this.$store.commit('LOAD_PARAMETERS', this.currentParams);
-      // this.paramsIndex = this.$refs.params.selectedIndex;
       this.$bus.$emit('parameters:load');
-      // this.currentParamsName = this.patches[this.currentPatch].parameterSets[this.currentParams].name;
+
+      // this.paramsIndex = this.$refs.params.selectedIndex;
+      // this.currentParamsName = this.parameters && this.parameters.name;
     },
 
     ...mapActions([
@@ -179,10 +198,10 @@ export default {
 
     span {
       font-family: $font-secondary;
-      font-size: 1.3em;
-      line-height: 1.5;
+      font-size: 1.2em;
+      line-height: 1.7;
       opacity: 0.2;
-      padding: 0 0.2em;
+      padding: 0 0.4em;
       position: absolute;
       left: 0;
       // z-index: 1;

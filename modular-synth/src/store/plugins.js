@@ -1,13 +1,13 @@
-import { KEY, NAME_KEY, MODULES_KEY, CONNECTIONS_KEY, PARAMETERS_KEY } from './index';
+import { KEY, MODULES_KEY, CONNECTIONS_KEY, PARAMETERS_KEY } from './index';
 
 const localStoragePlugin = (store) => {
-  store.subscribe((mutation, { key }) => {
+  store.subscribe((mutation, { patchKey }) => {
     // if (mutation.type === 'LOAD_PATCH') {
-    localStorage.setItem(KEY, key);
+    localStorage.setItem(KEY, patchKey);
   });
-  store.subscribe((mutation, { name }) => {
-    localStorage.setItem(NAME_KEY, name);
-  });
+  // store.subscribe((mutation, { name }) => {
+  //   localStorage.setItem(NAME_KEY, name);
+  // });
   store.subscribe((mutation, { modules }) => {
     localStorage.setItem(MODULES_KEY, JSON.stringify(modules));
   });

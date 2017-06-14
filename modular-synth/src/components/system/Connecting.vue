@@ -29,7 +29,8 @@ export default {
    */
   created() {
     this.$bus.$on('connection:start', (port, id) => {  // store.state.focused); // could just use this
-      this.from = this.$store.state.modules.find(function(module) { return module.id === id; });
+      // this.from = this.$store.state.modules.find(function(module) { return module.id === id; });
+      this.from = this.$store.getters.modules.find(function(module) { return module.id === id; });
       this.port = port;
 
       this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
@@ -68,7 +69,8 @@ export default {
       if (target && port) {                         // NOTE: port is a String, so "0" is cool here
         const focused = this.$store.state.focused;  // ironically, we dont even use the target to fetch the Component
 
-        this.to = this.$store.state.modules.find(function(module) { return module.id === focused; });
+        // this.to = this.$store.state.modules.find(function(module) { return module.id === focused; });
+        this.to = this.$store.getters.modules.find(function(module) { return module.id === focused; });
 
         if (
             this.to.id !== this.from.id &&          // if not circular connection
