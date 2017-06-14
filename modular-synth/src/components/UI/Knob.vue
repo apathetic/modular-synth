@@ -151,7 +151,8 @@ export default {
         return;
       }
 
-      this.value = this.$store.state.parameters[this.id] || 0;
+      // this.value = this.$store.state.parameters[this.id] || 0;
+      this.value = this.$store.getters.parameters[this.id] || 0;
       this.knobValue = this.value / this.range;               // derive internal knobValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
       this.setDisplay();
