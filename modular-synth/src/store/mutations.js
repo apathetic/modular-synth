@@ -134,9 +134,9 @@ export const REMOVE_CONNECTION = (state, id) => {
 // -----------------------------------------------
 //  PARAMETERS
 // -----------------------------------------------
-export const SET_PARAMETERS_KEY = (state, key) => {
-  state.parameterKey = key;
-};
+// export const SET_PARAMETERS_KEY = (state, key) => {
+//   state.parameterKey = key;
+// };
 
 export const ADD_PARAMETERS = (state, name) => {      // ADD_PARAMETER_SET
   // state.parameterSets.push({
@@ -146,12 +146,13 @@ export const ADD_PARAMETERS = (state, name) => {      // ADD_PARAMETER_SET
 };
 
 export const LOAD_PARAMETERS = (state, id = 0) => { // LOAD_PARAMETER_SET
-  try {
-    const patch = state.patches[state.patchKey];    // TODO use getter, here
-    const parameterSet = patch.parameterSets && patch.parameterSets[id];
-
-    state.parameters = parameterSet.parameters || {};
-  } catch (e) {}
+  // try {
+  //   const patch = state.patches[state.patchKey];    // TODO use getter, here
+  //   const parameterSet = patch.parameterSets && patch.parameterSets[id];
+  //
+  //   state.parameters = parameterSet.parameters || {};
+  // } catch (e) {}
+  state.parameterKey = id;
 };
 
 
