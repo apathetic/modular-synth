@@ -13,16 +13,16 @@
           <option value="" disabled selected>&lt;select patch&gt;</option>
           <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
         </select>
-        <input type="text" v-model="currentPatchName" @change="updatePatchName">
+        <input type="text" v-model="currentPatchName">
       </div>
 
       <div class="params select">
         <span>{{ paramsIndex }}</span>
         <select :value="currentParams" @change="selectParams" ref="params">
           <option value="" disabled selected>&lt;select settings&gt;</option>
-          <option v-for="(params, index) in patch.parameterSets" :value="index">{{ params.name }}</option>
+          <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
         </select>
-        <input type="text" v-model="currentParamsName" @change="updateParamsName">
+        <input type="text" v-model="currentParamsName">
       </div>
 
     </div>
@@ -45,26 +45,35 @@ export default {
       currentParams: 0,    // integer index
       currentParamsName: ''
 
-      // patchIndex: '-'
-      // paramsIndex: '-'
+      // patches: [{
+      //   name: '',
+      //   key: '',
+      //   parameterSets: []
+      // }]
     };
   },
 
   computed: {
+    parameterSets() {
+      let patches = this.$store.state.patches;
+      let current = this.$store.state.patchKey;
 
-    // parameterSets() { return this.patch.parameterSets || []; },
+      return patches[current] && patches[current].parameterSets || [];
+    },
+
+    // patch() {
+    //   return this.$store.state.patchKey && this.$store.state.patches[this.$store.state.patchKey] || {};
+    // },
 
     patchIndex() { return this.$refs.patch && this.$refs.patch.selectedIndex || '-'; },    // *sigh* cannot reference $refs inside computed prop
     // paramsIndex() { return this.$refs.params.selectedIndex || '-'; },    // *sigh* cannot reference $refs inside computed prop
     paramsIndex() { return this.currentParams ? this.currentParams + 1 : '-'; },
 
-    // currentPatchName() { return this.patches[this.currentPatch].name; // this.$store.state.name; },
-    // currentParamsName() { return this.patches[this.currentPatch].parameterSets[this.currentParams].name; },
-
     ...mapGetters([
-      'patches',
-      'patch',
-      'parameters'
+      'patches'
+      // 'patch',
+      // 'parameterSets',
+      // 'parameters'
     ])
   },
 
@@ -75,45 +84,51 @@ export default {
   // },
 
   created() {
-    const key = this.$store.state.patchKey;
+    // const patches = this.$store.state.patches;
+    // create a reduced representation of the patches, parameterSets for display _in the module only_
+    // Object.keys(patches).forEach((key) => {
+    //   this.patches.push({
+    //     key,
+    //     name: patches[key].name,
+    //     parameterSets: patches[key].parameterSets.map(s => s.name)
+    //   });
+    // });
 
+
+
+    const key = this.$store.state.patchKey;
     if (key) {
       // TODO 100 WTFs. I really have no idea why this needs setTImeout:
       // https://github.com/vuejs/vue/issues/3842
       setTimeout(() => {
         this.currentPatch = key;
         this.load();
-        this.$bus.$emit('parameters:load');
       }, 1000);
     }
   },
 
   mounted() {
     this.$bus.$emit('parameters:load');
+
+    // this.$store.watch(this.$store.getters.patches
   },
 
   methods: {
     save() {
+      this.$store.state.name = this.currentPatchName;
       this.savePatch();
     },
 
     load() {
       this.loadPatch(this.currentPatch);
-      this.currentPatchName = this.patch.name;
+      this.currentPatchName = this.patches[this.currentPatch].name;
       // this.patchIndex = this.$refs.patch.selectedIndex;
 
-      this.currentParams = this.patch.parameterSets.length ? 0 : -1;  // always select 1st set
+      // this.currentParams = this.patch.parameterSets.length ? 0 : -1;  // always select 1st set
+
       // this.$bus.$emit('parameters:load');
       // this.paramsIndex = this.$refs.params.selectedIndex;
       // this.currentParamsName = this.parameters && this.parameters.name;
-    },
-
-    updatePatchName(e) {
-      this.patch.name = e.target.value;
-    },
-
-    updateParamsName(e) {
-      this.parameters.name = e.target.value;
     },
 
     selectPatch(e) {
@@ -124,8 +139,8 @@ export default {
     selectParams(e) {
       this.currentParams = e.target.value;  // integer, index
       this.$store.commit('LOAD_PARAMETERS', this.currentParams);
-      this.$bus.$emit('parameters:load');
 
+      this.$bus.$emit('parameters:load');
       // this.paramsIndex = this.$refs.params.selectedIndex;
       // this.currentParamsName = this.parameters && this.parameters.name;
     },

@@ -14,6 +14,11 @@ export const LOAD_PATCH = (state, patch) => {
   }
 };
 
+export const SAVE_PATCH = (state, patch) => {
+  // save a patch into localStorage
+  state.patches[state.patchKey] = patch;
+};
+
 export const SET_PATCHES = (state, patches) => {
   state.patches = patches;    // check if patches is an array, or ...?
 };
@@ -146,13 +151,12 @@ export const ADD_PARAMETERS = (state, name) => {      // ADD_PARAMETER_SET
 };
 
 export const LOAD_PARAMETERS = (state, id = 0) => { // LOAD_PARAMETER_SET
-  // try {
-  //   const patch = state.patches[state.patchKey];    // TODO use getter, here
-  //   const parameterSet = patch.parameterSets && patch.parameterSets[id];
-  //
-  //   state.parameters = parameterSet.parameters || {};
-  // } catch (e) {}
-  state.parameterKey = id;
+  try {
+    const patch = state.patches[state.patchKey];    // TODO use getter, here
+    const parameterSet = patch.parameterSets && patch.parameterSets[id] || {};
+
+    state.parameters = parameterSet.parameters || {};
+  } catch (e) {}
 };
 
 

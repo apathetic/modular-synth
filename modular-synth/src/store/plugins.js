@@ -1,21 +1,23 @@
-import { KEY, MODULES_KEY, CONNECTIONS_KEY, PARAMETERS_KEY } from './index';
+import { _KEY, _NAME, _MODULES, _CONNECTIONS, _PARAMETERS, _PARAMETER_KEY } from './index';
 
 const localStoragePlugin = (store) => {
   store.subscribe((mutation, { patchKey }) => {
-    // if (mutation.type === 'LOAD_PATCH') {
-    localStorage.setItem(KEY, patchKey);
+    localStorage.setItem(_KEY, patchKey);
   });
-  // store.subscribe((mutation, { name }) => {
-  //   localStorage.setItem(NAME_KEY, name);
-  // });
+  store.subscribe((mutation, { parameterKey }) => {
+    localStorage.setItem(_PARAMETER_KEY, parameterKey);
+  });
+  store.subscribe((mutation, { name }) => {
+    localStorage.setItem(_NAME, name);
+  });
   store.subscribe((mutation, { modules }) => {
-    localStorage.setItem(MODULES_KEY, JSON.stringify(modules));
+    localStorage.setItem(_MODULES, JSON.stringify(modules));
   });
   store.subscribe((mutation, { connections }) => {
-    localStorage.setItem(CONNECTIONS_KEY, JSON.stringify(connections));
+    localStorage.setItem(_CONNECTIONS, JSON.stringify(connections));
   });
   store.subscribe((mutation, { parameters }) => {
-    localStorage.setItem(PARAMETERS_KEY, JSON.stringify(parameters));
+    localStorage.setItem(_PARAMETERS, JSON.stringify(parameters));
   });
   store.subscribe((mutation, { id }) => {
     localStorage.setItem('id', id);
