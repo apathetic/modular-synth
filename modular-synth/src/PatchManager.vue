@@ -41,15 +41,11 @@ export default {
   data() {
     return {
       currentPatch: '',    // key
-      currentPatchName: '',
       currentParams: 0,    // integer index
-      currentParamsName: ''
-
-      // patches: [{
-      //   name: '',
-      //   key: '',
-      //   parameterSets: []
-      // }]
+      currentPatchName: '',
+      currentParamsName: '',
+      patchIndex: '',
+      paramsIndex: ''
     };
   },
 
@@ -61,56 +57,30 @@ export default {
       return patches[current] && patches[current].parameterSets || [];
     },
 
-    // patch() {
-    //   return this.$store.state.patchKey && this.$store.state.patches[this.$store.state.patchKey] || {};
-    // },
-
-    patchIndex() { return this.$refs.patch && this.$refs.patch.selectedIndex || '-'; },    // *sigh* cannot reference $refs inside computed prop
-    // paramsIndex() { return this.$refs.params.selectedIndex || '-'; },    // *sigh* cannot reference $refs inside computed prop
-    paramsIndex() { return this.currentParams ? this.currentParams + 1 : '-'; },
-
     ...mapGetters([
       'patches'
-      // 'patch',
-      // 'parameterSets',
-      // 'parameters'
     ])
   },
 
-  // watch: {
-  //   currentPatch: function(name) {
-  //     this.currentPatchName = name;
-  //   }
-  // },
+  watch: {
+    currentPatch: function() { this.updatePatchDisplay(); },
+    currentParams: function() { this.updateParamsDisplay(); }
+  },
 
-  created() {
-    // const patches = this.$store.state.patches;
-    // create a reduced representation of the patches, parameterSets for display _in the module only_
-    // Object.keys(patches).forEach((key) => {
-    //   this.patches.push({
-    //     key,
-    //     name: patches[key].name,
-    //     parameterSets: patches[key].parameterSets.map(s => s.name)
-    //   });
-    // });
-
-
-
+  mounted() {
     const key = this.$store.state.patchKey;
+
     if (key) {
       // TODO 100 WTFs. I really have no idea why this needs setTImeout:
       // https://github.com/vuejs/vue/issues/3842
       setTimeout(() => {
         this.currentPatch = key;
         this.load();
+
+        this.updatePatchDisplay();
+        this.updateParamsDisplay();
       }, 1000);
     }
-  },
-
-  mounted() {
-    this.$bus.$emit('parameters:load');
-
-    // this.$store.watch(this.$store.getters.patches
   },
 
   methods: {
@@ -121,28 +91,29 @@ export default {
 
     load() {
       this.loadPatch(this.currentPatch);
-      this.currentPatchName = this.patches[this.currentPatch].name;
-      // this.patchIndex = this.$refs.patch.selectedIndex;
-
-      // this.currentParams = this.patch.parameterSets.length ? 0 : -1;  // always select 1st set
-
-      // this.$bus.$emit('parameters:load');
-      // this.paramsIndex = this.$refs.params.selectedIndex;
-      // this.currentParamsName = this.parameters && this.parameters.name;
+      this.$bus.$emit('parameters:load');
     },
 
     selectPatch(e) {
-      this.currentPatch = e.target.value;  // key, (cleaned name)
+      this.currentPatch = e.target.value;
+      this.currentParams = 0;  // always select 1st set when new patch loaded
       this.load();
     },
 
     selectParams(e) {
-      this.currentParams = e.target.value;  // integer, index
+      this.currentParams = e.target.value;
       this.$store.commit('LOAD_PARAMETERS', this.currentParams);
-
       this.$bus.$emit('parameters:load');
-      // this.paramsIndex = this.$refs.params.selectedIndex;
-      // this.currentParamsName = this.parameters && this.parameters.name;
+    },
+
+    updatePatchDisplay() {
+      this.patchIndex = this.$refs.patch.selectedIndex || '-';
+      this.currentPatchName = this.patches[this.currentPatch].name;
+    },
+
+    updateParamsDisplay() {
+      this.paramsIndex = this.$refs.params.selectedIndex || '-';
+      this.currentParamsName = this.patches[this.currentPatch].parameterSets[this.currentParams].name;
     },
 
     ...mapActions([

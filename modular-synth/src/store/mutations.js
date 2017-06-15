@@ -7,6 +7,9 @@ export const LOAD_PATCH = (state, patch) => {
   // Modules / Connections / Parameters in the patch are copied
   // to the root of the store. Will need to update so that App
   // can just reference the current patch  within patches ...?
+  // [update] no, leave as-is. state.patches will be "persistent"
+  // data ie. things to cache in localStorage, and the rest will be
+  // "working" data
   if (patch) {
     state.id = patch.id;
     state.name = patch.name;
@@ -15,7 +18,7 @@ export const LOAD_PATCH = (state, patch) => {
 };
 
 export const SAVE_PATCH = (state, patch) => {
-  // save a patch into localStorage
+  // save a patch into state.patches
   state.patches[state.patchKey] = patch;
 };
 
@@ -150,7 +153,7 @@ export const ADD_PARAMETERS = (state, name) => {      // ADD_PARAMETER_SET
   // });
 };
 
-export const LOAD_PARAMETERS = (state, id = 0) => { // LOAD_PARAMETER_SET
+export const LOAD_PARAMETERS = (state, id = 0) => {
   try {
     const patch = state.patches[state.patchKey];    // TODO use getter, here
     const parameterSet = patch.parameterSets && patch.parameterSets[id] || {};
