@@ -86,7 +86,10 @@ export default {
   methods: {
     save() {
       this.$store.state.name = this.currentPatchName;
-      this.savePatch();
+      this.savePatch({
+        name: this.currentPatchName,
+        paramName: this.currentParamsName
+      });
     },
 
     load() {
