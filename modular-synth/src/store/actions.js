@@ -44,22 +44,32 @@ export const loadPatch = ({ commit, state }, key) => {
 
 export const savePatch = ({ commit, state }, data) => {
   const key = state.patchKey;
-  const pkey = state.parameterKey;
-  // let patch = state.patches[key];
-  let parameterSets = [];
+  let patch = state.patches[key];   // make a copy of the current patch
 
-  parameterSets[pkey] = {
-    name: 'hhh',
+
+  // const patch = {
+  //   id: state.id,
+  //   name: state.name,
+  //   modules: state.modules,
+  //   connections: state.connections,
+  //   parameterSets: state.patches[key].parameterSets
+  // };
+
+  // patch.parameterSets[state.parameterKey] = {
+  //   name: xxx,
+  //   parameters: state.parameters;
+
+  // ----------------------------------------------------------------------
+
+  patch.id = state.id;
+  patch.name = state.name;
+  patch.modules = state.modules;
+  patch.connections = state.connections;
+  patch.parameterSets[state.parameterKey] = {
+    name: 'night flite',
     parameters: state.parameters
   };
 
-  const patch = {
-    id: state.id,
-    name: state.name,
-    modules: state.modules,
-    connections: state.connections,
-    parameterSets   // just current params are saved
-  };
 
   // Update patch in Database
   api.save('patch/' + key, patch)
