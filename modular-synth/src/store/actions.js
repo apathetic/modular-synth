@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { api } from './firebase';
 // import { parameterSets } from './getters';
-import { NAME_KEY, MODULES_KEY, CONNECTIONS_KEY } from './index';
+import { _NAME, _MODULES, _CONNECTIONS } from './index';
 
 
 // -----------------------------------------------
@@ -26,9 +26,9 @@ export const loadPatch = ({ commit, state }, key) => {
     console.log('Loading patch from localStorage');
     patch = {
       id: parseInt(localStorage.getItem('id')) || 0,
-      name: parseInt(localStorage.getItem(NAME_KEY)) || 'Hello World',
-      modules: JSON.parse(localStorage.getItem(MODULES_KEY)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-      connections: JSON.parse(localStorage.getItem(CONNECTIONS_KEY)) || []
+      name: parseInt(localStorage.getItem(_NAME)) || 'Hello World',
+      modules: JSON.parse(localStorage.getItem(_MODULES)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || []
     };
   }
 
@@ -42,22 +42,26 @@ export const loadPatch = ({ commit, state }, key) => {
   });
 };
 
-export const savePatch = ({ state }) => {
-  // const key = generateKey(state.patches name);
+export const savePatch = ({ commit, state }, data) => {
   const key = state.patchKey;
+  const pkey = state.parameterKey;
+  // let patch = state.patches[key];
+  let parameterSets = [];
 
-  // const parameterSets = ..... whatever [];
-  //
-  // parameterSets[currentParamsSet].parameters = state.parameters;
+  parameterSets[pkey] = {
+    name: 'hhh',
+    parameters: state.parameters
+  };
 
   const patch = {
     id: state.id,
     name: state.name,
     modules: state.modules,
     connections: state.connections,
-    parameterSets: []       // gaaah. Save all parameterSets... or just current?
+    parameterSets   // just current params are saved
   };
 
+  // Update patch in Database
   api.save('patch/' + key, patch)
     .then(() => {
       console.log('saved');
@@ -65,6 +69,13 @@ export const savePatch = ({ state }) => {
     .catch((err) => {
       console.log(err); // NOT SIGNED IN ?
     });
+
+  // Update patch in localStorage
+  commit('SAVE_PATCH', patch);
+};
+
+export const createPatch = () => {
+  // const key = generateKey(state.patches name);
 };
 
 export const fetchPatches = ({ commit }) => {
