@@ -66,10 +66,11 @@ export const savePatch = ({ commit, state }, data) => {
   patch.modules = state.modules;
   patch.connections = state.connections;
   patch.parameterSets[state.parameterKey] = {
-    name: 'night flite',
+    name: data.paramName,
     parameters: state.parameters
   };
 
+  debugger;
 
   // Update patch in Database
   api.save('patch/' + key, patch)
