@@ -48,7 +48,6 @@ export default {
       currentParamsName: '',
       patchIndex: '',
       paramsIndex: ''
-      // menuCoords: []
     };
   },
 
@@ -84,12 +83,6 @@ export default {
         this.updateParamsDisplay();
       }, 1000);
     }
-
-
-    // this.$refs.manager.addEventListener('contextmenu', (e) => {
-    //   e.preventDefault();
-    //   this.menuCoords = [e.pageX, e.pageY];
-    // });
   },
 
   methods: {
@@ -120,13 +113,13 @@ export default {
     },
 
     updatePatchDisplay() {
-      this.patchIndex = this.$refs.patch.selectedIndex || '-';
-      this.currentPatchName = this.patches.length && this.patches[this.currentPatch].name;
+      this.patchIndex = ~this.$refs.patch.selectedIndex ? this.$refs.patch.selectedIndex + 1 : '-';
+      this.currentPatchName = this.patches[this.currentPatch] && this.patches[this.currentPatch].name;
     },
 
     updateParamsDisplay() {
-      this.paramsIndex = this.$refs.params.selectedIndex || '-';
-      this.currentParamsName = this.patches.length && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
+      this.paramsIndex = ~this.$refs.params.selectedIndex ? this.$refs.params.selectedIndex + 1 : '-';
+      this.currentParamsName = this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
     },
 
     ...mapActions([
@@ -156,7 +149,7 @@ export default {
 
     .select {
       margin: 0 1px;
-      font-size: 1.5em;
+      font-size: 1.4em;
       padding:0;
 
       &::after {
@@ -179,7 +172,7 @@ export default {
 
     select {
       background: none;
-      min-width: 12em;
+      min-width: 15em;
       height: 100%;
       padding-left: 24px;
       padding-right: 24px;
