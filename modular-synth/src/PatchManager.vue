@@ -1,11 +1,9 @@
 <template>
-  <div class="patch-manager">
-    <auth></auth>
+  <header class="patch-manager pad" :class="{'active': $root.authenticated}">
 
-    <div class="menu" :class="{'active': $root.authenticated}">
+    <button class="save button" @click="save">save</button>
 
-      <button class="save button" @click="save">save</button>
-
+    <div class="menu">
       <!-- TODO : this could prob be a component -->
       <div class="patch select">
         <span>{{ patchIndex }}</span>
@@ -26,11 +24,15 @@
       </div>
 
     </div>
-  </div>
+
+    <auth></auth>
+
+  </header>
 </template>
 
 <script>
 import Auth from './Auth';
+import { generateKey } from './store/firebase';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -46,6 +48,7 @@ export default {
       currentParamsName: '',
       patchIndex: '',
       paramsIndex: ''
+      // menuCoords: []
     };
   },
 
@@ -81,12 +84,19 @@ export default {
         this.updateParamsDisplay();
       }, 1000);
     }
+
+
+    // this.$refs.manager.addEventListener('contextmenu', (e) => {
+    //   e.preventDefault();
+    //   this.menuCoords = [e.pageX, e.pageY];
+    // });
   },
 
   methods: {
     save() {
-      this.$store.state.name = this.currentPatchName;
+      // this.$store.state.name = this.currentPatchName;
       this.savePatch({
+        key: this.currentPatch || generateKey(this.currentPatchName),
         name: this.currentPatchName,
         paramName: this.currentParamsName
       });
@@ -111,12 +121,12 @@ export default {
 
     updatePatchDisplay() {
       this.patchIndex = this.$refs.patch.selectedIndex || '-';
-      this.currentPatchName = this.patches[this.currentPatch].name;
+      this.currentPatchName = this.patches.length && this.patches[this.currentPatch].name;
     },
 
     updateParamsDisplay() {
       this.paramsIndex = this.$refs.params.selectedIndex || '-';
-      this.currentParamsName = this.patches[this.currentPatch].parameterSets[this.currentParams].name;
+      this.currentParamsName = this.patches.length && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
     },
 
     ...mapActions([
@@ -132,16 +142,16 @@ export default {
   @import 'assets/scss/variables.scss';
 
   .patch-manager {
+    display: flex;
+
     .menu {
       display: flex;
+      flex: 0 1 100%;
       justify-content: center;
-
-      &:not(.active) { display: none; }
     }
 
     .save {
-      position: absolute;
-      left: 0;
+      align-self: center;
     }
 
     .select {
@@ -158,6 +168,14 @@ export default {
         pointer-events: none;
       }
     }
+
+    &:not(.active) {
+      .menu,
+      .save {
+        z-index: -1;
+      }
+    }
+
 
     select {
       background: none;

@@ -32,8 +32,9 @@ export default {
   @import 'assets/scss/variables.scss';
 
   .auth {
-    float: left;
-    margin-right: 1em;
+    // float: left;
+    // margin-right: 1em;
+    align-self: center;
 
     button:not(.active) {
       box-shadow: 0 0 0 0 rgba($color-grey-light, 0.7);
@@ -42,7 +43,7 @@ export default {
   }
 
   @keyframes pulse {
-    to { box-shadow: 0 0 0.4em 0.1em rgba($color-grey-light, 0.7); }
+    to { box-shadow: 0 0 0.8em 0.2em rgba($color-grey-light, 0.7); }
   }
 
 </style>
