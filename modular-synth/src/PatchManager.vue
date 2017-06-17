@@ -79,8 +79,8 @@ export default {
         this.currentPatch = key;
         this.load();
 
-        this.updatePatchDisplay();
-        this.updateParamsDisplay();
+        // this.updatePatchDisplay();
+        // this.updateParamsDisplay();
       }, 1000);
     }
   },
@@ -97,6 +97,8 @@ export default {
 
     load() {
       this.loadPatch(this.currentPatch);
+      this.updatePatchDisplay();
+      this.updateParamsDisplay();
       this.$bus.$emit('parameters:load');
     },
 
