@@ -1,7 +1,8 @@
 <template>
   <header class="patch-manager pad" :class="{'active': $root.authenticated}">
 
-    <button class="save button" @click="save">save</button>
+    <!-- <button class="save button" @click="save">save</button> -->
+    <auth></auth>
 
     <div class="menu">
       <!-- TODO : this could prob be a component -->
@@ -25,7 +26,6 @@
 
     </div>
 
-    <auth></auth>
 
   </header>
 </template>
@@ -150,9 +150,9 @@ export default {
       justify-content: center;
     }
 
-    .save {
-      align-self: center;
-    }
+    // .save {
+    //   align-self: center;
+    // }
 
     .select {
       margin: 0 1px;
@@ -185,7 +185,6 @@ export default {
       padding-right: 24px;
       font-size: inherit;
       color: inherit;
-
       opacity: 0;
     }
 

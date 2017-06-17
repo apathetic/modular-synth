@@ -2,7 +2,7 @@ import Vue from 'vue';
 import store from './store';
 import Synth from './Synth';
 import PatchManager from './PatchManager';
-import ContextMenu from './components/system/ContextMenu2';
+import ContextMenu from './components/system/ContextMenu';
 import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
