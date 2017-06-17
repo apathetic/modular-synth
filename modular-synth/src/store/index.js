@@ -36,7 +36,7 @@ const state = {
   parameters: JSON.parse(localStorage.getItem(_PARAMETERS) || '{}'),
 
   // APP: "PERSISTENT" STORAGE
-  patches: [],                                       // all available patches, cached here
+  patches: {},                                       // all available patches, cached here
   patchKey: localStorage.getItem(_KEY) || 'default', // key of active patch
   parameterKey: 0                                    // key of active parameter set
 };

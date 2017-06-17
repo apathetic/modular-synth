@@ -1,4 +1,5 @@
 import { moduleSize } from '../dimensions';
+// import { validateData } from '../schema';
 
 // -----------------------------------------------
 //  PATCH
@@ -23,6 +24,7 @@ export const SAVE_PATCH = (state, patch) => {
 };
 
 export const SET_PATCHES = (state, patches) => {
+  // validateData(patches);
   state.patches = patches;    // check if patches is an array, or ...?
 };
 
