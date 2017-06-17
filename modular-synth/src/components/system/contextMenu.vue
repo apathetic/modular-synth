@@ -87,14 +87,17 @@ export default {
 
     document.body.addEventListener('contextmenu', (e) => {
       e.preventDefault();
-      this.active = '';
 
       if (header === e.target || header.contains(e.target)) {
         this.active = 'file';
       }
-
-      if (grid === e.target || grid.contains(e.target)) {
+      else if (grid === e.target || grid.contains(e.target)) {
         this.active = 'add';
+      }
+      else {
+        this.coords = [];
+        this.active = '';
+        return false;
       }
 
       if (this.editing) {
@@ -111,6 +114,7 @@ export default {
         type,
         coords: [this.coords[0], this.coords[1] - offset]
       });
+
       this.$bus.$emit('module:add');
     },
 
