@@ -26,6 +26,7 @@ const state = {
   editing: false,
   focused: undefined,                                // "Hovered": for Module Info, Connections.  TODO move to $bus?
   active: 0,                                         // "Clicked": for Dragging, Deleting.
+  // contextmenu: false,
 
   // PATCH: WORKING DATA
   id: 0,                                             // for keeping track of modules AND connections

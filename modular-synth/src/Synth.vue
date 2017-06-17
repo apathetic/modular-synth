@@ -9,7 +9,7 @@
       class="grid-container"
       ref="grid"
       @click.left="clearActive"
-      @click.right.prevent="contextmenu">
+      >
 
       <div class="position-highlight">
         <div class="inner"></div>
@@ -40,7 +40,7 @@
         </connection>
       </svg>
 
-      <contextmenu :coords="menuCoords"></contextmenu>
+      <!-- <contextmenu :coords="menuCoords"></contextmenu> -->
     </div>
 
     <aside id="sidebar">
@@ -116,7 +116,7 @@
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
 
-  import contextmenu from './components/system/ContextMenu';
+  // import contextmenu from './components/system/contextMenu';
 
   export default {
     mixins: [sortable],
@@ -127,7 +127,7 @@
       connection,
       midi,
 
-      contextmenu,
+      // contextmenu,
 
       Env,
       LFO,
@@ -156,8 +156,8 @@
 
     data() {
       return {
-        sorting: false,
-        menuCoords: []
+        sorting: false
+        // menuCoords: []
       };
     },
 
@@ -215,7 +215,8 @@
             this.toggleEditMode();
             break;
           case 'Escape':
-            this.menuCoords = [];
+            // this.menuCoords = [];
+            // this.$store.commit('CLOSE_CONTEXTMENU');
             // this.togglePower();
             break;
           case 'Space':
@@ -242,9 +243,9 @@
         }
       });
 
-      window.addEventListener('click', (e) => {
-        this.menuCoords = [];
-      });
+      // window.addEventListener('click', (e) => {
+      //   this.menuCoords = [];
+      // });
     },
 
     mounted() {
@@ -254,12 +255,12 @@
       this.initSorting(this.$refs.grid);
       // this.setupGrid();  // this should be after every module has registered its dimensions
 
-      this.$refs.grid.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        const y = e.pageY - document.querySelector('header').offsetHeight;
-
-        this.menuCoords = [e.pageX, y];
-      });
+      // this.$refs.grid.addEventListener('contextmenu', (e) => {
+      //   e.preventDefault();
+      //   const y = e.pageY - document.querySelector('header').offsetHeight;
+      //
+      //   this.menuCoords = [e.pageX, y];
+      // });
     },
 
     methods: {
@@ -272,6 +273,7 @@
         'clearActive',
         'setFocus',
         'clearFocus'
+        // 'clearContext'
       ])
     }
   };

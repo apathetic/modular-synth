@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import store from './store';
 import Synth from './Synth';
-// import Auth from './Auth';
 import PatchManager from './PatchManager';
+import ContextMenu from './components/system/ContextMenu2';
 import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
@@ -135,7 +135,7 @@ Vue.component('outlets', {
 new Vue({
   store,
   el: 'main',
-  components: { Synth, PatchManager },
+  components: { Synth, PatchManager, ContextMenu },
   data: { bus, authenticated },
   methods: {
     ...mapActions([
@@ -145,10 +145,7 @@ new Vue({
   beforeCreate: function() {
     auth.onAuthStateChanged((user) => {
       this.authenticated = !!user;
-      //   this.user = user;
 
-      // TODO.  We want to fetch patches if the user logs
-      // in / out; not just when the app loads
       if (this.authenticated) {
         this.fetchPatches();
       }
