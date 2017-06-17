@@ -4,24 +4,36 @@
     :class="{visible: visible}"
     :style="position">
 
-    <h3>New Module:</h3>
-    <ul>
-      <!-- <li v-for="module in modules" @click="newModule(module)">{{ module }}</li> -->
-      <li @click="newModule('Analyser')">• analyser</li>
-      <li @click="newModule('Comb')">• comb</li>
-      <li @click="newModule('Delay')">• delay</li>
-      <li @click="newModule('Env')">• ENV</li>
-      <li @click="newModule('LFO')">• LFO</li>
-      <li @click="newModule('Mixer')">• mixer</li>
-      <li @click="newModule('NoteIn')">• note-in</li>
-      <li @click="newModule('Reverb')">• reverb</li>
-      <li @click="newModule('VCO')">• OSC</li>
-      <li @click="newModule('VCA')">• VCA</li>
-      <li @click="newModule('VCF')">• VCF</li>
-      <li>---</li>
-      <li @click="newModule('Node')">• Node</li>
-      <li @click="newModule('Debugger')">• debugger</li>
-    </ul>
+    <div class="add" :class="{active: active === 'add'}">
+      <h3>New Module:</h3>
+      <ul>
+        <!-- <li v-for="module in modules" @click="newModule(module)">{{ module }}</li> -->
+        <li @click="newModule('Analyser')">analyser</li>
+        <li @click="newModule('Comb')">comb</li>
+        <li @click="newModule('Delay')">delay</li>
+        <li @click="newModule('Env')">ENV</li>
+        <li @click="newModule('LFO')">LFO</li>
+        <li @click="newModule('Mixer')">mixer</li>
+        <li @click="newModule('NoteIn')">note-in</li>
+        <li @click="newModule('Reverb')">reverb</li>
+        <li @click="newModule('VCO')">OSC</li>
+        <li @click="newModule('VCA')">VCA</li>
+        <li @click="newModule('VCF')">VCF</li>
+        <li>---</li>
+        <li @click="newModule('Node')">• Node</li>
+        <li @click="newModule('Debugger')">• debugger</li>
+      </ul>
+    </div>
+
+    <div class="file" :class="{active: active === 'file'}">
+      <h3>File:</h3>
+      <ul>
+        <li @click="savePatch()">Save Patch</li>
+        <li @click="newPatch()">New Patch</li>
+        <li @click="newParams()">New Parameter Set</li>
+      </ul>
+    </div>
+
   </div>
 </template>
 
@@ -29,52 +41,77 @@
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  props: {
-    coords: Array
+  data() {
+    return {
+      active: '',
+      coords: []
+    };
   },
 
   computed: {
     visible() {
-      return !!this.coords.length && this.editing;
+      return !!this.coords.length;
     },
+
     position() {
       return {
         left: this.coords[0] + 'px' || 0,
         top: this.coords[1] + 'px' || 0
       };
     },
+
     ...mapGetters([
       'editing'
     ])
   },
 
   created() {
-    document.body.addEventListener('contextmenu', (e) => {
-      const y = e.pageY - document.querySelector('header').offsetHeight;
-
-      debugger;
-
-      e.preventDefault();
-      this.menuCoords = [e.pageX, y];
+    window.addEventListener('click', (e) => {
+      this.coords = [];
     });
 
-    window.addEventListener('click', (e) => {
-      this.menuCoords = [];
+    window.addEventListener('keydown', (e) => {
+      switch (e.code) {
+        case 'Escape':
+          this.coords = [];
+          break;
+        default:
+          // console.log(e.code);
+      }
+    });
+  },
+
+  mounted() {
+    const header = document.querySelector('header');
+    const grid = document.querySelector('#modules');
+
+    document.body.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      this.active = '';
+
+      if (header === e.target || header.contains(e.target)) {
+        this.active = 'file';
+      }
+
+      if (grid === e.target || grid.contains(e.target)) {
+        this.active = 'add';
+      }
+
+      if (this.editing) {
+        this.coords = [e.pageX, e.pageY];
+      }
     });
   },
 
   methods: {
     newModule(type) {
-      this.addModule({ type, coords: this.coords });
-      this.$bus.$emit('module:add');
+      const offset = document.querySelector('header').offsetHeight;
 
-      // this.$nextTick(function() {
-      //   const id = this.$store.state.id;
-      //   const item = this.modules.find((m) => { return m.id === id; });
-      //
-      //   this.gridList.items = this.modules;
-      //   this.gridList.moveItemToPosition(item, [0, 0]);
-      // });
+      this.addModule({
+        type,
+        coords: [this.coords[0], this.coords[1] - offset]
+      });
+      this.$bus.$emit('module:add');
     },
 
     ...mapActions([
@@ -88,7 +125,7 @@ export default {
   @import '../../assets/scss/variables.scss';
 
   .contextmenu {
-    position: absolute; // fixed;
+    position: fixed;
     visibility: hidden;
 
     width: 160px;
@@ -114,6 +151,14 @@ export default {
       &:hover {
         background-color: $color-highlight;
       }
+    }
+
+    div {
+      display: none;
+    }
+
+    .active {
+      display: block;
     }
   }
 </style>
