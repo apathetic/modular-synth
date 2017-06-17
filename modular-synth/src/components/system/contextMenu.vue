@@ -48,20 +48,23 @@ export default {
     ])
   },
 
+  created() {
+    document.body.addEventListener('contextmenu', (e) => {
+      const y = e.pageY - document.querySelector('header').offsetHeight;
 
-  // mounted() {
-  //   this.$refs.grid.addEventListener('contextmenu', (e) => {
-  //     e.preventDefault();
-  //
-  //     const y = e.pageY - document.querySelector('header').offsetHeight;
-  //
-  //     this.menuCoords = [e.pageX, y];
-  //   });
-  // },
+      debugger;
+
+      e.preventDefault();
+      this.menuCoords = [e.pageX, y];
+    });
+
+    window.addEventListener('click', (e) => {
+      this.menuCoords = [];
+    });
+  },
 
   methods: {
     newModule(type) {
-      // this.$store.commit('ADD_MODULE', { type, coords: this.coords });
       this.addModule({ type, coords: this.coords });
       this.$bus.$emit('module:add');
 
