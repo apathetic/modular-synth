@@ -39,8 +39,6 @@
           @mousedown.native="setActive(connection.id)">
         </connection>
       </svg>
-
-      <!-- <contextmenu :coords="menuCoords"></contextmenu> -->
     </div>
 
     <aside id="sidebar">
@@ -116,7 +114,6 @@
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
 
-  // import contextmenu from './components/system/contextMenu';
 
   export default {
     mixins: [sortable],
@@ -126,8 +123,6 @@
       connecting,
       connection,
       midi,
-
-      // contextmenu,
 
       Env,
       LFO,
@@ -215,8 +210,6 @@
             this.toggleEditMode();
             break;
           case 'Escape':
-            // this.menuCoords = [];
-            // this.$store.commit('CLOSE_CONTEXTMENU');
             // this.togglePower();
             break;
           case 'Space':
@@ -242,10 +235,6 @@
             break;
         }
       });
-
-      // window.addEventListener('click', (e) => {
-      //   this.menuCoords = [];
-      // });
     },
 
     mounted() {
@@ -254,13 +243,6 @@
       // TODO2 sortable:mounted() ...?
       this.initSorting(this.$refs.grid);
       // this.setupGrid();  // this should be after every module has registered its dimensions
-
-      // this.$refs.grid.addEventListener('contextmenu', (e) => {
-      //   e.preventDefault();
-      //   const y = e.pageY - document.querySelector('header').offsetHeight;
-      //
-      //   this.menuCoords = [e.pageX, y];
-      // });
     },
 
     methods: {
@@ -273,7 +255,6 @@
         'clearActive',
         'setFocus',
         'clearFocus'
-        // 'clearContext'
       ])
     }
   };
