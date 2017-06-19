@@ -18,9 +18,11 @@ export const LOAD_PATCH = (state, patch) => {
   }
 };
 
-export const SAVE_PATCH = (state, patch) => {
-  // save a patch into state.patches
-  state.patches[state.patchKey] = patch;
+export const SAVE_PATCH = (state, data) => {
+  const patch = data.patch;
+  const key = data.patchKey;
+
+  state.patches[key] = patch;
 };
 
 export const SET_PATCHES = (state, patches) => {
