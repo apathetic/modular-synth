@@ -85,8 +85,9 @@ export const savePatch = ({ commit, state }, data) => {
   commit('SAVE_PATCH', patch);
 };
 
-export const createPatch = () => {
+export const newPatch = () => {
   // const key = generateKey(state.patches name);
+  console.log('dd');
 };
 
 export const fetchPatches = ({ commit }) => {

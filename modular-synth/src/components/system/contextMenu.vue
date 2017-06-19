@@ -90,11 +90,9 @@ export default {
 
       if (header === e.target || header.contains(e.target)) {
         this.active = 'file';
-      }
-      else if (grid === e.target || grid.contains(e.target)) {
+      } else if (grid === e.target || grid.contains(e.target)) {
         this.active = 'add';
-      }
-      else {
+      } else {
         this.coords = [];
         this.active = '';
         return false;
