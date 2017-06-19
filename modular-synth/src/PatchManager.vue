@@ -1,13 +1,13 @@
 <template>
   <header class="patch-manager pad" :class="{'active': $root.authenticated}">
 
-    <!-- <button class="save button" @click="save">save</button> -->
-    <auth></auth>
+    <button class="save button" @click="save">save</button>
 
     <div class="menu">
       <!-- TODO : this could prob be a component -->
       <div class="patch select">
         <span>{{ patchIndex }}</span>
+        <button class="new" @click="newPatch">+</button>
         <select :value="currentPatch" @change="selectPatch" ref="patch">
           <option value="" disabled selected>&lt;select patch&gt;</option>
           <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
@@ -26,6 +26,7 @@
 
     </div>
 
+    <auth></auth>
 
   </header>
 </template>
@@ -102,6 +103,10 @@ export default {
       this.$bus.$emit('parameters:load');
     },
 
+    // newP() {
+    //   console.log('s');
+    // },
+
     selectPatch(e) {
       this.currentPatch = e.target.value;
       this.currentParams = 0;  // always select 1st set when new patch loaded
@@ -115,18 +120,19 @@ export default {
     },
 
     updatePatchDisplay() {
-      this.patchIndex = ~this.$refs.patch.selectedIndex ? this.$refs.patch.selectedIndex + 1 : '-';
+      this.patchIndex = ~this.$refs.patch.selectedIndex ? '0' + this.$refs.patch.selectedIndex : '';
       this.currentPatchName = this.patches[this.currentPatch] && this.patches[this.currentPatch].name;
     },
 
     updateParamsDisplay() {
-      this.paramsIndex = ~this.$refs.params.selectedIndex ? this.$refs.params.selectedIndex + 1 : '-';
+      this.paramsIndex = ~this.$refs.params.selectedIndex ? this.$refs.params.selectedIndex : '';
       this.currentParamsName = this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
     },
 
     ...mapActions([
       'savePatch',
-      'loadPatch'
+      'loadPatch',
+      'newPatch'
     ])
   }
 };
@@ -135,6 +141,7 @@ export default {
 
 <style lang="scss">
   @import 'assets/scss/variables.scss';
+  $gap: 24px;
 
   .patch-manager {
     display: flex;
@@ -145,14 +152,15 @@ export default {
       justify-content: center;
     }
 
-    // .save {
-    //   align-self: center;
-    // }
+    .save {
+      align-self: center;
+    }
 
     .select {
       margin: 0 1px;
       font-size: 1.4em;
       padding:0;
+      overflow: hidden;
 
       &::after {
         content: '▿';  // ▽
@@ -164,6 +172,11 @@ export default {
       }
     }
 
+    .new {
+      font-size: 1.2em;
+      width: $gap;
+    }
+
     &:not(.active) {
       .menu,
       .save {
@@ -171,13 +184,11 @@ export default {
       }
     }
 
-
     select {
       background: none;
       min-width: 15em;
       height: 100%;
-      padding-left: 24px;
-      padding-right: 24px;
+      padding-right: $gap;
       font-size: inherit;
       color: inherit;
       opacity: 0;
@@ -188,24 +199,25 @@ export default {
       color: inherit;
       border: 0;
       background: none;
-      width: calc(100% - 24px);
-      height: 100%;
-      padding-left: 24px;
       position: absolute;
+
+      height: 100%;
+      // width: calc(100% - 24px);
+      // left: 0;
+      left: $gap;
+      right: $gap;
+
       top: 0;
 
       &:focus { outline: none; }
     }
 
     span {
-      font-family: $font-secondary;
-      font-size: 1.2em;
-      line-height: 1.7;
-      opacity: 0.2;
-      padding: 0 0.4em;
+      font: 3em/0.7em $font-secondary;
+      font-weight: bold;
       position: absolute;
-      left: 0;
-      // z-index: 1;
+      right: 0.5em;
+      opacity: 0.1;
     }
   }
 </style>
