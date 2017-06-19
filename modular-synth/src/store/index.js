@@ -26,11 +26,10 @@ const state = {
   editing: false,
   focused: undefined,                                // "Hovered": for Module Info, Connections.  TODO move to $bus?
   active: 0,                                         // "Clicked": for Dragging, Deleting.
-  // contextmenu: false,
 
   // PATCH: WORKING DATA
   id: 0,                                             // for keeping track of modules AND connections
-  name: localStorage.getItem(_NAME) || 'Hello World', // CAN PROB KILL THIS...
+  name: localStorage.getItem(_NAME) || 'Blank',
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
   parameters: JSON.parse(localStorage.getItem(_PARAMETERS) || '{}'),
