@@ -92,9 +92,8 @@ export const newPatch = () => {
 
 export const fetchPatches = ({ commit }) => {
   api.load('/patch')
-    .then((response) => {
-      const patches = response.val();  // val() is a firebase thing
-
+    .then((patches) => {
+      console.log(patches);
       commit('SET_PATCHES', patches);
     })
     .catch(() => {
