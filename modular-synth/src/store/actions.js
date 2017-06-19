@@ -1,6 +1,5 @@
 import Vue from 'vue';
-import { api } from './firebase';
-// import { parameterSets } from './getters';
+import { api, generateKey } from './firebase';
 import { _NAME, _MODULES, _CONNECTIONS } from './index';
 
 
@@ -44,22 +43,7 @@ export const loadPatch = ({ commit, state }, key) => {
 
 export const savePatch = ({ commit, state }, data) => {
   const key = state.patchKey;
-  let patch = state.patches[key];   // make a copy of the current patch
-
-
-  // const patch = {
-  //   id: state.id,
-  //   name: state.name,
-  //   modules: state.modules,
-  //   connections: state.connections,
-  //   parameterSets: state.patches[key].parameterSets
-  // };
-
-  // patch.parameterSets[state.parameterKey] = {
-  //   name: xxx,
-  //   parameters: state.parameters;
-
-  // ----------------------------------------------------------------------
+  let patch = state.patches[key];   // make a copy of the current patch.. ///  by reference or by value here
 
   patch.id = state.id;
   patch.name = state.name;
@@ -69,8 +53,6 @@ export const savePatch = ({ commit, state }, data) => {
     name: data.paramName,
     parameters: state.parameters
   };
-
-  debugger;
 
   // Update patch in Database
   api.save('patch/' + key, patch)
@@ -82,12 +64,34 @@ export const savePatch = ({ commit, state }, data) => {
     });
 
   // Update patch in localStorage
-  commit('SAVE_PATCH', patch);
+  commit('SAVE_PATCH', {
+    key: state.patchKey,
+    patch: patch
+  });
 };
 
-export const newPatch = () => {
-  // const key = generateKey(state.patches name);
-  console.log('dd');
+export const addPatch = ({ commit, state }) => {
+  const key = generateKey();
+  const blank = {   // TODO make this live somewhere universal
+    id: 0,
+    name: 'Blank',
+    modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+    connections: [],
+    parameterSets: [
+      // {
+      //   name: 'Empty',
+      //   parameters: {}
+      // }
+    ]
+  };
+
+  state.patchKey = key;
+  state.parameterKey = 0;
+
+  commit('SAVE_PATCH', {
+    key,
+    patch: blank
+  });
 };
 
 export const fetchPatches = ({ commit }) => {

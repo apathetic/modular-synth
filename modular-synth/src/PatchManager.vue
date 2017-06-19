@@ -7,7 +7,7 @@
       <!-- TODO : this could prob be a component -->
       <div class="patch select">
         <span>{{ patchIndex }}</span>
-        <button class="new" @click="newPatch">+</button>
+        <button class="add" @click="add">+</button>
         <select :value="currentPatch" @change="selectPatch" ref="patch">
           <option value="" disabled selected>&lt;select patch&gt;</option>
           <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
@@ -17,6 +17,7 @@
 
       <div class="params select">
         <span>{{ paramsIndex }}</span>
+        <button class="add" @click="addPatch">+</button>
         <select :value="currentParams" @change="selectParams" ref="params">
           <option value="" disabled selected>&lt;select settings&gt;</option>
           <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
@@ -88,7 +89,6 @@ export default {
 
   methods: {
     save() {
-      // this.$store.state.name = this.currentPatchName;
       this.savePatch({
         key: this.currentPatch || generateKey(this.currentPatchName),
         name: this.currentPatchName,
@@ -103,9 +103,11 @@ export default {
       this.$bus.$emit('parameters:load');
     },
 
-    // newP() {
-    //   console.log('s');
-    // },
+    add() {
+      this.addPatch();
+
+      // AND NOW SELECT THAT BLANK PATCH
+    },
 
     selectPatch(e) {
       this.currentPatch = e.target.value;
@@ -132,7 +134,7 @@ export default {
     ...mapActions([
       'savePatch',
       'loadPatch',
-      'newPatch'
+      'addPatch'
     ])
   }
 };
@@ -172,7 +174,7 @@ export default {
       }
     }
 
-    .new {
+    .add {
       font-size: 1.2em;
       width: $gap;
     }
