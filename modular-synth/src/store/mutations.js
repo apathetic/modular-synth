@@ -1,16 +1,14 @@
 import { moduleSize } from '../dimensions';
-// import { validateData } from '../schema';
+import { validateData } from '../schema';
 
 // -----------------------------------------------
 //  PATCH
 // -----------------------------------------------
 export const LOAD_PATCH = (state, patch) => {
-  // Modules / Connections / Parameters in the patch are copied
-  // to the root of the store. Will need to update so that App
-  // can just reference the current patch  within patches ...?
-  // [update] no, leave as-is. state.patches will be "persistent"
-  // data ie. things to cache in localStorage, and the rest will be
-  // "working" data
+  // - Modules / Connections / Parameters in the patch are to the root of the store.
+  // - Should I update so that App can just reference the current patch  within patches ...?
+  // - [update] nah, leave as-is: state.patches will be "persistent" data,
+  //   ie. things to cache in localStorage, and the rest will be "working" data
   if (patch) {
     state.id = patch.id;
     state.name = patch.name;
@@ -26,8 +24,7 @@ export const SAVE_PATCH = (state, data) => {
 };
 
 export const SET_PATCHES = (state, patches) => {
-  // validateData(patches);
-  state.patches = patches;    // check if patches is an array, or ...?
+  state.patches = validateData(patches); // patches;
 };
 
 export const SET_NAME = (state, name) => {
@@ -157,9 +154,12 @@ export const ADD_PARAMETERS = (state, name) => {      // ADD_PARAMETER_SET
   // });
 };
 
-export const LOAD_PARAMETERS = (state, id = 0) => {
+export const LOAD_PARAMETERS = (state, patch) => {
+  // state.parameters = patch.parameters;
+
   try {
-    const patch = state.patches[state.patchKey];    // TODO use getter, here
+    // const patch = state.patches[state.patchKey];     // TODO use getter, here
+    const id = state.parameterKey;
     const parameterSet = patch.parameterSets && patch.parameterSets[id] || {};
 
     state.parameters = parameterSet.parameters || {};

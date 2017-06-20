@@ -97,20 +97,29 @@ export default {
     },
 
     load() {
-      this.loadPatch(this.currentPatch);
-      this.updatePatchDisplay();
-      this.updateParamsDisplay();
-      this.$bus.$emit('parameters:load');
+      this.loadPatch();
+
+      // make sure all Knobs n' such are in the DOM, and ready
+      this.$nextTick(function() {
+        this.$bus.$emit('parameters:load');
+      });
+
+      if (Object.keys(this.patches).length) {
+        this.updatePatchDisplay();
+        this.updateParamsDisplay();
+      }
     },
 
     add() {
       this.addPatch();
+      this.loadPatch();
 
       // AND NOW SELECT THAT BLANK PATCH
     },
 
     selectPatch(e) {
       this.currentPatch = e.target.value;
+      this.$store.commit('SET_KEY', this.currentPatch);
       this.currentParams = 0;  // always select 1st set when new patch loaded
       this.load();
     },
@@ -167,16 +176,18 @@ export default {
       &::after {
         content: '▿';  // ▽
         position: absolute;
-        right: 5px;
+        right: 7px;
         top: 5px;
-        opacity: .2;
+        // opacity: 0.2;
         pointer-events: none;
       }
     }
 
     .add {
+      padding: 3px;
       font-size: 1.2em;
       width: $gap;
+      // opacity: 0.2;
     }
 
     &:not(.active) {
@@ -202,13 +213,9 @@ export default {
       border: 0;
       background: none;
       position: absolute;
-
       height: 100%;
-      // width: calc(100% - 24px);
-      // left: 0;
       left: $gap;
       right: $gap;
-
       top: 0;
 
       &:focus { outline: none; }
