@@ -74,17 +74,17 @@ export default {
   mounted() {
     const key = this.$store.state.patchKey;
 
-    if (key) {
+    // LOAD what we can from localStorage first. It's possible we'll load something
+    // before we've FETCHED any data from the backend.
+
+    // if (key) {
       // TODO 100 WTFs. I really have no idea why this needs setTImeout:
       // https://github.com/vuejs/vue/issues/3842
-      setTimeout(() => {
-        this.currentPatch = key;
-        this.load();
-
-        // this.updatePatchDisplay();
-        // this.updateParamsDisplay();
-      }, 1000);
-    }
+    setTimeout(() => {
+      this.currentPatch = key;
+      this.load();
+    }, 1000);
+    // }
   },
 
   methods: {
@@ -99,22 +99,20 @@ export default {
     load() {
       this.loadPatch();
 
-      // make sure all Knobs n' such are in the DOM, and ready
-      this.$nextTick(function() {
-        this.$bus.$emit('parameters:load');
-      });
-
       if (Object.keys(this.patches).length) {
         this.updatePatchDisplay();
         this.updateParamsDisplay();
       }
+
+      // make sure all Knobs n' such are in the DOM, and ready
+      this.$nextTick(function() {
+        this.$bus.$emit('parameters:load');
+      });
     },
 
     add() {
       this.addPatch();
-      this.loadPatch();
-
-      // AND NOW SELECT THAT BLANK PATCH
+      this.loadPatch();      // AND NOW SELECT THAT BLANK PATCH
     },
 
     selectPatch(e) {
@@ -132,12 +130,18 @@ export default {
 
     updatePatchDisplay() {
       this.patchIndex = ~this.$refs.patch.selectedIndex ? '0' + this.$refs.patch.selectedIndex : '';
-      this.currentPatchName = this.patches[this.currentPatch] && this.patches[this.currentPatch].name;
+      // this.currentPatchName = this.patches[this.currentPatch] && this.patches[this.currentPatch].name;
+      this.currentPatchName = this.patches[this.currentPatch].name;
     },
 
     updateParamsDisplay() {
-      this.paramsIndex = ~this.$refs.params.selectedIndex ? this.$refs.params.selectedIndex : '';
-      this.currentParamsName = this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
+      this.paramsIndex = ~this.$refs.params.selectedIndex ? '0' + this.$refs.params.selectedIndex : '';
+      // we're assuming good data integrity; dont need to check "if exists"
+      // this.currentParamsName = this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
+      this.currentParamsName = this.patches[this.currentPatch].parameterSets.length && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
+      if (!this.currentParamsName) {
+        this.currentParamsName = '';    // should prob disable the input
+      }
     },
 
     ...mapActions([
