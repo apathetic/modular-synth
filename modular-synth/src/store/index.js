@@ -29,14 +29,14 @@ const state = {
 
   // PATCH: WORKING DATA
   id: 0,                                             // for keeping track of modules AND connections
-  name: localStorage.getItem(_NAME) || 'Blank',
+  name: localStorage.getItem(_NAME) || '',
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
   parameters: JSON.parse(localStorage.getItem(_PARAMETERS) || '{}'),
 
   // APP: "PERSISTENT" STORAGE
   patches: {},                                       // all available patches, cached here
-  patchKey: localStorage.getItem(_KEY) || 'default', // key of active patch
+  patchKey: localStorage.getItem(_KEY) || '',        // key of active patch
   parameterKey: 0                                    // key of active parameter set
 };
 
