@@ -1,7 +1,14 @@
 import Vue from 'vue';
 import { api, generateKey } from './firebase';
-import { _NAME, _MODULES, _CONNECTIONS } from './index';
+import { _NAME, _MODULES, _CONNECTIONS, _PARAMETERS } from './index';
 
+let blank = {   // TODO make this (object) live somewhere universal
+  id: 0,
+  name: 'Blank',
+  modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+  connections: [],
+  parameterSets: []
+};
 
 // -----------------------------------------------
 //  LOAD / SAVE
@@ -14,6 +21,7 @@ import { _NAME, _MODULES, _CONNECTIONS } from './index';
 export const loadPatch = ({ commit, state }, key) => {
   let patch;
 
+  key = key || state.patchKey;    // load a specific patch, or whatever current key is
   console.log('-----------------------------');
 
   // if loading patch via a specific key
@@ -23,21 +31,42 @@ export const loadPatch = ({ commit, state }, key) => {
     commit('SET_KEY', key);
   } else {
     console.log('Loading patch from localStorage');
+    // TODO store this object somewhere global. USE blank ABOVE
     patch = {
       id: parseInt(localStorage.getItem('id')) || 0,
-      name: parseInt(localStorage.getItem(_NAME)) || 'Hello World',
+      name: parseInt(localStorage.getItem(_NAME)) || 'Blank',
       modules: JSON.parse(localStorage.getItem(_MODULES)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || []
+      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || [],
+      parameterSets: []
     };
+    // patch = Object.assign({}, blank);
+    // patch.id: parseInt(localStorage.getItem('id')),
+    //   name: parseInt(localStorage.getItem(_NAME)),
+    //   modules: JSON.parse(localStorage.getItem(_MODULES)),
+    //   connections: JSON.parse(localStorage.getItem(_CONNECTIONS))
+    // });
+
+    // we WERE presupposing that there is state.patches...
+    // will not work if not (ie. no firebase, etc).
+    const p = JSON.parse(localStorage.getItem(_PARAMETERS));
+    if (p) {
+      patch.parameterSets.push({
+        parameters: p // dont care about name: as they're prob not logged in & no <select> at all
+      });
+    }
   }
 
+  // loads: id, name and modules ...
   commit('LOAD_PATCH', patch);
 
   // ensure nodes (+ inlets/outlets) are in the DOM
   Vue.nextTick(function() {
     console.log('All modules loaded, now routing audio...');
-    commit('LOAD_CONNECTIONS', patch);    // connections);
-    commit('LOAD_PARAMETERS');
+    // ... then load connections (from the same patch Object) ...
+    commit('LOAD_CONNECTIONS', patch);
+
+    // ... lastly, load parameters (from the same patch Object)
+    commit('LOAD_PARAMETERS', patch);
   });
 };
 
@@ -72,18 +101,13 @@ export const savePatch = ({ commit, state }, data) => {
 
 export const addPatch = ({ commit, state }) => {
   const key = generateKey();
-  const blank = {   // TODO make this live somewhere universal
-    id: 0,
-    name: 'Blank',
-    modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-    connections: [],
-    parameterSets: [
-      // {
-      //   name: 'Empty',
-      //   parameters: {}
-      // }
-    ]
-  };
+  // const blank = {
+  //   id: 0,
+  //   name: 'Blank',
+  //   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+  //   connections: [],
+  //   parameterSets: []
+  // };
 
   state.patchKey = key;
   state.parameterKey = 0;
@@ -97,8 +121,10 @@ export const addPatch = ({ commit, state }) => {
 export const fetchPatches = ({ commit }) => {
   api.load('/patch')
     .then((patches) => {
-      console.log(patches);
       commit('SET_PATCHES', patches);
+
+      // ALSO store in localStorage...?
+      // localStorage.setItem(_PARAMETERS
     })
     .catch(() => {
       console.log('Not signed in.'); // NOT SIGNED IN ?
