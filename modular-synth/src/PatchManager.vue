@@ -172,7 +172,7 @@ export default {
     }
 
     .select {
-      margin: 0 1px;
+      margin: 0 5px;
       font-size: 1.4em;
       padding:0;
       overflow: hidden;
