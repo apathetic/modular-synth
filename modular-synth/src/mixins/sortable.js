@@ -16,19 +16,11 @@ import GridList from '../assets/vendor/gridList';
 import { rackWidth, rackHeight } from '../dimensions';
 
 export const sortable = {
-  mounted() {
-    // this.handle = handle;
-    // this.$positionHighlight = this.handle.querySelector('.position-highlight');
-    // this.$positionHighlight.style.display = 'none';
-  },
-
   methods: {
     initSorting(handle) {
       this.handle = handle;
       this.$positionHighlight = this.handle.querySelector('.position-highlight');
       this.$positionHighlight.style.display = 'none';
-
-      console.log('WTF', this.modules);
 
       this.setupGrid();
     },
@@ -38,7 +30,7 @@ export const sortable = {
       this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
       this.gridList = new GridList(this.modules);
       this._applyPositionToItems();
-      console.log(this.modules, this.gridList.toString());
+      console.log(this.gridList.toString());
     },
 
     startSorting() {
