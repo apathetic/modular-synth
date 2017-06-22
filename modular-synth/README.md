@@ -33,7 +33,7 @@ npm test
 **EVENTS**
   - App
     - app:load
-    - app:initSorting
+    - app:sort    // app:sorting:init
   - module
     - module:add
     - module:remove
