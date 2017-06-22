@@ -105,8 +105,10 @@ export default {
       }
 
       // make sure all Knobs n' such are in the DOM, and ready
+      // also: set up the sorting
       this.$nextTick(function() {
         this.$bus.$emit('parameters:load');
+        this.$bus.$emit('app:sort');
       });
     },
 
