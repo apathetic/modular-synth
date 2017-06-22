@@ -28,6 +28,8 @@ export const sortable = {
       this.$positionHighlight = this.handle.querySelector('.position-highlight');
       this.$positionHighlight.style.display = 'none';
 
+      console.log('WTF', this.modules);
+
       this.setupGrid();
     },
 
@@ -36,6 +38,7 @@ export const sortable = {
       this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
       this.gridList = new GridList(this.modules);
       this._applyPositionToItems();
+      console.log(this.modules, this.gridList.toString());
     },
 
     startSorting() {

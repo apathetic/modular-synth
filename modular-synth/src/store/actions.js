@@ -31,7 +31,7 @@ export const loadPatch = ({ commit, state }, key) => {
     commit('SET_KEY', key);
   } else {
     console.log('Loading patch from localStorage');
-    // TODO store this object somewhere global. USE blank ABOVE
+    // TODO store this object somewhere global. USE blank, ABOVE
     patch = {
       id: parseInt(localStorage.getItem('id')) || 0,
       name: parseInt(localStorage.getItem(_NAME)) || 'Blank',

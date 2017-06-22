@@ -152,13 +152,11 @@
     data() {
       return {
         sorting: false
-        // menuCoords: []
       };
     },
 
     created() {
       console.log('◌ App: loading...');
-      // this.loadPatch();
 
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
@@ -169,6 +167,12 @@
       this.$bus.$on('drag:active', (coords, el) => {
         if (!this.editing) { //  this.sorting) {
           this.whileSorting(el); // from sortable mixin
+        }
+      });
+
+      this.$bus.$on('drag:end', () => {
+        if (!this.editing) {
+          this.stopSorting();    // from sortable mixin
         }
       });
 
@@ -191,12 +195,6 @@
           this.gridList.items = this.modules;
           this.gridList._pullItemsToLeft();
         });
-      });
-
-      this.$bus.$on('drag:end', () => {
-        if (!this.editing) {
-          this.stopSorting();    // from sortable mixin
-        }
       });
 
       window.addEventListener('keydown', (e) => {
@@ -247,7 +245,6 @@
 
     methods: {
       ...mapActions([
-        // 'loadPatch',
         'togglePower',
         'toggleEditMode',
         'removeModule',
