@@ -132,17 +132,22 @@ export default {
 
     updatePatchDisplay() {
       this.patchIndex = ~this.$refs.patch.selectedIndex ? '0' + this.$refs.patch.selectedIndex : '';
-      // this.currentPatchName = this.patches[this.currentPatch] && this.patches[this.currentPatch].name;
-      this.currentPatchName = this.patches[this.currentPatch].name;
+      try {
+        this.currentPatchName = this.patches[this.currentPatch].name || '';
+      } catch (e) {
+        this.currentPatchName = '';    // should prob disable the input, too
+      }
     },
 
     updateParamsDisplay() {
       this.paramsIndex = ~this.$refs.params.selectedIndex ? '0' + this.$refs.params.selectedIndex : '';
       // we're assuming good data integrity; dont need to check "if exists"
       // this.currentParamsName = this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
-      this.currentParamsName = this.patches[this.currentPatch].parameterSets.length && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
-      if (!this.currentParamsName) {
-        this.currentParamsName = '';    // should prob disable the input
+      try {
+        this.currentParamsName = this.patches[this.currentPatch].parameterSets[this.currentParams].name || '';
+      } catch (e) {
+        console.log(e);
+        this.currentParamsName = '';    // should prob disable the input, too
       }
     },
 
