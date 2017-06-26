@@ -72,12 +72,21 @@ export const loadPatch = ({ commit, state }, key) => {
 
 export const savePatch = ({ commit, state }, data) => {
   const key = state.patchKey;
-  let patch = state.patches[key];   // make a copy of the current patch.. ///  by reference or by value here
+  // data.key ??
+  // data.name ...??/
 
-  patch.id = state.id;
-  patch.name = state.name;
-  patch.modules = state.modules;
-  patch.connections = state.connections;
+  const patch = {
+    id: state.id,
+    name: state.name,
+    modules: state.modules,
+    connections: state.connections,
+    parameterSets: state.patches[key].parameterSets
+  };
+
+  // patch.id = state.id;
+  // patch.name = state.name;
+  // patch.modules = state.modules;
+  // patch.connections = state.connections;
   patch.parameterSets[state.parameterKey] = {
     name: data.paramName,
     parameters: state.parameters
