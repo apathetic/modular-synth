@@ -32,7 +32,6 @@ export const api = {
    * @return {Promise} The loaded data.
    */
   load(path) {
-    console.log('Firebase authentication', !!auth.currentUser);
     if (auth.currentUser) {
       // return database.ref(path).once('value');
 

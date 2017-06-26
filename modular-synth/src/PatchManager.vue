@@ -90,7 +90,7 @@ export default {
   methods: {
     save() {
       this.savePatch({
-        key: this.currentPatch || generateKey(this.currentPatchName),
+        key: this.currentPatch || generateKey(),
         name: this.currentPatchName,
         paramName: this.currentParamsName
       });
