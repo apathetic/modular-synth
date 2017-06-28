@@ -65,6 +65,10 @@ export default {
     this.outlets[0].audio = vca;
 
     console.log('Creating VCA');
+  },
+
+  destroyed() {
+    this.inlets[0].audio.disconnect();
   }
 };
 

@@ -113,6 +113,17 @@ export default {
     console.log('Creating Delay');
   },
 
+  destroyed() {
+    this.inlets[0].disconnect();
+    this.outlets[0].disconnect();
+    // activateNode.disconnect();
+    // delay.disconnect();
+    // filter.disconnect();
+    // feedbackNode.disconnect();
+    // wet.disconnect();
+    // dry.disconnect();
+  },
+
   methods: {
     setDelay(d) {
       // this.osc.frequency.value = f;
