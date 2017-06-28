@@ -88,6 +88,11 @@ export default {
     console.log('Creating Env');
   },
 
+  destroyed() {
+    this.adsr.disconnect();
+    // DESTROY signal. TODO
+  },
+
   methods: {
     gate(velocity) {
       if (velocity) {
