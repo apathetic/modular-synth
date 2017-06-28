@@ -74,6 +74,10 @@ export default {
     console.log('Creating Reverb');
   },
 
+  destroyed() {
+    this.convolver.disconnect();
+  },
+
   methods: {
     /**
      * k-rate control of the Reverb
