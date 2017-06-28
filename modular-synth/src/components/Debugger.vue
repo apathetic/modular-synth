@@ -120,6 +120,10 @@
       console.log('Creating Debugger');
     },
 
+    destroyed() {
+      this.processor.disconnect();
+    },
+
     methods: {
       loop() {
         this.peak = this.processor.volume.toFixed(3);

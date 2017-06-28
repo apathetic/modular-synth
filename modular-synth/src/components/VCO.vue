@@ -101,6 +101,8 @@
 
     destroyed() {
       console.log('Destroying VCO ', this.id);
+      this.gain.disconnect();
+      this.osc.disconnect();
     },
 
     methods: {
