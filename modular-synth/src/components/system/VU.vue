@@ -34,6 +34,10 @@ export default {
     });
   },
 
+  destroyed() {
+    // clean up METER // TODO
+  },
+
   mounted() {
     const meterContext = this.meterContext = this.$refs.vu.getContext('2d');
     let meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, 132);

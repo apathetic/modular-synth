@@ -72,6 +72,11 @@
       console.log('Creating Analyser');
     },
 
+    destroyed() {
+      this.analyser.disconnect();
+      // this._buffer: ... Float32Array destroy ...??
+    },
+
     mounted() {
       this.visualizer = this.$refs.visualization.getContext('2d');
     },

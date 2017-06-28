@@ -83,6 +83,10 @@ export default {
     console.log('Creating Filter');
   },
 
+  destroyed() {
+    this.filter.disconnect();
+  },
+
   methods: {
     setFreq(f) {
       this.filter.frequency.value = f;

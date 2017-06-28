@@ -82,6 +82,10 @@ export default {
     console.log('Creating Comb');
   },
 
+  destroyed() {
+    this.filter.disconnect();
+  },
+
   methods: {
     setFreq(f) {
       this.filter.frequency.value = f;
