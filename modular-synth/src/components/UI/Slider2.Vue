@@ -9,9 +9,9 @@
 <script>
 export default {
   props: {
-    label: String,
-    min: null,
-    max: null
+    param: String,
+    min: Number,
+    max: Number
   },
 
   data() {
@@ -33,6 +33,7 @@ export default {
     const self = this;
 
     this.range = (this.max - this.min) / 100;
+    this.id = this.$parent.id + '-' + this.param;
 
     // this.sliderValue = this.value;
     // this.knobValue = 100 * (this.value - this.min) / (this.max - this.min);  // derive internal knobValue from value
@@ -50,6 +51,15 @@ export default {
         self.update(e);
       }
     });
+
+    // fetch the slider's value from the Store parameterSet, update itself as well as the (parent) Component
+    this.$bus.$on('parameters:load', this.fetchValue);
+  },
+
+  destroyed() {
+    console.log('Destroying Slider ', this.id);
+    this.$store.commit('REMOVE_PARAMETER', this.id);
+    this.$bus.$off('parameters:load', this.fetchValue);
   },
 
   methods: {
@@ -68,6 +78,14 @@ export default {
       this.sliderValue = sliderValue;
       // this.value = value;
       this.$emit('value', value);
+      this.$store.commit('SET_PARAMETER', {
+        id: this.id,
+        value: value
+      });
+    },
+
+    fetchValue() {
+      console.log('%c • Slider (%s) value: %d', 'color: blue', this.param, this.value);
     }
   }
 };
