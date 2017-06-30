@@ -156,7 +156,7 @@
     },
 
     created() {
-      console.log('◌ App: loading...');
+      console.log('%c ◌ App: loading...  ', 'background:black;color:white;');
 
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {

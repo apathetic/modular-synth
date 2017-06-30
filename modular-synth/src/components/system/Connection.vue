@@ -123,7 +123,7 @@ export default {
 
             // mmm, maybe brittle. try:   if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
             (connect) ? source.connect(destination) : source.disconnect(destination);
-            console.log(' • %s ⟹ %s', this.fromModule.name, this.toModule.name);
+            console.log('%c • %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
           } catch (e) {
             console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
             console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
