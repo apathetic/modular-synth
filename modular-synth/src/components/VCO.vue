@@ -13,7 +13,7 @@
       <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
-      <slider label="mod"  @value="mod = $event"  :min="0" :max="100"></slider>
+      <slider param="mod"  @value="mod = $event"  :min="0" :max="100"></slider>
       <p>OSC</p>
       <knob   param="freq" @value="freq = $event" :min="1" :max="2000"></knob>
       <knob   param="sync" @value="sync = $event" :min="0" :max="1"></knob>

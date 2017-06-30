@@ -156,6 +156,7 @@ export default {
       this.knobValue = this.value / this.range;               // derive internal knobValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
       this.setDisplay();
+      console.log('%c • Knob (%s) value: %d', 'color: blue', this.param, this.value);
     }
 
   }
