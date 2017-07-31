@@ -86,23 +86,23 @@ export default {
     this.inlets[0].audio = this.input = this.context.createGain();
     this.outlets[0].audio = this.output = this.context.createGain();
 
-    const activateNode = this.context.createGain();
-    const dry = this.context.createGain();
-    const wet = this.context.createGain();
-    const filter = this.context.createBiquadFilter();
-    const delay = this.context.createDelay(10);
-    const feedbackNode = this.context.createGain();
+    this.activateNode = this.context.createGain();
+    this.dry = this.context.createGain();
+    this.wet = this.context.createGain();
+    this.filter = this.context.createBiquadFilter();
+    this.delay = this.context.createDelay(10);
+    this.feedbackNode = this.context.createGain();
 
-    activateNode.connect(delay);
-    activateNode.connect(dry);
-    delay.connect(filter);
-    filter.connect(feedbackNode);
-    feedbackNode.connect(delay);
-    feedbackNode.connect(wet);
-    wet.connect(this.output);
-    dry.connect(this.output);
+    this.activateNode.connect(this.delay);
+    this.activateNode.connect(this.dry);
+    this.delay.connect(this.filter);
+    this.filter.connect(this.feedbackNode);
+    this.feedbackNode.connect(this.delay);
+    this.feedbackNode.connect(this.wet);
+    this.wet.connect(this.output);
+    this.dry.connect(this.output);
 
-    filter.type = 'lowpass';
+    this.filter.type = 'lowpass';
 
     // this.$watch('delay', this.setFreq);
     this.$watch('wet', this.setWet);
@@ -114,14 +114,14 @@ export default {
   },
 
   destroyed() {
-    this.inlets[0].disconnect();
-    this.outlets[0].disconnect();
-    // activateNode.disconnect();
-    // delay.disconnect();
-    // filter.disconnect();
-    // feedbackNode.disconnect();
-    // wet.disconnect();
-    // dry.disconnect();
+    // this.inlets[0].disconnect();
+    // this.outlets[0].disconnect();
+    this.activateNode.disconnect();
+    this.delay.disconnect();
+    this.filter.disconnect();
+    this.feedbackNode.disconnect();
+    this.wet.disconnect();
+    this.dry.disconnect();
   },
 
   methods: {

@@ -26,7 +26,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import VU from '../system/VU';
+import VU from '../UI/VU';
 
 // import { meter } from '../../mixins/meter';
 // import { meter } from '../../audio';

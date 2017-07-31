@@ -80,13 +80,13 @@
       this.outlets[1].audio = this.context.createGain();
 
       console.log('Creating Node');
-    },
-
-    destroyed() {
-      this.inlets[0].audio.disconnect();
-      this.outlets[0].audio.disconnect();
-      this.outlets[1].audio.disconnect();
     }
+
+    // destroyed() {
+    //   this.inlets[0].audio.disconnect();
+    //   this.outlets[0].audio.disconnect();
+    //   this.outlets[1].audio.disconnect();
+    // }
   };
 
 </script>

@@ -10,9 +10,8 @@
     </div>
 
     <div class="module-interface">
-      <select class="select" @mousedown.stop v-model="type">
-        <option v-for="type in types" :value="type">{{ type }}</option>
-      </select>
+      <input @mousedown.stop type="checkbox" v-for="type in types" :value="type">{{ type }}</input>
+
       <slider param="mod"  @value="mod = $event"  :min="0" :max="100"></slider>
       <p>OSC</p>
       <knob   param="freq" @value="freq = $event" :min="1" :max="2000"></knob>
@@ -27,6 +26,7 @@
 </template>
 
 <script>
+  import { Oscillator, PWM } from '../audio';
   import { draggable } from '../mixins/draggable';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider2';
@@ -42,52 +42,38 @@
 
     data() {
       return {
-        name: 'Oscillator',
+        name: 'Oscillator B',
 
         freq: 440,
         mod: 0,
         PW: 0,
-        phase: 0,
         type: 'sine',
-        types: ['sine', 'sawtooth', 'triangle'], // 'square', ==> 'pulse' instead
+        types: ['sine', 'sawtooth', 'triangle', 'pulse'],
 
         inlets: [
-          {
-            label: 'freq',
-            data: null          // this accepts a K-rate param
-          },
-          {
-            label: 'FM'
-            // audio: null,     // this accepts an A-rate param
-          },
-          {
-            label: 'PWM'
-            // audio: null,
-          }
+          { label: 'freq' },
+          { label: 'FM' },
+          { label: 'PWM' }
         ],
 
         outlets: [
-          {
-            label: 'output'
-            // audio: null,
-          }
+          { label: 'output' }
         ]
       };
     },
 
     created() {
-      // this.inlets[0].audio = this.temp;
-      this.inlets[0].data = this.setFreq;
-      this.inlets[1].audio = this.gain = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      this.osc = new Oscillator(this.freq, this.type);
+      this.pwm = new PWM();
 
-      this.outlets[0].audio = this.osc = this.context.createOscillator();
+      // this.gain = this.context.createGain();
+      // this.gain.value = 0;
+      // this.gain.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
 
-      this.gain.value = 0;
-      this.gain.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
-
-      this.osc.type = this.type;
-      this.osc.frequency.value = this.freq;
       this.osc.start();
+
+      this.inlets[0].data = this.setFreq;
+      this.outlets[0].audio = this.osc;
 
       // k-Param for controlling mod, sync
       this.$watch('freq', this.setFreq);
@@ -98,9 +84,7 @@
     },
 
     destroyed() {
-      console.log('Destroying VCO ', this.id);
-      // this.gain.disconnect();    // this is done in Connection
-      // this.osc.disconnect();     // this is done in Connection
+      this.osc.destroy();
     },
 
     methods: {

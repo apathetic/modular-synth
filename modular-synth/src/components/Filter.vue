@@ -83,9 +83,9 @@ export default {
     console.log('Creating Filter');
   },
 
-  destroyed() {
-    this.filter.disconnect();
-  },
+  // destroyed() {
+  //   this.filter.disconnect();
+  // },
 
   methods: {
     setFreq(f) {

@@ -12,11 +12,12 @@
     - offload heavy calcs, etc.
   - service workers
     - store samples, waveforms, and... stuff
+    - FFT stuffs, offload to GPU a la gpu.js ...?
   - Deleting Debuggers leaves ScriptNode behind
 
 
 - MODULES
-  - ENV: breaks unless each ADSR have been set
+  - ENV: breaks unless each ADSR value have been set
 
 
 - VUEX
@@ -31,7 +32,7 @@
   - must press shift to sort in play mode
   - single click on Module fires sortable; should only be onDrag
   - Digit appears on parameterSets, when no params
-  - knob: linear/log
+  - knob: linear OR log
 
 
 - LOADING
@@ -60,7 +61,10 @@
     ... or, every port is a different thing: disco inferno (on :8000), aleatoric wackiness (on :8001), etc
   - webworker (audiolet?) for Meter, etc.
 
+
+
 ---------------
+
 
 
   ## FIXED

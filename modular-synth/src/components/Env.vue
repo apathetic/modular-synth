@@ -89,7 +89,9 @@ export default {
   },
 
   destroyed() {
-    this.adsr.disconnect();
+    signal(1).disconnect();   // or is it:
+    // this.adsr.disconnect();  // ...?
+
     // DESTROY signal. TODO
   },
 
@@ -123,7 +125,8 @@ export default {
       const now = this.context.currentTime;
       const adsr = this.adsr.gain;
 
-      adsr.cancelScheduledValues(0);
+      // adsr.cancelScheduledValues(0);
+      adsr.cancelScheduledValues(now);
       adsr.setValueAtTime(0, now);
       adsr.linearRampToValueAtTime(1, now + this.A);
       adsr.linearRampToValueAtTime(this.S, now + this.A + this.D);
