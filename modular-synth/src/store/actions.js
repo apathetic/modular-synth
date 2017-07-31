@@ -2,22 +2,32 @@ import Vue from 'vue';
 import { api, generateKey } from './firebase';
 import { _NAME, _MODULES, _CONNECTIONS, _PARAMETERS } from './index';
 
-let blank = {   // TODO make this (object) live somewhere universal
+let blank = {   // TODO make this (object) live somewhere universal. schema js ?
   id: 0,
-  name: 'Blank',
+  name: '<blank>',
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
   parameterSets: []
 };
 
+
 // -----------------------------------------------
 //  LOAD / SAVE
 // -----------------------------------------------
 
-// THIS is important: we cannot load modules, connections, parameters
-// all at once. Modules must be mounted _first_, so that the AudioNode
-// is a available to the Connections; likewise with the Modules'
-// settings being availble to the Parameters.
+/**
+ * Load a Patch from the Store; only patches that have been previously
+ * fetched may be loaded.
+ *
+ * NOTE: we cannot load modules, connections, and parameters all at once.
+ *       Modules must be mounted _first_, so that the AudioNode is available
+ *       to the Connections; likewise with the Modules' settings being
+ *       available to the Parameters.
+ * @param  {[type]} commit [description]
+ * @param  {[type]} state  [description]
+ * @param  {String} key    The Object key of the patch to load
+ * @return {void}
+ */
 export const loadPatch = ({ commit, state }, key) => {
   let patch;
 
@@ -70,25 +80,28 @@ export const loadPatch = ({ commit, state }, key) => {
   });
 };
 
+/**
+ * Save the current working patch into the backend database, and persist it
+ * into localStorage as well.
+ * @param  {[type]} commit [description]
+ * @param  {[type]} state  [description]
+ * @param  {Object} data   Patch and parameter names, other patch data
+ * @return {void}        [description]
+ */
 export const savePatch = ({ commit, state }, data) => {
   const key = state.patchKey;
   // data.key ??
-  // data.name ...??/
 
   const patch = {
     id: state.id,
-    name: state.name,
+    name: state.name, // data.name??? comes from PatchManager ie if name was edited therein
     modules: state.modules,
     connections: state.connections,
     parameterSets: state.patches[key].parameterSets
   };
 
-  // patch.id = state.id;
-  // patch.name = state.name;
-  // patch.modules = state.modules;
-  // patch.connections = state.connections;
   patch.parameterSets[state.parameterKey] = {
-    name: data.paramName,
+    name: data.paramName, // this comes from PatchManager, ie. if name was edited therein
     parameters: state.parameters
   };
 
@@ -98,25 +111,23 @@ export const savePatch = ({ commit, state }, data) => {
       console.log('saved');
     })
     .catch((err) => {
-      console.log(err); // NOT SIGNED IN ?
+      console.log(err);
     });
 
   // Update patch in localStorage
   commit('SAVE_PATCH', {
-    key: state.patchKey,
+    key: key,
     patch: patch
   });
 };
 
+/**
+ * Insert a new, blank patch into the workspace.
+ * @param {[type]} commit [description]
+ * @param {[type]} state  [description]
+ */
 export const addPatch = ({ commit, state }) => {
   const key = generateKey();
-  // const blank = {
-  //   id: 0,
-  //   name: 'Blank',
-  //   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-  //   connections: [],
-  //   parameterSets: []
-  // };
 
   state.patchKey = key;
   state.parameterKey = 0;
@@ -127,16 +138,18 @@ export const addPatch = ({ commit, state }) => {
   });
 };
 
+/**
+ * Fetch all of the user's patches from the backend.
+ * @param  {[type]} commit [description]
+ * @return {[type]}        [description]
+ */
 export const fetchPatches = ({ commit }) => {
   api.load('/patch')
     .then((patches) => {
       commit('SET_PATCHES', patches);
-
-      // ALSO store in localStorage...?
-      // localStorage.setItem(_PARAMETERS
     })
     .catch(() => {
-      console.log('Not signed in.'); // NOT SIGNED IN ?
+      console.log('Not signed in.');
     });
 };
 
@@ -157,6 +170,7 @@ export const toggleEditMode = ({ commit }) => {
 // -----------------------------------------------
 //  UI
 // -----------------------------------------------
+
 export const setActive = ({ commit }, id) => {
   commit('SET_ACTIVE', id);
 };
@@ -179,6 +193,7 @@ export const clearFocus = ({ commit }) => {
 // -----------------------------------------------
 //  MODULES
 // -----------------------------------------------
+
 export const addModule = ({ commit }, data) => {
   commit('ADD_MODULE', data);
 };
@@ -195,6 +210,8 @@ export const removeModule = ({ commit, state }) => {
         commit('REMOVE_CONNECTION', connection.id);
       }
     });
+
+    // Note: KNOB / SLIDERS will remove themselves, yay!
   }
 };
 

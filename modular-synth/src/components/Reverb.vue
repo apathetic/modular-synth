@@ -74,9 +74,9 @@ export default {
     console.log('Creating Reverb');
   },
 
-  destroyed() {
-    this.convolver.disconnect();
-  },
+  // destroyed() {
+  //   this.convolver.disconnect();
+  // },
 
   methods: {
     /**

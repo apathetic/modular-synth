@@ -80,9 +80,9 @@ export default {
     console.log('Creating LFO');
   },
 
-  destroyed() {
-    this.osc.disconnect();
-  },
+  // destroyed() {
+  //   this.osc.disconnect();
+  // },
 
   methods: {
     setFreq(f) {

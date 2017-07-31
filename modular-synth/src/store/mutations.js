@@ -143,15 +143,15 @@ export const REMOVE_CONNECTION = (state, id) => {
 // -----------------------------------------------
 //  PARAMETERS
 // -----------------------------------------------
-// export const SET_PARAMETERS_KEY = (state, key) => {
-//   state.parameterKey = key;
-// };
+export const ADD_PARAMETERS = (state) => {
+  state.patches[state.patchKey].parameterSets.push({
+    name: '<empty>',
+    params: {}
+  });
+};
 
-export const ADD_PARAMETERS = (state, name) => {      // ADD_PARAMETER_SET
-  // state.parameterSets.push({
-  //   name: name,
-  //   params: {...}
-  // });
+export const REMOVE_PARAMETERS = (state, id) => {
+  state.patches[state.patchKey].parameterSets.splice(id, 1); // let's try mutating the array directly
 };
 
 export const LOAD_PARAMETERS = (state, patch) => {

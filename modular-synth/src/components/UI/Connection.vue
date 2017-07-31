@@ -121,12 +121,12 @@ export default {
             const source = outlet.audio;
             const destination = inlet.audio;
 
-            // mmm, maybe brittle. try:   if (source instanceof window.AudioNode && destination instanceof window.AudioNode) {
             (connect) ? source.connect(destination) : source.disconnect(destination);
+
             console.log('%c • %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
           } catch (e) {
-            console.log('Audio dis/connect error. From module %s, outlet %d ', this.from.id, this.from.port);
-            console.log('Audio dis/connect error. To module %s, inlet %d ', this.to.id, this.to.port);
+            console.log('%c[error] audio dis/connect: id %s (#%d) ⟹ id %s (#%d)', 'color: red', this.from.id, this.from.port, this.to.id, this.to.port);
+            console.log(e);
           }
         } else if (inlet.hasOwnProperty('data') && outlet.hasOwnProperty('data')) {
           //

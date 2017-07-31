@@ -82,9 +82,9 @@ export default {
     console.log('Creating Comb');
   },
 
-  destroyed() {
-    this.filter.disconnect();
-  },
+  // destroyed() {
+  //   this.filter.disconnect();// this is done in Connection
+  // },
 
   methods: {
     setFreq(f) {

@@ -73,7 +73,8 @@
     },
 
     destroyed() {
-      this.analyser.disconnect();
+      // this.analyser.disconnect();// this is done in Connection
+
       // this._buffer: ... Float32Array destroy ...??
     },
 
