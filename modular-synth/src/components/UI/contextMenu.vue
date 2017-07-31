@@ -15,8 +15,9 @@
         <li @click="newModule('LFO')">LFO</li>
         <li @click="newModule('Mixer')">mixer</li>
         <li @click="newModule('NoteIn')">note-in</li>
+        <li @click="newModule('OSC')">OSC</li>
         <li @click="newModule('Reverb')">reverb</li>
-        <li @click="newModule('VCO')">OSC</li>
+        <li @click="newModule('VCO')">VCO</li>
         <li @click="newModule('VCA')">VCA</li>
         <li @click="newModule('VCF')">VCF</li>
         <li>---</li>
@@ -28,9 +29,11 @@
     <div class="file" :class="{active: active === 'file'}">
       <h3>File:</h3>
       <ul>
-        <li @click="savePatch()">Save Patch</li>
-        <li @click="newPatch()">New Patch</li>
-        <li @click="newParams()">New Parameter Set</li>
+        <li @click="save()">Save</li>
+        <li @click="addPatch()">New Patch</li>
+        <li @click="addParams()">New Parameter Set</li>
+        <li @click="removePatch()">Remove patch</li>
+        <li @click="removeParams()">Remove parameter Set</li>
       </ul>
     </div>
 
@@ -139,6 +142,20 @@ export default {
     padding: 0.5em 0;
 
     z-index: 10000;
+
+    &::before {
+      content: '';
+      display: block;
+      border-radius: 50%;
+      background: inherit;
+      width: 1em;
+      height: 1em;
+      z-index: 1;
+      position: absolute;
+      border: 2px solid red;
+      top: -7px;
+      left: -7px;
+    }
 
     h3 {
       padding: 0.2em 1em;

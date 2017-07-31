@@ -2,7 +2,7 @@ import Vue from 'vue';
 import store from './store';
 import Synth from './Synth';
 import PatchManager from './PatchManager';
-import ContextMenu from './components/system/ContextMenu';
+import ContextMenu from './components/UI/ContextMenu';
 import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
@@ -36,21 +36,18 @@ Vue.mixin({
 });
 
 /* * /
-const inlets = Vue.compile(`
-  <div v-once class="inlets">
-    <span v-for="(inlet, index) in ports"
-      :data-label="inlet.label"
-      :data-port="index"
-      class="inlet">
-    </span>
-  </div>
-`);
-
 Vue.component('inlets', {
   functional: true,
-  props: { ports: {} },
-  render: inlets.render,
-  staticRenderFns: inlets.staticRenderFns
+  props: { ports: Array },
+  template: `
+    <div class="inlets">
+      <span v-for="(inlet, index) in ports"
+        :data-label="inlet.label"
+        :data-port="index"
+        class="inlet">
+      </span>
+    </div>
+  `
 });
 
 /* * /
@@ -73,6 +70,11 @@ Vue.component('outlets', {
 /* */
 
 // TODO use the vue + compiler bundle for this: ...?
+/* */
+// <div class="inlets">
+//   <span data-label="signal" data-port="0" class="inlet"></span>
+//   <span data-label="gain" data-port="1" class="inlet"></span>
+// </div>
 Vue.component('inlets', {
   functional: true,
   props: { ports: Array },
@@ -97,6 +99,7 @@ Vue.component('inlets', {
     );
   }
 });
+/**/
 
 Vue.component('outlets', {
   functional: true,
@@ -130,6 +133,13 @@ Vue.component('outlets', {
   }
 });
 
+
+// Register a global custom directive called v-content-menu
+Vue.directive('context-menu', {
+  inserted: function(element) {
+
+  }
+});
 
 /* eslint-disable no-new */
 new Vue({

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { auth, provider } from './store/firebase';
+import { auth, provider } from '../../store/firebase';
 
 export default {
   methods: {
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import 'assets/scss/variables.scss';
+  @import '../../assets/scss/variables.scss';
 
   .auth {
     // float: left;

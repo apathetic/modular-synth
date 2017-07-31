@@ -68,7 +68,7 @@ export default {
   },
 
   destroyed() {
-    this.inlets[0].audio.disconnect();
+    // this.inlets[0].audio.disconnect(); // this is done in Connection
   }
 };
 

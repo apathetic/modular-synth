@@ -101,6 +101,7 @@
   import LFO from './components/LFO';
   import Mixer from './components/Mixer';
   import NoteIn from './components/NoteIn';
+  import OSC from './components/OSC';
   import Reverb from './components/Reverb';
   import VCF from './components/Filter';
   import VCO from './components/VCO';
@@ -109,8 +110,8 @@
   import Debugger from './components/Debugger';
   import Node from './components/Node';
 
-  import connecting from './components/system/Connecting';
-  import connection from './components/system/Connection';
+  import connecting from './components/UI/Connecting';
+  import connection from './components/UI/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
 
@@ -124,19 +125,20 @@
       connection,
       midi,
 
-      Env,
-      LFO,
-      VCF,
-      VCO,
-      VCA,
       Analyser,
       Comb,
       Debugger,
       Delay,
+      Env,
+      LFO,
       Mixer,
       Node,
       NoteIn,
-      Reverb
+      OSC,
+      Reverb,
+      VCF,
+      VCO,
+      VCA
     },
 
     computed: {

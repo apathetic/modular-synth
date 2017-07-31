@@ -7,28 +7,24 @@
  */
 export const context = window.AudioContext && (new window.AudioContext());
 
+
 /**
  * Constant stream of 1's at the audio-rate.
  * Allows sample-accurate manipulation of a parameter, or a way to generate ASDRs.
  * @type {Object}
  */
-let signals = {};  // memoize this shizz
+let constants = {};  // memoize this shizz
 export function signal(value = 1) {
-  if (signals[value]) {
-    return signals[value];
+  if (constants[value]) {
+    return constants[value];
   } else {
     // Generate (mono) buffer with 2 samples
     const signal = context.createBufferSource();
     const buffer = context.createBuffer(1, 2, context.sampleRate);
 
-    // // set each sample to 1
+    // set each sample to 1
     buffer.getChannelData(0)[0] = value;    // 2 items, as Safari chokes on 1
     buffer.getChannelData(0)[1] = value;
-
-    // const buffer = context.createBuffer(1, 128, context.sampleRate);
-    // for (let i = 0; i < buffer.length; i++) {
-    //   buffer.getChannelData(0)[i] = value;
-    // }
 
     signal.channelCountMode = 'explicit';
     signal.channelCount = 1;
@@ -36,15 +32,33 @@ export function signal(value = 1) {
     signal.loop = true;
     signal.start(0);
 
-    signals[value] = signal;
+    constants[value] = signal;
 
     return signal;
     // return context.createConstantSource(value);  // one day
   }
 };
 
+
 /**
- * Audio VU meter. Uses deprecated ScriptNode, tho'
+ * @class An audio ratio parameter. Wraps a constant source in a gain Node.
+ *        Reference: https://github.com/Tonejs/Tone.js/blob/master/Tone/signal/Signal.js
+ * @param {Number} value Initial value of the signal.
+ */
+export class Signal {
+  constructor(value) {
+    this.output = this._gain = this.context.createGain();
+    this.input = this._gain.gain;
+
+    this.gain.value = value;
+
+    signal(1).connect(this._gain);
+  }
+}
+
+
+/**
+ * @class Audio VU meter. Uses deprecated ScriptNode, tho'
  * @param {AudioContext} audioContext The webaudio context.
  * @param {Float} clipLevel    The rms peak at which it is considered to clip.
  * @param {Float} averaging    [description]
@@ -110,13 +124,92 @@ export class Meter {
 }
 
 
+/**
+ * Create a sawtooth oscillator. By adding a DC offset, we can move it up or
+ * down. We then threshold the result to either 1 or -1 using a waveshaper,
+ * which turns it into a square.
+ * Reference: https://github.com/pendragon-andyh/WebAudio-PulseOscillator
+ */
+export class PWM {
+  constructor() {
+    this.frequency = null;
+    this.width = null;
+    this.output = null;
 
-// *  use carefully. circumvents JS and WebAudio's normal Garbage Collection behavior
-//   Tone.prototype.noGC = function(){
-//     this.output.connect(_silentNode);
-//     return this;
-//   };
-//
+    this._curve = this.generateCurve();
+  }
+
+  /**
+   * Start the Oscillator
+   */
+  start() {
+    // create sawtooth
+    this._saw = context.createOscillator();
+    this._saw.type = 'sawtooth';
+
+    // create the waveshaper
+    this._pulseShaper = context.createWaveShaper();
+    this._pulseShaper.curve = this._curve;
+
+    // create the offset (ie. pulse width)
+    this._offset = context.createGain();
+    this._offset.gain.value = 0;      // default
+    signal(1).connect(this._offset);  // feed it with constant 1 source
+
+    // connectify
+    this._saw.connect(this._pulseShaper);
+    this._offset.connect(this._pulseShaper);
+
+    // input / output
+    this.frequency = this._saw.frequency.value; // control the frequency
+    this.width = this._offset.gain;             // control PW
+    this.output = this._pulseShaper;            // ouput
+  }
+
+  /**
+   * Generate a curve to be used in Waveshaping the Sawtooth wave.
+   * NOTE: why 256 samples?? No idea. A goodly number I guess
+   */
+  generateCurve() {
+    const pulseCurve = new Float32Array(256);
+
+    for (let i = 0; i < 128; i++) {
+      pulseCurve[i] = -1;
+      pulseCurve[i + 128] = 1;
+    }
+
+    return pulseCurve;
+  }
+}
+
+
+/**
+ * @class Creates a wrapper around the Oscillator AudioNode, with the ability
+ *        to start and stop playing.
+ * @param {Number} f Initial frequency of the oscillator.
+ * @param {String} t Initial type of the oscillator.
+ */
+export class Oscillator {
+  constructor(f, t) {
+    this.osc = null;
+    this.frequency = signal(f);
+    this.type = t;
+  }
+
+  start() {
+    this.osc = context.createOscillator();
+    this.frequency.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
+    // this.gain.connect(this.osc.frequency);
+
+    // this.frequency = this.osc.frequency.value;
+    this.output = this.osc;
+  }
+
+  destroy() {
+    this.frequency.disconnect();
+  }
+}
+
 
 
 /*
