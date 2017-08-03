@@ -44,10 +44,10 @@ export const loadPatch = ({ commit, state }, key) => {
     // TODO store this object somewhere global. USE blank, ABOVE
     patch = {
       id: parseInt(localStorage.getItem('id')) || 0,
-      name: parseInt(localStorage.getItem(_NAME)) || 'Blank',
+      name: parseInt(localStorage.getItem(_NAME)) || '<blank>',
       modules: JSON.parse(localStorage.getItem(_MODULES)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || [],
-      parameterSets: []
+      connections: JSON.parse(localStorage.getItem(_CONNECTIONS) || '[]'),
+      parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS) || '[]')
     };
     // patch = Object.assign({}, blank);
     // patch.id: parseInt(localStorage.getItem('id')),
@@ -58,25 +58,25 @@ export const loadPatch = ({ commit, state }, key) => {
 
     // we WERE presupposing that there is state.patches...
     // will not work if not (ie. no firebase, etc).
-    const p = JSON.parse(localStorage.getItem(_PARAMETERS));
-    if (p) {
-      patch.parameterSets.push({
-        parameters: p // dont care about name: as they're prob not logged in & no <select> at all
-      });
-    }
+    // const p = JSON.parse(localStorage.getItem(_PARAMETERS));
+    // if (p) {
+    //   patch.parameterSets.push({
+    //     parameters: p // dont care about name: as they're prob not logged in & no <select> at all
+    //   });
+    // }
   }
 
-  // loads: id, name and modules ...
+  // loads: id, name and modules ... (and parameterSets??) ...
   commit('LOAD_PATCH', patch);
 
-  // ensure nodes (+ inlets/outlets) are in the DOM
+  // ensure nodes (+ inlets/outlets) are in the DOM...
   Vue.nextTick(function() {
     console.log('All modules loaded, now routing audio...');
-    // ... then load connections (from the same patch Object) ...
+    // ...then load connections (from the same patch Object) ...
     commit('LOAD_CONNECTIONS', patch);
 
-    // ... lastly, load parameters (from the same patch Object)
-    commit('LOAD_PARAMETERS', patch);
+    // ...lastly, load parameters (from the same patch Object)
+    // commit('LOAD_PARAMETERS', patch);
   });
 };
 
@@ -89,20 +89,13 @@ export const loadPatch = ({ commit, state }, key) => {
  * @return {void}        [description]
  */
 export const savePatch = ({ commit, state }, data) => {
-  const key = state.patchKey;
-  // data.key ??
-
+  const key = state.patchKey || generateKey();
   const patch = {
     id: state.id,
-    name: state.name, // data.name??? comes from PatchManager ie if name was edited therein
+    name: state.name,
     modules: state.modules,
     connections: state.connections,
-    parameterSets: state.patches[key].parameterSets
-  };
-
-  patch.parameterSets[state.parameterKey] = {
-    name: data.paramName, // this comes from PatchManager, ie. if name was edited therein
-    parameters: state.parameters
+    parameterSets: state.parameterSets
   };
 
   // Update patch in Database
