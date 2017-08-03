@@ -32,6 +32,7 @@ const state = {
   name: localStorage.getItem(_NAME) || '',
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
+  parameterSets: [],
   parameters: JSON.parse(localStorage.getItem(_PARAMETERS) || '{}'),
 
   // APP: "PERSISTENT" STORAGE
