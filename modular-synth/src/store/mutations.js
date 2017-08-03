@@ -4,15 +4,14 @@ import { validateData } from '../schema';
 // -----------------------------------------------
 //  PATCH
 // -----------------------------------------------
+// loads modules, id, and patch name
+// connection, parameters are loaded below
 export const LOAD_PATCH = (state, patch) => {
-  // - Modules / Connections / Parameters in the patch are to the root of the store.
-  // - Should I update so that App can just reference the current patch  within patches ...?
-  // - [update] nah, leave as-is: state.patches will be "persistent" data,
-  //   ie. things to cache in localStorage, and the rest will be "working" data
   if (patch) {
     state.id = patch.id;
     state.name = patch.name;
     state.modules = patch.modules;
+    state.parameterSets = patch.parameterSets;  // not sure if modules need to be in DOM before this is loaded. TODO: find out
   }
 };
 
@@ -144,38 +143,54 @@ export const REMOVE_CONNECTION = (state, id) => {
 //  PARAMETERS
 // -----------------------------------------------
 export const ADD_PARAMETERS = (state) => {
-  state.patches[state.patchKey].parameterSets.push({
+  // state.patches[state.patchKey].parameterSets.push({
+  state.parameterSets.push({
     name: '<empty>',
     params: {}
   });
 };
 
-export const REMOVE_PARAMETERS = (state, id) => {
-  state.patches[state.patchKey].parameterSets.splice(id, 1); // let's try mutating the array directly
+export const REMOVE_PARAMETERS = (state, key) => {
+  // state.patches[state.patchKey].parameterSets.splice(id, 1); // let's try mutating the array directly
+  state.parameterSets.splice(key, 1); // let's try mutating the array directly
 };
 
-export const LOAD_PARAMETERS = (state, patch) => {
-  // state.parameters = patch.parameters;
+// export const LOAD_PARAMETERS = (state, patch) => {
+//   try {
+//     const id = state.parameterKey;
+//
+//     state.parameterSets = patch.parameterSets && patch.parameterSets[id] || {};
+//   } catch (e) {}
+// };
 
-  try {
-    // const patch = state.patches[state.patchKey];     // TODO use getter, here
-    const id = state.parameterKey;
-    const parameterSet = patch.parameterSets && patch.parameterSets[id] || {};
+export const SET_PARAMETERS_NAME = (state, name) => {
+  const key = state.parameterKey;
 
-    state.parameters = parameterSet.parameters || {};
-  } catch (e) {}
+  state.parameterSets[key].name = name;
+};
+
+export const SET_PARAMETERS_KEY = (state, key) => {
+  state.parameterKey = key;
 };
 
 
 export const ADD_PARAMETER = (state, id) => {
-  state.parameters[id] = null;
+  // state.parameters[id] = null;
+  const key = state.parameterKey;
+
+  state.parameterSets[key].parameters[id] = null;
 };
 
 export const SET_PARAMETER = (state, data) => {
-  state.parameters[data.id] = data.value;
+  // state.parameters[data.id] = data.value;
+  const key = state.parameterKey;
+
+  state.parameterSets[key].parameters[data.id] = data.value;
 };
 
 export const REMOVE_PARAMETER = (state, id) => {
-  delete state.parameters[id];
-  // Vue.delete(state.parameters, id);
+  // delete state.parameters[id];
+  const key = state.parameterKey;
+
+  delete state.parameterSets[key].parameters[id];
 };

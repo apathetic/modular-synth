@@ -12,7 +12,7 @@ export const _PARAMETER_KEY = 'parameterKey';
 export const _NAME = 'name';
 export const _MODULES = 'modules';
 export const _CONNECTIONS = 'connections';
-export const _PARAMETERS = 'parameters';
+export const _PARAMETERS = 'parameterSets';
 
 
 // -----------------------------------------------
@@ -32,8 +32,8 @@ const state = {
   name: localStorage.getItem(_NAME) || '',
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
-  parameterSets: [],
-  parameters: JSON.parse(localStorage.getItem(_PARAMETERS) || '{}'),
+  parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS) || '[]'),
+  // parameters: JSON.parse(localStorage.getItem(_PARAMETERS) || '{}'),
 
   // APP: "PERSISTENT" STORAGE
   patches: {},                                       // all available patches, cached here
