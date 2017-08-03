@@ -194,6 +194,7 @@ export class Oscillator {
     this.osc = null;
     this.frequency = signal(f);
     this.type = t;
+    this.output = this.osc;
   }
 
   start() {
@@ -202,7 +203,6 @@ export class Oscillator {
     // this.gain.connect(this.osc.frequency);
 
     // this.frequency = this.osc.frequency.value;
-    this.output = this.osc;
   }
 
   destroy() {
