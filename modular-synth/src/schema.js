@@ -89,6 +89,12 @@ export function validateData(patches) {
       patch.parameterSets = [];
     }
 
+    patch.parameterSets.forEach((set) => {
+      set.name = set.name || '';
+      if (!set.parameters) console.log('fuck');
+      set.parameters = set.parameters || {};
+    });
+
     if (!patch.name || !patch.id || !patch.connections || !patch.modules) {
       console.log('Patch error ', key);
     }

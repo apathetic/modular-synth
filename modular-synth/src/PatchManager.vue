@@ -16,7 +16,7 @@
     <div class="dropdowns">
       <!-- TODO : this could prob be a component -->
       <div class="patch select">
-        <span>{{ patchIndex }}</span>
+        <span>0{{ patchIndex }}</span>
 
         <button class="math add" @click="add">+</button>
         <button class="math remove" @click="remove">-</button>
@@ -29,7 +29,7 @@
       </div>
 
       <div class="params select">
-        <span>{{ paramsIndex }}</span>
+        <span>0{{ paramsIndex }}</span>
 
         <button class="math add" @click="addParams">+</button>
         <button class="math remove" @click="removeParams">-</button>
@@ -50,7 +50,6 @@
 
 <script>
 import Auth from './components/system/Auth';
-import { generateKey } from './store/firebase';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -62,10 +61,10 @@ export default {
     return {
       currentPatch: '',    // key
       currentParams: 0,    // integer index
-      currentPatchName: '',
-      currentParamsName: '',
-      patchIndex: '',
-      paramsIndex: ''
+      // currentPatchName: '',
+      // currentParamsName: '',
+      patchIndex: 0,
+      paramsIndex: 0
     };
   },
 
@@ -75,6 +74,25 @@ export default {
       let current = this.$store.state.patchKey;
 
       return patches[current] && patches[current].parameterSets || [];
+    },
+
+    currentPatchName: {
+      get() {
+        return this.$store.state.name;
+      },
+      set(value) {
+        this.$store.commit('SET_NAME', value);
+      }
+    },
+
+    currentParamsName: {
+      get() {
+        const key = this.$store.state.parameterKey;
+        return this.$store.state.parameterSets[key].name;
+      },
+      set(value) {
+        this.$store.commit('SET_PARAMETERS_NAME', value);
+      }
     },
 
     ...mapGetters([
@@ -107,9 +125,9 @@ export default {
   methods: {
     save() {
       this.savePatch({
-        key: this.currentPatch || generateKey(),
-        name: this.currentPatchName,
-        paramName: this.currentParamsName
+        // key: this.currentPatch || generateKey()
+        // name: this.currentPatchName,
+        // paramName: this.currentParamsName
       });
     },
 
@@ -139,6 +157,7 @@ export default {
 
     select(e) {
       this.currentPatch = e.target.value;
+      this.patchIndex = e.target.selectedIndex;
       this.$store.commit('SET_KEY', this.currentPatch);
       this.currentParams = 0;  // always select 1st set when new patch loaded
       this.load();
@@ -156,12 +175,14 @@ export default {
 
     selectParams(e) {
       this.currentParams = e.target.value;
-      this.$store.commit('LOAD_PARAMETERS', this.currentParams);
+      this.paramsIndex = e.target.selectedIndex - 1;
+      this.$store.commit('SET_PARAMETERS_KEY', this.paramsIndex);
+      // this.$store.commit('LOAD_PARAMETERS', this.currentParams);
       this.$bus.$emit('parameters:load');
     },
 
     updatePatchDisplay() {
-      this.patchIndex = ~this.$refs.patch.selectedIndex ? '0' + this.$refs.patch.selectedIndex : '';
+      // this.patchIndex = ~this.$refs.patch.selectedIndex ? '0' + this.$refs.patch.selectedIndex : '';
       try {
         this.currentPatchName = this.patches[this.currentPatch].name || '';
       } catch (e) {
@@ -170,7 +191,9 @@ export default {
     },
 
     updateParamsDisplay() {
+      /*
       this.paramsIndex = ~this.$refs.params.selectedIndex ? '0' + this.$refs.params.selectedIndex : '';
+
       // we're assuming good data integrity; dont need to check "if exists"
       // this.currentParamsName = this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
       try {
@@ -179,6 +202,7 @@ export default {
         console.log(e);
         this.currentParamsName = '';    // should prob disable the input, too
       }
+      */
     },
 
     ...mapActions([
