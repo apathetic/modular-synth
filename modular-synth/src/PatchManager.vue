@@ -21,7 +21,7 @@
         <button class="math add" @click="add">+</button>
         <button class="math remove" @click="remove">-</button>
 
-        <select :value="currentPatch" @change="select" ref="patch">
+        <select :value="currentPatchKey" @change="select" ref="patch">
           <option value="" disabled selected>&lt;select patch&gt;</option>
           <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
         </select>
@@ -34,7 +34,7 @@
         <button class="math add" @click="addParams">+</button>
         <button class="math remove" @click="removeParams">-</button>
 
-        <select :value="currentParams" @change="selectParams" ref="params">
+        <select :value="currentParamsKey" @change="selectParams" ref="params">
           <option value="" disabled selected>&lt;select settings&gt;</option>
           <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
         </select>
@@ -59,10 +59,6 @@ export default {
 
   data() {
     return {
-      currentPatch: '',    // key
-      currentParams: 0,    // integer index
-      // currentPatchName: '',
-      // currentParamsName: '',
       patchIndex: 0,
       paramsIndex: 0
     };
@@ -74,6 +70,24 @@ export default {
       let current = this.$store.state.patchKey;
 
       return patches[current] && patches[current].parameterSets || [];
+    },
+
+    currentPatchKey: {
+      get() {
+        return this.$store.state.patchKey;
+      },
+      set(key) {
+        this.$store.commit('SET_KEY', key);
+      }
+    },
+
+    currentParamsKey: {
+      get() {
+        return this.$store.state.parameterKey;
+      },
+      set(key) {
+        this.$store.commit('SET_PARAMETERS_KEY', key);
+      }
     },
 
     currentPatchName: {
@@ -102,25 +116,8 @@ export default {
     ])
   },
 
-  watch: {
-    currentPatch: function() { this.updatePatchDisplay(); },
-    currentParams: function() { this.updateParamsDisplay(); }
-  },
-
   mounted() {
-    const key = this.$store.state.patchKey;
-
-    // LOAD what we can from localStorage first. It's possible we'll load something
-    // before we've FETCHED any data from the backend.
-
-    // if (key) {
-      // TODO 100 WTFs. I really have no idea why this needs setTImeout:
-      // https://github.com/vuejs/vue/issues/3842
-    setTimeout(() => {
-      this.currentPatch = key;
-      this.load();
-    }, 1000);
-    // }
+    this.load();
   },
 
   methods: {
@@ -131,13 +128,6 @@ export default {
     load() {
       this.loadPatch();
 
-      if (Object.keys(this.patches).length) {
-        this.updatePatchDisplay();
-        this.updateParamsDisplay();
-      }
-
-      // make sure all Knobs n' such are in the DOM, and ready
-      // also: set up the sorting
       this.$nextTick(function() {
         this.$bus.$emit('parameters:load');
         this.$bus.$emit('app:sort');
@@ -153,53 +143,27 @@ export default {
     remove() {},
 
     select(e) {
-      this.currentPatch = e.target.value;
+      this.currentPatchKey = e.target.value;
       this.patchIndex = e.target.selectedIndex;
-      this.$store.commit('SET_KEY', this.currentPatch);
-      this.currentParams = 0;                      // always select 1st set when new patch loaded
+      this.currentParamsKey = 0;                      // always select 1st set when new patch loaded
       this.load();
     },
 
     addParams() {
       this.$store.commit('ADD_PARAMETERS');
-      this.currentParams = this.parameterSets.length - 1;
+      this.currentParamsKey = this.parameterSets.length - 1;
     },
 
     removeParams(id) {
-      this.$store.commit('REMOVE_PARAMETERS', this.currentParams);
-      this.currentParams = -1;
+      this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
+      this.currentParamsKey = -1;
     },
 
     selectParams(e) {
-      this.currentParams = e.target.value;
+      this.currentParamsKey = e.target.value;
       this.paramsIndex = e.target.selectedIndex - 1;
       this.$store.commit('SET_PARAMETERS_KEY', this.paramsIndex);
-      // this.$store.commit('LOAD_PARAMETERS', this.currentParams);
       this.$bus.$emit('parameters:load');
-    },
-
-    updatePatchDisplay() {
-      // this.patchIndex = ~this.$refs.patch.selectedIndex ? '0' + this.$refs.patch.selectedIndex : '';
-      try {
-        this.currentPatchName = this.patches[this.currentPatch].name || '';
-      } catch (e) {
-        this.currentPatchName = '';    // should prob disable the input, too
-      }
-    },
-
-    updateParamsDisplay() {
-      /*
-      this.paramsIndex = ~this.$refs.params.selectedIndex ? '0' + this.$refs.params.selectedIndex : '';
-
-      // we're assuming good data integrity; dont need to check "if exists"
-      // this.currentParamsName = this.patches[this.currentPatch] && this.patches[this.currentPatch].parameterSets && this.patches[this.currentPatch].parameterSets[this.currentParams].name;
-      try {
-        this.currentParamsName = this.patches[this.currentPatch].parameterSets[this.currentParams].name || '';
-      } catch (e) {
-        console.log(e);
-        this.currentParamsName = '';    // should prob disable the input, too
-      }
-      */
     },
 
     ...mapActions([
@@ -229,10 +193,6 @@ export default {
       align-self: center;
       padding: 2px 8px;
 
-      // &:active {
-      //   color: $color-highlight;
-      // }
-
       svg {
         display: block;
         height: 2em;
@@ -254,39 +214,6 @@ export default {
       }
     }
 
-    // .math {
-    //   padding: 3px;
-    //   font-size: 1.2em;
-    //   width: $gap;
-    // }
-    //
-    // OPTION 1
-    // .math {
-    //   opacity: 0.2;
-    //   border-radius: 50%;
-    //   width: 1em;
-    //   height: 1em;
-    //   line-height: 0;
-    //   background: #777; // $color-grey;
-    //   //
-    //   position: absolute;
-    //   left: 3px;
-    //   z-index: 1;
-    //
-    //   &:active {
-    //     background: $color-grey-dark;
-    //   }
-    //
-    //   &.add {
-    //     top: -4px;
-    //   }
-    //
-    //   &.remove {
-    //     bottom: -4px;
-    //   }
-    // }
-
-    // OPTION 2
     .math {
       display: none;
       font-size: 1em;
@@ -309,7 +236,6 @@ export default {
         color: orange;
       }
     }
-
 
     &.editing {
       .math {
@@ -354,7 +280,6 @@ export default {
     }
 
     span {
-      // font: 3em/0.7em $font-secondary;
       font: 3.2em/0.65em $font-secondary;
       font-weight: bold;
       letter-spacing: -0.05em;

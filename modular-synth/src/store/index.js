@@ -27,18 +27,17 @@ const state = {
   focused: undefined,                                // "Hovered": for Module Info, Connections.  TODO move to $bus?
   active: 0,                                         // "Clicked": for Dragging, Deleting.
 
-  // PATCH: WORKING DATA
-  id: 0,                                             // for keeping track of modules AND connections
-  name: localStorage.getItem(_NAME) || '',
-  modules: JSON.parse(localStorage.getItem(_MODULES)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+  // PATCH: WORKING DATA                             // NOTE: data is populated in actions.js
+  id: 0,
+  name: '',
+  modules: [],
   connections: [],
-  parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || [],
-  // parameters: JSON.parse(localStorage.getItem(_PARAMETERS)) || {},
+  parameterSets: [],
+  parameterKey: 0,
 
   // APP: "PERSISTENT" STORAGE
   patches: {},                                       // all available patches, cached here
-  patchKey: localStorage.getItem(_KEY) || '',        // key of active patch
-  parameterKey: 0                                    // key of active parameter set
+  patchKey: localStorage.getItem(_KEY) || ''         // key of active patch
 };
 
 
