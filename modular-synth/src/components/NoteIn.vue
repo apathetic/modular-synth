@@ -19,6 +19,7 @@
     <div class="module-connections">
       <outlets :ports="outlets"></outlets>
     </div>
+  </div>
 </template>
 
 <script>

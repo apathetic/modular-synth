@@ -88,7 +88,8 @@ export default {
     currentParamsName: {
       get() {
         const key = this.$store.state.parameterKey;
-        return this.$store.state.parameterSets[key].name;
+        return (this.$store.state.parameterSets[key] &&
+                this.$store.state.parameterSets[key].name);
       },
       set(value) {
         this.$store.commit('SET_PARAMETERS_NAME', value);
@@ -124,11 +125,7 @@ export default {
 
   methods: {
     save() {
-      this.savePatch({
-        // key: this.currentPatch || generateKey()
-        // name: this.currentPatchName,
-        // paramName: this.currentParamsName
-      });
+      this.savePatch();
     },
 
     load() {
@@ -148,9 +145,9 @@ export default {
     },
 
     add() {
-      this.addPatch();
-      this.loadPatch();      // AND NOW SELECT THAT BLANK PATCH
-      this.currentPatch = this.patches.length - 1; // as our new params are at the end
+      this.addPatch();                             // CREATE a new blank patch...
+      this.loadPatch();                            // ...AND then select it
+      this.currentPatch = this.patches.length - 1; // "-1" as our new params are at the end of the list
     },
 
     remove() {},
@@ -159,13 +156,13 @@ export default {
       this.currentPatch = e.target.value;
       this.patchIndex = e.target.selectedIndex;
       this.$store.commit('SET_KEY', this.currentPatch);
-      this.currentParams = 0;  // always select 1st set when new patch loaded
+      this.currentParams = 0;                      // always select 1st set when new patch loaded
       this.load();
     },
 
     addParams() {
       this.$store.commit('ADD_PARAMETERS');
-      this.currentParams = this.parameterSets.length - 1; // as our new params are at the end
+      this.currentParams = this.parameterSets.length - 1;
     },
 
     removeParams(id) {

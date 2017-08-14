@@ -30,10 +30,10 @@ const state = {
   // PATCH: WORKING DATA
   id: 0,                                             // for keeping track of modules AND connections
   name: localStorage.getItem(_NAME) || '',
-  modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+  modules: JSON.parse(localStorage.getItem(_MODULES)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
-  parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS) || '[]'),
-  // parameters: JSON.parse(localStorage.getItem(_PARAMETERS) || '{}'),
+  parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || [],
+  // parameters: JSON.parse(localStorage.getItem(_PARAMETERS)) || {},
 
   // APP: "PERSISTENT" STORAGE
   patches: {},                                       // all available patches, cached here
