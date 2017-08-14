@@ -4,9 +4,6 @@ const localStoragePlugin = (store) => {
   store.subscribe((mutation, { patchKey }) => {
     localStorage.setItem(_KEY, patchKey);
   });
-  store.subscribe((mutation, { parameterKey }) => {
-    localStorage.setItem(_PARAMETER_KEY, parameterKey);
-  });
   store.subscribe((mutation, { name }) => {
     localStorage.setItem(_NAME, name);
   });
@@ -18,6 +15,9 @@ const localStoragePlugin = (store) => {
   });
   store.subscribe((mutation, { parameterSets }) => {
     localStorage.setItem(_PARAMETERS, JSON.stringify(parameterSets));
+  });
+  store.subscribe((mutation, { parameterKey }) => {
+    localStorage.setItem(_PARAMETER_KEY, parameterKey);
   });
   store.subscribe((mutation, { id }) => {
     localStorage.setItem('id', id);
