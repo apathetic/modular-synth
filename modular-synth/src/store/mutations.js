@@ -175,17 +175,25 @@ export const SET_PARAMETERS_KEY = (state, key) => {
 
 
 export const ADD_PARAMETER = (state, id) => {
-  // state.parameters[id] = null;
   const key = state.parameterKey;
 
-  state.parameterSets[key].parameters[id] = null;
+  // state.parameterSets[key] &&
+  // state.parameterSets[key].parameters[id] = null;
+
+  if (state.parameterSets[key]) {
+    state.parameterSets[key].parameters[id] = null;
+  }
 };
 
 export const SET_PARAMETER = (state, data) => {
-  // state.parameters[data.id] = data.value;
   const key = state.parameterKey;
 
-  state.parameterSets[key].parameters[data.id] = data.value;
+  // (state.parameterSets[key].parameters[data.id] &&
+  //  state.parameterSets[key].parameters[data.id] = data.value);
+
+  if (state.parameterSets[key].parameters) {
+    state.parameterSets[key].parameters[data.id] = data.value;
+  }
 };
 
 export const REMOVE_PARAMETER = (state, id) => {

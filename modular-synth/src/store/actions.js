@@ -32,15 +32,14 @@ export const loadPatch = ({ commit, state }, key) => {
   let patch;
 
   key = key || state.patchKey;    // load a specific patch, or whatever current key is
-  console.log('-----------------------------');
 
   // if loading patch via a specific key
   if (key && state.patches[key]) {
-    console.log('Loading patch: ', key);
+    console.log('%c Loading patch: %s', 'background:#666;color:white;', key);
     patch = state.patches[key];
     commit('SET_KEY', key);
   } else {
-    console.log('Loading patch from localStorage');
+    console.log('%c Loading patch from localStorage ', 'background:#666;color:white;');
     // TODO store this object somewhere global. USE blank, ABOVE
     patch = {
       id: parseInt(localStorage.getItem('id')) || 0,
@@ -49,21 +48,6 @@ export const loadPatch = ({ commit, state }, key) => {
       connections: JSON.parse(localStorage.getItem(_CONNECTIONS) || '[]'),
       parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS) || '[]')
     };
-    // patch = Object.assign({}, blank);
-    // patch.id: parseInt(localStorage.getItem('id')),
-    //   name: parseInt(localStorage.getItem(_NAME)),
-    //   modules: JSON.parse(localStorage.getItem(_MODULES)),
-    //   connections: JSON.parse(localStorage.getItem(_CONNECTIONS))
-    // });
-
-    // we WERE presupposing that there is state.patches...
-    // will not work if not (ie. no firebase, etc).
-    // const p = JSON.parse(localStorage.getItem(_PARAMETERS));
-    // if (p) {
-    //   patch.parameterSets.push({
-    //     parameters: p // dont care about name: as they're prob not logged in & no <select> at all
-    //   });
-    // }
   }
 
   // loads: id, name and modules ... (and parameterSets??) ...
