@@ -66,10 +66,11 @@ export default {
 
   computed: {
     parameterSets() {
-      let patches = this.$store.state.patches;
-      let current = this.$store.state.patchKey;
-
-      return patches[current] && patches[current].parameterSets || [];
+      // let patches = this.$store.state.patches;
+      // let current = this.$store.state.patchKey;
+      //
+      // return patches[current] && patches[current].parameterSets || [];
+      return this.$store.state.parameterSets || [];
     },
 
     currentPatchKey: {
@@ -137,7 +138,7 @@ export default {
     add() {
       this.addPatch();                             // CREATE a new blank patch...
       this.loadPatch();                            // ...AND then select it
-      this.currentPatch = this.patches.length - 1; // "-1" as our new params are at the end of the list
+      this.patchIndex = this.patches.length - 1;   // "-1" as our new patch is at the end of the list
     },
 
     remove() {},
@@ -145,7 +146,7 @@ export default {
     select(e) {
       this.currentPatchKey = e.target.value;
       this.patchIndex = e.target.selectedIndex;
-      this.currentParamsKey = 0;                      // always select 1st set when new patch loaded
+      this.currentParamsKey = 0;                   // always select 1st set when new patch loaded
       this.load();
     },
 
@@ -256,7 +257,7 @@ export default {
 
     select {
       background: none;
-      min-width: 15em;
+      min-width: 16em;
       height: 100%;
       padding-right: $gap;
       font-size: inherit;
@@ -280,12 +281,21 @@ export default {
     }
 
     span {
-      font: 3.2em/0.65em $font-secondary;
-      font-weight: bold;
-      letter-spacing: -0.05em;
+      // font: 3.2em/0.65em 'Inconsolata';
+      // font: 3.2em / 0.6em 'Dosis';
+      font: 3em / 0.7em 'Anton';
+      letter-spacing: 0.05em;
       position: absolute;
-      right: 0.4em;
-      opacity: 0.1;
+      right: $gap;
+      opacity: 0.25;
+      //
+      // animation: 3s infinite alternate pulse;
     }
   }
+
+  // @keyframes pulse {
+  //   0% { opacity: 0.25 },
+  //   50% { opacity: 0.05 },
+  //   100% { opacity: 0.25 }
+  // }
 </style>

@@ -32,13 +32,13 @@ let blank = {   // TODO make this (object) live somewhere universal. schema js ?
 export const loadPatch = ({ commit, state }, key) => {
   let patch;
 
-  key = key || state.patchKey;    // load a specific patch, or whatever current key is
+  key = key || state.patchKey;    // load a specific patch, or whatever current key is (from localStorage)
 
   // if loading patch via a specific key
   if (key && state.patches[key]) {
-    console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', key);
     patch = state.patches[key];
     commit('SET_KEY', key);
+    console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
   } else {
     console.log('%c Loading patch from localStorage ', 'background:#666;color:white;font-weight:bold;');
     // TODO store this object somewhere global. USE blank, ABOVE
@@ -74,7 +74,7 @@ export const loadPatch = ({ commit, state }, key) => {
  * @return {void}        [description]
  */
 export const savePatch = ({ commit, state }, data) => {
-  const key = state.patchKey || generateKey();
+  const key = state.patchKey;
   const patch = {
     id: state.id,
     name: state.name,
@@ -107,13 +107,18 @@ export const savePatch = ({ commit, state }, data) => {
 export const addPatch = ({ commit, state }) => {
   const key = generateKey();
 
-  state.patchKey = key;
-  state.parameterKey = 0;
+  // Create new patch in Database
+  api.create(key, blank);
 
+  // Create new patch in localStorage
   commit('SAVE_PATCH', {
     key,
     patch: blank
   });
+
+  // Update App keys
+  state.patchKey = key;
+  state.parameterKey = 0;
 };
 
 /**
