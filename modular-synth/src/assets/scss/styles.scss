@@ -277,7 +277,9 @@ button {
 .select {
   background: rgba(85, 85, 85, 0.85); // $color-grey-medium
   color: #fff;
-  border-bottom: 1px solid $color-grey;
+  border-bottom: 1px solid #777; // $color-grey;
+  border-right: 1px solid $color-grey-medium;
+  border-left: 1px solid $color-grey-medium;
   font-family: $font-secondary;
   font-weight: 300;
   height: 2em;

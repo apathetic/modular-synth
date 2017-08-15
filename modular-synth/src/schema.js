@@ -68,35 +68,43 @@ export function validateData(patches) {
     const patch = patches[key];
 
     // if (typeof patch !== "object") {
-    //   console.log('patch prob ', key);
+    //   console.warn('patch prob ', key);
     //   return;
     // }
     //
     // check(patch.name, 'name', type)
 
 
-    // if (!patch.name) {
-    //   console.log('missing name');
-    //   patch.name = 'Blank';
-    // }
-    // if (!patch.id) {
-    //   console.log('missing id'); }
-    //   patch.id = 0;
-    // }
+    if (!patch.name) {
+      console.warn('Patch "%s" missing name', key);
+      patch.name = 'xxxx';
+    }
+
+    if (patch.id === undefined) {
+      console.warn('Patch "%s" missing id. Fixing...', patch.name);
+      patch.id = 0;
+    }
 
     if (!patch.parameterSets) {
-      console.log('Patch %s missing parameterSets Array. Correcting', key);
+      console.warn('Patch "%s" missing parameterSets. Fixing...', patch.name);
       patch.parameterSets = [];
     }
 
     patch.parameterSets.forEach((set) => {
-      set.name = set.name || '';
-      if (!set.parameters) console.log('fuck');
-      set.parameters = set.parameters || {};
+      set.name = set.name || 'yyyy';
+      if (!set.parameters) {
+        console.warn('Patch "%s" missing parameters in "%s". Fixing...', patch.name, set.name);
+        set.parameters = {};
+      }
     });
 
-    if (!patch.name || !patch.id || !patch.connections || !patch.modules) {
-      console.log('Patch error ', key);
+    if (!patch.connections) {
+      console.warn('Patch "%s" missing connections. Fixing...', patch.name);
+      patch.connections = [];
+    }
+
+    if (!patch.modules) {
+      console.warn('Patch %s no modules.... (not fixed)', patch.name);
     }
   }
 
@@ -114,7 +122,7 @@ export function validateData(patches) {
 //   if (assert) {
 //     return;
 //   } else {
-//     console.log('Problem with missing %s in patch', name);
+//     console.warn('Problem with missing "%s" in patch', name);
 //     assert
 //   }
 // }
