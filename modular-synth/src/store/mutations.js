@@ -183,6 +183,23 @@ export const ADD_PARAMETER = (state, id) => {
   if (state.parameterSets[key]) {
     state.parameterSets[key].parameters[id] = null;
   }
+
+  // TODO should we remove it from each Parameter Set, then....?
+  // state.parameterSets.forEach(set => {
+  //   set.parameters[id] = null;   // OR 0 ???
+  // });
+};
+
+export const REMOVE_PARAMETER = (state, id) => {
+  // const key = state.parameterKey;
+  // delete state.parameterSets[key].parameters[id];
+
+  // TODO should we remove it from each Parameter Set, then....?
+  state.parameterSets.forEach(set => {
+    if (set.parameters[id]) {
+      delete set.parameters[id];
+    }
+  });
 };
 
 export const SET_PARAMETER = (state, data) => {
@@ -194,11 +211,4 @@ export const SET_PARAMETER = (state, data) => {
   if (state.parameterSets[key].parameters) {
     state.parameterSets[key].parameters[data.id] = data.value;
   }
-};
-
-export const REMOVE_PARAMETER = (state, id) => {
-  // delete state.parameters[id];
-  const key = state.parameterKey;
-
-  delete state.parameterSets[key].parameters[id];
 };
