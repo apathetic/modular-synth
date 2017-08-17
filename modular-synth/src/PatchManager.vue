@@ -140,12 +140,21 @@ export default {
     // -----------------
 
     add() {
+      if (this.patches.length >= 9) { return; }
       this.addPatch();                             // CREATE a new blank patch...
       this.loadPatch();                            // ...AND then select it
-      this.patchIndex = Object.keys(this.patches).length;       // as our new patch is at the end of the list
+
+      this.patchIndex = this.$refs.patch.selectedIndex = Object.keys(this.patches).length;       // as our new patch is at the end of the list
     },
 
-    remove() {},
+    remove() {
+      const confirm = window.confirm('Delete ' + this.currentPatchName + '?');
+
+      if (this.patches.length <= 1 || !confirm) { return; }
+
+      this.removePatch(this.currentPatchKey);
+      this.patchIndex = this.$refs.patch.selectedIndex = 1;
+    },
 
     select(e) {
       this.currentPatchKey = e.target.value;
@@ -164,6 +173,10 @@ export default {
     },
 
     removeParams(id) {
+      const confirm = window.confirm('Delete ' + this.currentParamsName + '?');
+
+      if (this.$store.state.parameterSets.length <= 1 || !confirm) { return; }
+
       this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
       this.paramsIndex = 0;
     },
@@ -180,7 +193,8 @@ export default {
     ...mapActions([
       'savePatch',
       'loadPatch',
-      'addPatch'
+      'addPatch',
+      'removePatch'
     ])
   }
 };
