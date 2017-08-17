@@ -7,7 +7,10 @@ let blank = {   // TODO make this (object) live somewhere universal. schema js ?
   name: '<blank>',
   modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
   connections: [],
-  parameterSets: []
+  parameterSets: [{
+    name: '<empty>',
+    parameters: []
+  }]
 };
 
 
@@ -45,9 +48,9 @@ export const loadPatch = ({ commit, state }, key) => {
     patch = {
       id: parseInt(localStorage.getItem('id')) || 0,
       name: localStorage.getItem(_NAME) || '',
-      modules: JSON.parse(localStorage.getItem(_MODULES)) || [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-      connections: JSON.parse(localStorage.getItem(_CONNECTIONS) || '[]'),
-      parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS) || '[]')
+      modules: JSON.parse(localStorage.getItem(_MODULES)) || [{type: 'MasterOut', id: 0, x: 0, y: 0}],
+      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || [],
+      parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || [{name: '<empty>', parameters: []}]
     };
   }
 
@@ -119,6 +122,21 @@ export const addPatch = ({ commit, state }) => {
   // Update App keys
   state.patchKey = key;
   state.parameterKey = 0;
+};
+
+/**
+ * Remove a patch.
+ * @param {[type]} commit [description]
+ * @param {[type]} state  [description]
+ */
+export const removePatch = ({ commit, state }, key) => {
+  api.remove('patch/' + key);
+  commit('REMOVE_PATCH', key);
+
+  // Update App keys
+  state.patchKey = Object.keys(state.patches)[0];   // choose first key (oldest)
+  state.parameterKey = 0;
+  loadPatch({ commit, state });
 };
 
 /**

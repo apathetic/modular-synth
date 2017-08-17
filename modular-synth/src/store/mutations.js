@@ -22,6 +22,13 @@ export const SAVE_PATCH = (state, data) => {
   state.patches[key] = patch;
 };
 
+export const REMOVE_PATCH = (state, key) => {
+  delete state.patches[key];
+  // Vue.delete(state.patches, key);
+  // state.patches.$remove(key);
+  // state.patches = state.patches.filter(....
+};
+
 export const SET_PATCHES = (state, patches) => {
   state.patches = validateData(patches); // patches;
 };
@@ -198,6 +205,9 @@ export const REMOVE_PARAMETER = (state, id) => {
   state.parameterSets.forEach(set => {
     if (set.parameters[id]) {
       delete set.parameters[id];
+      // Vue.delete(set.parameters, id);
+      // set.parameters.$remove(id);
+      // set.parameters = set.parameters.filter(id...
     }
   });
 };

@@ -123,5 +123,20 @@ export const api = {
         })
         .catch(reject);
     });
+  },
+
+  /**
+   * Remove this here thing.
+   * @param {String} path The data at this path will be deleted.
+   * @return {Promise}
+   */
+  remove(path) {
+    if (path === '/' || !path) { return; }
+
+    const item = database.ref(path);
+
+    return new Promise((resolve, reject) => {
+      item.remove().then(resolve).catch(reject);
+    });
   }
 };
