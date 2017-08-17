@@ -17,7 +17,7 @@ export const LOAD_PATCH = (state, patch) => {
 
 export const SAVE_PATCH = (state, data) => {
   const patch = data.patch;
-  const key = data.patchKey;
+  const key = data.key;
 
   state.patches[key] = patch;
 };
