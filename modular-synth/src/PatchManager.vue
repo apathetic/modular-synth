@@ -1,5 +1,6 @@
 <template>
-  <header class="patch-manager pad"
+  <header
+    class="patch-manager pad"
     :class="{
       'active':  $root.authenticated,
       'editing': editing
@@ -14,13 +15,11 @@
     </button>
 
     <div class="dropdowns">
-      <!-- TODO : this could prob be a component -->
+
       <div class="patch select">
         <span>0{{ patchIndex }}</span>
-
         <button class="math add" @click="add">+</button>
         <button class="math remove" @click="remove">-</button>
-
         <select :value="currentPatchKey" @change="select" ref="patch">
           <option value="" disabled selected>&lt;select patch&gt;</option>
           <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
@@ -30,10 +29,8 @@
 
       <div class="params select">
         <span>0{{ paramsIndex }}</span>
-
         <button class="math add" @click="addParams">+</button>
         <button class="math remove" @click="removeParams">-</button>
-
         <select :value="currentParamsKey" @change="selectParams" ref="params">
           <option value="" disabled selected>&lt;select settings&gt;</option>
           <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
@@ -59,20 +56,12 @@ export default {
 
   data() {
     return {
-      patchIndex: 0,
-      paramsIndex: 0
+      patchIndex: 1,
+      paramsIndex: 1
     };
   },
 
   computed: {
-    parameterSets() {
-      // let patches = this.$store.state.patches;
-      // let current = this.$store.state.patchKey;
-      //
-      // return patches[current] && patches[current].parameterSets || [];
-      return this.$store.state.parameterSets || [];
-    },
-
     currentPatchKey: {
       get() {
         return this.$store.state.patchKey;
@@ -113,12 +102,26 @@ export default {
 
     ...mapGetters([
       'patches',
+      'parameterSets',
       'editing'
     ])
   },
 
   mounted() {
     this.load();
+
+    // update patchIndex display and selected option in dropdown
+    // NOTE: <select> doesn't seem to be ready at mount
+    const options = this.$refs.patch.options;
+    console.log(options.length, Object.keys(this.patches).length);
+    // update the 00 display
+    // update the <select> selectedIndex
+    // Array.prototype.forEach.call(options, (opt, i) => {
+    //   if (opt.value === this.currentPatchKey) {
+    //     this.patchIndex = i;
+    //     this.$refs.patch.selectedIndex = i;
+    //   }
+    // });
   },
 
   methods: {
@@ -128,17 +131,18 @@ export default {
 
     load() {
       this.loadPatch();
-
       this.$nextTick(function() {
         this.$bus.$emit('parameters:load');
         this.$bus.$emit('app:sort');
       });
     },
 
+    // -----------------
+
     add() {
       this.addPatch();                             // CREATE a new blank patch...
       this.loadPatch();                            // ...AND then select it
-      this.patchIndex = this.patches.length - 1;   // "-1" as our new patch is at the end of the list
+      this.patchIndex = Object.keys(this.patches).length;       // as our new patch is at the end of the list
     },
 
     remove() {},
@@ -150,22 +154,28 @@ export default {
       this.load();
     },
 
+    // -----------------
+
     addParams() {
       this.$store.commit('ADD_PARAMETERS');
       this.currentParamsKey = this.parameterSets.length - 1;
+
+      this.paramsIndex = this.$refs.params.selectedIndex = this.parameterSets.length;
     },
 
     removeParams(id) {
       this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
-      this.currentParamsKey = -1;
+      this.paramsIndex = 0;
     },
 
     selectParams(e) {
       this.currentParamsKey = e.target.value;
-      this.paramsIndex = e.target.selectedIndex - 1;
-      this.$store.commit('SET_PARAMETERS_KEY', this.paramsIndex);
+      this.paramsIndex = e.target.selectedIndex;
+      this.$store.commit('SET_PARAMETERS_KEY', this.currentParamsKey);
       this.$bus.$emit('parameters:load');
     },
+
+    // -----------------
 
     ...mapActions([
       'savePatch',
@@ -288,6 +298,7 @@ export default {
       position: absolute;
       right: $gap;
       opacity: 0.25;
+      text-shadow: 1px 1px 2px #000;
       //
       // animation: 3s infinite alternate pulse;
     }
