@@ -86,7 +86,7 @@ export const savePatch = ({ commit, state }, data) => {
   // Update patch in Database
   api.save('patch/' + key, patch)
     .then(() => {
-      console.log('saved: ', key);
+      console.log('saved: ', patch.name);
     })
     .catch((err) => {
       console.log(err);
@@ -94,8 +94,8 @@ export const savePatch = ({ commit, state }, data) => {
 
   // Update patch in localStorage
   commit('SAVE_PATCH', {
-    key: key,
-    patch: patch
+    key,
+    patch
   });
 };
 
