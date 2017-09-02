@@ -2,6 +2,8 @@
 
 ## TODO
 
+** DONT BOTHER trying to manage `patches` in the store; rather, keep them in Firebase, and cache them using a SW so that loading time is snappy
+
 - General
   - Some sort of Module base (ie node). Currently so much duplication atm
   - load patch

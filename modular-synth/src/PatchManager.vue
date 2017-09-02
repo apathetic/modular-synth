@@ -178,7 +178,7 @@ export default {
       if (this.$store.state.parameterSets.length <= 1 || !confirm) { return; }
 
       this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
-      this.paramsIndex = 0;
+      this.paramsIndex = this.$refs.params.selectedIndex = 1;
     },
 
     selectParams(e) {
