@@ -36,8 +36,10 @@ const state = {
   parameterKey: 0,
 
   // APP: "PERSISTENT" STORAGE
-  patches: {},                                       // all available patches, cached here
-  patchKey: localStorage.getItem(_KEY) || ''         // key of active patch
+  patchKey: localStorage.getItem(_KEY) || '',        // key of active patch
+
+  // TODO: remove; use firebase + SW instead;
+  patches: {}                                        // all available patches, cached here
 };
 
 
