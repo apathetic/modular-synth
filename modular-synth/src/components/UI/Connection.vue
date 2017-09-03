@@ -39,8 +39,9 @@ Other notes:
 
 
 THOUGHTS:
-* a connection may contain BOTH audio and CONTROL data. For example, a signal (audio), and a frequency (integer, data).
-This (the k-rate data) might be used to visually display controls / drive other effects
+* a connection may contain BOTH (or EITHER?) audio and CONTROL data. For example, a signal (audio),
+  and a frequency (integer, data). This (the k-rate data) is used to visually display controls / drive
+  other effects, etc.
 
 <template>
   <line
@@ -49,7 +50,7 @@ This (the k-rate data) might be used to visually display controls / drive other 
     :y1="y1"
     :x2="x2"
     :y2="y2"
-    stroke="white"
+    :stroke="stroke"
     stroke-width="3">
   </line>
 </template>
@@ -85,8 +86,8 @@ export default {
       fromModule: {},     // will be a Vue Component
       toModule: {},       // will be a Vue Component
       cursorX: false,
-      cursorY: false
-      // unwatch: () => {}
+      cursorY: false,
+      stroke: 'white'
     };
   },
 
@@ -133,12 +134,17 @@ export default {
           // DATA
           //
           try {
-            const sender = outlet.data; // STRING OR FN
-            const receiver = inlet.data;
+            const action = outlet.data; // STRING
+            const update = inlet.data;  // FUNCTION
 
-            if (typeof receiver === 'function') {
+            if (typeof update === 'function') {
+              console.log('erd');
               // unwatch is a fn that removes itself
-              this.unwatch = this.fromModule.$watch(sender, receiver);
+              // "sender" is a string -- is refers us to the property on fromModule that should be watched;
+              // ... when it is changed, the receiver function (on toModule) is fired with the new value.
+              this.unwatch = this.fromModule.$watch(action, update);
+              this.stroke = 'yellow';
+              // this.fromModule.$on(action, update);
             }
           } catch (e) {
             console.log('connect fail', e);

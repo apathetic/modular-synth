@@ -4,6 +4,10 @@
 
 ** DONT BOTHER trying to manage `patches` in the store; rather, keep them in Firebase, and cache them using a SW so that loading time is snappy
 
+** Service worker: manage `patches` between different tabs, enabling a
+polyphonic synth where the SW intercepts the midi notes and assigns each
+to a free voice (ie tab). Similarly, different patches to be run in parallel, where each tab could be likened to a track in a DAW.
+
 - General
   - Some sort of Module base (ie node). Currently so much duplication atm
   - load patch
