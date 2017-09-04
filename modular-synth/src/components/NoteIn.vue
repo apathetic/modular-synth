@@ -44,14 +44,10 @@ export default {
       velocity: 0,
       outlets: [
         {
-          label: 'pitch',
-          data: 0
+          label: 'freq'
         },
         {
           label: 'gate'
-        },
-        {
-          label: 'freq'
         }
       ]
     };
@@ -64,9 +60,8 @@ export default {
     this.$bus.$on('midi:pitchWheel', this.pitchWheel);
     this.$bus.$on('midi:polyPressure', this.polyPressure);
 
-    this.outlets[0].data = 'note';  // string of the value to connect
+    this.outlets[0].data = 'freq';  // string of the value to connect
     this.outlets[1].data = 'velocity';
-    this.outlets[2].data = 'freq';
 
     window.addEventListener('keydown', (e) => {
       switch (e.code) {

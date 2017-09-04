@@ -143,7 +143,7 @@ export default {
               // "sender" is a string -- is refers us to the property on fromModule that should be watched;
               // ... when it is changed, the receiver function (on toModule) is fired with the new value.
               this.unwatch = this.fromModule.$watch(action, update);
-              this.stroke = 'yellow';
+              this.stroke = '#999';
               // this.fromModule.$on(action, update);
             }
           } catch (e) {

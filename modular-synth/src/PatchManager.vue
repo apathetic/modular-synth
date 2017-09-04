@@ -225,10 +225,10 @@ export default {
     }
 
     .select {
+      color: #fff;
       margin: 0 5px;
       font-size: 1.4em;
       padding:0;
-      overflow: hidden;
 
       &::after {
         content: '▿';  // ▽
@@ -240,35 +240,61 @@ export default {
     }
 
     .math {
-      display: none;
+      display: block;
+
+      border-radius: 50%;
+      background: $color-grey-medium;
+      border: 1px solid rgba(white, 0.25);
+
       font-size: 1em;
-      width: 20px;
+      font-family: inherit;
+
       position: absolute;
+      left: 2px;
+      height: 1.2em;
+      width: 1.2em;
+
       cursor: pointer;
-      height: 50%;
       line-height: 0;
       z-index: 1;
 
+      opacity: 0;
+      transform: scale(0);
+      transition: all $transition-time-slow;
+
       &.add {
-        top: 0;
-      }
+        top: -4px;
+        }
 
       &.remove {
-        bottom: 0;
+        bottom: -4px;
       }
 
       &:hover {
-        color: orange;
+        color: $color-highlight;
       }
     }
 
     &.editing {
       .math {
-        display: block;
+        transform: scale(1);
+        opacity: 1;
       }
 
       input {
         left: $gap;
+      }
+    }
+
+    &:not(.editing) {
+      input {
+        pointer-events: none;
+      }
+
+      .select {
+        &:hover {
+          color: $color-highlight;
+        }
       }
     }
 
@@ -301,7 +327,9 @@ export default {
       top: 0;
       transition: left $transition-time-slow;
 
-      &:focus { outline: none; }
+      &:focus {
+        outline: none;
+      }
     }
 
     span {
@@ -313,14 +341,8 @@ export default {
       right: $gap;
       opacity: 0.25;
       text-shadow: 1px 1px 2px #000;
-      //
-      // animation: 3s infinite alternate pulse;
+      overflow: hidden;
+      height: 100%;
     }
   }
-
-  // @keyframes pulse {
-  //   0% { opacity: 0.25 },
-  //   50% { opacity: 0.05 },
-  //   100% { opacity: 0.25 }
-  // }
 </style>
