@@ -58,7 +58,10 @@
             // audio: null,     // this accepts an A-rate param
           },
           {
-            label: 'PWM'
+            label: 'mod'        // need this, so that we can modify mod _depth_ with the slider
+          },
+          {
+            label: 'pulse'
           }
         ],
 
@@ -71,9 +74,12 @@
     },
 
     created() {
-      this.inlets[0].data = this.setFreq;                              // NOTE: if the input is a k-rate conrol, we connect it here
-      this.inlets[0].audio = this.gain = this.context.createGain(); //       ...else, if the input is a signal, we connect this one
-      // this.inlets[1].audio = this.gain = this.context.createGain();    // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      this.gain = this.context.createGain();
+      this.osc = this.context.createOscillator();
+
+      this.inlets[0].data = this.setFreq;     // NOTE: if the input is a k-rate conrol, we connect it here
+      this.inlets[0].audio = this.gain;       //       ...else, if the input is a signal, we connect this one
+      this.inlets[1].audio = this.gain;       // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
 
       this.outlets[0].audio = this.osc = this.context.createOscillator();
 
@@ -86,8 +92,8 @@
 
       // k-Param for controlling mod, sync
       this.$watch('freq', this.setFreq);
-      this.$watch('mod', this.setMod);
       this.$watch('type', this.setType);
+      // this.$watch('mod', this.setMod);
 
       console.log('Creating VCO');
     },
