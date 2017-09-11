@@ -6,6 +6,7 @@
  * @type {AudioContext}
  */
 export const context = window.AudioContext && (new window.AudioContext());
+// export const context = new (window.AudioContext || window.webkitAudioContext)();
 
 
 /**
