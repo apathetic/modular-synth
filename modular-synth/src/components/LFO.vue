@@ -18,8 +18,7 @@
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
 
-      <knob label="freq"  @value="freq = $event"  :min="0" :max="20"></knob>
-      <knob label="phase" @value="phase = $event" :min="0" :max="3.14159265"></knob>
+      <knob param="freq"  @value="freq = $event"  :min="0" :max="20"></knob>
     </div>
 
     <div class="module-connections">
@@ -52,16 +51,11 @@ export default {
       type: 'sine',
       types: ['sine', 'square', 'sawtooth', 'triangle'],
       inlets: [
-        {
-          label: 'mod'
-          // audio: null
-        }
+        { label: 'mod' },
+        { label: 'sync' }
       ],
       outlets: [
-        {
-          label: 'output'
-          // audio: null
-        }
+        { label: 'output' }
       ]
     };
   },

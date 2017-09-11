@@ -54,8 +54,8 @@ function describeArc(x, y, radius, startAngle, endAngle) {
 
 export default {
   props: {
-    // label: String,
     param: String,
+    mode: String,
     min: Number,
     max: Number,
     decimals: 0
@@ -151,9 +151,8 @@ export default {
         return;
       }
 
-      // this.value = this.$store.state.parameters[this.id] || 0;
-      this.value = this.$store.getters.parameters[this.id] || 0;
-      this.knobValue = this.value / this.range;               // derive internal knobValue from value
+      this.value = this.$store.getters.parameters[this.id] || this.min;  // \\ 0;
+      this.knobValue = (this.value - this.min) / this.range;               // derive internal knobValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
       this.setDisplay();
       console.log('%c • Knob (%s) value: %d', 'color: blue', this.param, this.value);
