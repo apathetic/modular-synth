@@ -15,7 +15,13 @@
       </select>
       <slider param="mod"  @value="mod = $event"  :min="0" :max="100"></slider>
       <p>OSC</p>
-      <knob   param="freq" @value="freq = $event" :min="1" :max="2000"></knob>
+      <knob
+        param="freq"
+        mode="log"
+        :min="1"
+        :max="2000"
+        @value="freq = $event">
+      </knob>
       <knob   param="PW"   @value="PW = $event"   :min="0" :max="6.28"></knob>
     </div>
 
@@ -93,7 +99,7 @@
       // k-Param for controlling mod, sync
       this.$watch('freq', this.setFreq);
       this.$watch('type', this.setType);
-      // this.$watch('mod', this.setMod);
+      this.$watch('mod', this.setMod);
 
       console.log('Creating VCO');
     },
