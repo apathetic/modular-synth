@@ -124,10 +124,16 @@ export default {
     start() {   // "trigger" ?
       const now = this.context.currentTime;
       const adsr = this.adsr.gain;
+      const currentValue = adsr.value;  // for the case where the previous envelope is still active
 
-      // adsr.cancelScheduledValues(0);
       adsr.cancelScheduledValues(now);
-      adsr.setValueAtTime(0, now);
+      adsr.setValueAtTime(currentValue, now);
+
+
+      // perhaps better:
+
+      // setTargetAtTime(to, now, duration)
+      // exponentialRampToValueAtTime
       adsr.linearRampToValueAtTime(1, now + this.A);
       adsr.linearRampToValueAtTime(this.S, now + this.A + this.D);
     },
