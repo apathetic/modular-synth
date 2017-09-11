@@ -138,7 +138,6 @@ export default {
             const update = inlet.data;  // FUNCTION
 
             if (typeof update === 'function') {
-              console.log('erd');
               // unwatch is a fn that removes itself
               // "sender" is a string -- is refers us to the property on fromModule that should be watched;
               // ... when it is changed, the receiver function (on toModule) is fired with the new value.

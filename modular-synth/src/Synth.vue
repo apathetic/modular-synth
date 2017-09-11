@@ -212,6 +212,7 @@
             break;
           case 'Tab':
             this.toggleEditMode();
+            e.stopPropagation();   // do not tab through <select>, fields, etc
             break;
           case 'Escape':
             // this.togglePower();
