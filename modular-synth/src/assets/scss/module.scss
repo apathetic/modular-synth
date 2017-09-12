@@ -16,6 +16,10 @@
   transition-timing-function: ease-in-out;
   z-index: 1;
 
+  &--tall {
+    height: 112px;
+  }
+
   &:hover {
     filter: brightness(1.2);
 
@@ -46,6 +50,7 @@
 
   &-interface {
     padding: 2em 2.4em;
+    position: static;
     visibility: hidden;
     transition: visibility 0s;    // yes you can do this (to delay the toggle of block/none);
   }

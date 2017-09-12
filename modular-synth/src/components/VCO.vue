@@ -80,17 +80,16 @@
     },
 
     created() {
-      this.gain = this.context.createGain();
+      this.fm = this.context.createGain();
       this.osc = this.context.createOscillator();
 
       this.inlets[0].data = this.setFreq;     // NOTE: if the input is a k-rate conrol, we connect it here
-      this.inlets[0].audio = this.gain;       //       ...else, if the input is a signal, we connect this one
-      this.inlets[1].audio = this.gain;       // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      // this.inlets[0].audio = this.fm;       //       ...else, if the input is a signal, we connect this one
+      this.inlets[1].audio = this.fm;        // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      this.outlets[0].audio = this.osc;
 
-      this.outlets[0].audio = this.osc = this.context.createOscillator();
-
-      this.gain.value = 0;
-      this.gain.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
+      this.fm.value = 0;
+      this.fm.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
 
       this.osc.type = this.type;
       this.osc.frequency.value = this.freq;
@@ -99,7 +98,7 @@
       // k-Param for controlling mod, sync
       this.$watch('freq', this.setFreq);
       this.$watch('type', this.setType);
-      this.$watch('mod', this.setMod);
+      this.$watch('mod', this.setDepth);
 
       console.log('Creating VCO');
     },
@@ -118,6 +117,8 @@
       setFreq(f) {
         this.osc.frequency.value = f;
         // this.osc.frequency.setValueAtTime(f, context.currentTime);
+        // update knob display
+        this.freq = f;
       },
 
       /**
@@ -132,8 +133,11 @@
        * Update Oscillator gain
        * @param  {Float} g  Gain, between 0 and 1.
        */
-      setMod(g) {
-        this.gain.value = g;
+      setDepth(d) {
+        const depth = this.osc.frequency.value * d / 100.0;
+
+        // console.log(this.freq, this.osc.frequency.value, depth);
+        this.fm.value = depth;
       },
 
       /**
@@ -175,7 +179,7 @@
       font-weight: lighter;
       font-family: $font-secondary;
       color: #bbb;
-      top: 1.5em;
+      top: 2em;
       left: 2em;
     }
 
