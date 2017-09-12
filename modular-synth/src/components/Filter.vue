@@ -1,6 +1,6 @@
 <template>
   <div
-  class="filter module _2U"
+  class="filter module module--tall _3U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
@@ -49,13 +49,10 @@ export default {
       Q: 1,
 
       inlets: [
-        {
-          label: 'input'
-          // audio: null
-        }, {
-          label: 'freq'
-          // audio: null // this.input
-        }
+        { label: 'input' },
+        { label: 'freq' },
+        { label: 'cutoff' },
+        { label: 'res' }
       ],
 
       outlets: [
@@ -106,19 +103,35 @@ export default {
 </script>
 
 <style lang="scss">
+  $grey: #a8a8a8;
+  $teal: #409d9e;
+
   .filter {
-    background: linear-gradient(to bottom, #484643 0%, #42413e 98%, #343330 100%);
-    // $grey: #a8a8a8;
-    // $purple: #c35896;
-    // background:
-    //   linear-gradient(187deg,                  $purple 0%,  $purple 22%, transparent 22%) no-repeat,
-    //   linear-gradient(192deg, transparent 22%, $purple 22%, $purple 26%, transparent 26%) no-repeat,
-    //   linear-gradient(196deg, transparent 22%, $purple 22%, $purple 25%, transparent 25%) no-repeat,
-    //   linear-gradient(199deg, transparent 22%, $purple 22%, $purple 24%, transparent 24%) no-repeat,
-    //   linear-gradient(201deg, $grey 22%,       $purple 22%, $purple 23%, $grey 23%);
-    //
-    // background-position: 0 0, 0 5px, 100% 16px, 100% 38px, 100% 50px;
-    // background-size: 100%, 110%, 120%, 120%, 130%;
+    background-image: radial-gradient(
+      circle,
+      $grey 0%,
+      $grey  10%,
+      $teal 10%,
+      $teal 26%,
+      $grey  26%,
+      $grey  28%,
+      $teal 28%,
+      $teal 36%,
+      $grey  36%,
+      $grey  40%,
+      $teal 40%,
+      $teal 44%,
+      $grey  44%,
+      $grey  52%,
+      $teal 52%,
+      $teal 54%,
+      $grey  54%,
+      $grey  100%
+    );
+    background-position: 100% 66%;
+    background-size: 150%;
+
+
     //
 
     color: #fff;
