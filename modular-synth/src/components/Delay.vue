@@ -77,8 +77,15 @@ export default {
       feedback: params.feedback.default,
       cutoff: params.cutoff.default,
 
-      inlets: [{ label: 'input' }],
-      outlets: [{ label: 'output' }]
+      inlets: [
+        { label: 'in-1' },
+        { label: 'in-2' },
+        { label: 'mod' }
+      ],
+      outlets: [
+        { label: 'out-1' },
+        { label: 'out-2' }
+      ]
     };
   },
 
@@ -137,3 +144,20 @@ export default {
 };
 
 </script>
+
+<style lang="scss">
+  $grey: #a8a8a8;
+  $purple: #c35896;
+
+  .delay {
+    background:
+      linear-gradient(187deg,                  $purple 0%,  $purple 22%, transparent 22%) no-repeat,
+      linear-gradient(192deg, transparent 22%, $purple 22%, $purple 26%, transparent 26%) no-repeat,
+      linear-gradient(196deg, transparent 22%, $purple 22%, $purple 25%, transparent 25%) no-repeat,
+      linear-gradient(199deg, transparent 22%, $purple 22%, $purple 24%, transparent 24%) no-repeat,
+      linear-gradient(201deg, $grey 22%,       $purple 22%, $purple 23%, $grey 23%);
+
+    background-position: 0 0, 0 5px, 100% 16px, 100% 38px, 100% 50px;
+    background-size: 100%, 110%, 120%, 120%, 130%;
+  }
+</style>

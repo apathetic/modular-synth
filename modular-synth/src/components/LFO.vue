@@ -51,8 +51,8 @@ export default {
       type: 'sine',
       types: ['sine', 'square', 'sawtooth', 'triangle'],
       inlets: [
-        { label: 'mod' },
-        { label: 'sync' }
+        { label: 'reset' },
+        { label: 'mod' }
       ],
       outlets: [
         { label: 'output' }

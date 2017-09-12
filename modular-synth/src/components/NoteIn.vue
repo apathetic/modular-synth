@@ -1,6 +1,6 @@
 <template>
   <div
-  class="note-in module _2U"
+  class="note-in module module--tall _2U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
@@ -43,12 +43,10 @@ export default {
       freq: 0,
       velocity: 0,
       outlets: [
-        {
-          label: 'freq'
-        },
-        {
-          label: 'gate'
-        }
+        { label: 'freq' },
+        { label: 'gate' },
+        { label: 'vel' },
+        { label: 'touch' }
       ]
     };
   },

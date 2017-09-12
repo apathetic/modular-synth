@@ -19,6 +19,6 @@ export const moduleSize = {
   'Reverb': [3, 1],
   'Signal': [2, 1],
   'VCA': [2, 1],
-  'VCF': [2, 1],
+  'VCF': [3, 1],
   'VCO': [4, 1]
 };
