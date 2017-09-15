@@ -76,7 +76,7 @@ export default {
 
 <style lang="scss">
   .vca {
-    background: linear-gradient(to bottom, #383633 0%, #32312e 98%, #242320 100%);
+    background: linear-gradient(to bottom, #242320 0%, #181310 98%, #101310 100%);
     color: #fff;
 
     .knob {

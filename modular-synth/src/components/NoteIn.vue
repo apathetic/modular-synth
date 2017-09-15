@@ -42,6 +42,7 @@ export default {
       note: 0,
       freq: 0,
       velocity: 0,
+      touch: 0,
       outlets: [
         { label: 'freq' },
         { label: 'gate' },
@@ -58,8 +59,10 @@ export default {
     this.$bus.$on('midi:pitchWheel', this.pitchWheel);
     this.$bus.$on('midi:polyPressure', this.polyPressure);
 
-    this.outlets[0].data = 'freq';  // string of the value to connect
-    this.outlets[1].data = 'velocity';
+    this.outlets[0].data = 'freq';      // "string" of the property to connect
+    this.outlets[1].data = 'velocity';  // for now. should be "gate" or "trigger"...
+    this.outlets[2].data = 'velocity';
+    this.outlets[3].data = 'touch';
 
     window.addEventListener('keydown', (e) => {
       switch (e.code) {
@@ -142,7 +145,9 @@ export default {
     },
     controller(note, velocity) {},
     pitchWheel(data) {},
-    polyPressure(note, velocity) {}
+    polyPressure(note, pressure) {
+
+    }
   }
 };
 </script>

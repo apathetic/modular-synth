@@ -94,20 +94,20 @@ export default {
     this.outlets[0].audio = this.output = this.context.createGain();
 
     this.activateNode = this.context.createGain();
-    this.dry = this.context.createGain();
-    this.wet = this.context.createGain();
+    this.dryNode = this.context.createGain();
+    this.wetNode = this.context.createGain();
     this.filter = this.context.createBiquadFilter();
-    this.delay = this.context.createDelay(10);
+    this.delayNode = this.context.createDelay(10);
     this.feedbackNode = this.context.createGain();
 
-    this.activateNode.connect(this.delay);
-    this.activateNode.connect(this.dry);
-    this.delay.connect(this.filter);
+    this.activateNode.connect(this.delayNode);
+    this.activateNode.connect(this.dryNode);
+    this.delayNode.connect(this.filter);
     this.filter.connect(this.feedbackNode);
-    this.feedbackNode.connect(this.delay);
-    this.feedbackNode.connect(this.wet);
-    this.wet.connect(this.output);
-    this.dry.connect(this.output);
+    this.feedbackNode.connect(this.delayNode);
+    this.feedbackNode.connect(this.wetNode);
+    this.wetNode.connect(this.output);
+    this.dryNode.connect(this.output);
 
     this.filter.type = 'lowpass';
 
@@ -124,11 +124,11 @@ export default {
     // this.inlets[0].disconnect();
     // this.outlets[0].disconnect();
     this.activateNode.disconnect();
-    this.delay.disconnect();
+    this.delayNode.disconnect();
     this.filter.disconnect();
     this.feedbackNode.disconnect();
-    this.wet.disconnect();
-    this.dry.disconnect();
+    this.wetNode.disconnect();
+    this.dryNode.disconnect();
   },
 
   methods: {
