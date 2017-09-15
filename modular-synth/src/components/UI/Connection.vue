@@ -152,7 +152,7 @@ export default {
           //
         } else {
           const type = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
-          console.error('Connection error: type mismatch (or undefined). From id %s #%d (%s)', this.from.id, this.from.port, type);
+          console.error('Connection error (mismatch / undefined): From #%s.%d => #%s.%d (type %s)', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1, type);
         }
       }
     },

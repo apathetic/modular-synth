@@ -11,8 +11,8 @@
 
     <div class="module-interface">
       <!-- <slot name="interface"></slot> -->
-      <knob label="freq" @value="freq = $event" :min="100" :max="20000" log="1"></knob>
-      <knob label="Q"    @value="Q = $event"    :min="0" :max="1" :decimals="2"></knob>
+      <knob param="freq" @value="freq = $event" :min="100" :max="20000" log="1"></knob>
+      <knob param="Q"    @value="Q = $event"    :min="0" :max="1" :decimals="2"></knob>
       <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
@@ -130,19 +130,23 @@ export default {
     );
     background-position: 100% 66%;
     background-size: 150%;
-
-
-    //
-
     color: #fff;
 
     text {
       fill: #fff;
     }
 
-    // .track {
-    //   stroke: #333;
-    // }
+    select {
+      position: absolute;
+      bottom: 22px;
+      left: 33%;
+    }
+
+    .knob:first-child {
+      transform: scale(1.5);
+      top: 43px;
+      left: -4px;
+    }
   }
 
 </style>
