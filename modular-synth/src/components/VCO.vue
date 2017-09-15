@@ -63,18 +63,12 @@
             // data: null       // this accepts a K-rate param
             // audio: null,     // this accepts an A-rate param
           },
-          {
-            label: 'mod'        // need this, so that we can modify mod _depth_ with the slider
-          },
-          {
-            label: 'pulse'
-          }
+          { label: 'mod' },     // need this, so that we can modify mod _depth_ with the slider
+          { label: 'pulse' }
         ],
 
         outlets: [
-          {
-            label: 'output'
-          }
+          { label: 'output' }
         ]
       };
     },

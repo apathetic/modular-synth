@@ -13,11 +13,10 @@ export const moduleSize = {
   'Delay': [4, 1],
   'Env': [3, 1],
   'LFO': [2, 1],
-  'Mixer': [4, 1],
+  'Mixer': [3, 1],
   'Node': [4, 1],
   'NoteIn': [2, 1],
   'Reverb': [3, 1],
-  'Signal': [2, 1],
   'VCA': [2, 1],
   'VCF': [3, 1],
   'VCO': [4, 1]

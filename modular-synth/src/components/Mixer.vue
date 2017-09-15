@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mixer module module--tall _4U"
+    class="mixer module module--tall _3U"
     :class="dragging ? 'dragging' : ''"
     :style="position"
     @mousedown.stop="startDragging">
@@ -10,10 +10,10 @@
     </div>
 
     <div class="module-interface">
-      <knob param="gain_1" @value="gain_1 = $event" :min="0" :max="100"></knob>
-      <knob param="gain_2" @value="gain_2 = $event" :min="0" :max="100"></knob>
-      <knob param="gain_3" @value="gain_3 = $event" :min="0" :max="100"></knob>
-      <knob param="gain_4" @value="gain_4 = $event" :min="0" :max="100"></knob>
+      <knob param="one"   @value="one = $event"   :min="0" :max="100"></knob>
+      <knob param="two"   @value="two = $event"   :min="0" :max="100"></knob>
+      <knob param="three" @value="three = $event" :min="0" :max="100"></knob>
+      <knob param="four"  @value="four = $event"  :min="0" :max="100"></knob>
     </div>
 
     <div class="module-connections">
@@ -39,10 +39,10 @@ export default {
   data() {
     return {
       name: 'Mixer',
-      'gain_1': 0,
-      'gain_2': 0,
-      'gain_3': 0,
-      'gain_4': 0,
+      'one': 0,
+      'two': 0,
+      'three': 0,
+      'four': 0,
 
       inlets: [
         { label: 'in-1' },
@@ -88,7 +88,7 @@ export default {
       position: absolute;
 
       // path {
-      //   transform: scale(1.5);
+      transform: scale(1.2);
       // }
 
       fill: #fff;

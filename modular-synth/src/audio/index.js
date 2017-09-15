@@ -6,15 +6,14 @@
  * @type {AudioContext}
  */
 export const context = window.AudioContext && (new window.AudioContext());
-// export const context = new (window.AudioContext || window.webkitAudioContext)();
 
 
 /**
  * Constant stream of 1's at the audio-rate.
- * Allows sample-accurate manipulation of a parameter, or a way to generate ASDRs.
+ * , or a way to generate ASDRs.
  * @type {Object}
  */
-let constants = {};  // memoize this shizz
+let constants = {};  // memoize this shizz??
 export function signal(value = 1) {
   if (constants[value]) {
     return constants[value];
@@ -42,12 +41,13 @@ export function signal(value = 1) {
 
 
 /**
- * @class An audio ratio parameter. Wraps a constant source in a gain Node.
+ * @class An A-rate control that allows sample-accurate manipulation of any
+ *        parameter. Accepts both A-rate and K-rate inputs.
  *        Reference: https://github.com/Tonejs/Tone.js/blob/master/Tone/signal/Signal.js
- * @param {Number} value Initial value of the signal.
+ * @param {Number} value Initial value of the parameter.
  */
-export class Signal {
-  constructor(value) {
+export class Parameter {
+  constructor(value = 0) {
     this.output = this._gain = this.context.createGain();
     this.input = this._gain.gain;
 
