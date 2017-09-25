@@ -13,16 +13,17 @@
       <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
-      <slider param="mod"  @value="mod = $event"  :min="0" :max="100"></slider>
+      <slider param="mod"    @value="mod = $event"  :min="0" :max="100"></slider>
       <p>OSC</p>
       <knob
         param="freq"
         mode="log"
-        :min="1"
-        :max="2000"
+        :min="100"
+        :max="12000"
         @value="freq = $event">
       </knob>
-      <knob   param="PW"   @value="PW = $event"   :min="0" :max="6.28"></knob>
+      <knob   param="PW"     @value="PW = $event"     :min="0"    :max="6.28"></knob>
+      <knob   param="detune" @value="detune = $event" :min="-500" :max="500"></knob>
     </div>
 
     <div class="module-connections">
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+  import { Parameter } from '../audio';
   import { draggable } from '../mixins/draggable';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider2';
@@ -54,15 +56,12 @@
         mod: 0,
         PW: 0,
         phase: 0,
+        detune: 0,
         type: 'sine',
         types: ['sine', 'sawtooth', 'triangle'], // 'square', ==> 'pulse' instead
 
         inlets: [
-          {
-            label: 'freq'
-            // data: null       // this accepts a K-rate param
-            // audio: null,     // this accepts an A-rate param
-          },
+          { label: 'freq' },
           { label: 'mod' },     // need this, so that we can modify mod _depth_ with the slider
           { label: 'pulse' }
         ],
@@ -74,27 +73,39 @@
     },
 
     created() {
-      this.fm = this.context.createGain();
-      this.osc = this.context.createOscillator();
+      // Oscillator
+      this.osc_ = this.context.createOscillator();
+      this.osc_.frequency.value = this.freq;
+      this.osc_.type = this.type;
 
-      this.inlets[0].data = this.setFreq;     // NOTE: if the input is a k-rate conrol, we connect it here
-      // this.inlets[0].audio = this.fm;       //       ...else, if the input is a signal, we connect this one
-      this.inlets[1].audio = this.fm;        // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
-      this.outlets[0].audio = this.osc;
+      // Modulation depth
+      this.mod_ = this.context.createGain();
+      this.mod_.value = 0;
 
-      this.fm.value = 0;
-      this.fm.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
+      // Pulse width
+      this.pulse_ = new Parameter(0);
 
-      this.osc.type = this.type;
-      this.osc.frequency.value = this.freq;
-      this.osc.start();
+      // Inlets
+      this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate conrol, we connect it here...
+      // this.inlets[0].audio = this.osc.frequency;   //       ...else, if the input is a signal, we connect this one
+      this.inlets[1].audio = this.mod_;               // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      this.inlets[2].audio = this.pulse_;
 
-      // k-Param for controlling mod, sync
+      // Outlets
+      this.outlets[0].audio = this.osc_;
+
+      // Connectify
+      this.mod_.connect(this.osc_.frequency);      // input connects to audioParam (freq) "mod"
+      // this.frequency.connect(this.osc_.frequency);
+
+      // Map k-Params
       this.$watch('freq', this.setFreq);
       this.$watch('type', this.setType);
+      this.$watch('PW', this.setPulse);
       this.$watch('mod', this.setDepth);
 
       console.log('Creating VCO');
+      this.osc_.start();
     },
 
     destroyed() {
@@ -109,8 +120,8 @@
        * @param  {Float} f frequency
        */
       setFreq(f) {
-        this.osc.frequency.value = f;
-        // this.osc.frequency.setValueAtTime(f, context.currentTime);
+        this.osc_.frequency.value = f;
+        // this.osc_.frequency.setValueAtTime(f, context.currentTime);
         // update knob display
         this.freq = f;
       },
@@ -120,7 +131,7 @@
        * @param  {String} t One of the pre-defined oscillator wave types
        */
       setType(t) {
-        this.osc.type = t;
+        this.osc_.type = t;
       },
 
       /**
@@ -128,10 +139,15 @@
        * @param  {Float} g  Gain, between 0 and 1.
        */
       setDepth(d) {
-        const depth = this.osc.frequency.value * d / 100.0;
+        this.mod_.value = this.osc_.frequency.value * d / 100.0;
+      },
 
-        // console.log(this.freq, this.osc.frequency.value, depth);
-        this.fm.value = depth;
+      /**
+       * Update Oscillator Pulse width
+       * @param  {Float} p  Pulse, between 0 and 1.
+       */
+      setPulse(p) {
+        this.pulse_.input = this.PW = p;
       },
 
       /**
