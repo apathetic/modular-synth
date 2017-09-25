@@ -48,12 +48,15 @@ export function signal(value = 1) {
  */
 export class Parameter {
   constructor(value = 0) {
-    this.output = this._gain = this.context.createGain();
-    this.input = this._gain.gain;
+    const param = context.createGain();
 
-    this.gain.value = value;
+    param.value = value;
+    this.output = param;
+    this.input = param.gain;
 
-    signal(1).connect(this._gain);
+    // this.input = (audio) ? param.gain : param.gain.value
+
+    signal(1).connect(param);
   }
 }
 
@@ -162,9 +165,17 @@ export class PWM {
     this._offset.connect(this._pulseShaper);
 
     // input / output
-    this.frequency = this._saw.frequency.value; // control the frequency
-    this.width = this._offset.gain;             // control PW
+    this._saw.frequency.value = this.frequency; // control the frequency
+    this._offset.gain.value = this.width;       // control PW
     this.output = this._pulseShaper;            // ouput
+  }
+
+  /**
+   * Un-start the Oscillator
+   */
+  stop() {
+    this.curve = this.output = this.frequency =
+    this.output = this._saw = this._offset = this._pulseShaper = null;
   }
 
   /**

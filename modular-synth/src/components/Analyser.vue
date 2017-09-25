@@ -43,17 +43,14 @@
       return {
         name: 'Analyser',
         inlets: [
-          {
-            label: 'input'
-            // audio: null
-          }
+          { label: 'input' }
         ]
       };
     },
 
     created() {
       this.analyser = this.inlets[0].audio = this.context.createAnalyser();
-      this.analyser.fftSize = 64; // 1024;
+      this.analyser.fftSize = 256; // 1024;
       this.analyser.maxDecibels = -30;
       this.analyser.minDecibels = -100;
 
