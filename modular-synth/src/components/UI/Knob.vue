@@ -66,7 +66,7 @@ export default {
       active: false,
       startValue: 0,
       startY: null,
-      knobValue: 0,         // 0 -> 1 internally
+      internalValue: 0,         // 0 -> 1 internally
       range: 1,
       value: 0
     };
@@ -115,7 +115,7 @@ export default {
     start(e) {
       window.mouseDown = true;
       this.active = true;
-      this.startValue = this.knobValue;
+      this.startValue = this.internalValue;
       this.startY = e.clientY;
 
       // document.body.style.webkitUserSelect = 'none';
@@ -124,10 +124,12 @@ export default {
 
     update(e) {
       const delta = (this.startY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
-      const knobValue = Math.min(1, Math.max(0, this.startValue + delta));
+      const internalValue = Math.min(1, Math.max(0, this.startValue + delta));
 
-      this.knobValue = knobValue;
-      this.value = parseFloat(knobValue * this.range + this.min);
+      this.internalValue = internalValue;
+      this.value = this.mode === 'log'
+                   ? this.range * Math.pow(2, internalValue) - this.range + this.min
+                   : parseFloat(internalValue * this.range + this.min);
 
       this.$emit('value', this.value);
       this.setDisplay();
@@ -139,7 +141,7 @@ export default {
     },
 
     setDisplay() {
-      const rotationValue = this.knobValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+      const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
 
       this.$refs.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
     },
@@ -151,8 +153,8 @@ export default {
         return;
       }
 
-      this.value = this.$store.getters.parameters[this.id] || this.min;  // \\ 0;
-      this.knobValue = (this.value - this.min) / this.range;               // derive internal knobValue from value
+      this.value = this.$store.getters.parameters[this.id] || this.min;
+      this.internalValue = (this.value - this.min) / this.range;               // derive internal internalValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
       this.setDisplay();
       console.log('%c • Knob (%s) value: %d', 'color: blue', this.param, this.value);

@@ -8,12 +8,13 @@
 polyphonic synth where the SW intercepts the midi notes and assigns each
 to a free voice (ie tab). Similarly, different patches to be run in parallel, where each tab could be likened to a track in a DAW.
 
+** Machine learning: auto-generate patches based on common or popular ones.
+
+
 - General
   - Some sort of Module base (ie node). Currently so much duplication atm
   - load patch
     - turn off power. Problematic now that Meters plug directly into MasterOut due to Chrome bug.
-  - saving patches
-    - **saving settings**
   - web workers
     - offload heavy calcs, etc.
   - service workers
@@ -31,14 +32,10 @@ to a free voice (ie tab). Similarly, different patches to be run in parallel, wh
 
 
 - UI
-  - removing connections: disconnects audio, but data connects throw errors
-  - ugh, regression: modules don't retain position after dragging / switching states. Cannot reliably reproduce...
   - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
   - when a node is selected, all connected connections become highlighted
   - must press shift to sort in play mode
   - single click on Module fires sortable; should only be onDrag
-  - Digit appears on parameterSets, when no params
-  - knob: linear OR log
 
 
 - LOADING
@@ -49,11 +46,10 @@ to a free voice (ie tab). Similarly, different patches to be run in parallel, wh
 
 - AUDIO
   - use audioParam to automate parameters
-  - global "get (actual) component by id" method?
   - **power-off no longer kills CPU (as meters are connected)**
     - LEVEL is ...broken? Crazy inefficient. Check meter.js where output is connected to audioContext
-  - click sound on ADSR
-  - VCO / FM not working as modulators
+  - **REGRESSION** VCO / FM not working as modulators
+
 
 - Connections
   - connecting to an outlet, connects to the inlet (ie. app doesn't distinguish between these -- just ID and port)
@@ -121,6 +117,11 @@ to a free voice (ie tab). Similarly, different patches to be run in parallel, wh
       - ~~edit: draggables (dragabilly, vanillaJS)~~
     - ~~dotted line while creating a connection~~
     - ~~Knobs with tiny "min" render backwards~~
+    - ~~ugh, regression: modules don't retain position after dragging / switching states. Cannot reliably reproduce...~~
+    - ~~removing connections: disconnects audio, but data connects throw errors~~
+    - ~~knob: linear OR log~~
+    - ~~saving patches~~
+      - ~~saving settings~~
 
 
   - LOADING
@@ -151,6 +152,8 @@ to a free voice (ie tab). Similarly, different patches to be run in parallel, wh
       - ~~(same problem for Connector)~~
     - ~~master out volume control~~
     - ~~hook up master out mute~~ eh, removed Mute
+    - ~~click sound on ADSR~~
+    - ~~**REGRESSION** visualizer not working~~
 
 
   - CONNECTIONS
