@@ -219,6 +219,6 @@ export const SET_PARAMETER = (state, data) => {
   //  state.parameterSets[key].parameters[data.id] = data.value);
 
   if (state.parameterSets[key].parameters) {
-    state.parameterSets[key].parameters[data.id] = data.value;
+    state.parameterSets[key].parameters[data.id] = data.value; // toFixed(3);
   }
 };
