@@ -28,10 +28,6 @@ const size = 20;
 const x = 24; // half the css knob size
 const y = 24;
 
-// let startValue = 0;
-// let startY = 0;
-
-
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   let angleInRadians = (angleInDegrees + 90) * Math.PI / 180.0;
 
@@ -58,6 +54,7 @@ export default {
     mode: String,
     min: Number,
     max: Number,
+    default: Number,
     decimals: 0
   },
 
@@ -117,9 +114,6 @@ export default {
       this.active = true;
       this.startValue = this.internalValue;
       this.startY = e.clientY;
-
-      // document.body.style.webkitUserSelect = 'none';
-      // document.body.style.userSelect = 'none';
     },
 
     update(e) {
@@ -128,8 +122,8 @@ export default {
 
       this.internalValue = internalValue;
       this.value = this.mode === 'log'
-                   ? this.range * Math.pow(2, internalValue) - this.range + this.min
-                   : parseFloat(internalValue * this.range + this.min);
+                 ? this.range * Math.pow(2, internalValue) - this.range + this.min
+                 : parseFloat(internalValue * this.range + this.min);
 
       this.$emit('value', this.value);
       this.setDisplay();
@@ -153,7 +147,12 @@ export default {
         return;
       }
 
-      this.value = this.$store.getters.parameters[this.id] || this.min;
+      if (!this.$store.getters.parameters[this.id]) {
+        console.warn('undefined knob: ', this.id);
+        return;
+      }
+
+      this.value = this.$store.getters.parameters[this.id] || this.default;
       this.internalValue = (this.value - this.min) / this.range;               // derive internal internalValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
       this.setDisplay();

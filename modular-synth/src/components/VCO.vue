@@ -99,7 +99,7 @@
       // this.frequency.connect(this.osc_.frequency);
 
       // Map k-Params
-      this.$watch('freq', this.setFreq);
+      // this.$watch('freq', this.setFreq);
       this.$watch('type', this.setType);
       this.$watch('PW', this.setPulse);
       this.$watch('mod', this.setDepth);
@@ -120,6 +120,7 @@
        * @param  {Float} f frequency
        */
       setFreq(f) {
+        console.log(f);
         this.osc_.frequency.value = f;
         // this.osc_.frequency.setValueAtTime(f, context.currentTime);
         // update knob display
