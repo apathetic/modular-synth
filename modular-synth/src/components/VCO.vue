@@ -61,13 +61,20 @@
         types: ['sine', 'sawtooth', 'triangle'], // 'square', ==> 'pulse' instead
 
         inlets: [
-          { label: 'freq' },
-          { label: 'mod' },     // need this, so that we can modify mod _depth_ with the slider
-          { label: 'pulse' }
+          { label: 'freq',
+            desc: 'The frequency of the Oscillator. [A-rate / k-rate]'
+          },
+          { label: 'mod',
+            desc: 'Modulation input, ie. LFO or similar. Depth is controlled via the slider'
+          },
+          { label: 'pulse',
+            desc: 'Pulse width modulation. [0 - 1]'
+          }
         ],
 
         outlets: [
-          { label: 'output' }
+          { label: 'output',
+            desc: 'Audio output' }
         ]
       };
     },
@@ -88,8 +95,8 @@
       // Inlets
       this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate conrol, we connect it here...
       // this.inlets[0].audio = this.osc.frequency;   //       ...else, if the input is a signal, we connect this one
-      this.inlets[1].audio = this.mod_;               // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
-      this.inlets[2].audio = this.pulse_;
+      this.inlets[1].audio = this.mod_.gain;          // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      this.inlets[2].audio = this.pulse_.input;
 
       // Outlets
       this.outlets[0].audio = this.osc_;
