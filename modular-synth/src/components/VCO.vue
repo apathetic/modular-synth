@@ -86,8 +86,8 @@
       this.osc_.type = this.type;
 
       // Modulation depth
-      this.mod_ = this.context.createGain();
-      this.mod_.value = 0;
+      this.modDepth_ = this.context.createGain();
+      this.modDepth_.value = 0;
 
       // Pulse width
       this.pulse_ = new Parameter(0);
@@ -95,18 +95,18 @@
       // Inlets
       this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate conrol, we connect it here...
       // this.inlets[0].audio = this.osc.frequency;   //       ...else, if the input is a signal, we connect this one
-      this.inlets[1].audio = this.mod_.gain;          // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
+      this.inlets[1].audio = this.modDepth_;          // NOTE: this is how we control the depth of the modulation (ie. in the _receiving_ module rather than the source)
       this.inlets[2].audio = this.pulse_.input;
 
       // Outlets
       this.outlets[0].audio = this.osc_;
 
       // Connectify
-      this.mod_.connect(this.osc_.frequency);      // input connects to audioParam (freq) "mod"
+      this.modDepth_.connect(this.osc_.frequency);      // input connects to audioParam (freq) "mod"
       // this.frequency.connect(this.osc_.frequency);
 
       // Map k-Params
-      // this.$watch('freq', this.setFreq);
+      this.$watch('freq', this.setFreq);
       this.$watch('type', this.setType);
       this.$watch('PW', this.setPulse);
       this.$watch('mod', this.setDepth);
@@ -127,11 +127,8 @@
        * @param  {Float} f frequency
        */
       setFreq(f) {
-        console.log(f);
         this.osc_.frequency.value = f;
-        // this.osc_.frequency.setValueAtTime(f, context.currentTime);
-        // update knob display
-        this.freq = f;
+        this.freq = f; // updates knob display
       },
 
       /**
@@ -143,11 +140,13 @@
       },
 
       /**
-       * Update Oscillator gain
-       * @param  {Float} g  Gain, between 0 and 1.
+       * Update Modulation depth.
+       * @param  {Float} g  Depth, between 0 and 1. This maps to 0 - 500 cents (??).
        */
       setDepth(d) {
-        this.mod_.value = this.osc_.frequency.value * d / 100.0;
+        const depth = this.osc_.frequency.value * d / 100.0;
+
+        this.modDepth_.gain.value = depth;
       },
 
       /**

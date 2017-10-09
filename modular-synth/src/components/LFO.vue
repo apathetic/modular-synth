@@ -1,7 +1,3 @@
-//------------------------------------------------
-//  LFO
-// -----------------------------------------------
-
 <template>
   <div
   class="lfo module _2U"
@@ -73,10 +69,6 @@ export default {
 
     console.log('Creating LFO');
   },
-
-  // destroyed() {
-  //   this.osc.disconnect();
-  // },
 
   methods: {
     setFreq(f) {
