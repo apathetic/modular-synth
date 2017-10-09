@@ -1,4 +1,3 @@
-
 /*
 
 class DataApi {
@@ -21,10 +20,6 @@ class DataApi {
 
 export default DataApi;
 */
-
-
-
-
 
 
 
