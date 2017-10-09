@@ -59,7 +59,6 @@
   - use audioParam to automate parameters
   - **power-off no longer kills CPU (as meters are connected)**
     - LEVEL is ...broken? Crazy inefficient. Check meter.js where output is connected to audioContext
-  - **REGRESSION** VCO / FM not working as modulators
 
 
 - Connections
@@ -162,6 +161,7 @@
     - ~~hook up master out mute~~ eh, removed Mute
     - ~~click sound on ADSR~~
     - ~~**REGRESSION** visualizer not working~~
+    - ~~**REGRESSION** VCO / FM not working as modulators~~
 
 
   - CONNECTIONS
