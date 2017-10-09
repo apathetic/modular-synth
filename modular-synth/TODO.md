@@ -2,13 +2,22 @@
 
 ## TODO
 
-** DONT BOTHER trying to manage `patches` in the store; rather, keep them in Firebase, and cache them using a SW so that loading time is snappy
+** DONT BOTHER trying to manage `patches` in the store; rather, keep them in
+   Firebase, and cache them using a SW so that loading time is snappy
 
 ** Service worker: manage `patches` between different tabs, enabling a
-polyphonic synth where the SW intercepts the midi notes and assigns each
-to a free voice (ie tab). Similarly, different patches to be run in parallel, where each tab could be likened to a track in a DAW.
+   polyphonic synth where the SW intercepts the midi notes and assigns each
+   to a free voice (ie tab). Similarly, different patches to be run in
+   parallel, where each tab could be likened to a track in a DAW.
 
 ** Machine learning: auto-generate patches based on common or popular ones.
+
+** create server that spits out OSC notes, 24/7. Different styles / genres
+   depending on time of day (like a radio station). Then, modify Note-In to
+   stream from it.
+   ... or, every port is a different thing: disco inferno (on :8000),
+   aleatoric wackiness (on :8001), etc
+
 
 
 - General
@@ -23,8 +32,10 @@ to a free voice (ie tab). Similarly, different patches to be run in parallel, wh
   - Deleting Debuggers leaves ScriptNode behind
 
 
+- TESTING
+
+
 - MODULES
-  - ENV: breaks unless each ADSR value have been set
 
 
 - VUEX
@@ -57,10 +68,6 @@ to a free voice (ie tab). Similarly, different patches to be run in parallel, wh
 
 
 - RANDOM
-  - create server that spits out OSC notes, 24/7. Different
-    styles / genres depending on time of day (like a radio
-    station). Then, modify Note-In to stream from it.
-    ... or, every port is a different thing: disco inferno (on :8000), aleatoric wackiness (on :8001), etc
   - webworker (audiolet?) for Meter, etc.
 
 
@@ -145,6 +152,7 @@ to a free voice (ie tab). Similarly, different patches to be run in parallel, wh
     - ~~DELETE node~~
       - ~~and associated audio connections~~
     - ~~VCA: WTF. Order of inputs matters? Don't understand. Gain not seeming to multiply input signal. ie. gain of 0 (from env) results in no attenuation. Solved!~~
+    - ~~ENV: breaks unless each ADSR value have been set~~
 
 
   - AUDIO

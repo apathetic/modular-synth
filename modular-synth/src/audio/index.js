@@ -1,5 +1,3 @@
-// base, extracted audio stuffs.
-//
 
 /**
  * The application's audio context.
@@ -9,8 +7,7 @@ export const context = window.AudioContext && (new window.AudioContext());
 
 
 /**
- * Constant stream of 1's at the audio-rate.
- * , or a way to generate ASDRs.
+ * Generata a constant stream of 1's at the audio-rate.
  * @type {Object}
  */
 let constants = {};  // memoize this shizz??
@@ -128,25 +125,47 @@ export class Meter {
 }
 
 
+
+/**
+ * @class Creates a wrapper around the Oscillator AudioNode, with the ability
+ *        to start and stop playing.
+ * @param {Number} f Initial frequency of the oscillator.
+ * @param {String} t Initial type of the oscillator.
+ */
+export class Oscillator {
+  constructor(f, t) {
+    this.osc = context.createOscillator();
+    this.osc.type = this.type = t;
+    this.frequency = new Parameter(f);
+    this.frequency.output.connect(this.osc.frequency);
+    this.output = this.osc;
+  }
+
+  start() {
+    this.osc.start();
+  }
+
+  stop() {
+    this.osc.stop();
+    this.frequency = null;  // .destroy(); ?
+  }
+}
+
+
+
 /**
  * Create a sawtooth oscillator. By adding a DC offset, we can move it up or
  * down. We then threshold the result to either 1 or -1 using a waveshaper,
- * which turns it into a square.
+ * which turns it square ie. a PWM waveform.
  * Reference: https://github.com/pendragon-andyh/WebAudio-PulseOscillator
  */
 export class PWM {
-  constructor() {
-    this.frequency = null;
-    this.width = null;
-    this.output = null;
+  constructor(f = 440, w = 0.5) {
+    this.frequency = new Parameter(f);
+    this.width = w;
 
     this._curve = this.generateCurve();
-  }
 
-  /**
-   * Start the Oscillator
-   */
-  start() {
     // create sawtooth
     this._saw = context.createOscillator();
     this._saw.type = 'sawtooth';
@@ -158,24 +177,37 @@ export class PWM {
     // create the offset (ie. pulse width)
     this._offset = context.createGain();
     this._offset.gain.value = 0;      // default
-    signal(1).connect(this._offset);  // feed it with constant 1 source
+    // this._offset = new Parameter(w);
 
     // connectify
     this._saw.connect(this._pulseShaper);
     this._offset.connect(this._pulseShaper);
+    // this._offset.output.connect(this._pulseShaper);
 
     // input / output
-    this._saw.frequency.value = this.frequency; // control the frequency
-    this._offset.gain.value = this.width;       // control PW
+    this.frequency.output.connect(this._saw.frequency); // control the frequency
+    // this._offset.gain.value = this.width;               // control PW
+    // this.width.output.connect(this._offset.gain);       // control PW
+
     this.output = this._pulseShaper;            // ouput
+  }
+
+  /**
+   * Start the Oscillator
+   */
+  start() {
+    signal(1).connect(this._offset);  // feed it with constant 1 source
+    // signal(1).connect(this._offset.input);            // feed offset with constant 1 source
+    this._saw.start();
   }
 
   /**
    * Un-start the Oscillator
    */
   stop() {
-    this.curve = this.output = this.frequency =
-    this.output = this._saw = this._offset = this._pulseShaper = null;
+    this._saw.stop();
+
+    this.curve = this.output = this.frequency = this.output = this._offset = this._pulseShaper = null;
   }
 
   /**
@@ -191,34 +223,6 @@ export class PWM {
     }
 
     return pulseCurve;
-  }
-}
-
-
-/**
- * @class Creates a wrapper around the Oscillator AudioNode, with the ability
- *        to start and stop playing.
- * @param {Number} f Initial frequency of the oscillator.
- * @param {String} t Initial type of the oscillator.
- */
-export class Oscillator {
-  constructor(f, t) {
-    this.osc = null;
-    this.frequency = signal(f);
-    this.type = t;
-    this.output = this.osc;
-  }
-
-  start() {
-    this.osc = context.createOscillator();
-    this.frequency.connect(this.osc.frequency);      // input connects to audioParam (freq) "mod"
-    // this.gain.connect(this.osc.frequency);
-
-    // this.frequency = this.osc.frequency.value;
-  }
-
-  destroy() {
-    this.frequency.disconnect();
   }
 }
 
