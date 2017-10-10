@@ -114,45 +114,58 @@ export default {
       const inlet = this.toModule.inlets[this.to.port];
 
       if (inlet && outlet) {
-        if (inlet.audio && outlet.audio) {
-          //
-          // AUDIO
-          //
-          try {
+        try {
+          if (inlet.audio && outlet.audio) {
+            // -------------------
+            // AUDIO -> AUDIO
+            // -------------------
             const source = outlet.audio;
             const destination = inlet.audio;
 
             (connect) ? source.connect(destination) : source.disconnect(destination);
 
-            console.log('%c • %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
-          } catch (e) {
-            console.log('%c[error] audio dis/connect: id %s (#%d) ⟹ id %s (#%d)', 'color: red', this.from.id, this.from.port, this.to.id, this.to.port);
-            console.log(e);
-          }
-        } else if (inlet.hasOwnProperty('data') && outlet.hasOwnProperty('data')) {
-          //
-          // DATA
-          //
-          try {
+            //
+          } else if (inlet.audio && outlet.data) {
+            // -------------------
+            // DATA -> AUDIO
+            // -------------------
+
+            console.log('CONNECTION FROM DAT TO AUDIO ', this.from.id, this.to.id);
+            // const interpolator = new Parameter(0);
+            // interpolator.output.connect(outlet.audio)
+
+            //
+          } else if (inlet.data && outlet.data) {
+            // -------------------
+            // DATA -> DATA
+            // -------------------
             const action = outlet.data; // STRING
             const update = inlet.data;  // FUNCTION
 
             if (typeof update === 'function') {
-              // unwatch is a fn that removes itself
-              // "sender" is a string -- is refers us to the property on fromModule that should be watched;
-              // ... when it is changed, the receiver function (on toModule) is fired with the new value.
+              // "this.unwatch" is a fn that removes itself
+              // "action" is a string -- is refers us to the property on fromModule that should be watched;
+              // ... when it is changed, the receiver function, "update" (on toModule), is fired with the new value.
               this.unwatch = this.fromModule.$watch(action, update);
               this.stroke = '#999';
               // this.fromModule.$on(action, update);
+
+            //
             }
-          } catch (e) {
-            console.log('connect fail', e);
+          } else {
+            const inType = inlet.data ? 'data' : inlet.audio ? 'audio' : 'unknown';
+            const outType = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
+
+            throw '[error] connection: mismatch (' + outType + ' ⟹ ' + inType + ')';  // eslint-disable-line
           }
 
+          // success message:
+          console.log('%c[connection] %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
           //
-        } else {
-          const type = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
-          console.error('Connection error (mismatch / undefined): From #%s.%d => #%s.%d (type %s)', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1, type);
+        } catch (e) {
+          // error message:
+          console.log('%c%s', 'color: red', e);
+          console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
         }
       }
     },
