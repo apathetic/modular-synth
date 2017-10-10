@@ -117,7 +117,7 @@ export default {
     this.$watch('feedback', this.setFeedback);
     this.$watch('cutoff', this.setCutoff);
 
-    console.log('%c[module] Creating Delay', 'color: blue');
+    console.log('%c[component] Creating Delay', 'color: blue');
   },
 
   destroyed() {

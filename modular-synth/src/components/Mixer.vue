@@ -71,6 +71,13 @@ export default {
     this.inlets[1].audio.connect(this.outlets[0].audio);
     this.inlets[2].audio.connect(this.outlets[0].audio);
     this.inlets[3].audio.connect(this.outlets[0].audio);
+  },
+
+  methods: {
+    // update() {
+    //   numConnected = 1; // how many active connections
+    //   this.outlets[0].audio.gain.value = 1 / numConnected;
+    // }
   }
 };
 </script>

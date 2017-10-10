@@ -1,7 +1,3 @@
-//------------------------------------------------
-//  Envelope (ADSR)
-// -----------------------------------------------
-
 <template>
   <div
     class="env module _3U"
@@ -30,7 +26,6 @@
 
 <script>
 import { signal } from '../audio';
-
 import { draggable } from '../mixins/draggable';
 import Knob from './UI/Knob';
 
@@ -52,20 +47,14 @@ export default {
       'R': 0.1,
 
       inlets: [
-        {
-          label: 'gate',
-          data: 999
-        }, {
-          label: 'mod-A',
-          data: null
-        }
+        { label: 'gate',
+          desc: 'Acts as a trigger for the envelope' },
+        { label: 'mod',
+          desc: '???/' }
       ],
 
       outlets: [
-        {
-          label: 'out'
-          // audio: null
-        }
+        { label: 'out' }
       ]
     };
   },
@@ -80,19 +69,14 @@ export default {
     this.outlets[0].audio = this.adsr;
     signal(1).connect(this.adsr);
 
-    // this.$watch('A', this.setAttack);
-    // this.$watch('D', this.setDecay);
-    // this.$watch('S', this.setSustain);
-    // this.$watch('R', this.setRelease);
-
-    console.log('%c[module] Creating Env', 'color: blue');
+    console.log('%c[component] Creating Env', 'color: blue');
   },
 
   destroyed() {
-    signal(1).disconnect();   // or is it:
-    // this.adsr.disconnect();  // ...?
+    // signal(1).disconnect();   // or is it:
+    this.adsr.disconnect();  // ...?
 
-    // DESTROY signal. TODO
+    // DESTROY signal? TODO
   },
 
   methods: {
@@ -103,23 +87,6 @@ export default {
         this.stop();
       }
     },
-
-    // start(when) {
-    //   var attackRampMethodName = this._getRampMethodName('attack');
-    //   var decayRampMethodName = this._getRampMethodName('decay');
-    //
-    //   var attackStartsAt = when + this.settings.delayTime;
-    //   var attackEndsAt = attackStartsAt + this.settings.attackTime;
-    //   var decayStartsAt = attackEndsAt + this.settings.holdTime;
-    //   var decayEndsAt = decayStartsAt + this.settings.decayTime;
-    //   var attackStartLevel = (attackRampMethodName === 'exponentialRampToValueAtTime') ? 0.001 : 0;
-    //
-    //   this.adsr.gain.setValueAtTime(attackStartLevel, when);
-    //   this.adsr.gain.setValueAtTime(attackStartLevel, attackStartsAt);
-    //   this.adsr.gain[attackRampMethodName](1, attackEndsAt);
-    //   this.adsr.gain.setValueAtTime(1, decayStartsAt);
-    //   this.adsr.gain[decayRampMethodName](this.settings.sustainLevel, decayEndsAt);
-    // },
 
     start() {   // "trigger" ?
       const now = this.context.currentTime;

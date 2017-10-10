@@ -117,7 +117,7 @@
       this.inlets[0].audio = processor;
       this.loop();
 
-      console.log('%c[module] Creating Debugger', 'color: blue');
+      console.log('%c[component] Creating Debugger', 'color: blue');
     },
 
     destroyed() {
