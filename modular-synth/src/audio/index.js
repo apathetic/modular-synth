@@ -38,22 +38,27 @@ export function signal(value = 1) {
 
 
 /**
- * @class An A-rate control that allows sample-accurate manipulation of any
- *        parameter. Accepts both A-rate and K-rate inputs.
- *        Reference: https://github.com/Tonejs/Tone.js/blob/master/Tone/signal/Signal.js
+ * @class Provides a uniform interface to an automatable value. Accepts both
+ *        A-rate and k-rate inputs (ie. connection agnostic), while allowing
+ *        sample-accurate manipulation of any parameter.
  * @param {Number} value Initial value of the parameter.
  */
 export class Parameter {
   constructor(value = 0) {
     const param = context.createGain();
 
-    param.value = value;
+    param.gain.value = value;
+    this.set = (value) => { param.gain.value = value; };
     this.output = param;
-    this.input = param.gain;
+    this.input = param;
 
     // this.input = (audio) ? param.gain : param.gain.value
 
     signal(1).connect(param);
+  }
+
+  destroy() {
+    this.output.disconnect();
   }
 }
 
@@ -162,7 +167,7 @@ export class Oscillator {
 export class PWM {
   constructor(f = 440, w = 0.5) {
     this.frequency = new Parameter(f);
-    this.width = w;
+    this.width = new Parameter(w);
 
     this._curve = this.generateCurve();
 
@@ -174,30 +179,19 @@ export class PWM {
     this._pulseShaper = context.createWaveShaper();
     this._pulseShaper.curve = this._curve;
 
-    // create the offset (ie. pulse width)
-    this._offset = context.createGain();
-    this._offset.gain.value = 0;      // default
-    // this._offset = new Parameter(w);
-
     // connectify
     this._saw.connect(this._pulseShaper);
-    this._offset.connect(this._pulseShaper);
-    // this._offset.output.connect(this._pulseShaper);
 
-    // input / output
-    this.frequency.output.connect(this._saw.frequency); // control the frequency
-    // this._offset.gain.value = this.width;               // control PW
-    // this.width.output.connect(this._offset.gain);       // control PW
-
-    this.output = this._pulseShaper;            // ouput
+    // output
+    this.output = this._pulseShaper;
   }
 
   /**
    * Start the Oscillator
    */
   start() {
-    signal(1).connect(this._offset);  // feed it with constant 1 source
-    // signal(1).connect(this._offset.input);            // feed offset with constant 1 source
+    this.frequency.output.connect(this._saw.frequency); // control the frequency
+    this.width.output.connect(this._pulseShaper); // control pulse width
     this._saw.start();
   }
 
@@ -205,9 +199,15 @@ export class PWM {
    * Un-start the Oscillator
    */
   stop() {
-    this._saw.stop();
+    this._saw.disconnect();
+    this._pulseShaper.disconnect();
 
-    this.curve = this.output = this.frequency = this.output = this._offset = this._pulseShaper = null;
+    this.frequency.destroy();
+    this.width.destroy();
+
+    this._saw = null;
+    this._curve = null;
+    this._pulseShaper = null;
   }
 
   /**
