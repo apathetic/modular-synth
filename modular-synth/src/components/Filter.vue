@@ -99,7 +99,7 @@ export default {
     this.$watch('Q', this.setQ);
     this.$watch('type', this.setType);
 
-    console.log('%c[module] Creating Filter', 'color: blue');
+    console.log('%c[component] Creating Filter', 'color: blue');
   },
 
   methods: {

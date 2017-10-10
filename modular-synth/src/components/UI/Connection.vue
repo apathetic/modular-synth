@@ -57,6 +57,7 @@ THOUGHTS:
 
 <script>
 import { cellWidth } from '../../dimensions';
+// import { Parameter } from '../audio';
 import { mapActions } from 'vuex';
 
 export default {
