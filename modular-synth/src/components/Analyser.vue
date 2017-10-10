@@ -66,7 +66,7 @@
         }
       });
 
-      console.log('Creating Analyser');
+      console.log('%c[module] Creating Analyser', 'color: blue');
     },
 
     destroyed() {

@@ -110,7 +110,7 @@ export default {
       }
     });
 
-    console.log('Creating NoteIn');
+    console.log('%c[module] Creating NoteIn', 'color: blue');
   },
 
   destroyed() {

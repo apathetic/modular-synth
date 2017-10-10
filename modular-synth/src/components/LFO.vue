@@ -67,7 +67,7 @@ export default {
     // this.$watch('depth', this.setDepth);   // gate. mod?
     this.$watch('type', this.setType);
 
-    console.log('Creating LFO');
+    console.log('%c[module] Creating LFO', 'color: blue');
   },
 
   methods: {
