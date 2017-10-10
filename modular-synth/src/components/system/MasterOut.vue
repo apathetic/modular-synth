@@ -27,14 +27,10 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import VU from '../UI/VU';
-
-// import { meter } from '../../mixins/meter';
 // import { meter } from '../../audio';
 
 export default {
-  // mixins: [meter],
   components: { VU },
-
   computed: {
     ...mapGetters([
       'power'
@@ -44,34 +40,33 @@ export default {
   data() {
     return {
       name: 'Master Out',
-      id: 0,    // MasterOut is always id 0
+      id: 0, // MasterOut is always id 0
       x: 0,
       y: 0,
       gain: 0.5,
       isMuted: false,
       inlets: [
-        {
-          label: 'out-1'
-        }, {
-          label: 'out-2'
-        }
+        { label: 'out-1' },
+        { label: 'out-2' }
       ]
     };
   },
 
   created() {
+    this.stop();
+
     this.out1 = this.context.createGain();
     this.out2 = this.context.createGain();
 
     this.inlets[0].audio = this.out1;
     this.inlets[1].audio = this.out2;
 
+    this.out1.connect(this.context.destination);
+    this.out2.connect(this.context.destination);
+
+
     this.$watch('power', (on) => {
-      if (on) {
-        this.start();
-      } else {
-        this.stop();
-      }
+      (on) ? this.start() : this.stop();
     });
 
     this.$watch('gain', this.setGain);
@@ -80,26 +75,17 @@ export default {
   },
 
   mounted() {
-    // const X = this.$refs.meter;
-
-    // this.meter = meter(X);
-    // console.log(this.meter);
-
     this.determinePosition();
     window.addEventListener('resize', this.determinePosition);
   },
 
   methods: {
-    // Chrome and FF (in informal testing) are smart enough to know when there is no
-    // audio chain of connected nodes, and optimize accordingly.
     start() {
-      this.out1.connect(this.context.destination);
-      this.out2.connect(this.context.destination);
+      this.context.resume();
     },
 
     stop() {
-      this.out1.disconnect(this.context.destination);
-      this.out2.disconnect(this.context.destination);
+      this.context.suspend();
     },
 
     setGain(g) {
