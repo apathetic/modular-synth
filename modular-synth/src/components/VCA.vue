@@ -64,7 +64,7 @@ export default {
 
     this.outlets[0].audio = vca;
 
-    console.log('%c[module] Creating VCA', 'color: blue');
+    console.log('%c[component] Creating VCA', 'color: blue');
   },
 
   destroyed() {

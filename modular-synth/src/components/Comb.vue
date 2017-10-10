@@ -79,7 +79,7 @@ export default {
     // this.$watch('freq', this.setDecay);
     // this.$watch('Q', this.setDecay);
 
-    console.log('%c[module] Creating Comb', 'color: blue');
+    console.log('%c[component] Creating Comb', 'color: blue');
   },
 
   // destroyed() {
