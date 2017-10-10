@@ -85,7 +85,7 @@ export default {
     // this.$watch('S', this.setSustain);
     // this.$watch('R', this.setRelease);
 
-    console.log('Creating Env');
+    console.log('%c[module] Creating Env', 'color: blue');
   },
 
   destroyed() {

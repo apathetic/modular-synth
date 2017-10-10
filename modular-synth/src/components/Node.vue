@@ -79,7 +79,7 @@
       this.outlets[0].audio = this.context.createGain();
       this.outlets[1].audio = this.context.createGain();
 
-      console.log('Creating Node');
+      console.log('%c[module] Creating Node', 'color: blue');
     }
 
     // destroyed() {

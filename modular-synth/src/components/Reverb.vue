@@ -71,7 +71,7 @@ export default {
     this.$watch('seconds', this.setReverb);
     this.$watch('decay', this.setDecay);
 
-    console.log('Creating Reverb');
+    console.log('%c[module] Creating Reverb', 'color: blue');
   },
 
   // destroyed() {

@@ -99,12 +99,8 @@ export default {
     this.$watch('Q', this.setQ);
     this.$watch('type', this.setType);
 
-    console.log('Creating Filter');
+    console.log('%c[module] Creating Filter', 'color: blue');
   },
-
-  // destroyed() {
-  //   this.filter.disconnect();
-  // },
 
   methods: {
     setFreq(f) {
