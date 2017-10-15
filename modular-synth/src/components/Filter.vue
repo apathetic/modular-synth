@@ -10,9 +10,20 @@
     </div>
 
     <div class="module-interface">
-      <!-- <slot name="interface"></slot> -->
-      <knob param="freq" @value="freq = $event" :min="100" :max="12000" mode="log"></knob>
-      <knob param="Q"    @value="Q = $event"    :min="0"   :max="1" :decimals="2"></knob>
+      <knob
+        param="freq"
+        mode="log"
+        :min="100"
+        :max="12000"
+        @value="freq = $event">
+      </knob>
+      <knob
+        param="Q"
+        :min="0"
+        :max="1"
+        :decimals="2"
+        @value="Q = $event">
+      </knob>
       <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
@@ -48,20 +59,20 @@ export default {
       mod: 21,
       Q: 1,
       type: 'allpass',
-      types: ['allpass', 'bandpass', 'highpass', 'highshelf', 'lowpass', 'lowshelf', 'notch', 'peaking'],
+      types: ['allpass', 'bandpass', 'highpass', 'lowpass', 'peaking'],
 
       inlets: [
-        { label: 'input' },   // 0
-        { label: 'cutoff' },  // 1
-        { label: 'Q' },       // 2
-        { label: 'mod' }      // 3
+        { label: 'input',
+          desc: 'The signal to filter' },
+        { label: 'freq',
+          desc: 'The filter frequency' },
+        { label: 'mod' }
       ],
 
       outlets: [
         {
-          label: 'output'
-          // audio: null
-        }
+          label: 'output',
+          desc: 'Audio output' }
       ]
     };
   },
@@ -71,28 +82,19 @@ export default {
     this.filter = this.context.createBiquadFilter();
     this.filter.type = this.types[0];
     this.filter.frequency.value = this.freq;
-
-    // Cutoff
-    // this.freq_ = new Parameter(0);
-
-    // Q
-    this.Q_ = new Parameter(this.Q);
     this.filter.Q.value = this.Q; // this.Q_;
 
     // Mod
     this.mod_ = new Parameter(this.mod * 500);    // range: 0-500, interval of a 5th
+    this.mod_.output.connect(this.filter.detune); // filter tremolo
 
     // Inlets
     this.inlets[0].audio = this.filter;
-    // this.inlets[1].audio = this.mod_.input;
-    this.inlets[2].audio = this.Q_.input;
-    this.inlets[3].audio = this.mod_.input;
+    this.inlets[1].data = this.setFreq;
+    this.inlets[2].audio = this.mod_.input;
 
     // Outlets
     this.outlets[0].audio = this.filter;
-
-    // Connectify
-    this.mod_.output.connect(this.filter.detune); // filter tremolo
 
     // Map k-Params
     this.$watch('freq', this.setFreq);
@@ -112,7 +114,6 @@ export default {
     },
 
     setType(t) {
-      console.log(t);
       this.filter.type = t || 'lowpass';
     }
   }
