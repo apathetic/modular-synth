@@ -10,11 +10,25 @@
     </div>
 
     <div class="module-interface">
+      <slider
+        param="mod"
+        :min="0"
+        :max="50"
+        @value="mod = $event">
+      </slider>
+
+      <knob
+        param="freq"
+        mode="log"
+        :min="min"
+        :max="max"
+        :decimals="1"
+        @value="freq = $event">
+      </knob>
+
       <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
-
-      <knob param="freq"  @value="freq = $event"  :min="0" :max="20"></knob>
     </div>
 
     <div class="module-connections">
@@ -26,11 +40,12 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';   // audioParam
+import Knob from './UI/Knob';
+import Slider from './UI/Slider2';
 
 export default {
-  mixins: [draggable],
-  components: { Knob },
+  mixins: [ draggable ],
+  components: { Knob, Slider },
   props: {
     id: null,
     col: null,
@@ -41,42 +56,82 @@ export default {
     return {
       name: 'LFO',
       freq: 2.0,
+      mod: 0,
       min: 0.1,
-      max: 10,
+      max: 50,
       phase: 0,
       type: 'sine',
       types: ['sine', 'square', 'sawtooth', 'triangle'],
+
       inlets: [
-        { label: 'reset' },
-        { label: 'mod' }
+        { label: 'reset',
+          desc: '' },
+        { label: 'mod',
+          desc: 'The amount of frequency modulation' }
       ],
+
       outlets: [
-        { label: 'output' }
+        { label: 'output',
+          desc: 'Audio output' }
       ]
     };
   },
 
   created() {
-    this.outlets[0].audio = this.osc = this.context.createOscillator();
+    // LFO
+    this.lfo_ = this.context.createOscillator();
+    this.lfo_.type = this.type;
+    this.lfo_.frequency.value = this.freq;
 
-    this.osc.type = this.type;
-    this.osc.frequency.value = this.freq;
-    this.osc.start();
+    // Modulation depth
+    this.modDepth_ = this.context.createGain();
+    this.modDepth_.value = 0;
+    this.modDepth_.connect(this.lfo_.detune);
 
+    // Inlets
+    this.inlets[0].data = this.reset; // input is 'data'. mapped to a fn
+    this.inlets[1].audio = this.modDepth_;
+
+    // Outlets
+    this.outlets[0].audio = this.lfo_;
+
+    // Map k-Params
     this.$watch('freq', this.setFreq);
-    // this.$watch('depth', this.setDepth);   // gate. mod?
+    this.$watch('mod', this.setDepth);
     this.$watch('type', this.setType);
 
     console.log('%c[component] Creating LFO', 'color: blue');
+
+    this.lfo_.start();
   },
 
   methods: {
-    setFreq(f) {
-      this.osc.frequency.value = f;
+    reset() {
+
     },
 
+    /**
+     * k-rate control of the Oscillator frequency.
+     * @param {Float} f frequency
+     */
+    setFreq(f) {
+      this.lfo_.frequency.value = f;
+    },
+
+    /**
+     * Update the (frequency) modulation depth.
+     * @param {Float} d Depth, betwen 0 and 100.
+     */
+    setDepth(d) {
+      this.modDepth_.gain.value = d;
+    },
+
+    /**
+     * Update wave type
+     * @param {String} t One of the pre-defined oscillator wave types
+     */
     setType(t) {
-      this.osc.type = t;
+      this.lfo_.type = t;
     }
   }
 };
@@ -86,5 +141,10 @@ export default {
   .lfo {
     background: linear-gradient(to bottom, #f2efed 0%,#d9d7d5 98%,#959492 100%);
     color: #000;
+
+    .slider {
+      position: absolute;
+      left: 9em;
+    }
   }
 </style>
