@@ -89,22 +89,18 @@
       // this.modDepth_ = new Parameter(0);
       this.modDepth_ = this.context.createGain();
       this.modDepth_.value = 0;
+      this.modDepth_.connect(this.osc_.detune);      // input connects to audioParam (freq) "mod"
 
       // Pulse width
       this.pulse_ = new Parameter(0);
 
       // Inlets
       this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate conrol, we connect it here...
-      // this.inlets[0].audio = this.osc.frequency;   //       ...else, if the input is a signal, we connect this one
       this.inlets[1].audio = this.modDepth_;          // NOTE: this is how we control the modulation (ie. in the _receiving_ module rather than the source)
       this.inlets[2].audio = this.pulse_.input;
 
       // Outlets
       this.outlets[0].audio = this.osc_;
-
-      // Connectify
-      this.modDepth_.connect(this.osc_.detune);      // input connects to audioParam (freq) "mod"
-      // this.frequency.connect(this.osc_.frequency);
 
       // Map k-Params
       this.$watch('freq', this.setFreq);
