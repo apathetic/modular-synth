@@ -10,7 +10,9 @@
         <!-- <li v-for="module in modules" @click="newModule(module)">{{ module }}</li> -->
         <li @click="newModule('Analyser')">analyser</li>
         <li @click="newModule('Comb')">comb</li>
+        <li @click="newModule('Compressor')">compressor</li>
         <li @click="newModule('Delay')">delay</li>
+        <li @click="newModule('Drive')">drive</li>
         <li @click="newModule('Env')">ENV</li>
         <li @click="newModule('LFO')">LFO</li>
         <li @click="newModule('Mixer')">mixer</li>
