@@ -1,6 +1,6 @@
 <template>
   <div
-  class="compressor module _3U"
+  class="drive module _3U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
@@ -10,7 +10,12 @@
     </div>
 
     <div class="module-interface">
-      ....
+      <Knob
+        param="drive"
+        :min="20"
+        :max="1000"
+        @value="drive = $event">
+      </Knob>
     </div>
 
     <div class="module-connections">
@@ -36,7 +41,8 @@ export default {
 
   data() {
     return {
-      name: 'Compressor',
+      name: 'Drive',
+      drive: 0.1,
 
       inlets: [
         { label: 'input' }
@@ -51,19 +57,24 @@ export default {
     this.inlets[0].audio = this.input = this.context.createGain();
     this.outlets[0].audio = this.output = this.context.createGain();
 
-    console.log('%c[component] Creating Compressor', 'color: blue');
+    this.$watch('drive', this.setDrive);
+
+    console.log('%c[component] Creating Drive', 'color: blue');
   },
 
   destroyed() {
   },
 
   methods: {
+    setDrive(d) {
+      // this.osc.frequency.value = f;
+    }
   }
 };
 
 </script>
 
 <style lang="scss">
-  .compressor {
+  .drive {
   }
 </style>

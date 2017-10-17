@@ -57,7 +57,7 @@ THOUGHTS:
 
 <script>
 import { cellWidth } from '../../dimensions';
-// import { Parameter } from '../audio';
+import { Parameter } from '../../audio';
 import { mapActions } from 'vuex';
 
 export default {
@@ -132,8 +132,10 @@ export default {
             // -------------------
 
             console.log('CONNECTION FROM DAT TO AUDIO ', this.from.id, this.to.id);
-            // const interpolator = new Parameter(0);
-            // interpolator.output.connect(outlet.audio)
+            const interpolator = new Parameter(0);
+
+            this.fromModule.$watch(outlet.data, interpolator.set);
+            interpolator.output.connect(inlet.audio);
 
             //
           } else if (inlet.data && outlet.data) {
