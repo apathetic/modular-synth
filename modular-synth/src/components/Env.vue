@@ -50,7 +50,7 @@ export default {
         { label: 'gate',
           desc: 'Acts as a trigger for the envelope' },
         { label: 'mod',
-          desc: '???/' }
+          desc: '???' }
       ],
 
       outlets: [
