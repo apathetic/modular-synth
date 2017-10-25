@@ -156,7 +156,7 @@ export default {
       this.internalValue = (this.value - this.min) / this.range;               // derive internal internalValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
       this.setDisplay();
-      console.log('%c • Knob (%s) value: %d', 'color: blue', this.param, this.value);
+      console.log('%c🎛️ Knob (%s) value: %d', 'color: blue', this.param, this.value);
     }
 
   }
