@@ -94,6 +94,9 @@ export default {
     },
 
     determinePosition() {
+      // const temp = document.querySelector('#modules');
+      // const x = temp.scrollWidth;
+      // const x = this.$el.offsetLeft;                 // relative to parent
       const x = this.$el.getBoundingClientRect().left;  // relative to viewport
       const y = this.$el.offsetTop;                     // relative to parent
 

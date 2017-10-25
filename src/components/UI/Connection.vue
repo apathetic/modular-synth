@@ -86,8 +86,6 @@ export default {
     return {
       fromModule: {},     // will be a Vue Component
       toModule: {},       // will be a Vue Component
-      cursorX: false,
-      cursorY: false,
       stroke: 'white'
     };
   },
@@ -159,11 +157,13 @@ export default {
             const inType = inlet.data ? 'data' : inlet.audio ? 'audio' : 'unknown';
             const outType = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
 
+            this.stroke = 'red';
+
             throw '[error] connection: mismatch (' + outType + ' ⟹ ' + inType + ')';  // eslint-disable-line
           }
 
           // success message:
-          console.log('%c[connection] %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
+          console.log('%c🔗[connection] %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
           //
         } catch (e) {
           // error message:
