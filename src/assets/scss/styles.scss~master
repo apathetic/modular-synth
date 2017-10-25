@@ -34,7 +34,6 @@ main {
 
 header {
   border-bottom: 1px solid $color-grey-dark;
-  // border-bottom: 1px solid $color-grey-medium;
   box-shadow: inset 0 -2px 4px $color-grey-medium;
   height: $header-height;
   width: 100%;
@@ -83,70 +82,6 @@ h3 {
 h4 {
   font-size: 0.8rem;
   font-weight: normal;
-}
-
-
-
-/* --------------------------------
-   Synth
---------------------------------- */
-
-#modules {
-  flex: 1;
-  // overflow: auto;
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  &::-webkit-scrollbar {
-    width: 1em;
-    height: 1em;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: $color-grey-dark;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: $color-grey-medium;
-    border: 2px solid $color-grey-dark;
-    border-radius: 0.5em;
-  }
-
-  &::-webkit-scrollbar-corner {
-    background: $color-grey-dark;
-  }
-}
-
-#connections {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: opacity 0.1s;
-  // transition-delay: 0.2s;
-  transition-delay: $transition-time-slow;
-
-  .play-mode & {
-    opacity: 0;
-    z-index: -1;
-    transition-delay: 0s;
-  }
-}
-
-#sidebar {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 112px;
-  background-color: #444;
-  z-index: 9999;          // as nodes will increment their z-index
-
-  // flex-basis: 124px;
-  // border: 6px solid #222;
-}
-
-.controls {
-  flex: 1;
 }
 
 
@@ -250,14 +185,6 @@ button {
   }
 }
 
-.position-highlight {
-  width: $rackWidth;
-  height: $rackHeight;
-  border: 4px dashed grey;
-  // transition: all $transition-time;
-  transition: left $transition-time, top $transition-time;
-}
-
 
 /* --------------------------------
    General
@@ -272,6 +199,15 @@ button {
   pointer-events: none;
 }
 
+.position-highlight {
+  width: $rackWidth;
+  height: $rackHeight;
+  border: 4px dashed grey;
+  // transition: all $transition-time;
+  transition: left $transition-time, top $transition-time;
+}
+
+.dropdown,
 .select {
   background: rgba(85, 85, 85, 0.85); // $color-grey-medium
   color: #fff;
@@ -280,7 +216,7 @@ button {
   border-left: 1px solid $color-grey-medium;
   font-family: $font-secondary;
   font-weight: 300;
-  height: 2em;
+  line-height: 2em;
   padding: 0em 0.5em;
 }
 

@@ -1,17 +1,7 @@
 import Vue from 'vue';
 import { api, generateKey } from './firebase';
 import { _NAME, _MODULES, _CONNECTIONS, _PARAMETERS } from './index';
-
-let blank = {   // TODO make this (object) live somewhere universal. schema js ?
-  id: 0,
-  name: '<blank>',
-  modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-  connections: [],
-  parameterSets: [{
-    name: '<empty>',
-    parameters: []
-  }]
-};
+import { DEFAULT } from '../schema';
 
 
 // -----------------------------------------------
@@ -29,7 +19,7 @@ let blank = {   // TODO make this (object) live somewhere universal. schema js ?
  *
  * @param  {[type]} commit [description]
  * @param  {[type]} state  [description]
- * @param  {String} key    The Object key of the patch to load
+ * @param  {String} key    The key of the patch to load
  * @return {void}
  */
 export const loadPatch = ({ commit, state }, key) => {
@@ -44,27 +34,26 @@ export const loadPatch = ({ commit, state }, key) => {
     console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
   } else {
     console.log('%c Loading patch from localStorage ', 'background:#666;color:white;font-weight:bold;');
-    // TODO store this object somewhere global. USE blank, ABOVE
     patch = {
-      id: parseInt(localStorage.getItem('id')) || 0,
-      name: localStorage.getItem(_NAME) || '',
-      modules: JSON.parse(localStorage.getItem(_MODULES)) || [{type: 'MasterOut', id: 0, x: 0, y: 0}],
-      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || [],
-      parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || [{name: '<empty>', parameters: []}]
+      id: parseInt(localStorage.getItem('id')) || DEFAULT.id,
+      name: localStorage.getItem(_NAME) || DEFAULT.name,
+      modules: JSON.parse(localStorage.getItem(_MODULES)) || DEFAULT.modules,
+      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || DEFAULT.connections,
+      parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || DEFAULT.parameterSets
     };
   }
 
-  // load: id, name, modules, and parameterSets
-  commit('LOAD_PATCH', patch);
+  commit('LOAD_PATCH', patch); // load: id, name, modules, and parameterSets
+  commit('LOAD_CONNECTIONS', []); // first, explicitly destroy all connections
 
   // ensure nodes (+ inlets/outlets) are in the DOM...
-  // ...then load connections (from the same patch Object) ...
   Vue.nextTick(function() {
-    console.log('All modules loaded, now routing audio...');
-    commit('LOAD_CONNECTIONS', patch);
+    // ...then load new connections
+    console.log('%c Routing audio... ', 'background:#666;color:white;font-weight:bold;');
+    commit('LOAD_CONNECTIONS', patch.connections);
 
-    // ...lastly, load parameters (from the same patch Object)
-    // commit('LOAD_PARAMETERS', patch);
+    // ...lastly, load parameters
+    // commit('LOAD_PARAMETERS', patch.parameters);
   });
 };
 
@@ -74,7 +63,7 @@ export const loadPatch = ({ commit, state }, key) => {
  * @param  {[type]} commit [description]
  * @param  {[type]} state  [description]
  * @param  {Object} data   Patch and parameter names, other patch data
- * @return {void}        [description]
+ * @return {void}
  */
 export const savePatch = ({ commit, state }, data) => {
   const key = state.patchKey;
@@ -111,12 +100,12 @@ export const addPatch = ({ commit, state }) => {
   const key = generateKey();
 
   // Create new patch in Database
-  api.create(key, blank);
+  api.create(key, DEFAULT);
 
   // Create new patch in localStorage
   commit('SAVE_PATCH', {
     key,
-    patch: blank
+    patch: DEFAULT
   });
 
   // Update App keys
@@ -147,6 +136,7 @@ export const removePatch = ({ commit, state }, key) => {
 export const fetchPatches = ({ commit }) => {
   api.load('/patch')
     .then((patches) => {
+      console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
       commit('SET_PATCHES', patches);
     })
     .catch(() => {
@@ -181,6 +171,7 @@ export const clearActive = ({ commit }) => {
 };
 
 // TODO ----------------- move to VUE BUS ? or within App.vue only ...?
+// $emit event ... only connecting.vue needs this...
 export const setFocus = ({ commit }, id) => {
   commit('SET_FOCUS', id);
 };
