@@ -7,67 +7,68 @@ import { Util, Node } from '../utils';
 // // localVue.use(MyPlugin)j // vuex, audioUnit mixins
 
 
-
-
 describe('VCO.vue', () => {
-  let component;
 
-  beforeEach(() => {
-    component = shallow(VCO, { // Create a shallow instance of the component
-      data: { }
+
+  it('can be created and disposed', function(){
+    const vco = shallow(VCO, {
+      propsData: { }
+    });
+
+
+    vco.destroy();
+    Util.wasDisposed(vco);
+  });
+
+
+  it('should render correct contents', () => {
+    const renderer = createRenderer()
+    const vco = shallow(Synth, {
+      propsData: { id: 1, col: 1, row: 1}
+    });
+
+    renderer.renderToString(vco.vm, (err, str) => {
+      if (err) throw new Error(err);
+      expect(str).toMatchSnapshot();
     });
   });
 
-  it('can be created and disposed', function(){
-    component.destroy();
-    Util.wasDisposed(component);
-  });
 
   it('handles input and output connections', function(){
-    component.connect(Node);
-    // Node.connect(component.inlets[0].data);
-    Node.connect(component.inlets[1].audio);
-    Node.connect(component.inlets[2].audio);
+    const vco = shallow(VCO, {
+      propsData: { }
+    });
 
-    components.destroy();
+    vco.connect(Node);
+    // Node.connect(vco.inlets[0].data);
+    Node.connect(vco.inlets[1].audio);
+    Node.connect(vco.inlets[2].audio);
+
+    vco.destroy();
   });
+
 
   it('can set frequency', function(){
     const freq1 = 123;
     const freq2 = 456;
+    const vco = shallow(VCO, {
+      propsData: { }
+    });
 
-    component.setFreq(freq1);
-    expect(component.osc_.frequency.value).to.be(freq1);
-    component.setFreq(freq2);
-    expect(component.osc_.frequency.value).to.be(freq2);
+    vco.setFreq(freq1);
+    expect(vco.osc_.frequency.value).to.be(freq1);
+    vco.setFreq(freq2);
+    expect(vco.osc_.frequency.value).to.be(freq2);
   });
 
-  it("can connect to detune and frequency", function(){
-    var instance = new Constr(args);
-    Test.connect(instance.frequency);
-    Test.connect(instance.detune);
-    instance.dispose();
+
+  it('has a primary oscillator', () => {  });
+
+
+  it('can connect to detune and frequency', function(){
+    // var instance = new Constr(args);
+    // Test.connect(instance.frequency);
+    // Test.connect(instance.detune);
+    // instance.dispose();
   });
-
-  it('should render correct contents', () => {
-    const rackInfo = { id: 1, col: 1, row: 1};
-    const renderer = createRenderer();
-    const wrapper = shallow(VCO, {
-      propsData: { rackInfo }
-    })
-
-    expect(component.$el).toMatchSnapshot();
-    // renderer.renderToString(wrapper.vm, (err, str) => {
-    //   if (err) throw new Error(err);
-
-    //   expect(str).toMatchSnapshot();
-    // });
-  });
-
-  it('has a primary oscillator', () => {
-
-
-
-  });
-
 });

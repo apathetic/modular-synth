@@ -1,6 +1,9 @@
-import { context } from '../src/audio/index'
+// import { context } from '../src/audio/index'
 // import { createLocalVue } from 'vue-test-utils'
 // const localVue = createLocalVue();
+
+const context = window.AudioContext && (new window.AudioContext());
+
 
 let Node = {
   input: context.createGain()

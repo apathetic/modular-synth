@@ -25,7 +25,7 @@ describe('connection.vue', () => {
   it('can be created from an options object', () => {
     connection.setProps({
       to: {
-        id: 1
+        id: 1,
         port: 1
       },
       from: {
@@ -50,19 +50,22 @@ describe('connection.vue', () => {
   it('it removes itself if a connection cannot be made', () => {
   });
 
-  it('a connection must be made between different nodes', () => {
+  it('must be made between different nodes', () => {
   });
 
   it('routes audio correctly between two AudioNodes', () => {
   });
 
-  it('routes data correctly between a data inlet/outlet', () => {
+  it('routes data correctly between data inlet/outlets', () => {
   });
 
   it('audio outlets cannot connect to data inlets', () => {
   });
 
   it('audio is disconnected after removing a connection', () => {
+  });
+
+  it('data is disconnected after removing a connection', () => {
   });
 
   it('sets its coordinates correction', () => {
