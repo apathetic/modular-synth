@@ -15,15 +15,15 @@ const App = shallow(Synth, {
   }
 })
 
-describe('connector.vue', () => {
-  let connector;
+describe('connection.vue', () => {
+  let connection;
 
   beforeEach(() => {
-    connector = shallow(Connection, { });
+    connection = shallow(Connection, { });
   });
 
   it('can be created from an options object', () => {
-    connector.setProps({
+    connection.setProps({
       to: {
         id: 1
         port: 1
@@ -33,9 +33,9 @@ describe('connector.vue', () => {
         port: 2
       }
     });
-    expect(connector.toModule).to.equal(200);
-    expect(connector.fromModule).to.equal(-20);
-    connector.destroy();
+    expect(connection.toModule).to.equal(200);
+    expect(connection.fromModule).to.equal(-20);
+    connection.destroy();
   });
 
   // it('can remove a connection', () => {
@@ -73,13 +73,13 @@ describe('connector.vue', () => {
       x: 67, y: 89
     };
 
-    connector.vm.toModule = toModule;
-    connector.vm.fromModule = fromModule;
+    connection.vm.toModule = toModule;
+    connection.vm.fromModule = fromModule;
 
-    expect(connector.vm.x1).toBe(70 + cellWidth);
-    expect(connector.vm.y1).toBe(xxx);
-    expect(connector.vm.x2).toBe(xxx);
-    expect(connector.vm.y2).toBe(xxx);
+    expect(connection.vm.x1).toBe(70 + cellWidth);
+    expect(connection.vm.y1).toBe(xxx);
+    expect(connection.vm.x2).toBe(xxx);
+    expect(connection.vm.y2).toBe(xxx);
   })
 
 
