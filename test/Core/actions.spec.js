@@ -39,4 +39,6 @@ describe('actions', () => {
     // expect(actions.actionInput.calledOnce).toBe(true)
   });
 
+  // Assert that user can add a new module (and store is updated)
+
 });
