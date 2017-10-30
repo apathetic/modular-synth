@@ -1,5 +1,5 @@
 .DS_Store
 node_modules/
-ass/
 npm-debug.log
 dist/
+._js
