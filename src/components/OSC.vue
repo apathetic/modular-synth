@@ -70,6 +70,8 @@
       this.$watch('freq', this.setFreq);
       this.$watch('mod', this.setMod);
       this.$watch('type', this.setType);
+
+      console.log('Creating OSC');
     },
 
     destroyed() {

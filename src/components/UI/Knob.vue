@@ -24,11 +24,11 @@ is a "freq" parameter in the parent Component.
 
 
 <script>
-import { parameter } from '../../mixins/parameter';
+import { EVENT } from '../../events';
 
-const SIZE = 20;
-const X = 24; // half the css knob radius
-const Y = 24;
+const size = 20;
+const x = 24; // half the css knob size
+const y = 24;
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   let angleInRadians = (angleInDegrees + 90) * Math.PI / 180.0;
@@ -65,44 +65,99 @@ export default {
     };
   },
 
-  computed: {
-    /**
-     * Helper function for the path attribute d in the svg display.
-     * @return {string} The new path attribute.
-     */
-    arc: function() {
-      const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
-      return describeArc(X, Y, SIZE, 30, rotationValue);
-    }
+  created() {
+    const self = this;
 
-    // /**
-    //  * Getter and setter functions for the value in the vuex $store.
-    //  */
-    // value: {
-    //   get() {
-    //     return this.$store.getters.parameters[this.id] || this.default || 0;
-    //   },
+    this.range = this.max - this.min;
+    this.id = this.$parent.id + '-' + this.param;
+    this.$store.commit('ADD_PARAMETER', this.id);
 
-    //   set(value) {
-    //     this._temp = value;
-    //     this.$emit('value', value); // update parent w/ value
-    //     this.$store.commit('SET_PARAMETER', {
-    //       id: this.id,
-    //       value: value
-    //     });
-    //   }
-    // }
+    // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App
+    //       or: just add / remove dynamically as needed?
+    window.addEventListener(EVENT.MOUSE_UP, (e) => {
+      window.mouseDown = false;
+      self.active = false;
+
+      document.body.style.webkitUserSelect = 'auto';
+      document.body.style.userSelect = 'auto';
+    });
+
+    window.addEventListener(EVENT.MOUSE_MOVE, (e) => {
+      if (window.mouseDown && self.active) {
+        self.update(e);
+      }
+    });
+
+    // fetch the knob's value from the Store parameterSet, update itself as well as the (parent) Component
+    this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
   },
 
-  // watch: {
-  //   value: function(value) {
-  //     if (!this._temp || value !== this._temp) { // value was changed externally ie. via $store
-  //       this.$store.commit('REGISTER_PARAMETER', this.id); // in the event where the new parameterSet did not contain this param, let's register it
-  //       this.internalValue = this.computeValue(value, true);
-  //       console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, value);
-  //     }
-  //   }
-  // },
+  mounted() {
+    this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330));  // draw track
+    // this.$refs.computed.setAttribute('d', describeArc(x, y, size - 4, 30, 330));  // "actual" value, from varying inputs, etc.
+    this.setDisplay();
+  },
+
+  destroyed() {
+    // console.log('Destroying Knob ', this.id);
+    console.log('%c[parameter] Destroying Knob %s', 'color: grey', this.id);
+    this.$store.commit('REMOVE_PARAMETER', this.id);
+    this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
+  },
+
+  methods: {
+    start(e) {
+      window.mouseDown = true;
+      this.active = true;
+      this.startValue = this.internalValue;
+      this.startY = e.clientY;
+    },
+
+    update(e) {
+      const delta = (this.startY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
+      const internalValue = Math.min(1, Math.max(0, this.startValue + delta));
+
+      this.internalValue = internalValue;
+      this.value = this.mode === 'log'
+                 ? this.range * Math.pow(2, internalValue) - this.range + this.min
+                 : parseFloat(internalValue * this.range + this.min);
+
+      this.$emit('value', this.value);
+      this.setDisplay();
+
+      this.$store.commit('SET_PARAMETER', {
+        id: this.id,
+        value: this.value
+      });
+    },
+
+    setDisplay() {
+      const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+
+      this.$refs.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
+    },
+
+    fetchValue() {
+      console.log('knob getting ', this.id);
+
+      if (!this.$refs.display) {
+        console.warn('[parameter] Knob %s DOM is not available', this.id);
+        return;
+      }
+
+      if (!this.$store.getters.parameters[this.id]) {
+        console.warn('[parameter] Knob %s not found in store', this.id);
+        console.log(this.$store);
+        return;
+      }
+
+      this.value = this.$store.getters.parameters[this.id] || this.default;
+      this.internalValue = (this.value - this.min) / this.range;               // derive internal internalValue from value
+      this.$emit('value', this.value);                        // update parent w/ new value
+      this.setDisplay();
+
+      console.log('%c[parameter] Knob %s set to %d', 'color: orange', this.param, this.value);
+    }
 
   mounted() {
     this.internalValue = this.computeValue(this.value, true);
