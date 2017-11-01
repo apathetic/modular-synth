@@ -36,6 +36,9 @@ describe('knob.vue', () => {
   it('sets its value in the store when changed', () => {
   });
 
+  it('registers itself in the store when created', () => {
+  });
+
   it('updates internal value on "parameters:load"', () => {
   });
 
