@@ -5,7 +5,6 @@ import Synth from '@/Synth.vue';
 
 describe('Synth.vue', () => {
 
-
   it('matches snapshot', () => {
     const renderer = createRenderer()
     const app = shallow(Synth, {
