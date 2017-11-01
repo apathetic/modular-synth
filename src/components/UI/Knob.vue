@@ -70,7 +70,12 @@ export default {
 
     this.range = this.max - this.min;
     this.id = this.$parent.id + '-' + this.param;
+
+
+    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
     this.$store.commit('ADD_PARAMETER', this.id);
+
+
 
     // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App
     //       or: just add / remove dynamically as needed?
@@ -138,25 +143,31 @@ export default {
     },
 
     fetchValue() {
-      console.log('knob getting ', this.id);
-
       if (!this.$refs.display) {
         console.warn('[parameter] Knob %s DOM is not available', this.id);
         return;
       }
 
-      if (!this.$store.getters.parameters[this.id]) {
+      if (this.$store.getters.parameters[this.id] === undefined) {
         console.warn('[parameter] Knob %s not found in store', this.id);
-        console.log(this.$store);
         return;
       }
 
+
+      //
       this.value = this.$store.getters.parameters[this.id] || this.default;
-      this.internalValue = (this.value - this.min) / this.range;               // derive internal internalValue from value
+      if (isNaN(this.value)) {
+        console.log('XXX', this.value, this.id, this.param);
+        this.value = 0;
+      }
+      //
+
+
+      this.internalValue = (this.value - this.min) / this.range; // derive internal internalValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
       this.setDisplay();
 
-      console.log('%c[parameter] Knob %s set to %d', 'color: orange', this.param, this.value);
+      console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, this.value);
     }
 
   mounted() {
