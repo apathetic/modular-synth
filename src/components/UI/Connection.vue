@@ -163,7 +163,7 @@ export default {
           }
 
           // success message:
-          console.log('%c🔗[connection] %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
+          console.log('%c[connection] %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
           //
         } catch (e) {
           // error message:

@@ -108,7 +108,7 @@
       this.$watch('PW', this.setPulse);
       this.$watch('mod', this.setDepth);
 
-      console.log('%c📦[component] Creating VCO', 'color: blue');
+      console.log('%c[component] Creating VCO', 'color: blue');
 
       this.osc_.start();
     },

@@ -80,7 +80,7 @@
       this.$watch('mod', this.setMod);
       this.$watch('type', this.setType);
 
-      console.log('Creating VCO');
+      console.log('Creating OSC');
     },
 
     destroyed() {
