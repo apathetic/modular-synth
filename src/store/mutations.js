@@ -183,12 +183,17 @@ export const SET_PARAMETERS_KEY = (state, key) => {
 
 export const ADD_PARAMETER = (state, id) => {
   const key = state.parameterKey;
+  const sets = state.parameterSets[key];
 
   // state.parameterSets[key] &&
   // state.parameterSets[key].parameters[id] = null;
 
-  if (state.parameterSets[key]) {
-    state.parameterSets[key].parameters[id] = null;
+  // WARNING : WHAT TO DO IF PARAM ALREADY EXISTS?
+  // ie. WAS PERSISTENT FROM LOCALSTORAGE, AND WE
+  // ARE TRIGGERING RELOAD?
+  if (sets && !sets.parameters[id]) {
+    // sets.parameters[id] = null;
+    sets.parameters[id] = null;
   }
 
   // TODO should we remove it from each Parameter Set, then....?
