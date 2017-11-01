@@ -30,7 +30,6 @@ export const EVENT = {
   MOUSE_UP: 'mouseup',
   KEY_DOWN: 'keydown',
   KEY_UP: 'keyup',
-  SCROLL: 'scroll',
   RESIZE: 'resize',
   CLICK: 'click'
   // CONTEXT_MENU: 'contextmenu'
