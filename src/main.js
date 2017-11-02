@@ -9,9 +9,8 @@ import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
 
-
+// Vue.config.silent = true;
 Vue.config.productionTip = false;
-
 
 const bus = new Vue();
 let authenticated = false;
@@ -33,7 +32,8 @@ Object.defineProperty(Vue.prototype, '$authenticated', {
 });
 
 
-// AudioContext Mixin: all Components will have access to AudioContext
+// AudioContext Mixin
+// All Components will have access to AudioContext
 Vue.mixin({
   data() {
     return { context };
@@ -41,9 +41,66 @@ Vue.mixin({
 });
 
 
-// Global Components (inlets / outlets)
-Vue.component('inlets', inlets);
-Vue.component('outlets', outlets);
+/* */
+
+// TODO use the vue + compiler bundle for this: ...?
+Vue.component('inlets', {
+  functional: true,
+  props: { ports: Array },
+  render: function(createElement, context) {
+    const ports = context.props.ports;
+
+    return createElement('div',
+      {
+        class: { 'inlets': true }
+      },
+      ports.map((port, i) => {
+        return createElement('span',
+          {
+            class: { 'inlet': true },
+            attrs: {
+              'data-label': port.label,
+              'data-port': i
+            }
+          }
+        );
+      })
+    );
+  }
+});
+/**/
+
+Vue.component('outlets', {
+  functional: true,
+  props: { ports: Array },
+  render: function(createElement, context) {
+    const ports = context.props.ports;
+
+    return createElement('div',
+      {
+        class: { 'outlets': true }
+      },
+      ports.map((port, i) => {
+        return createElement('span',
+          {
+            on: {
+              mousedown: (e) => {
+                e.stopPropagation();
+                // store.commit('ADD_CONNECTION', i);  // just port #, as the module is already ref'd in "focused"
+                bus.$emit('connection:start', i, context.parent.id);
+              }
+            },
+            class: { 'outlet': true },
+            attrs: {
+              'data-label': port.label,
+              'data-port': i
+            }
+          }
+        );
+      })
+    );
+  }
+});
 
 
 // Register a global custom directive called v-context-menu
