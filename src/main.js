@@ -8,25 +8,30 @@ import { auth } from './store/firebase';
 import { context } from './audio';
 
 // Vue.config.silent = true;
+Vue.config.productionTip = false;
 
 const bus = new Vue();
 let authenticated = false;
 
-// for midi events, drag events, and ....?  Setting/Clearing Focus/Active ...?
+
+// Global Event Bus
 Object.defineProperty(Vue.prototype, '$bus', {
   get() {
     return this.$root.bus;
   }
 });
 
+
+// Global isAuthenticated variable
 Object.defineProperty(Vue.prototype, '$authenticated', {
   get() {
     return this.$root.authenticated;
   }
 });
 
+
+// AudioContext Mixin
 // All Components will have access to AudioContext
-// oh.. although *now*, that includes Connectors
 Vue.mixin({
   data() {
     return {
@@ -70,11 +75,6 @@ Vue.component('outlets', {
 /* */
 
 // TODO use the vue + compiler bundle for this: ...?
-/* */
-// <div class="inlets">
-//   <span data-label="signal" data-port="0" class="inlet"></span>
-//   <span data-label="gain" data-port="1" class="inlet"></span>
-// </div>
 Vue.component('inlets', {
   functional: true,
   props: { ports: Array },

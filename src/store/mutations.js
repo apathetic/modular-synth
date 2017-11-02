@@ -11,7 +11,11 @@ export const LOAD_PATCH = (state, patch) => {
     state.id = patch.id;
     state.name = patch.name;
     state.modules = patch.modules;
-    state.parameterSets = patch.parameterSets;  // not sure if modules need to be in DOM before this is loaded. TODO: find out
+    state.parameterSets = patch.parameterSets;
+    // NOTE: parameters (knobs, sliders, etc) are created only after
+    // their parent is; they then register themselves within the store.
+    // Parameter values are then only fetched once the ParamsLoad event
+    // is fired
   }
 };
 
