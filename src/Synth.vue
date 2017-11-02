@@ -161,7 +161,7 @@
     },
 
     created() {
-      console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold;');
+      console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold');
 
       this.$bus.$on('drag:start', (coords, el) => {
         if (!this.editing) {
