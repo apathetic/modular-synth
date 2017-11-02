@@ -64,8 +64,7 @@ export const sortable = {
       this._previousDragPosition = null;
       this._applyPositionToItems();
       this._removePositionHighlight();
-
-      console.log('%c' + this.gridList.toString(), 'font-family:monospace;font-size:10px');
+      // console.log(this.gridList.toString());
     },
 
     // -----------------------------------------------------------------

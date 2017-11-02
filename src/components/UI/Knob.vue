@@ -149,19 +149,15 @@ export default {
       }
 
       if (this.$store.getters.parameters[this.id] === undefined) {
-        console.warn('[parameter] Knob %s not found in store', this.id);
-        return;
+        console.log('[parameter] Knob %s not found in store', this.id);
       }
 
+      this.value = this.$store.getters.parameters[this.id] || this.default || 0;
 
-      //
-      this.value = this.$store.getters.parameters[this.id] || this.default;
       if (isNaN(this.value)) {
-        console.log('XXX', this.value, this.id, this.param);
+        console.log('[parameter] ERROR: Knob %s not set correctly', this.id);
         this.value = 0;
       }
-      //
-
 
       this.internalValue = (this.value - this.min) / this.range; // derive internal internalValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
