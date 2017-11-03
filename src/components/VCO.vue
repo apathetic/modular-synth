@@ -18,7 +18,7 @@
       <knob
         param="freq"
         mode="log"
-        :default="freq"
+        :default="440"
         :min="100"
         :max="12000"
         @value="freq = $event">
