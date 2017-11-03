@@ -134,7 +134,7 @@ export default {
       this.loadPatch();
       this.$nextTick(function() {
         console.log('%c Fetching parameter values ', 'background:#666;color:white;font-weight:bold;');
-        this.$bus.$emit(EVENT.PARAMETERS_LOAD);
+        // this.$bus.$emit(EVENT.PARAMETERS_LOAD);
         this.$bus.$emit(EVENT.APP_SORT);
       });
     },

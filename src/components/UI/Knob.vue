@@ -15,7 +15,7 @@ is a "freq" parameter in the parent Component.
 <template>
   <svg class="knob" @mousedown.stop.prevent="start">
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
-    <path ref="display" class="display" fill="none" stroke-width="8" :d="arc"></path>
+    <path ref="display" class="display" fill="none" stroke-width="8" :d="display"></path>
     <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
     <text x="24" y="28">{{ value.toFixed(decimals) }}</text>
     <text x="24" y="54">{{ param }}</text>
@@ -60,54 +60,86 @@ export default {
 
   data() {
     return {
-      type: 'Knob'
-      // _temp: 0 // used to check if value was changed externally (ie via $store)
+      active: false,
+      startValue: 0,
+      startY: null,
+      internalValue: 0, // 0 -> 1 internally
+      range: 1
     };
+  },
+
+  computed: {
+    display: function() {
+      const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+      return describeArc(x, y, size, 30, rotationValue);
+    },
+
+    value: {
+      get() {
+        return this.$store.getters.parameters[this.id] || this.default || 0;
+      },
+      set(value) {
+        this.$store.commit('SET_PARAMETER', {
+          id: this.id,
+          value: value
+        });
+      }
+    }
+  },
+
+  watch: {
+    value: function(v) {
+      if (this.temp === this.internalValue) {
+        console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, v);
+        this.internalValue = this.computeValue(v, true);
+      }
+
+      this.temp = this.internalValue;
+    }
   },
 
   created() {
     const self = this;
 
-    this.range = this.max - this.min;
     this.id = this.$parent.id + '-' + this.param;
+    this.range = this.max - this.min;
 
-
-    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
     this.$store.commit('ADD_PARAMETER', this.id);
+    this.$emit('value', this.value); // update parent w/ value
 
-
-
-    // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App
-    //       or: just add / remove dynamically as needed?
-    window.addEventListener(EVENT.MOUSE_UP, (e) => {
+    // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App, or: just add / remove dynamically as needed?
+    this.mouseup = (e) => {
       window.mouseDown = false;
       self.active = false;
 
       document.body.style.webkitUserSelect = 'auto';
       document.body.style.userSelect = 'auto';
-    });
+    };
 
-    window.addEventListener(EVENT.MOUSE_MOVE, (e) => {
+    this.mousemove = (e) => {
       if (window.mouseDown && self.active) {
         self.update(e);
       }
-    });
+    };
 
-    // fetch the knob's value from the Store parameterSet, update itself as well as the (parent) Component
-    this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
+    window.addEventListener(EVENT.MOUSE_UP, this.mouseup);
+    window.addEventListener(EVENT.MOUSE_MOVE, this.mousemove);
+
+    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
   },
 
   mounted() {
-    this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330));  // draw track
-    // this.$refs.computed.setAttribute('d', describeArc(x, y, size - 4, 30, 330));  // "actual" value, from varying inputs, etc.
-    this.setDisplay();
+    this.internalValue = this.computeValue(this.value, true);
+    this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330)); // draw track
+    // this.$refs.computed.setAttribute('d', describeArc(x, y, size - 4, 30, 330));  // inner track. "actual" value, from varying inputs, etc.
   },
 
   destroyed() {
-    // console.log('Destroying Knob ', this.id);
-    console.log('%c[parameter] Destroying Knob %s', 'color: grey', this.id);
     this.$store.commit('REMOVE_PARAMETER', this.id);
-    this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
+    window.removeEventListener(EVENT.MOUSE_UP, this.mouseup);
+    window.removeEventListener(EVENT.MOUSE_MOVE, this.mousemove);
+
+    console.log('%c[parameter] Destroying Knob %s', 'color: grey', this.id);
   },
 
   methods: {
@@ -122,54 +154,29 @@ export default {
       const delta = (this.startY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
       const internalValue = Math.min(1, Math.max(0, this.startValue + delta));
 
+      if (internalValue === this.internalValue) return;
+
+      this.value = this.computeValue(internalValue);
       this.internalValue = internalValue;
-      this.value = this.mode === 'log'
-                 ? this.range * Math.pow(2, internalValue) - this.range + this.min
-                 : parseFloat(internalValue * this.range + this.min);
 
-      this.$emit('value', this.value);
-      this.setDisplay();
-
-      this.$store.commit('SET_PARAMETER', {
-        id: this.id,
-        value: this.value
-      });
+      this.$emit('value', this.value); // update parent w/ value
     },
 
-    setDisplay() {
-      const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+    computeValue(x, extract = false) {
+      if (extract) console.log('%c COMPUTE %s', 'color:red', this.id);
 
-      this.$refs.display.setAttribute('d', describeArc(x, y, size, 30, rotationValue));
-    },
-
-    fetchValue() {
-      if (!this.$refs.display) {
-        console.warn('[parameter] Knob %s DOM is not available', this.id);
-        return;
+      if (extract) { // derive internalValue from value
+        return parseFloat(this.mode === 'log'
+          ? Math.log2((x + this.range - this.min) / this.range)
+          : (x - this.min) / this.range
+        );
+      } else { // calculate value from internalValue
+        return parseFloat(this.mode === 'log'
+          ? this.range * Math.pow(2, x) - this.range + this.min
+          : x * this.range + this.min
+        );
       }
-
-      if (this.$store.getters.parameters[this.id] === undefined) {
-        console.log('[parameter] Knob %s not found in store', this.id);
-      }
-
-      this.value = this.$store.getters.parameters[this.id] || this.default || 0;
-
-      if (isNaN(this.value)) {
-        console.log('[parameter] ERROR: Knob %s not set correctly', this.id);
-        this.value = 0;
-      }
-
-      this.internalValue = (this.value - this.min) / this.range; // derive internal internalValue from value
-      this.$emit('value', this.value);                        // update parent w/ new value
-      this.setDisplay();
-
-      console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, this.value);
     }
-
-  mounted() {
-    this.internalValue = this.computeValue(this.value, true);
-    this.$refs.track.setAttribute('d', describeArc(X, Y, SIZE, 30, 330)); // draw track
-    // this.$refs.computed.setAttribute('d', describeArc(x, y, SIZE - 4, 30, 330));  // inner track. "actual" value, from varying inputs, etc.
   }
 };
 
