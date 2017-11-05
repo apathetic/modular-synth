@@ -71,11 +71,18 @@ export default {
   },
 
   computed: {
+    /**
+     * Helper function for the path attribute d in the svg display.
+     * @return {string} The new path attribute.
+     */
     display: function() {
       const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
       return describeArc(x, y, size, 30, rotationValue);
     },
 
+    /**
+     * Getter and setter functions for the value in the vuex $store.
+     */
     value: {
       get() {
         return this.$store.getters.parameters[this.id] || this.default || 0;
@@ -90,6 +97,11 @@ export default {
   },
 
   watch: {
+    /**
+     * If the value in the $store is updated, we need to determine
+     * the updated value for this.internalValue.
+     * @param  {number} v The new value.
+     */
     value: function(v) {
       if (this.temp === this.internalValue) {
         console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, v);
@@ -145,6 +157,10 @@ export default {
   },
 
   methods: {
+    /**
+     * Set up calculations for updating new knob values.
+     * @param {Event} e The mouse down Event.
+     */
     start(e) {
       window.mouseDown = true;
       this.active = true;
@@ -152,6 +168,10 @@ export default {
       this.startY = e.clientY;
     },
 
+    /**
+     * Updates new knob values on mouse move.
+     * @param {Event} e The mouse move Event.
+     */
     update(e) {
       const delta = (this.startY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
       const internalValue = Math.min(1, Math.max(0, this.startValue + delta));
@@ -164,6 +184,12 @@ export default {
       this.$emit('value', this.value); // update parent w/ value
     },
 
+    /**
+     * Maps the interval knob value to the desired range. Linear or exponential.
+     * @param {number}  x The value to map.
+     * @param {boolean} extract True to extract the internalValue from value,
+     *                          otherwise calculate value from internalValue.
+     */
     computeValue(x, extract = false) {
       if (extract) console.log('%c COMPUTE %s', 'color:red', this.id);
 
