@@ -191,8 +191,6 @@ export default {
      *                          otherwise calculate value from internalValue.
      */
     computeValue(x, extract = false) {
-      if (extract) console.log('%c COMPUTE %s', 'color:red', this.id);
-
       if (extract) { // derive internalValue from value
         return parseFloat(this.mode === 'log'
           ? Math.log2((x + this.range - this.min) / this.range)
