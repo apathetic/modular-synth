@@ -17,7 +17,7 @@ is a "freq" parameter in the Component.
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
     <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
     <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
-    <text x="24" y="28">{{ value.toFixed(this.decimals) }}</text>
+    <text x="24" y="28">{{ value.toFixed(decimals) }}</text>
     <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
