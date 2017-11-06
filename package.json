@@ -72,7 +72,6 @@
     "friendly-errors-webpack-plugin": "^1.1.2",
     "html-webpack-plugin": "^2.8.1",
     "http-proxy-middleware": "^0.17.2",
-    "json-loader": "^0.5.4",
     "node-sass": "^4.1.1",
     "ora": "^0.3.0",
     "sass-loader": "^4.1.1",
