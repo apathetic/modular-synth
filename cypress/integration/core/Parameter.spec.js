@@ -1,19 +1,21 @@
 // import { shallow, mount, createLocalVue } from 'vue-test-utils'
 // import { createRenderer } from 'vue-server-renderer'
-import { Parameter } from '../../../src/audio'
-import { node } from '../../support/utils';
+import { Parameter } from '../../../src/audio';
+import dummy from '../../../src/components/Node.vue';
+// import { dummy } from '../../support/dummy';
+// import { VCO } from '/src/components/node';
 
 // const localVue = createLocalVue();
 
 describe('Parameter', () => {
   it('handles input connections', () => {
     const param = new Parameter();
-    node.output.connect(param.input);
+    dummy.output.connect(param.input);
   });
 
   it('handles output connections', () => {
     const param = new Parameter();
-    param.input.connect(node.output);
+    param.input.connect(dummy.output);
   });
 
   it('can set a value', () => {
