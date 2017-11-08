@@ -1,10 +1,11 @@
+import { Util, Node } from '../../test/utils';
+
 import { shallow, createLocalVue } from 'vue-test-utils'
 import { createRenderer } from 'vue-server-renderer'
 import { cellWidth } from '../../src/dimensions';
-import { Util, Node } from '../utils';
-import Synth from '@/Synth.vue';
-import _Node from '@/components/Node.vue';
-import Connection from '@/components/UI/Connection.vue';
+import Synth from '../../src/Synth.vue';
+import _Node from '../../src/components/Node.vue';
+import Connection from '../../src/components/UI/Connection.vue';
 
 const dummyVue = createLocalVue();
 
