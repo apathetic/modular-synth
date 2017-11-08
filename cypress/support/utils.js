@@ -1,15 +1,13 @@
-// import { context } from '../src/audio/index'
+import { context } from '../../src/audio/index'
 // import { createLocalVue } from 'vue-test-utils'
 // const localVue = createLocalVue();
 
-const context = window.AudioContext && (new window.AudioContext());
 
-
-let Node = {
+let node = {
   input: context.createGain()
 };
 
-Node.connect = function(node){
+node.connect = function(node){
   this.input.connect(node);
   this.input.disconnect();
 };
@@ -35,6 +33,6 @@ Utils.wasDisposed = function(obj){
 };
 
 export default {
-  Util,
-  Node
+  Utils,
+  node
 };
