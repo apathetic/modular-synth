@@ -1,14 +1,16 @@
-// const utils = require('./utils');
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const nodeExternals = require('webpack-node-externals');
-const baseWebpackConfig = require('./webpack.base.conf');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+'use strict'
+// This is the webpack config used for unit tests.
+
+const utils = require('./utils')
+const webpack = require('webpack')
+const merge = require('webpack-merge')
+const baseWebpackConfig = require('./webpack.base.conf')
 
 const webpackConfig = merge(baseWebpackConfig, {
-  // module: {
-  //   rules: utils.styleLoaders()
-  // },
+  // use inline sourcemap for karma-sourcemap-loader
+  module: {
+    rules: utils.styleLoaders()
+  },
   devtool: '#inline-source-map',
   resolveLoader: {
     alias: {
@@ -19,23 +21,12 @@ const webpackConfig = merge(baseWebpackConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('testing')
-      }
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
+      'process.env': require('../config/test.env')
     })
-  ],
-
-  // target: 'node',
-  externals: [nodeExternals()]
-});
+  ]
+})
 
 // no need for app entry during tests
-delete webpackConfig.entry;
+delete webpackConfig.entry
 
-module.exports = webpackConfig;
-
+module.exports = webpackConfig
