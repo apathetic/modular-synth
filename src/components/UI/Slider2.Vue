@@ -85,7 +85,7 @@ export default {
     },
 
     fetchValue() {
-      console.log('%c • Slider (%s) value: %d', 'color: blue', this.param, this.value);
+      console.log('%c[parameter] %s Slider set to %f', 'color: orange', this.param, this.value);
     }
   }
 };

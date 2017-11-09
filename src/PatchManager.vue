@@ -48,6 +48,7 @@
 <script>
 import Auth from './components/system/Auth';
 import { mapGetters, mapActions } from 'vuex';
+import { EVENT } from './events';
 
 export default {
   components: {
@@ -112,8 +113,8 @@ export default {
 
     // update patchIndex display and selected option in dropdown
     // NOTE: <select> doesn't seem to be ready at mount
-    const options = this.$refs.patch.options;
-    console.log(options.length, Object.keys(this.patches).length);
+    // const options = this.$refs.patch.options;
+    // console.log(options.length, Object.keys(this.patches).length);
     // update the 00 display
     // update the <select> selectedIndex
     // Array.prototype.forEach.call(options, (opt, i) => {
@@ -132,8 +133,9 @@ export default {
     load() {
       this.loadPatch();
       this.$nextTick(function() {
-        this.$bus.$emit('parameters:load');
-        this.$bus.$emit('app:sort');
+        console.log('%c Fetching parameter values ', 'background:#666;color:white;font-weight:bold;');
+        this.$bus.$emit(EVENT.PARAMETERS_LOAD);
+        this.$bus.$emit(EVENT.APP_SORT);
       });
     },
 
@@ -185,7 +187,9 @@ export default {
       this.currentParamsKey = e.target.value;
       this.paramsIndex = e.target.selectedIndex;
       this.$store.commit('SET_PARAMETERS_KEY', this.currentParamsKey);
-      this.$bus.$emit('parameters:load');
+
+      console.log('%c Fetching parameters ', 'background:#666;color:white;font-weight:bold;');
+      this.$bus.$emit(EVENT.PARAMETERS_LOAD);
     },
 
     // -----------------
