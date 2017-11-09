@@ -114,13 +114,17 @@ export default {
     const self = this;
 
     this.id = this.$parent.id + '-' + this.param;
-    this.range = this.max - this.min;
 
+
+    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
     this.$store.commit('ADD_PARAMETER', this.id);
     this.$emit('value', this.value); // update parent w/ value
 
-    // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App, or: just add / remove dynamically as needed?
-    this.mouseup = (e) => {
+
+
+    // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App
+    //       or: just add / remove dynamically as needed?
+    window.addEventListener(EVENT.MOUSE_UP, (e) => {
       window.mouseDown = false;
       self.active = false;
 
@@ -128,7 +132,7 @@ export default {
       document.body.style.userSelect = 'auto';
     };
 
-    this.mousemove = (e) => {
+    window.addEventListener(EVENT.MOUSE_MOVE, (e) => {
       if (window.mouseDown && self.active) {
         self.update(e);
       }
@@ -137,7 +141,8 @@ export default {
     window.addEventListener(EVENT.MOUSE_UP, this.mouseup);
     window.addEventListener(EVENT.MOUSE_MOVE, this.mousemove);
 
-    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
+    // fetch the knob's value from the Store parameterSet, update itself as well as the (parent) Component
+    this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
   },
 
   mounted() {
@@ -147,11 +152,10 @@ export default {
   },
 
   destroyed() {
-    this.$store.commit('REMOVE_PARAMETER', this.id);
-    window.removeEventListener(EVENT.MOUSE_UP, this.mouseup);
-    window.removeEventListener(EVENT.MOUSE_MOVE, this.mousemove);
-
+    // console.log('Destroying Knob ', this.id);
     console.log('%c[parameter] Destroying Knob %s', 'color: grey', this.id);
+    this.$store.commit('REMOVE_PARAMETER', this.id);
+    this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
   },
 
   methods: {
@@ -182,24 +186,28 @@ export default {
       this.$emit('value', this.value); // update parent w/ value
     },
 
-    /**
-     * Maps the interval knob value to the desired range. Linear or exponential.
-     * @param {number}  x The value to map.
-     * @param {boolean} extract True to extract the internalValue from value,
-     *                          otherwise calculate value from internalValue.
-     */
-    computeValue(x, extract = false) {
-      if (extract) { // derive internalValue from value
-        return parseFloat(this.mode === 'log'
-          ? Math.log2((x + this.range - this.min) / this.range)
-          : (x - this.min) / this.range
-        );
-      } else { // calculate value from internalValue
-        return parseFloat(this.mode === 'log'
-          ? this.range * Math.pow(2, x) - this.range + this.min
-          : x * this.range + this.min
-        );
+    fetchValue() {
+      if (!this.$refs.display) {
+        console.warn('[parameter] Knob %s DOM is not available', this.id);
+        return;
       }
+
+      if (this.$store.getters.parameters[this.id] === undefined) {
+        console.log('[parameter] Knob %s not found in store', this.id);
+      }
+
+      this.value = this.$store.getters.parameters[this.id] || this.default || 0;
+
+      if (isNaN(this.value)) {
+        console.log('[parameter] ERROR: Knob %s not set correctly', this.id);
+        this.value = 0;
+      }
+
+      this.internalValue = (this.value - this.min) / this.range; // derive internal internalValue from value
+      this.$emit('value', this.value);                        // update parent w/ new value
+      this.setDisplay();
+
+      console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, this.value);
     }
   }
 };
