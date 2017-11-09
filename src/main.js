@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import store from './store';
 import Synth from './Synth';
-import PatchManager from './PatchManager';
+import PatchManager from './PatchManager.vue';
 import ContextMenu from './components/UI/contextMenu';
 import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
