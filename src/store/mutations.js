@@ -11,7 +11,11 @@ export const LOAD_PATCH = (state, patch) => {
     state.id = patch.id;
     state.name = patch.name;
     state.modules = patch.modules;
-    state.parameterSets = patch.parameterSets;  // not sure if modules need to be in DOM before this is loaded. TODO: find out
+    state.parameterSets = patch.parameterSets;
+    // NOTE: parameters (knobs, sliders, etc) are created only after
+    // their parent is; they then register themselves within the store.
+    // Parameter values are then only fetched once the ParamsLoad event
+    // is fired
   }
 };
 
@@ -183,12 +187,17 @@ export const SET_PARAMETERS_KEY = (state, key) => {
 
 export const ADD_PARAMETER = (state, id) => {
   const key = state.parameterKey;
+  const sets = state.parameterSets[key];
 
   // state.parameterSets[key] &&
   // state.parameterSets[key].parameters[id] = null;
 
-  if (state.parameterSets[key]) {
-    state.parameterSets[key].parameters[id] = null;
+  // WARNING : WHAT TO DO IF PARAM ALREADY EXISTS?
+  // ie. WAS PERSISTENT FROM LOCALSTORAGE, AND WE
+  // ARE TRIGGERING RELOAD?
+  if (sets && !sets.parameters[id]) {
+    // sets.parameters[id] = null;
+    sets.parameters[id] = null;
   }
 
   // TODO should we remove it from each Parameter Set, then....?

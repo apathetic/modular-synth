@@ -1,0 +1,468 @@
+{
+  "patch" : {
+    "-KrgsZS0ZplO" : {
+      "connections" : [ {
+        "from" : {
+          "id" : 4,
+          "port" : 0
+        },
+        "id" : 5,
+        "to" : {
+          "id" : 0,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 4,
+          "port" : 0
+        },
+        "id" : 6,
+        "to" : {
+          "id" : 0,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 3,
+          "port" : 0
+        },
+        "id" : 7,
+        "to" : {
+          "id" : 4,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 1
+        },
+        "id" : 9,
+        "to" : {
+          "id" : 3,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 0
+        },
+        "id" : 12,
+        "to" : {
+          "id" : 11,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 11,
+          "port" : 0
+        },
+        "id" : 13,
+        "to" : {
+          "id" : 4,
+          "port" : 0
+        }
+      } ],
+      "id" : 13,
+      "modules" : [ {
+        "id" : 0,
+        "type" : "MasterOut",
+        "x" : 708,
+        "y" : 661
+      }, {
+        "col" : 0,
+        "h" : 1,
+        "id" : 1,
+        "row" : 0,
+        "type" : "NoteIn",
+        "w" : 2,
+        "x" : 73,
+        "y" : 257
+      }, {
+        "col" : 6,
+        "h" : 1,
+        "id" : 3,
+        "row" : 0,
+        "type" : "Env",
+        "w" : 3,
+        "x" : 360,
+        "y" : 339
+      }, {
+        "col" : 9,
+        "h" : 1,
+        "id" : 4,
+        "row" : 0,
+        "type" : "VCA",
+        "w" : 2,
+        "x" : 614,
+        "y" : 343
+      }, {
+        "col" : 2,
+        "h" : 1,
+        "id" : 11,
+        "row" : 0,
+        "type" : "VCO",
+        "w" : 4,
+        "x" : 352,
+        "y" : 215
+      } ],
+      "name" : "1111",
+      "parameterSets" : [ {
+        "name" : "one"
+      }, {
+        "name" : "wes"
+      }, {
+        "name" : "<empty>"
+      } ]
+    },
+    "-Krkgnicf_mf" : {
+      "connections" : [ {
+        "from" : {
+          "id" : 1,
+          "port" : 1
+        },
+        "id" : 5,
+        "to" : {
+          "id" : 4,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 3
+        },
+        "id" : 17,
+        "to" : {
+          "id" : 2,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 2
+        },
+        "id" : 18,
+        "to" : {
+          "id" : 4,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 4,
+          "port" : 0
+        },
+        "id" : 21,
+        "to" : {
+          "id" : 12,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 1
+        },
+        "id" : 22,
+        "to" : {
+          "id" : 12,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 0
+        },
+        "id" : 23,
+        "to" : {
+          "id" : 2,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 12,
+          "port" : 0
+        },
+        "id" : 24,
+        "to" : {
+          "id" : 2,
+          "port" : 2
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 0
+        },
+        "id" : 26,
+        "to" : {
+          "id" : 25,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 3
+        },
+        "id" : 27,
+        "to" : {
+          "id" : 25,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 12,
+          "port" : 0
+        },
+        "id" : 28,
+        "to" : {
+          "id" : 25,
+          "port" : 2
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 0
+        },
+        "id" : 32,
+        "to" : {
+          "id" : 14,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 14,
+          "port" : 0
+        },
+        "id" : 33,
+        "to" : {
+          "id" : 6,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 1
+        },
+        "id" : 35,
+        "to" : {
+          "id" : 34,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 1,
+          "port" : 2
+        },
+        "id" : 36,
+        "to" : {
+          "id" : 34,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 34,
+          "port" : 0
+        },
+        "id" : 37,
+        "to" : {
+          "id" : 6,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 12,
+          "port" : 0
+        },
+        "id" : 44,
+        "to" : {
+          "id" : 38,
+          "port" : 2
+        }
+      }, {
+        "from" : {
+          "id" : 6,
+          "port" : 0
+        },
+        "id" : 45,
+        "to" : {
+          "id" : 38,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 6,
+          "port" : 0
+        },
+        "id" : 46,
+        "to" : {
+          "id" : 38,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 38,
+          "port" : 0
+        },
+        "id" : 47,
+        "to" : {
+          "id" : 0,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 38,
+          "port" : 1
+        },
+        "id" : 48,
+        "to" : {
+          "id" : 0,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 16,
+          "port" : 0
+        },
+        "id" : 52,
+        "to" : {
+          "id" : 14,
+          "port" : 0
+        }
+      }, {
+        "from" : {
+          "id" : 25,
+          "port" : 0
+        },
+        "id" : 53,
+        "to" : {
+          "id" : 16,
+          "port" : 1
+        }
+      }, {
+        "from" : {
+          "id" : 2,
+          "port" : 0
+        },
+        "id" : 54,
+        "to" : {
+          "id" : 16,
+          "port" : 0
+        }
+      } ],
+      "id" : 54,
+      "modules" : [ {
+        "id" : 0,
+        "type" : "MasterOut",
+        "x" : 1311,
+        "y" : 488
+      }, {
+        "col" : 0,
+        "h" : 1,
+        "id" : 1,
+        "row" : 0,
+        "type" : "NoteIn",
+        "w" : 2,
+        "x" : 41,
+        "y" : 295
+      }, {
+        "col" : 6,
+        "h" : 1,
+        "id" : 2,
+        "row" : 1,
+        "type" : "VCO",
+        "w" : 4,
+        "x" : 505,
+        "y" : 261
+      }, {
+        "col" : 2,
+        "h" : 1,
+        "id" : 4,
+        "row" : 0,
+        "type" : "Env",
+        "w" : 3,
+        "x" : 209,
+        "y" : 487
+      }, {
+        "col" : 0,
+        "h" : 1,
+        "id" : 6,
+        "row" : 2,
+        "type" : "VCA",
+        "w" : 2,
+        "x" : 934,
+        "y" : 365
+      }, {
+        "col" : 0,
+        "h" : 1,
+        "id" : 12,
+        "row" : 1,
+        "type" : "LFO",
+        "w" : 2,
+        "x" : 359,
+        "y" : 472
+      }, {
+        "col" : 5,
+        "h" : 1,
+        "id" : 14,
+        "row" : 0,
+        "type" : "VCF",
+        "w" : 2,
+        "x" : 788,
+        "y" : 168
+      }, {
+        "col" : 10,
+        "h" : 1,
+        "id" : 16,
+        "row" : 1,
+        "type" : "Mixer",
+        "w" : 4,
+        "x" : 654,
+        "y" : 273
+      }, {
+        "col" : 2,
+        "h" : 1,
+        "id" : 25,
+        "row" : 1,
+        "type" : "VCO",
+        "w" : 4,
+        "x" : 502,
+        "y" : 362
+      }, {
+        "col" : 2,
+        "h" : 1,
+        "id" : 34,
+        "row" : 2,
+        "type" : "Env",
+        "w" : 3,
+        "x" : 648,
+        "y" : 488
+      }, {
+        "col" : 5,
+        "h" : 1,
+        "id" : 38,
+        "row" : 2,
+        "type" : "Delay",
+        "w" : 4,
+        "x" : 1102,
+        "y" : 263
+      } ],
+      "name" : "organblaster",
+      "parameterSets" : [ {
+        "name" : "googah",
+        "parameters" : {
+          "2-mod" : 18
+        }
+      } ]
+    },
+    "-KrlnrzH4M8o" : {
+      "id" : 0,
+      "modules" : [ {
+        "id" : 0,
+        "type" : "MasterOut",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "name" : "<blank>",
+      "parameterSets" : [ {
+        "name" : "<empty>"
+      } ]
+    }
+  }
+}

@@ -17,13 +17,15 @@ is a "freq" parameter in the Component.
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
     <path ref="display" class="display" fill="none" stroke-width="8" d=""></path>
     <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
-    <text x="24" y="28">{{ value.toFixed(this.decimals) }}</text>
+    <text x="24" y="28">{{ value.toFixed(decimals) }}</text>
     <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
 
 
 <script>
+import { EVENT } from '../../events';
+
 const size = 20;
 const x = 24; // half the css knob size
 const y = 24;
@@ -74,11 +76,16 @@ export default {
 
     this.range = this.max - this.min;
     this.id = this.$parent.id + '-' + this.param;
+
+
+    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
     this.$store.commit('ADD_PARAMETER', this.id);
+
+
 
     // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App
     //       or: just add / remove dynamically as needed?
-    window.addEventListener('mouseup', (e) => {
+    window.addEventListener(EVENT.MOUSE_UP, (e) => {
       window.mouseDown = false;
       self.active = false;
 
@@ -86,14 +93,14 @@ export default {
       document.body.style.userSelect = 'auto';
     });
 
-    window.addEventListener('mousemove', (e) => {
+    window.addEventListener(EVENT.MOUSE_MOVE, (e) => {
       if (window.mouseDown && self.active) {
         self.update(e);
       }
     });
 
     // fetch the knob's value from the Store parameterSet, update itself as well as the (parent) Component
-    this.$bus.$on('parameters:load', this.fetchValue);
+    this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
   },
 
   mounted() {
@@ -103,9 +110,10 @@ export default {
   },
 
   destroyed() {
-    console.log('Destroying Knob ', this.id);
+    // console.log('Destroying Knob ', this.id);
+    console.log('%c[parameter] Destroying Knob %s', 'color: grey', this.id);
     this.$store.commit('REMOVE_PARAMETER', this.id);
-    this.$bus.$off('parameters:load', this.fetchValue);
+    this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
   },
 
   methods: {
@@ -141,22 +149,27 @@ export default {
     },
 
     fetchValue() {
-      // TODO fix $refs(?) when changing paramSets
       if (!this.$refs.display) {
-        console.warn('undefined knob: ', this.id);
+        console.warn('[parameter] Knob %s DOM is not available', this.id);
         return;
       }
 
-      if (!this.$store.getters.parameters[this.id]) {
-        console.warn('undefined knob: ', this.id);
-        return;
+      if (this.$store.getters.parameters[this.id] === undefined) {
+        console.log('[parameter] Knob %s not found in store', this.id);
       }
 
-      this.value = this.$store.getters.parameters[this.id] || this.default;
-      this.internalValue = (this.value - this.min) / this.range;               // derive internal internalValue from value
+      this.value = this.$store.getters.parameters[this.id] || this.default || 0;
+
+      if (isNaN(this.value)) {
+        console.log('[parameter] ERROR: Knob %s not set correctly', this.id);
+        this.value = 0;
+      }
+
+      this.internalValue = (this.value - this.min) / this.range; // derive internal internalValue from value
       this.$emit('value', this.value);                        // update parent w/ new value
       this.setDisplay();
-      console.log('%c🎛️ Knob (%s) value: %d', 'color: blue', this.param, this.value);
+
+      console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, this.value);
     }
 
   }

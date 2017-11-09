@@ -60,7 +60,7 @@ export const loadPatch = ({ commit, state }, key) => {
   // ensure nodes (+ inlets/outlets) are in the DOM...
   // ...then load connections (from the same patch Object) ...
   Vue.nextTick(function() {
-    console.log('All modules loaded, now routing audio...');
+    console.log('%c All modules loaded, now routing audio... ', 'background:#666;color:white;font-weight:bold;');
     commit('LOAD_CONNECTIONS', patch);
 
     // ...lastly, load parameters (from the same patch Object)
@@ -147,6 +147,7 @@ export const removePatch = ({ commit, state }, key) => {
 export const fetchPatches = ({ commit }) => {
   api.load('/patch')
     .then((patches) => {
+      console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
       commit('SET_PATCHES', patches);
     })
     .catch(() => {
