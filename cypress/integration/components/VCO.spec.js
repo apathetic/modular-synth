@@ -1,7 +1,9 @@
 import { shallow, mount } from 'vue-test-utils';
 import { createRenderer } from 'vue-server-renderer';
-import VCO from '@/components/VCO.vue';
-import { Util, Node } from '../utils';
+// import VCO from '@/components/VCO.vue';
+import VCO from '../../../src/components/VCO.vue';
+import { Util } from '../../support/utils';
+import { node } from '../../support/dummy';
 
 // const localVue = createLocalVue();
 // // localVue.use(MyPlugin)j // vuex, audioUnit mixins
