@@ -8,21 +8,11 @@
   </head>
   <body>
 
-
-
-    <main>
-      Signing in allows you to store your data in the cloud. You can save multiple patches and parameters sets
-      <form>
-        <button>go</button>
-      </form>
-
-
-      Just use the synth without signing in. The browser will remember parameter settings of a single patch.
-      <a href="/synth.html">skip</a>
-
+    <main v-context-menu>
+      <patch-manager></patch-manager>
+      <synth></synth>
+      <context-menu></context-menu>
     </main>
-
-
 
   </body>
 </html>
