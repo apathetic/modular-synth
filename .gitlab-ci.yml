@@ -15,4 +15,7 @@ deploy:
   stage: deploy
   tags: deployServer
   script:
-    -  npm install && npm run build && forever restartall
+    - npm install
+    - npm run build
+    - forever restartall
+
