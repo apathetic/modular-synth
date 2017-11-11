@@ -1,22 +1,12 @@
+'use strict'
 const path = require('path')
-const config = require('../config')
 const utils = require('./utils')
+const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
-
-
-// const projectRoot = path.resolve(__dirname, '../')
-
-// var env = process.env.NODE_ENV
-// // check env & config/index.js to decide whether to enable CSS source maps for the
-// // various preprocessor loaders added to vue-loader at the end of this file
-// var cssSourceMapDev = (env === 'development' && config.dev.cssSourceMap)
-// var cssSourceMapProd = (env === 'production' && config.build.productionSourceMap)
-// var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
-
 
 module.exports = {
   entry: {
@@ -24,16 +14,16 @@ module.exports = {
   },
   output: {
     path: config.build.assetsRoot,
+    filename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath,
-    filename: '[name].js'
+      : config.dev.assetsPublicPath
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      '@': resolve('src'),
     }
   },
   module: {
@@ -44,8 +34,7 @@ module.exports = {
         enforce: 'pre',
         include: [resolve('src'), resolve('test')],
         options: {
-          formatter: require('eslint-friendly-formatter'),
-          emitWarning: !config.dev.showEslintErrorsInOverlay
+          formatter: require('eslint-friendly-formatter')
         }
       },
       {
@@ -64,6 +53,14 @@ module.exports = {
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
+        }
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('media/[name].[hash:7].[ext]')
         }
       },
       {
