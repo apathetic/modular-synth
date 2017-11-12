@@ -7,7 +7,6 @@ const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 
 const webpackConfig = merge(baseWebpackConfig, {
-  // use inline sourcemap for karma-sourcemap-loader
   module: {
     rules: utils.styleLoaders()
   },
@@ -23,10 +22,13 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': require('../config/test.env')
     })
-  ]
+  ],
+  module.exports.externals = [require('webpack-node-externals')()]
 })
 
 // no need for app entry during tests
 delete webpackConfig.entry
 
 module.exports = webpackConfig
+
+
