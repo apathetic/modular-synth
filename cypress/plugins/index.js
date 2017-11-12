@@ -1,8 +1,8 @@
-const wp = require('@cypress/webpack-preprocessor')
+const webpack = require('@cypress/webpack-preprocessor')
+const options = {
+  webpackOptions: require('../../build/webpack.base.conf');
+};
 
 module.exports = (on) => {
-  const options = {
-    webpackOptions: require('../../build/webpack.test.conf');
-  }
-  on('file:preprocessor', wp(options))
+  on('file:preprocessor', webpack(options))
 }

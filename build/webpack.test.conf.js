@@ -22,8 +22,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': require('../config/test.env')
     })
-  ],
-  module.exports.externals = [require('webpack-node-externals')()]
+  ]
 })
 
 // no need for app entry during tests
