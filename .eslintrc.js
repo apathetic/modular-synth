@@ -38,6 +38,8 @@ module.exports = {
 
     'no-multi-spaces': [1, { 'ignoreEOLComments': true }],
 
+    'no-multi-spaces': [1, { 'ignoreEOLComments': true }],
+
     // don't require .vue extension when importing
     // 'import/extensions': ['error', 'always', {
     //   'js': 'never',
