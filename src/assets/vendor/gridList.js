@@ -6,7 +6,6 @@ const defaults = {
 
 
 export default class GridList {
-
   /**
    * A GridList manages the two-dimensional positions from a list of items,
    * within a virtual matrix.
@@ -216,8 +215,7 @@ export default class GridList {
     var changedItems = [];
 
     for (var i = 0; i < initialItems.length; i++) {
-      var item = this._getItemByAttribute(idAttribute,
-                                          initialItems[i][idAttribute]);
+      var item = this._getItemByAttribute(idAttribute, initialItems[i][idAttribute]);
 
       if (item.col !== initialItems[i].col ||
           item.row !== initialItems[i].row ||
@@ -540,8 +538,7 @@ export default class GridList {
       }
 
       var col = this._findLeftMostPositionForItem(item);
-      var newPosition = this.findPositionForItem(
-            item, {col: col, row: 0}, position.row);
+      var newPosition = this.findPositionForItem(item, {col: col, row: 0}, position.row);
 
       this._updateItemPosition(item, newPosition);
     }

@@ -130,8 +130,8 @@ export default {
 
       this.internalValue = internalValue;
       this.value = this.mode === 'log'
-                 ? this.range * Math.pow(2, internalValue) - this.range + this.min
-                 : parseFloat(internalValue * this.range + this.min);
+        ? this.range * Math.pow(2, internalValue) - this.range + this.min
+        : parseFloat(internalValue * this.range + this.min);
 
       this.$emit('value', this.value);
       this.setDisplay();
