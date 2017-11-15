@@ -71,7 +71,6 @@ export class Parameter {
  * @param {Integer} clipLag    The release time, in ms, after clipping.
  */
 export class Meter {
-
   constructor(canvas, clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
     // if (!context) { return; }
 
