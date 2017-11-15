@@ -178,7 +178,19 @@ export default {
       const delta = (this.startY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
       const internalValue = Math.min(1, Math.max(0, this.startValue + delta));
 
-      if (internalValue === this.internalValue) return;
+      this.internalValue = internalValue;
+      this.value = this.mode === 'log'
+        ? this.range * Math.pow(2, internalValue) - this.range + this.min
+        : parseFloat(internalValue * this.range + this.min);
+
+      this.$emit('value', this.value);
+      this.setDisplay();
+
+      this.$store.commit('SET_PARAMETER', {
+        id: this.id,
+        value: this.value
+      });
+    },
 
       this.value = this.computeValue(internalValue);
       this.internalValue = internalValue;

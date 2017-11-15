@@ -44,11 +44,14 @@
       };
     },
 
-    created() {
-      const vca = this.context.createGain();
-      // IMPORTANT. Set ORIGINAL gain value i.e. "offset"... which is what is ADDED into future signals. I Think...???
-      // If this is not set, than any signal in will... be additive to itself, or ...something
-      vca.gain.value = 0;
+  created() {
+    const vca = this.context.createGain();
+    // IMPORTANT. Set ORIGINAL gain value i.e. "offset"... which is what is ADDED into future signals. I Think...???
+    // If this is not set, than any signal in will... be additive to itself, or ...something
+    vca.gain.value = 0;
+
+    this.inlets[0].audio = vca;
+    this.inlets[1].audio = vca.gain;
 
       this.inlets[0].audio = vca;
       this.inlets[1].audio = vca.gain;

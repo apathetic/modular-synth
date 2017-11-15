@@ -64,6 +64,14 @@ export default {
     this.outlets[2].data = 'velocity';
     this.outlets[3].data = 'touch';
 
+
+    navigator.serviceWorker.register('service-worker.js', {
+      scope: './'
+    }).then(function(reg) {
+      console.log('ServiceWorker registered', reg);
+    });
+
+
     window.addEventListener('keydown', (e) => {
       switch (e.code) {
         case 'KeyA':
@@ -83,6 +91,16 @@ export default {
           break;
 
         default:
+
+          // ONE WAY COMMUNICATION
+          if (navigator.serviceWorker.controller) {
+            console.log('Sending message to service worker');
+            navigator.serviceWorker.controller.postMessage({
+              'command': 'oneWayCommunication',
+              'message': 'Hi, SW'
+            });
+          }
+
           break;
       }
     });
