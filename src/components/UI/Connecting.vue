@@ -73,8 +73,8 @@ export default {
         // this.to = this.$store.getters.modules.find(function(module) { return module.id === focused; });
 
         if (
-            this.to.id !== this.from.id &&          // if not circular connection
-            1                                       // to.port .... TODO and is not a duplicated connection
+          this.to.id !== this.from.id &&          // if not circular connection
+          1                                       // to.port .... TODO and is not a duplicated connection
         ) {
           this.$store.commit('ADD_CONNECTION', {
             to: {
