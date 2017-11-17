@@ -97,7 +97,7 @@ export default {
   watch: {
     /**
      * If the value in the $store is updated, we need to determine
-     * the updated value for this.internalValue.
+     * a new value for this.internalValue.
      * @param  {number} v The new value.
      */
     value: function(v) {
@@ -198,14 +198,23 @@ export default {
       this.$emit('value', this.value); // update parent w/ value
     },
 
-    fetchValue() {
-      if (!this.$refs.display) {
-        console.warn('[parameter] Knob %s DOM is not available', this.id);
-        return;
-      }
-
-      if (this.$store.getters.parameters[this.id] === undefined) {
-        console.log('[parameter] Knob %s not found in store', this.id);
+    /**
+     * Maps the interval knob value to the desired range. Linear or exponential.
+     * @param {number}  x The value to map.
+     * @param {boolean} extract If true, extracts the internalValue from value,
+     *                          otherwise calculate value from internalValue.
+     */
+    computeValue(x, extract = false) {
+      if (extract) { // derive internalValue from value
+        return parseFloat(this.mode === 'log'
+          ? Math.log2((x + this.range - this.min) / this.range)
+          : (x - this.min) / this.range
+        );
+      } else { // calculate value from internalValue
+        return parseFloat(this.mode === 'log'
+          ? this.range * Math.pow(2, x) - this.range + this.min
+          : x * this.range + this.min
+        );
       }
 
       this.value = this.$store.getters.parameters[this.id] || this.default || 0;
