@@ -99,7 +99,7 @@ export default {
   watch: {
     /**
      * If the value in the $store is updated, we need to determine
-     * the updated value for this.internalValue.
+     * a new value for this.internalValue.
      * @param  {number} v The new value.
      */
     value: function(v) {
@@ -187,7 +187,7 @@ export default {
     /**
      * Maps the interval knob value to the desired range. Linear or exponential.
      * @param {number}  x The value to map.
-     * @param {boolean} extract True to extract the internalValue from value,
+     * @param {boolean} extract If true, extracts the internalValue from value,
      *                          otherwise calculate value from internalValue.
      */
     computeValue(x, extract = false) {
