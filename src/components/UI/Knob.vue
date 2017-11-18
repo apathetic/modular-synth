@@ -15,9 +15,10 @@ is a "freq" parameter in the parent Component.
 <template>
   <svg class="knob" @mousedown.stop.prevent="start">
     <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
-    <path ref="display" class="display" fill="none" stroke-width="8" :d="display"></path>
+    <path ref="display" class="display" fill="none" stroke-width="8" :d="arc"></path>
     <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
     <text x="24" y="28">{{ value.toFixed(decimals) }}</text>
+    <!-- <text x="24" y="28">{{ displayValue.toFixed(decimals) }}</text> -->
     <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
@@ -26,9 +27,9 @@ is a "freq" parameter in the parent Component.
 <script>
 import { EVENT } from '../../events';
 
-const size = 20;
-const x = 24; // half the css knob size
-const y = 24;
+const SIZE = 20;
+const X = 24; // half the css knob radius
+const Y = 24;
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   let angleInRadians = (angleInDegrees + 90) * Math.PI / 180.0;
@@ -54,6 +55,13 @@ export default {
   mixins: [parameter],
 
   props: {
+    param: String,
+    mode: {
+      type: String,
+      default: 'linear'
+    },
+    min: Number,
+    max: Number,
     default: Number,
     decimals: 0
   },
@@ -65,6 +73,7 @@ export default {
       startY: null,
       internalValue: 0, // 0 -> 1 internally
       range: 1
+      // _temp: 0 // used to check if value was changed externally (ie via $store)
     };
   },
 
@@ -73,9 +82,9 @@ export default {
      * Helper function for the path attribute d in the svg display.
      * @return {string} The new path attribute.
      */
-    display: function() {
+    arc: function() {
       const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
-      return describeArc(x, y, size, 30, rotationValue);
+      return describeArc(X, Y, SIZE, 30, rotationValue);
     },
 
     /**
@@ -85,7 +94,10 @@ export default {
       get() {
         return this.$store.getters.parameters[this.id] || this.default || 0;
       },
+
       set(value) {
+        this._temp = value;
+        this.$emit('value', value); // update parent w/ value
         this.$store.commit('SET_PARAMETER', {
           id: this.id,
           value: value
@@ -94,19 +106,14 @@ export default {
     }
   },
 
-  watch: {
-    /**
-     * If the value in the $store is updated, we need to determine
-     * a new value for this.internalValue.
-     * @param  {number} v The new value.
-     */
-    value: function(v) {
-      if (this.temp === this.internalValue) {
-        console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, v);
-        this.internalValue = this.computeValue(v, true);
-      }
 
-      this.temp = this.internalValue;
+  watch: {
+    value: function(value) {
+      if (!this._temp || value !== this._temp) { // value was changed externally ie. via $store
+        this.$store.commit('REGISTER_PARAMETER', this.id); // in the event where the new parameterSet did not contain this param, let's register it
+        this.internalValue = this.computeValue(value, true);
+        console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, value);
+      }
     }
   },
 
@@ -115,10 +122,8 @@ export default {
 
     this.id = this.$parent.id + '-' + this.param;
 
-
-    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
-    this.$store.commit('ADD_PARAMETER', this.id);
-    this.$emit('value', this.value); // update parent w/ value
+    this.$store.commit('REGISTER_PARAMETER', this.id);
+    // this.$emit('value', this.value); // update parent w/ value
 
 
 
@@ -147,8 +152,8 @@ export default {
 
   mounted() {
     this.internalValue = this.computeValue(this.value, true);
-    this.$refs.track.setAttribute('d', describeArc(x, y, size, 30, 330)); // draw track
-    // this.$refs.computed.setAttribute('d', describeArc(x, y, size - 4, 30, 330));  // inner track. "actual" value, from varying inputs, etc.
+    this.$refs.track.setAttribute('d', describeArc(X, Y, SIZE, 30, 330)); // draw track
+    // this.$refs.computed.setAttribute('d', describeArc(x, y, SIZE - 4, 30, 330));  // inner track. "actual" value, from varying inputs, etc.
   },
 
   destroyed() {
@@ -175,45 +180,34 @@ export default {
      * @param {Event} e The mouse move Event.
      */
     update(e) {
-      const delta = (this.startY - e.clientY) / 100.0;   // drag distance, 1/100th pixels
+      const delta = (this.startY - e.clientY) / 100.0; // drag distance, 1/100th pixels
       const internalValue = Math.min(1, Math.max(0, this.startValue + delta));
 
+      if (this.internalValue === internalValue) return;
+
       this.internalValue = internalValue;
-      this.value = this.mode === 'log'
-        ? this.range * Math.pow(2, internalValue) - this.range + this.min
-        : parseFloat(internalValue * this.range + this.min);
-
-      this.$emit('value', this.value);
-      this.setDisplay();
-
-      this.$store.commit('SET_PARAMETER', {
-        id: this.id,
-        value: this.value
-      });
-    },
-
       this.value = this.computeValue(internalValue);
-      this.internalValue = internalValue;
 
-      this.$emit('value', this.value); // update parent w/ value
+      // this.$emit('value', this.value); // update parent w/ value
     },
 
     /**
      * Maps the interval knob value to the desired range. Linear or exponential.
-     * @param {number}  x The value to map.
+     * @param {number}  n The value to map.
      * @param {boolean} extract If true, extracts the internalValue from value,
      *                          otherwise calculate value from internalValue.
      */
-    computeValue(x, extract = false) {
+    computeValue(n, extract = false) {
+      // console.log('extract', extract);
       if (extract) { // derive internalValue from value
         return parseFloat(this.mode === 'log'
-          ? Math.log2((x + this.range - this.min) / this.range)
-          : (x - this.min) / this.range
+          ? Math.log2((n + this.range - this.min) / this.range)
+          : (n - this.min) / this.range
         );
       } else { // calculate value from internalValue
         return parseFloat(this.mode === 'log'
-          ? this.range * Math.pow(2, x) - this.range + this.min
-          : x * this.range + this.min
+          ? this.range * Math.pow(2, n) - this.range + this.min
+          : n * this.range + this.min
         );
       }
 
