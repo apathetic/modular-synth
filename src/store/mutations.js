@@ -166,14 +166,6 @@ export const REMOVE_PARAMETERS = (state, key) => {
   state.parameterSets.splice(key, 1); // let's try mutating the array directly
 };
 
-// export const LOAD_PARAMETERS = (state, patch) => {
-//   try {
-//     const id = state.parameterKey;
-//
-//     state.parameterSets = patch.parameterSets && patch.parameterSets[id] || {};
-//   } catch (e) {}
-// };
-
 export const SET_PARAMETERS_NAME = (state, name) => {
   const key = state.parameterKey;
 
@@ -184,26 +176,16 @@ export const SET_PARAMETERS_KEY = (state, key) => {
   state.parameterKey = key;
 };
 
-
-export const ADD_PARAMETER = (state, id) => {
+export const REGISTER_PARAMETER = (state, id) => {
   const key = state.parameterKey;
   const sets = state.parameterSets[key];
 
-  // state.parameterSets[key] &&
-  // state.parameterSets[key].parameters[id] = null;
-
-  // WARNING : WHAT TO DO IF PARAM ALREADY EXISTS?
-  // ie. WAS PERSISTENT FROM LOCALSTORAGE, AND WE
-  // ARE TRIGGERING RELOAD?
   if (sets && !sets.parameters[id]) {
-    // sets.parameters[id] = null;
-    sets.parameters[id] = null;
+    sets.parameters[id] = 0;
+    console.log(id, ' registered');
+  } else {
+    console.log(id, ' was already present');
   }
-
-  // TODO should we remove it from each Parameter Set, then....?
-  // state.parameterSets.forEach(set => {
-  //   set.parameters[id] = null;   // OR 0 ???
-  // });
 };
 
 export const REMOVE_PARAMETER = (state, id) => {
@@ -214,6 +196,7 @@ export const REMOVE_PARAMETER = (state, id) => {
   state.parameterSets.forEach(set => {
     if (set.parameters[id]) {
       delete set.parameters[id];
+      // set.parameters[id] = null;   // OR 0?
       // Vue.delete(set.parameters, id);
       // set.parameters.$remove(id);
       // set.parameters = set.parameters.filter(id...

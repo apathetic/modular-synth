@@ -1,17 +1,7 @@
 import Vue from 'vue';
 import { api, generateKey } from './firebase';
 import { _NAME, _MODULES, _CONNECTIONS, _PARAMETERS } from './index';
-
-let blank = {   // TODO make this (object) live somewhere universal. schema js ?
-  id: 0,
-  name: '<blank>',
-  modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
-  connections: [],
-  parameterSets: [{
-    name: '<empty>',
-    parameters: []
-  }]
-};
+import { DEFAULT } from '../schema';
 
 
 // -----------------------------------------------
@@ -44,13 +34,12 @@ export const loadPatch = ({ commit, state }, key) => {
     console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
   } else {
     console.log('%c Loading patch from localStorage ', 'background:#666;color:white;font-weight:bold;');
-    // TODO store this object somewhere global. USE blank, ABOVE
     patch = {
-      id: parseInt(localStorage.getItem('id')) || 0,
-      name: localStorage.getItem(_NAME) || '',
-      modules: JSON.parse(localStorage.getItem(_MODULES)) || [{type: 'MasterOut', id: 0, x: 0, y: 0}],
-      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || [],
-      parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || [{name: '<empty>', parameters: []}]
+      id: parseInt(localStorage.getItem('id')) || DEFAULT.id,
+      name: localStorage.getItem(_NAME) || DEFAULT.name,
+      modules: JSON.parse(localStorage.getItem(_MODULES)) || DEFAULT.modules,
+      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || DEFAULT.connections,
+      parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || DEFAULT.parameterSets
     };
   }
 
@@ -111,12 +100,12 @@ export const addPatch = ({ commit, state }) => {
   const key = generateKey();
 
   // Create new patch in Database
-  api.create(key, blank);
+  api.create(key, DEFAULT);
 
   // Create new patch in localStorage
   commit('SAVE_PATCH', {
     key,
-    patch: blank
+    patch: DEFAULT
   });
 
   // Update App keys
