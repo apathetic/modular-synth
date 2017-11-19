@@ -1,40 +1,26 @@
 <template>
-  <div class="slider">
-    <input
-      type="range"
-      orient="vertical"
-      :min="min"
-      :max="max"
-      :step="step"
-      :value="value"
-      @input.stop.prevent="update">
-    </input>
-    {{ value }}
+  <div class="slider" @mousedown.stop.prevent="start">
+    <div class="fill" :style="bottom"></div>
+    <!-- {{ value }} -->
   </div>
 </template>
 
 
 <script>
+import { parameter } from '../../mixins/parameter';
+
 export default {
-  props: {
-    label: 'Slider',
-    // value: 0,
-    min: 0,
-    max: 100
-  },
+  mixins: [parameter],
 
   data() {
     return {
-      active: false,
-      // sliderValue: 1,
-      step: 1
+      step: 1,
+      type: 'Slider'
     };
   },
 
-  methods: {
-    update(e) {
-      this.value = e.target.value;
-    }
+  computed: {
+    bottom() { return 'bottom:' + this.internalValue * 100 + '%'; }
   }
 };
 
@@ -42,6 +28,22 @@ export default {
 
 
 <style lang="scss">
+  .slider {
+    background: #444;
+    border-radius: 4px;
+    height: 48px;
+    width: 10px;
+    cursor: ns-resize;
+    overflow: hidden;
 
+    .fill {
+      opacity: 0.38;
+      background-color: rgb(213, 45, 255);
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      transform: translateY(100%);
+    }
+  }
 
 </style>

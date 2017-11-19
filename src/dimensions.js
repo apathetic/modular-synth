@@ -8,7 +8,7 @@ export const moduleSize = {
   'Analyser': [6, 1],
   'Clock': {},
   'Comb': [3, 1],
-  'Compressor': [4, 1],
+  'Compressor': [3, 1],
   'Debugger': [1, 1],
   'Delay': [4, 1],
   'Drive': [2, 1],

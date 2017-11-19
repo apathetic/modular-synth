@@ -41,7 +41,7 @@
 <script>
 import { draggable } from '../mixins/draggable';
 import Knob from './UI/Knob';
-import Slider from './UI/Slider2';
+import Slider from './UI/Slider';
 
 export default {
   mixins: [ draggable ],
