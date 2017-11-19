@@ -8,22 +8,13 @@ import { EVENT } from '../events';
 
 export const parameter = {
   props: {
-    param: {
-      type: String,
-      required: true
-    },
+    param: String,
     mode: {
       type: String,
       default: 'linear'
     },
-    min: {
-      type: Number,
-      default: 0
-    },
-    max: {
-      type: Number,
-      default: 1
-    }
+    min: Number,
+    max: Number
   },
 
   data() {
@@ -43,7 +34,6 @@ export const parameter = {
     this.id = this.$parent.id + '-' + this.param;
     this.range = this.max - this.min;
     this.$emit('value', this.value); // update parent w/ value
-    // this.$emit('update:value', this.value); // update parent w/ value
 
     // this.$store.commit('REGISTER_PARAMETER', this.id);
 
@@ -141,7 +131,6 @@ export const parameter = {
       */
       this.value = this.$store.getters.parameters[this.id] || this.default || 0;
       this.internalValue = this.computeValue(this.value, true);
-      this.$emit('value', this.value);
 
       console.log('%c[parameter] %s %s set to %f', 'color: orange', this.param, this.type, this.value);
     }

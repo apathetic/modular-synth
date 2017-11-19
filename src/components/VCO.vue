@@ -28,8 +28,6 @@
 <script>
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
-  import Dropdown from './UI/Dropdown';
-  import { Parameter } from '@/audio';
 
   export default {
     components: { Knob, Slider, Dropdown },
