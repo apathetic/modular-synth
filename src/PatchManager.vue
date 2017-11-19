@@ -155,6 +155,7 @@ export default {
 
       this.removePatch(this.currentPatchKey);
       this.patchIndex = this.$refs.patch.selectedIndex = 1;
+      this.currentPatchKey = 0;
     },
 
     select(e) {
@@ -180,6 +181,7 @@ export default {
 
       this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
       this.paramsIndex = this.$refs.params.selectedIndex = 1;
+      this.currentParamsKey = 0;
     },
 
     selectParams(e) {
