@@ -18,7 +18,6 @@ is a "freq" parameter in the parent Component.
     <path ref="display" class="display" fill="none" stroke-width="8" :d="arc"></path>
     <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
     <text x="24" y="28">{{ value.toFixed(decimals) }}</text>
-    <!-- <text x="24" y="28">{{ displayValue.toFixed(decimals) }}</text> -->
     <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
@@ -72,7 +71,8 @@ export default {
       startValue: 0,
       startY: null,
       internalValue: 0, // 0 -> 1 internally
-      range: 1
+      range: 1,
+      value: 0
       // _temp: 0 // used to check if value was changed externally (ie via $store)
     };
   },
@@ -85,37 +85,36 @@ export default {
     arc: function() {
       const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
       return describeArc(X, Y, SIZE, 30, rotationValue);
-    },
-
-    /**
-     * Getter and setter functions for the value in the vuex $store.
-     */
-    value: {
-      get() {
-        return this.$store.getters.parameters[this.id] || this.default || 0;
-      },
-
-      set(value) {
-        this._temp = value;
-        this.$emit('value', value); // update parent w/ value
-        this.$store.commit('SET_PARAMETER', {
-          id: this.id,
-          value: value
-        });
-      }
     }
+
+    // /**
+    //  * Getter and setter functions for the value in the vuex $store.
+    //  */
+    // value: {
+    //   get() {
+    //     return this.$store.getters.parameters[this.id] || this.default || 0;
+    //   },
+
+    //   set(value) {
+    //     this._temp = value;
+    //     this.$emit('value', value); // update parent w/ value
+    //     this.$store.commit('SET_PARAMETER', {
+    //       id: this.id,
+    //       value: value
+    //     });
+    //   }
+    // }
   },
 
-
-  watch: {
-    value: function(value) {
-      if (!this._temp || value !== this._temp) { // value was changed externally ie. via $store
-        this.$store.commit('REGISTER_PARAMETER', this.id); // in the event where the new parameterSet did not contain this param, let's register it
-        this.internalValue = this.computeValue(value, true);
-        console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, value);
-      }
-    }
-  },
+  // watch: {
+  //   value: function(value) {
+  //     if (!this._temp || value !== this._temp) { // value was changed externally ie. via $store
+  //       this.$store.commit('REGISTER_PARAMETER', this.id); // in the event where the new parameterSet did not contain this param, let's register it
+  //       this.internalValue = this.computeValue(value, true);
+  //       console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, value);
+  //     }
+  //   }
+  // },
 
   created() {
     const self = this;
@@ -123,7 +122,7 @@ export default {
     this.id = this.$parent.id + '-' + this.param;
 
     this.$store.commit('REGISTER_PARAMETER', this.id);
-    // this.$emit('value', this.value); // update parent w/ value
+    this.$emit('value', this.value); // update parent w/ value
 
 
 
@@ -146,8 +145,9 @@ export default {
     window.addEventListener(EVENT.MOUSE_UP, this.mouseup);
     window.addEventListener(EVENT.MOUSE_MOVE, this.mousemove);
 
-    // fetch the knob's value from the Store parameterSet, update itself as well as the (parent) Component
     this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
+
+    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
   },
 
   mounted() {
@@ -188,7 +188,11 @@ export default {
       this.internalValue = internalValue;
       this.value = this.computeValue(internalValue);
 
-      // this.$emit('value', this.value); // update parent w/ value
+      this.$emit('value', this.value); // update parent w/ value
+      this.$store.commit('SET_PARAMETER', {
+        id: this.id,
+        value: this.value
+      });
     },
 
     /**
@@ -210,17 +214,16 @@ export default {
           : n * this.range + this.min
         );
       }
+    },
 
+    fetchValue() {
+      /*
+      NOTE: this is only necessary when the parameterSet does *not* contain values for
+      all parameters. In essence, this function will update itself when the parameterSet
+      is changed, to either the value in the $store (if it exists) or the default value.
+      */
       this.value = this.$store.getters.parameters[this.id] || this.default || 0;
-
-      if (isNaN(this.value)) {
-        console.log('[parameter] ERROR: Knob %s not set correctly', this.id);
-        this.value = 0;
-      }
-
-      this.internalValue = (this.value - this.min) / this.range; // derive internal internalValue from value
-      this.$emit('value', this.value);                        // update parent w/ new value
-      this.setDisplay();
+      this.internalValue = this.computeValue(this.value, true);
 
       console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, this.value);
     }

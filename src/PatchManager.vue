@@ -133,7 +133,6 @@ export default {
     load() {
       this.loadPatch();
       this.$nextTick(function() {
-        console.log('%c Fetching parameter values ', 'background:#666;color:white;font-weight:bold;');
         this.$bus.$emit(EVENT.PARAMETERS_LOAD);
         this.$bus.$emit(EVENT.APP_SORT);
       });
@@ -189,7 +188,7 @@ export default {
       this.currentParamsKey = e.target.value;
       this.paramsIndex = e.target.selectedIndex;
       this.$store.commit('SET_PARAMETERS_KEY', this.currentParamsKey);
-
+      this.$bus.$emit(EVENT.PARAMETERS_LOAD);
       console.log('%c Fetching parameters ', 'background:#666;color:white;font-weight:bold;');
       this.$bus.$emit(EVENT.PARAMETERS_LOAD);
     },
