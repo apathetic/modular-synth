@@ -81,6 +81,7 @@
 <script>
   import { mapGetters, mapActions } from 'vuex';
   import { sortable } from './mixins/sortable';
+  import { EVENT } from './events';
 
   import Analyser from './components/Analyser';
   import Comb from './components/Comb';
@@ -100,8 +101,8 @@
   import Debugger from './components/Debugger';
   import Node from './components/Node';
 
-  import connecting from './components/UI/Connecting';
-  import connection from './components/UI/Connection';
+  import connecting from './components/system/Connecting';
+  import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
 
@@ -152,29 +153,29 @@
     created() {
       console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold');
 
-      this.$bus.$on('drag:start', (coords, el) => {
+      this.$bus.$on(EVENT.DRAG_START, (coords, el) => {
         if (!this.editing) {
           this.startSorting();   // from sortable mixin
         }
       });
 
-      this.$bus.$on('drag:active', (coords, el) => {
+      this.$bus.$on(EVENT.DRAG_ACTIVE, (coords, el) => {
         if (!this.editing) { //  this.sorting) {
           this.whileSorting(el); // from sortable mixin
         }
       });
 
-      this.$bus.$on('drag:end', () => {
+      this.$bus.$on(EVENT.DRAG_END, () => {
         if (!this.editing) {
-          this.stopSorting();    // from sortable mixin
+          this.stopSorting(); // from sortable mixin
         }
       });
 
-      this.$bus.$on('app:sort', () => {
+      this.$bus.$on(EVENT.APP_SORT, () => {
         this.initSorting(this.$refs.grid);
       });
 
-      this.$bus.$on('module:add', () => {
+      this.$bus.$on(EVENT.MODULE_ADD, () => {
         console.log('module add');
         this.$nextTick(function() {
           const item = this.modules.slice(-1)[0]; // get last (newest) item
@@ -184,7 +185,7 @@
         });
       });
 
-      this.$bus.$on('module:remove', () => {
+      this.$bus.$on(EVENT.MODULE_REMOVE, () => {
         console.log('module remove');
         this.$nextTick(() => {
           // const deleted = this.modules[this.$store.state.active];
@@ -195,12 +196,12 @@
         });
       });
 
-      window.addEventListener('keydown', (e) => {
+      window.addEventListener(EVENT.KEY_DOWN, (e) => {
         switch (e.code) {
           case 'Delete':
           case 'Backspace':
             this.removeModule();
-            this.$bus.$emit('module:remove');
+            this.$bus.$emit(EVENT.MODULE_REMOVE);
             break;
           case 'Tab':
             this.toggleEditMode();
@@ -224,7 +225,7 @@
         }
       });
 
-      window.addEventListener('keyup', (e) => {
+      window.addEventListener(EVENT.KEY_UP, (e) => {
         switch (e.code) {
           case 'ShiftLeft':
           case 'ShiftRight':
