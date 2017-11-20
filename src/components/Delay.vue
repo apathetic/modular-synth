@@ -5,7 +5,7 @@
     </div>
 
     <div class="module-interface">
-      <Knob param="delay"    @value="delay = $event"    :min="20" :max="5000"></Knob>
+      <Knob param="delay"    @value="delay = $event"    :min="20" :max="1000"></Knob>
       <Knob param="wet"      @value="wet = $event"      :min="0"  :max="1"   :decimals="2"></Knob>
       <Knob param="dry"      @value="dry = $event"      :min="0"  :max="1"   :decimals="2"></Knob>
       <Knob param="feedback" @value="feedback = $event" :min="0"  :max="0.9" :decimals="2"></Knob>

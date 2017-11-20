@@ -174,7 +174,10 @@ THOUGHTS:
           console.log('%c[connection] %s ⟹ %s', 'color: green', this.source.module.name, this.dest.module.name);
           //
         } catch (e) {
-          this.logError(e);
+          // error message:
+          // e.slice(0, 100)
+          console.log('%c%s', 'color: red', e.toString().slice(0, 100));
+          console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
         }
       },
 

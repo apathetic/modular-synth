@@ -49,7 +49,6 @@
 
 
 - LOADING
-  - general usability; switching between patches kills audio / app
   - glitchy
     - fallback for bad data, etc.
 
