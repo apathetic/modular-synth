@@ -71,6 +71,24 @@
   import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
 
+  import Analyser from './components/Analyser';
+  import Comb from './components/Comb';
+  import Compressor from './components/Compressor';
+  import Delay from './components/Delay';
+  import Drive from './components/Drive';
+  import Env from './components/Env';
+  import LFO from './components/LFO';
+  import Mixer from './components/Mixer';
+  import NoteIn from './components/NoteIn';
+  import OSC from './components/OSC';
+  import Reverb from './components/Reverb';
+  import VCF from './components/Filter';
+  import VCO from './components/VCO';
+  import VCA from './components/VCA';
+
+  import Debugger from './components/Debugger';
+  import Node from './components/Node';
+
   import connecting from './components/system/Connecting';
   import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
@@ -122,7 +140,7 @@
       });
 
       this.$bus.$on(EVENT.DRAG_ACTIVE, (coords, el) => {
-        if (!this.editing) {
+        if (!this.editing) { //  this.sorting) {
           this.whileSorting(el); // from sortable mixin
         }
       });
@@ -138,6 +156,7 @@
       });
 
       this.$bus.$on(EVENT.MODULE_ADD, () => {
+        console.log('module add');
         this.$nextTick(function() {
           const item = this.modules.slice(-1)[0]; // get last (newest) item
 
@@ -147,6 +166,7 @@
       });
 
       this.$bus.$on(EVENT.MODULE_REMOVE, () => {
+        console.log('module remove');
         this.$nextTick(() => {
           this.gridList.items = this.modules;
           this.gridList._pullItemsToLeft();
