@@ -50,7 +50,6 @@
 
 
 - LOADING
-  - grid doesn't gridify after loading new patch
   - glitchy
     - fallback for bad data, etc.
 
@@ -131,6 +130,7 @@
 
 
   - LOADING
+    - ~~grid doesn't gridify after loading new patch~~
     - ~~route audio on load (use store plugin / store mutation observer)~~
       - ~~_solved with a nextTick. Dont love need to import Vue for this_~~ _update: solved more better-er by consecutively loading pieces via the load action_
     - ~~update masterOut position on load~~

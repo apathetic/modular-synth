@@ -167,7 +167,8 @@ export default {
           //
         } catch (e) {
           // error message:
-          console.log('%c%s', 'color: red', e);
+          // e.slice(0, 100)
+          console.log('%c%s', 'color: red', e.toString().slice(0, 100));
           console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
         }
       }

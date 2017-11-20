@@ -10,7 +10,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+// const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 const env = config.build.env
 

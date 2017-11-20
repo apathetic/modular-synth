@@ -133,6 +133,7 @@ export default {
     load() {
       this.loadPatch();
       this.$nextTick(function() {
+        console.log('%c Setting parameters ', 'background:#666;color:white;font-weight:bold;');
         this.$bus.$emit(EVENT.PARAMETERS_LOAD);
         this.$bus.$emit(EVENT.APP_SORT);
       });

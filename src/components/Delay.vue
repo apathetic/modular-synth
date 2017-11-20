@@ -10,13 +10,11 @@
     </div>
 
     <div class="module-interface">
-      <Knob @value="delay = $event"    :min="20" :max="1000"></Knob>
-      <Knob @value="wet = $event"      :min="0"  :max="1"   :decimals="2"></Knob>
-      <Knob @value="dry = $event"      :min="0"  :max="1"   :decimals="2"></Knob>
-      <Knob @value="feedback = $event" :min="0"  :max="0.9" :decimals="2"></Knob>
-      <Knob @value="cut = $event"      :min="20" :max="20000"></Knob>
-      <!-- <Knob @value="diffusion = $event" min="220" max="880"></Knob> -->
-      <!-- <Knob @value="spread = $event"    min="220" max="880"></Knob> -->
+      <Knob param="delay"    @value="delay = $event"    :min="20" :max="1000"></Knob>
+      <Knob param="wet"      @value="wet = $event"      :min="0"  :max="1"   :decimals="2"></Knob>
+      <Knob param="dry"      @value="dry = $event"      :min="0"  :max="1"   :decimals="2"></Knob>
+      <Knob param="feedback" @value="feedback = $event" :min="0"  :max="0.9" :decimals="2"></Knob>
+      <Knob param="cut"      @value="cut = $event"      :min="20" :max="20000"></Knob>
     </div>
 
     <div class="module-connections">

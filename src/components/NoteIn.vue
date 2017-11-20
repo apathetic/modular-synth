@@ -66,11 +66,11 @@ export default {
     this.outlets[3].data = 'touch';
 
 
-    navigator.serviceWorker.register('service-worker.js', {
-      scope: './'
-    }).then(function(reg) {
-      console.log('ServiceWorker registered', reg);
-    });
+    // navigator.serviceWorker.register('service-worker.js', {
+    //   scope: './'
+    // }).then(function(reg) {
+    //   console.log('ServiceWorker registered', reg);
+    // });
 
 
     window.addEventListener('keydown', (e) => {
