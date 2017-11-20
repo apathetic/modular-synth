@@ -13,6 +13,7 @@ export const moduleSize = {
   'Delay': [4, 1],
   'Drive': [2, 1],
   'Env': [3, 1],
+  'Filter': [3, 1],
   'LFO': [2, 1],
   'Mixer': [3, 1],
   'Node': [4, 1],

@@ -8,7 +8,10 @@ import { EVENT } from '../events';
 
 export const parameter = {
   props: {
-    param: String,
+    param: {
+      type: String,
+      required: true
+    },
     mode: {
       type: String,
       default: 'linear'

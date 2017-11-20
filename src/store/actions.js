@@ -49,7 +49,7 @@ export const loadPatch = ({ commit, state }, key) => {
   // ensure nodes (+ inlets/outlets) are in the DOM...
   // ...then load connections (from the same patch Object) ...
   Vue.nextTick(function() {
-    console.log('%c All modules loaded, now routing audio... ', 'background:#666;color:white;font-weight:bold;');
+    console.log('%c Routing audio... ', 'background:#666;color:white;font-weight:bold;');
     commit('LOAD_CONNECTIONS', patch);
 
     // ...lastly, load parameters (from the same patch Object)
