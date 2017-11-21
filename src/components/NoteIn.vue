@@ -73,7 +73,7 @@ export default {
     // });
 
 
-    window.addEventListener('keydown', (e) => {
+    this.keydown = (e) => {
       switch (e.code) {
         case 'KeyA':
           this.noteOn(63, 127);
@@ -104,9 +104,9 @@ export default {
 
           break;
       }
-    });
+    };
 
-    window.addEventListener('keyup', (e) => {
+    this.keyup = (e) => {
       switch (e.code) {
         case 'KeyA':
           this.noteOff(63);
@@ -127,34 +127,36 @@ export default {
         default:
           break;
       }
-    });
+    };
+
+    window.addEventListener(EVENT.KEY_DOWN, this.keydown);
+    window.addEventListener(EVENT.KEY_UP, this.keyup);
 
     console.log('%c[component] Creating NoteIn', 'color: blue');
   },
 
   destroyed() {
-    this.$bus.$off('midi:noteOn', this.noteOn);
-    this.$bus.$off('midi:noteOff', this.noteOff);
+    this.$bus.$off(EVENT.MIDI_NOTEON, this.noteOn);
+    this.$bus.$off(EVENT.MIDI_NOTEOFF, this.noteOff);
     this.$bus.$off('midi:controller', this.controller);
     this.$bus.$off('midi:pitchWheel', this.pitchWheel);
     this.$bus.$off('midi:polyPressure', this.polyPressure);
+
+    window.removeEventListener(EVENT.KEY_DOWN, this.keydown);
+    window.removeEventListener(EVENT.KEY_UP, this.keyup);
 
     console.log('Destroying NoteIn');
   },
 
   methods: {
     noteOn(note, velocity) {
-      // this.outlets[0].data = note;
-      // this.outlets[1].data = velocity;
       this.note = note;
       this.velocity = velocity;
       this.freq = 440 * (Math.pow(2, ((note - 69) / 12)));
-
       this.active = note;
     },
+
     noteOff(note) {
-      // this.outlets[0].data = note;
-      // this.outlets[1].data = 0;
       this.note = note;
 
       if (note === this.active) {
@@ -162,6 +164,7 @@ export default {
         this.velocity = 0;
       }
     },
+
     controller(note, velocity) {},
     pitchWheel(data) {},
     polyPressure(note, pressure) {
