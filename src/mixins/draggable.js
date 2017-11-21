@@ -77,7 +77,7 @@ export const draggable = {
     },
 
     stopDragging(event) {
-      this.isDragging = false;
+      this.dragging = false;
       this.$bus.$emit(EVENT.DRAG_END, this.id);
 
       if (this.$store.state.editing) {      // TODO && cursorStartY != this.y etc
