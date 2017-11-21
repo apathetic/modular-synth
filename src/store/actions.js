@@ -19,7 +19,7 @@ import { DEFAULT } from '../schema';
  *
  * @param  {[type]} commit [description]
  * @param  {[type]} state  [description]
- * @param  {String} key    The Object key of the patch to load
+ * @param  {String} key    The key of the patch to load
  * @return {void}
  */
 export const loadPatch = ({ commit, state }, key) => {
@@ -63,7 +63,7 @@ export const loadPatch = ({ commit, state }, key) => {
  * @param  {[type]} commit [description]
  * @param  {[type]} state  [description]
  * @param  {Object} data   Patch and parameter names, other patch data
- * @return {void}        [description]
+ * @return {void}
  */
 export const savePatch = ({ commit, state }, data) => {
   const key = state.patchKey;
