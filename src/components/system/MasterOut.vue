@@ -26,6 +26,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { EVENT } from '../../events';
 import VU from '../UI/VU';
 // import { meter } from '../../audio';
 
@@ -75,8 +76,11 @@ export default {
   },
 
   mounted() {
+    this.modules = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
     this.determinePosition();
-    window.addEventListener('resize', this.determinePosition);
+
+    window.addEventListener(EVENT.RESIZE, this.determinePosition);
+    this.modules.addEventListener(EVENT.SCROLL, this.determinePosition);
   },
 
   methods: {
@@ -93,11 +97,9 @@ export default {
       this.out2.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
     },
 
-    determinePosition() {
-      // const temp = document.querySelector('#modules');
-      // const x = temp.scrollWidth;
-      // const x = this.$el.offsetLeft;                 // relative to parent
-      const x = this.$el.getBoundingClientRect().left;  // relative to viewport
+    determinePosition(e) {
+      const x = this.modules.scrollLeft +               // scroll offset +
+                this.$el.getBoundingClientRect().left;  // viewport offset
       const y = this.$el.offsetTop;                     // relative to parent
 
       this.x = x;
