@@ -249,7 +249,7 @@ export default {
 
       border-radius: 50%;
       background: $color-grey-medium;
-      border: 1px solid rgba(white, 0.25);
+      border: 1px solid rgba(black, 0.1);
 
       font-size: 1em;
       font-family: inherit;
