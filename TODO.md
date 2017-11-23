@@ -43,21 +43,21 @@
 
 
 - UI
-  - masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)
+  - #connections is only 100% of viewport; doesnt extend if parent has overflow-x
   - when a node is selected, all connected connections become highlighted
   - must press shift to sort in play mode
   - single click on Module fires sortable; should only be onDrag
 
 
 - LOADING
+  - general usability; switching between patches kills audio / app
   - glitchy
     - fallback for bad data, etc.
 
 
 - AUDIO
   - use audioParam to automate parameters
-  - **power-off no longer kills CPU (as meters are connected)**
-    - LEVEL is ...broken? Crazy inefficient. Check meter.js where output is connected to audioContext
+  - LEVEL is ...broken? Crazy inefficient. Check meter.js where output is connected to audioContext
 
 
 - Connections
@@ -107,6 +107,7 @@
 
 
   - UI
+    - ~~masterOut's in/out labels are bounded by module canvas area (ie. overflow causes visual errors)~~
     - ~~Grid is wonky, doesn't get component dimensions~~
     - ~~removing connections sometimes throw errors~~
       - ~~delete module causes odd grid reshuffle~~
@@ -155,6 +156,7 @@
 
 
   - AUDIO
+    - ~~**power-off no longer kills CPU (as meters are connected)**~~
     - ~~lives in the actual components (not in the store.modules)~~
       - ~~(same problem for Connector)~~
     - ~~master out volume control~~

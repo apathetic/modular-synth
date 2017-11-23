@@ -43,17 +43,17 @@ export const loadPatch = ({ commit, state }, key) => {
     };
   }
 
-  // load: id, name, modules, and parameterSets
-  commit('LOAD_PATCH', patch);
+  commit('LOAD_PATCH', patch); // load: id, name, modules, and parameterSets
+  commit('LOAD_CONNECTIONS', []); // first, explicitly destroy all connections
 
   // ensure nodes (+ inlets/outlets) are in the DOM...
-  // ...then load connections (from the same patch Object) ...
   Vue.nextTick(function() {
+    // ...then load new connections
     console.log('%c Routing audio... ', 'background:#666;color:white;font-weight:bold;');
-    commit('LOAD_CONNECTIONS', patch);
+    commit('LOAD_CONNECTIONS', patch.connections);
 
-    // ...lastly, load parameters (from the same patch Object)
-    // commit('LOAD_PARAMETERS', patch);
+    // ...lastly, load parameters
+    // commit('LOAD_PARAMETERS', patch.parameters);
   });
 };
 

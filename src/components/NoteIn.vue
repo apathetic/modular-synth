@@ -72,6 +72,15 @@ export default {
     //   console.log('ServiceWorker registered', reg);
     // });
 
+    // // ONE WAY COMMUNICATION
+    // if (navigator.serviceWorker.controller) {
+    //   console.log('Sending message to service worker');
+    //   navigator.serviceWorker.controller.postMessage({
+    //     'command': 'oneWayCommunication',
+    //     'message': 'Hi, SW'
+    //   });
+    // }
+
 
     this.keydown = (e) => {
       switch (e.code) {
@@ -92,16 +101,6 @@ export default {
           break;
 
         default:
-
-          // ONE WAY COMMUNICATION
-          if (navigator.serviceWorker.controller) {
-            console.log('Sending message to service worker');
-            navigator.serviceWorker.controller.postMessage({
-              'command': 'oneWayCommunication',
-              'message': 'Hi, SW'
-            });
-          }
-
           break;
       }
     };
@@ -138,14 +137,14 @@ export default {
   destroyed() {
     this.$bus.$off(EVENT.MIDI_NOTEON, this.noteOn);
     this.$bus.$off(EVENT.MIDI_NOTEOFF, this.noteOff);
-    this.$bus.$off('midi:controller', this.controller);
-    this.$bus.$off('midi:pitchWheel', this.pitchWheel);
-    this.$bus.$off('midi:polyPressure', this.polyPressure);
+    this.$bus.$off(EVENT.MIDI_CONTROLLER, this.controller);
+    this.$bus.$off(EVENT.MIDI_PITCH, this.pitchWheel);
+    this.$bus.$off(EVENT.MIDI_POLY, this.polyPressure);
 
     window.removeEventListener(EVENT.KEY_DOWN, this.keydown);
     window.removeEventListener(EVENT.KEY_UP, this.keyup);
 
-    console.log('Destroying NoteIn');
+    console.log('Destroying NoteIn', this.id);
   },
 
   methods: {

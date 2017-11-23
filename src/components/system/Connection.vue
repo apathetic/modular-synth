@@ -114,7 +114,7 @@ export default {
 
       if (inlet && outlet) {
         try {
-          if (inlet.audio && outlet.audio) {
+          if (outlet.audio && inlet.audio) {
             // -------------------
             // AUDIO -> AUDIO
             // -------------------
@@ -124,7 +124,7 @@ export default {
             (connect) ? source.connect(destination) : source.disconnect(destination);
 
             //
-          } else if (inlet.audio && outlet.data) {
+          } else if (outlet.data && inlet.audio) {
             // -------------------
             // DATA -> AUDIO
             // -------------------
@@ -136,7 +136,7 @@ export default {
             interpolator.output.connect(inlet.audio);
 
             //
-          } else if (inlet.data && outlet.data) {
+          } else if (outlet.data && inlet.data) {
             // -------------------
             // DATA -> DATA
             // -------------------
