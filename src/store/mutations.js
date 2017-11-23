@@ -14,7 +14,7 @@ export const LOAD_PATCH = (state, patch) => {
     state.parameterSets = patch.parameterSets;
     // NOTE: parameters (knobs, sliders, etc) are created only after
     // their parent is; they then register themselves within the store.
-    // Parameter values are then only fetched once the ParamsLoad event
+    // Parameter values are then only fetched once the params:load event
     // is fired
   }
 };
@@ -130,8 +130,8 @@ export const UPDATE_RACK_POSITION = (state, data) => {
 // -----------------------------------------------
 //  CONNECTIONS
 // -----------------------------------------------
-export const LOAD_CONNECTIONS = (state, patch) => {
-  state.connections = patch.connections;
+export const LOAD_CONNECTIONS = (state, data) => {
+  state.connections = data;
 };
 
 export const ADD_CONNECTION = (state, data) => {
