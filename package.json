@@ -9,8 +9,8 @@
     "dev2": "webpack-dashboard -- webpack-dev-server -d --hot --config build/webpack.dev.conf.js --watch",
     "start": "npm run dev",
     "build": "node build/build.js",
-    "test": "NODE_ENV=test cypress open",
-    "lint": "eslint --ext .js,.vue src cypress"
+    "test": "cypress open",
+    "lint": "eslint --ext .js,.vue src test"
   },
   "dependencies": {
     "firebase": "^3.7.1",
