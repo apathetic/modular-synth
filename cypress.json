@@ -3,6 +3,7 @@
   "fixturesFolder": " cypress/fixtures",
   "integrationFolder": "cypress/integration",
   "screenshotsFolder": "cypress/screenshots",
+  "pluginsFile": "cypress/plugins",
   "supportFile": "cypress/support",
   "videosFolder": "cypress/videos"
 }

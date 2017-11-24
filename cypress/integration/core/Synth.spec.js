@@ -1,12 +1,11 @@
-import { shallow } from 'vue-test-utils'
-import { createRenderer } from 'vue-server-renderer'
+import { shallow } from 'vue-test-utils';
+import { createRenderer } from 'vue-server-renderer';
 import Synth from '@/Synth.vue';
 
 
 describe('Synth.vue', () => {
-
   it('matches snapshot', () => {
-    const renderer = createRenderer()
+    const renderer = createRenderer();
     const app = shallow(Synth, {
       propsData: {}
     });
@@ -33,5 +32,4 @@ describe('Synth.vue', () => {
   it('user can drag a module in edit mode', () => {});
 
   it('audio is routed correctly after load', () => {});
-
 });
