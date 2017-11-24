@@ -10,7 +10,7 @@
     "start": "npm run dev",
     "build": "node build/build.js",
     "test": "NODE_ENV=test cypress open",
-    "lint": "eslint --ext .js,.vue src test/specs"
+    "lint": "eslint --ext .js,.vue src cypress"
   },
   "dependencies": {
     "firebase": "^3.7.1",
