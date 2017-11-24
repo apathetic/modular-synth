@@ -1,9 +1,9 @@
 {
-  "fileServerFolder": "./cypress",
-  "fixturesFolder": " cypress/fixtures",
-  "integrationFolder": "cypress/integration",
-  "screenshotsFolder": "cypress/screenshots",
-  "pluginsFile": "cypress/plugins",
-  "supportFile": "cypress/support",
-  "videosFolder": "cypress/videos"
+  "fileServerFolder": "./test",
+  "fixturesFolder": " ./test/fixtures",
+  "integrationFolder": "./test/integration",
+  "pluginsFile": "./test/plugins",
+  "supportFile": "./test/support",
+  "screenshotsFolder": "./test/screenshots",
+  "videosFolder": "./test/videos"
 }

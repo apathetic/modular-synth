@@ -10,7 +10,7 @@
   ],
   "plugins": ["transform-runtime"],
   "env": {
-    "test": {
+    "testing": {
       "presets": ["env", "stage-2"]
     }
   }
