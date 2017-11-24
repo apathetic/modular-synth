@@ -1,21 +1,20 @@
-import { shallow, createLocalVue } from 'vue-test-utils'
+import { shallow, createLocalVue } from 'vue-test-utils';
 import Synth from '@/Synth.vue';
 import Node from '@/components/Node';
 
 describe('sortable', () => {
-
   // --------
 
-  function movePiece (number, x, y) {
+  function movePiece(number, x, y) {
     cy.get(`.piece-${number}`)
       .trigger('mousedown', { which: 1 })
       .trigger('mousemove', { clientX: x, clientY: y })
-      .trigger('mouseup', {force: true})
+      .trigger('mouseup', {force: true});
   };
 
-  beforeEach(function(){
-    cy.viewport(550, 350)
-    cy.visit('http://localhost:8080/')
+  beforeEach(function() {
+    cy.viewport(550, 350);
+    cy.visit('http://localhost:8080/');
   });
 
   // --------
@@ -23,13 +22,12 @@ describe('sortable', () => {
   it('the App can sort modules in play mode', () => {
     const App = shallow(Synth, {
       stubs: {
-        Node,
         Node
       }
     });
 
-    movePiece(1, 340, 130)
-    cy.get('.pieces li').eq(3).find('span').should('not.exist')
+    movePiece(1, 340, 130);
+    cy.get('.pieces li').eq(3).find('span').should('not.exist');
 
     // ...
   });
@@ -42,5 +40,4 @@ describe('sortable', () => {
 
   it('works after removing a module', () => {
   });
-
 });

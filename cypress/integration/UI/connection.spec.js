@@ -1,7 +1,6 @@
 import { Util, Node } from '../../test/utils';
-
-import { shallow, createLocalVue } from 'vue-test-utils'
-import { createRenderer } from 'vue-server-renderer'
+import { shallow, createLocalVue } from 'vue-test-utils';
+import { createRenderer } from 'vue-server-renderer';
 import { cellWidth } from '../../src/dimensions';
 import Synth from '../../src/Synth.vue';
 import _Node from '../../src/components/Node.vue';
@@ -14,7 +13,7 @@ const App = shallow(Synth, {
     Node,
     Connection
   }
-})
+});
 
 describe('connection.vue', () => {
   let connection;
@@ -81,10 +80,8 @@ describe('connection.vue', () => {
     connection.vm.fromModule = fromModule;
 
     expect(connection.vm.x1).toBe(70 + cellWidth);
-    expect(connection.vm.y1).toBe(xxx);
-    expect(connection.vm.x2).toBe(xxx);
-    expect(connection.vm.y2).toBe(xxx);
-  })
-
-
+    expect(connection.vm.y1).toBe(1);
+    expect(connection.vm.x2).toBe(1);
+    expect(connection.vm.y2).toBe(1);
+  });
 });

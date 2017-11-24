@@ -1,4 +1,4 @@
-import { shallow, createLocalVue } from 'vue-test-utils'
+import { shallow, createLocalVue } from 'vue-test-utils';
 import PatchManager from '@/PatchManager.vue';
 
 
@@ -9,6 +9,7 @@ describe('PatchManager.vue', () => {
     });
 
     // ...
+    expect(patchmanager).toMatchSnapshot();
   });
 
   it('user can load a new patch', () => {
@@ -17,6 +18,7 @@ describe('PatchManager.vue', () => {
     });
 
     // ...
+    expect(patchmanager).toMatchSnapshot();
   });
 
   it('user can save a patch', () => {
@@ -25,5 +27,6 @@ describe('PatchManager.vue', () => {
     });
 
     // ...
+    expect(patchmanager).toMatchSnapshot();
   });
 });
