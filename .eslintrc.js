@@ -30,6 +30,8 @@ module.exports = {
     'no-multiple-empty-lines': ['error', {'max': 3}],
     'arrow-parens': 0,
 
+    'no-multi-spaces': [1, { 'ignoreEOLComments': true }],
+
     // don't require .vue extension when importing
     // 'import/extensions': ['error', 'always', {
     //   'js': 'never',

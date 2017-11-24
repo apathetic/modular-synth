@@ -1,8 +1,7 @@
 <template>
-  <div class="slider" @mousedown.stop.prevent="start">
-    <div class="fill" :style="bottom"></div>
-    <!-- {{ value }} -->
-  </div>
+  <select class="select" @mousedown.stop v-model="type">
+    <option v-for="type in types" :value="type">{{ type }}</option>
+  </select>
 </template>
 
 

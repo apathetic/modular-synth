@@ -6,6 +6,7 @@
  */
 
 import { rackWidth, rackHeight } from '../dimensions';
+import { EVENT } from '../events';
 
 const dragObj = {
   zIndex: 0,
@@ -60,11 +61,11 @@ export const draggable = {
       this.x = x;                 // necessary as the module's internal coords may be different if in play mode
       this.y = y;
 
-      this.$bus.$emit('drag:start', [x, y], this.$el);
+      this.$bus.$emit(EVENT.DRAG_START, [x, y], this.$el);
 
       // Capture mousemove and mouseup events on the page.
-      document.addEventListener('mousemove', this.whileDragging);
-      document.addEventListener('mouseup', this.stopDragging);
+      document.addEventListener(EVENT.MOUSE_MOVE, this.whileDragging);
+      document.addEventListener(EVENT.MOUSE_UP, this.stopDragging);
     },
 
     whileDragging(event) {
@@ -76,12 +77,12 @@ export const draggable = {
       this.x = x;
       this.y = y;
 
-      this.$bus.$emit('drag:active', [x, y], this.$el);
+      this.$bus.$emit(EVENT.DRAG_ACTIVE, [x, y], this.$el);
     },
 
     stopDragging(event) {
       this.dragging = false;
-      this.$bus.$emit('drag:end', this.id);
+      this.$bus.$emit(EVENT.DRAG_END, this.id);
 
       if (this.$store.state.editing) {      // TODO && cursorStartY != this.y etc
         // we only want to update the Store with the
@@ -100,8 +101,8 @@ export const draggable = {
         this.y = module.y;
       }
 
-      document.removeEventListener('mousemove', this.whileDragging);
-      document.removeEventListener('mouseup', this.stopDragging);
+      document.removeEventListener(EVENT.MOUSE_MOVE, this.whileDragging);
+      document.removeEventListener(EVENT.MOUSE_UP, this.stopDragging);
     }
   }
 };

@@ -59,17 +59,6 @@
 
         <midi></midi>
 
-        <br>
-
-        <!-- <button
-          class="power"
-          :class="power ? 'on' : 'off'"
-          @click="togglePower">
-
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40">
-            <path d="M28,18c0,6.629-5.375,12-12,12C9.371,30,4,24.629,4,18c0-5.223,3.34-9.652,8-11.301v4.41C9.617,12.496,8,15.047,8,18 c0,4.418,3.582,8,8,8s8-3.582,8-8c0-2.953-1.621-5.504-4-6.891v-4.41C24.656,8.348,28,12.777,28,18z M16,16c1.105,0,2-0.895,2-2V4 c0-1.104-0.895-2-2-2s-2,0.896-2,2v10C14,15.105,14.895,16,16,16z" />
-          </svg>
-        </button> -->
       </div>
 
       <master-out></master-out>
@@ -92,6 +81,7 @@
 <script>
   import { mapGetters, mapActions } from 'vuex';
   import { sortable } from './mixins/sortable';
+  import { EVENT } from './events';
 
   import Analyser from './components/Analyser';
   import Comb from './components/Comb';
@@ -111,8 +101,8 @@
   import Debugger from './components/Debugger';
   import Node from './components/Node';
 
-  import connecting from './components/UI/Connecting';
-  import connection from './components/UI/Connection';
+  import connecting from './components/system/Connecting';
+  import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
 
@@ -163,29 +153,29 @@
     created() {
       console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold');
 
-      this.$bus.$on('drag:start', (coords, el) => {
+      this.$bus.$on(EVENT.DRAG_START, (coords, el) => {
         if (!this.editing) {
           this.startSorting();   // from sortable mixin
         }
       });
 
-      this.$bus.$on('drag:active', (coords, el) => {
+      this.$bus.$on(EVENT.DRAG_ACTIVE, (coords, el) => {
         if (!this.editing) { //  this.sorting) {
           this.whileSorting(el); // from sortable mixin
         }
       });
 
-      this.$bus.$on('drag:end', () => {
+      this.$bus.$on(EVENT.DRAG_END, () => {
         if (!this.editing) {
-          this.stopSorting();    // from sortable mixin
+          this.stopSorting(); // from sortable mixin
         }
       });
 
-      this.$bus.$on('app:sort', () => {
+      this.$bus.$on(EVENT.APP_SORT, () => {
         this.initSorting(this.$refs.grid);
       });
 
-      this.$bus.$on('module:add', () => {
+      this.$bus.$on(EVENT.MODULE_ADD, () => {
         console.log('module add');
         this.$nextTick(function() {
           const item = this.modules.slice(-1)[0]; // get last (newest) item
@@ -195,7 +185,7 @@
         });
       });
 
-      this.$bus.$on('module:remove', () => {
+      this.$bus.$on(EVENT.MODULE_REMOVE, () => {
         console.log('module remove');
         this.$nextTick(() => {
           // const deleted = this.modules[this.$store.state.active];
@@ -206,12 +196,12 @@
         });
       });
 
-      window.addEventListener('keydown', (e) => {
+      window.addEventListener(EVENT.KEY_DOWN, (e) => {
         switch (e.code) {
           case 'Delete':
           case 'Backspace':
             this.removeModule();
-            this.$bus.$emit('module:remove');
+            this.$bus.$emit(EVENT.MODULE_REMOVE);
             break;
           case 'Tab':
             this.toggleEditMode();
@@ -235,7 +225,7 @@
         }
       });
 
-      window.addEventListener('keyup', (e) => {
+      window.addEventListener(EVENT.KEY_UP, (e) => {
         switch (e.code) {
           case 'ShiftLeft':
           case 'ShiftRight':

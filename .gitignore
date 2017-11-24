@@ -1,5 +1,9 @@
 .DS_Store
 node_modules/
 npm-debug.log
+selenium-debug.log
 dist/
 ._js
+
+
+

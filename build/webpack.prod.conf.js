@@ -10,7 +10,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+// const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 const env = config.build.env
 
@@ -96,13 +96,13 @@ const webpackConfig = merge(baseWebpackConfig, {
       }
     ]),
     // service worker caching
-    new SWPrecachePlugin({
-      cacheId: 'my-vue-app',
-      filename: 'service-worker.js',
-      staticFileGlobs: ['dist/**/*.{js,html,css}'],
-      minify: true,
-      stripPrefix: 'dist/'
-    })
+    // new SWPrecachePlugin({
+    //   cacheId: 'my-vue-app',
+    //   filename: 'service-worker.js',
+    //   staticFileGlobs: ['dist/**/*.{js,html,css}'],
+    //   minify: true,
+    //   stripPrefix: 'dist/'
+    // })
   ]
 })
 

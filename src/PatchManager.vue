@@ -133,7 +133,7 @@ export default {
     load() {
       this.loadPatch();
       this.$nextTick(function() {
-        console.log('%c Fetching parameter values ', 'background:#666;color:white;font-weight:bold;');
+        console.log('%c Setting parameters ', 'background:#666;color:white;font-weight:bold;');
         this.$bus.$emit(EVENT.PARAMETERS_LOAD);
         this.$bus.$emit(EVENT.APP_SORT);
       });
@@ -156,6 +156,7 @@ export default {
 
       this.removePatch(this.currentPatchKey);
       this.patchIndex = this.$refs.patch.selectedIndex = 1;
+      this.currentPatchKey = 0;
     },
 
     select(e) {
@@ -181,15 +182,15 @@ export default {
 
       this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
       this.paramsIndex = this.$refs.params.selectedIndex = 1;
+      this.currentParamsKey = 0;
     },
 
     selectParams(e) {
       this.currentParamsKey = e.target.value;
       this.paramsIndex = e.target.selectedIndex;
       this.$store.commit('SET_PARAMETERS_KEY', this.currentParamsKey);
-
-      console.log('%c Fetching parameters ', 'background:#666;color:white;font-weight:bold;');
       this.$bus.$emit(EVENT.PARAMETERS_LOAD);
+      console.log('%c Fetching parameters ', 'background:#666;color:white;font-weight:bold;');
     },
 
     // -----------------
@@ -248,7 +249,7 @@ export default {
 
       border-radius: 50%;
       background: $color-grey-medium;
-      border: 1px solid rgba(white, 0.25);
+      border: 1px solid rgba(black, 0.1);
 
       font-size: 1em;
       font-family: inherit;
