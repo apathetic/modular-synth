@@ -1,23 +1,23 @@
-const path = require('path')
-const utils = require('./utils')
-const config = require('../config')
-const webpack = require('webpack')
-const merge = require('webpack-merge')
-const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const path = require('path');
+const utils = require('./utils');
+const config = require('../config');
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const baseWebpackConfig = require('./webpack.base.conf');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 // const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
-      sourceMap: config.build.productionSourceMap,
+      sourceMap: config.build.cssSourceMap,
       extract: true
     })
   },
-  devtool: config.build.productionSourceMap ? '#source-map' : false,
+  devtool: config.build.cssSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
@@ -25,9 +25,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // publicPath: config.build.assetsPublicPath
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': config.build.env
-    }),
+    new webpack.DefinePlugin({ 'process.env': config.build.env }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
@@ -66,7 +64,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks: function (module) {
+      minChunks: function(module) {
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&
@@ -83,6 +81,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'manifest',
       chunks: ['vendor']
     }),
+
     // copy custom static assets
     new CopyWebpackPlugin([
       {
