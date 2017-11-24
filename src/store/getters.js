@@ -14,4 +14,4 @@ export const modules = (state) => state.modules.filter(function(module) { return
 export const connections = (state) => state.connections;
 export const parameterKey = (state) => state.parameterKey;
 export const parameters = (state) => (state.parameterSets[state.parameterKey] &&
-                                      state.parameterSets[state.parameterKey].parameters);
+                                      state.parameterSets[state.parameterKey].parameters || {});

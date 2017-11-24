@@ -21,13 +21,24 @@ class DataApi {
 export default DataApi;
 */
 
+export const DEFAULT = {
+  id: 0,
+  name: '<blank>',
+  modules: [{'type': 'MasterOut', 'id': 0, 'x': 0, 'y': 0}],
+  connections: [],
+  parameterSets: [{
+    name: '<empty>',
+    parameters: {}
+  }]
+};
+
 
 
 /**
  * This validates the Patch Object coming from Firebase, and
  * ensures that each Object has all the requesite fields. This
  * is important because everywhere else in the App we assume that
- * these fields are present; all data check happen only here.
+ * these fields are present; all data checks happen only here.
  * @param  {Object} patches The Object of the user's patches.
  * @return {Object) The patches Object, with any data-corrections made.
  */
@@ -35,40 +46,32 @@ export function validateData(patches) {
   for (let key in patches) {
     const patch = patches[key];
 
-    // if (typeof patch !== "object") {
-    //   console.warn('patch prob ', key);
-    //   return;
-    // }
-    //
-    // check(patch.name, 'name', type)
-
-
     if (!patch.name) {
       console.warn('Patch "%s" missing name', key);
-      patch.name = 'xxxx';
+      patch.name = DEFAULT.name;
     }
 
     if (patch.id === undefined) {
       console.warn('Patch "%s" missing id. Fixing...', patch.name);
-      patch.id = 0;
+      patch.id = DEFAULT.id;
     }
 
     if (!patch.parameterSets) {
       console.warn('Patch "%s" missing parameterSets. Fixing...', patch.name);
-      patch.parameterSets = [];
+      patch.parameterSets = DEFAULT.parameterSets;
     }
 
     patch.parameterSets.forEach((set) => {
-      set.name = set.name || 'yyyy';
+      set.name = set.name || '<missing>';
       if (!set.parameters) {
         console.warn('Patch "%s" missing parameters in "%s". Fixing...', patch.name, set.name);
-        set.parameters = {};
+        set.parameters = DEFAULT.parameterSets[0].parameters;
       }
     });
 
     if (!patch.connections) {
       console.warn('Patch "%s" missing connections. Fixing...', patch.name);
-      patch.connections = [];
+      patch.connections = DEFAULT.connections;
     }
 
     if (!patch.modules) {

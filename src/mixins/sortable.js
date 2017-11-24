@@ -30,9 +30,6 @@ export const sortable = {
       this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
       this.gridList = new GridList(this.modules);
       this._applyPositionToItems();
-
-      console.log('%c Setting up sortable ', 'background:#666;color:white;font-weight:bold;');
-      console.log('%c' + this.gridList.toString(), 'font-family:monospace;font-size:10px');
     },
 
     startSorting() {
@@ -64,7 +61,8 @@ export const sortable = {
       this._previousDragPosition = null;
       this._applyPositionToItems();
       this._removePositionHighlight();
-      // console.log(this.gridList.toString());
+
+      console.log('%c' + this.gridList.toString(), 'font-family:monospace;font-size:10px');
     },
 
     // -----------------------------------------------------------------

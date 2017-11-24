@@ -89,14 +89,14 @@
           // waveform
           // if (this.isFunction(AnalyserNode.prototype.getFloatTimeDomainData)) {
           this.analyser.getFloatTimeDomainData(this._buffer);
-            // } else {
-            //   var uint8 = new Uint8Array(this._buffer.length);
-            //   this.analyser.getByteTimeDomainData(uint8);
-            //   // referenced https://github.com/mohayonao/get-float-time-domain-data
-            //   // POLYFILL
-            //   for (var i = 0; i < uint8.length; i++){
-            //     this._buffer[i] = (uint8[i] - 128) * 0.0078125;
-            //   }
+          // } else {
+          //   var uint8 = new Uint8Array(this._buffer.length);
+          //   this.analyser.getByteTimeDomainData(uint8);
+          //   // referenced https://github.com/mohayonao/get-float-time-domain-data
+          //   // POLYFILL
+          //   for (var i = 0; i < uint8.length; i++){
+          //     this._buffer[i] = (uint8[i] - 128) * 0.0078125;
+          //   }
           // }
         }
       },

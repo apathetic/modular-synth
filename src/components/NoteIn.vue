@@ -65,7 +65,24 @@ export default {
     this.outlets[2].data = 'velocity';
     this.outlets[3].data = 'touch';
 
-    window.addEventListener('keydown', (e) => {
+
+    // navigator.serviceWorker.register('service-worker.js', {
+    //   scope: './'
+    // }).then(function(reg) {
+    //   console.log('ServiceWorker registered', reg);
+    // });
+
+    // // ONE WAY COMMUNICATION
+    // if (navigator.serviceWorker.controller) {
+    //   console.log('Sending message to service worker');
+    //   navigator.serviceWorker.controller.postMessage({
+    //     'command': 'oneWayCommunication',
+    //     'message': 'Hi, SW'
+    //   });
+    // }
+
+
+    this.keydown = (e) => {
       switch (e.code) {
         case 'KeyA':
           this.noteOn(63, 127);
@@ -86,9 +103,9 @@ export default {
         default:
           break;
       }
-    });
+    };
 
-    window.addEventListener('keyup', (e) => {
+    this.keyup = (e) => {
       switch (e.code) {
         case 'KeyA':
           this.noteOff(63);
@@ -109,34 +126,36 @@ export default {
         default:
           break;
       }
-    });
+    };
+
+    window.addEventListener(EVENT.KEY_DOWN, this.keydown);
+    window.addEventListener(EVENT.KEY_UP, this.keyup);
 
     console.log('%c[component] Creating NoteIn', 'color: blue');
   },
 
   destroyed() {
-    this.$bus.$off('midi:noteOn', this.noteOn);
-    this.$bus.$off('midi:noteOff', this.noteOff);
-    this.$bus.$off('midi:controller', this.controller);
-    this.$bus.$off('midi:pitchWheel', this.pitchWheel);
-    this.$bus.$off('midi:polyPressure', this.polyPressure);
+    this.$bus.$off(EVENT.MIDI_NOTEON, this.noteOn);
+    this.$bus.$off(EVENT.MIDI_NOTEOFF, this.noteOff);
+    this.$bus.$off(EVENT.MIDI_CONTROLLER, this.controller);
+    this.$bus.$off(EVENT.MIDI_PITCH, this.pitchWheel);
+    this.$bus.$off(EVENT.MIDI_POLY, this.polyPressure);
 
-    console.log('Destroying NoteIn');
+    window.removeEventListener(EVENT.KEY_DOWN, this.keydown);
+    window.removeEventListener(EVENT.KEY_UP, this.keyup);
+
+    console.log('Destroying NoteIn', this.id);
   },
 
   methods: {
     noteOn(note, velocity) {
-      // this.outlets[0].data = note;
-      // this.outlets[1].data = velocity;
       this.note = note;
       this.velocity = velocity;
       this.freq = 440 * (Math.pow(2, ((note - 69) / 12)));
-
       this.active = note;
     },
+
     noteOff(note) {
-      // this.outlets[0].data = note;
-      // this.outlets[1].data = 0;
       this.note = note;
 
       if (note === this.active) {
@@ -144,6 +163,7 @@ export default {
         this.velocity = 0;
       }
     },
+
     controller(note, velocity) {},
     pitchWheel(data) {},
     polyPressure(note, pressure) {
