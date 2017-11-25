@@ -7,6 +7,7 @@ const merge = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.conf');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+// const DashboardPlugin = require('webpack-dashboard/plugin')
 
 module.exports = merge(baseWebpackConfig, {
   module: {
@@ -33,6 +34,7 @@ module.exports = merge(baseWebpackConfig, {
     }
   },
   plugins: [
+    // new DashboardPlugin(),
     new webpack.DefinePlugin({ 'process.env': config.dev.env }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
