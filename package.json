@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "dev2": "webpack-dashboard -- webpack-dev-server -d --hot --config build/webpack.dev.conf.js --watch",
+    "dev2": "webpack-dashboard -- webpack-dev-server -d --inline --progress --config build/webpack.dev.conf.js --watch",
     "start": "npm run dev",
     "build": "node build/build.js",
     "test": "cypress open",
@@ -61,7 +61,8 @@
     "webpack": "^3.6.0",
     "webpack-dashboard": "^1.0.2",
     "webpack-dev-server": "^2.9.4",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "engines": {
     "node": ">= 4.0.0",
