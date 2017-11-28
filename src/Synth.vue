@@ -2,6 +2,8 @@
   <section :class="editing ? 'edit-mode': 'play-mode'">
 
     <div id="modules" ref="grid" @click.left="clearActive">
+
+    <div id="modules" ref="grid" @click.left="clearActive">
       <div class="position-highlight">
         <div class="inner"></div>
       </div>
@@ -26,6 +28,7 @@
           @mousedown.native="setActive(connection.id)">
         </connection>
       </svg>
+
     </div>
 
     <aside id="sidebar">
@@ -108,10 +111,10 @@
 
     computed: {
       width() {
+        // const scrollWidth = this.$refs.grid.scrollWidth;
         const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
-        return this.editing
-          ? `width: ${canvasWidth}px`
-          : 'width: auto';
+
+        return `width: ${canvasWidth}px`;
       },
 
       ...mapGetters([
@@ -140,7 +143,7 @@
       });
 
       this.$bus.$on(EVENT.DRAG_ACTIVE, (coords, el) => {
-        if (!this.editing) { //  this.sorting) {
+        if (!this.editing) {
           this.whileSorting(el); // from sortable mixin
         }
       });
@@ -156,7 +159,6 @@
       });
 
       this.$bus.$on(EVENT.MODULE_ADD, () => {
-        console.log('module add');
         this.$nextTick(function() {
           const item = this.modules.slice(-1)[0]; // get last (newest) item
 
@@ -166,7 +168,6 @@
       });
 
       this.$bus.$on(EVENT.MODULE_REMOVE, () => {
-        console.log('module remove');
         this.$nextTick(() => {
           this.gridList.items = this.modules;
           this.gridList._pullItemsToLeft();
