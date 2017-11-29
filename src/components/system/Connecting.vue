@@ -12,9 +12,10 @@
 
 <script>
 import { cellWidth } from '../../dimensions';
+import { EVENT } from '../../events';
 
 export default {
-  data() {                // reference to actual modules in the App:
+  data() {
     return {
       active: false,
       from: {},
@@ -28,16 +29,15 @@ export default {
    *
    */
   created() {
-    this.$bus.$on('connection:start', (port, id) => {  // store.state.focused); // could just use this
+    this.$bus.$on('connection:start', (port, id) => {
       this.from = this.$store.state.modules.find(function(module) { return module.id === id; });
-      // this.from = this.$store.getters.modules.find(function(module) { return module.id === id; });
       this.port = port;
 
       this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
       this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
 
-      document.addEventListener('mousemove', this.drag);
-      document.addEventListener('mouseup', this.dragEnd);
+      document.addEventListener(EVENT.MOUSE_MOVE, this.drag);
+      document.addEventListener(EVENT.MOUSE_UP, this.dragEnd);
 
       this.active = true;
     });
@@ -50,10 +50,9 @@ export default {
      * @return {Void}
      */
     drag(event) {
-      this.cursorX = event.clientX;
-      this.cursorY = event.clientY - 54;  // the header height
+      this.cursorX = event.clientX + this.$store.state.canvasOffset;
+      this.cursorY = event.clientY - 48;  // the header height
 
-      // event.preventDefault();
       event.stopPropagation();
     },
 
@@ -70,11 +69,10 @@ export default {
         const focused = this.$store.state.focused;  // ironically, we dont even use the target to fetch the Component
 
         this.to = this.$store.state.modules.find(function(module) { return module.id === focused; });
-        // this.to = this.$store.getters.modules.find(function(module) { return module.id === focused; });
 
         if (
           this.to.id !== this.from.id &&          // if not circular connection
-          1                                       // to.port .... TODO and is not a duplicated connection
+          this.isUnique()                         // is not a duplicated connection
         ) {
           this.$store.commit('ADD_CONNECTION', {
             to: {
@@ -95,6 +93,13 @@ export default {
       this.active = false;
       this.cursorX = false;
       this.cursorY = false;
+    },
+
+    /**
+     * Checks if a connection already exists between the start and end nodes.
+     */
+    isUnique() {
+      return true; // TODO
     }
   }
 };

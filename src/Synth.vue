@@ -4,11 +4,8 @@
 
 <template>
   <section :class="editing ? 'edit-mode': 'play-mode'">
-    <div
-      id="modules"
-      class="grid-container"
-      ref="grid"
-      @click.left="clearActive">
+
+    <div id="modules" ref="grid" @click.left="clearActive">
 
       <div class="position-highlight">
         <div class="inner"></div>
@@ -27,7 +24,7 @@
         @mouseout.native="clearFocus">
       </component>
 
-      <svg id="connections">
+      <svg id="connections" :style="width">
         <connecting></connecting>
         <connection v-for="connection in connections"
           :id="connection.id"
@@ -38,6 +35,7 @@
           @mousedown.native="setActive(connection.id)">
         </connection>
       </svg>
+
     </div>
 
     <aside id="sidebar">
@@ -135,11 +133,19 @@
     },
 
     computed: {
+      width() {
+        const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
+        return this.editing
+          ? `width: ${canvasWidth}px`
+          : 'width: auto';
+      },
+
       ...mapGetters([
         'power',
         'editing',
         'active',
         'modules',
+        'bounds',
         'connections'
       ])
     },
@@ -155,12 +161,12 @@
 
       this.$bus.$on(EVENT.DRAG_START, (coords, el) => {
         if (!this.editing) {
-          this.startSorting();   // from sortable mixin
+          this.startSorting(); // from sortable mixin
         }
       });
 
       this.$bus.$on(EVENT.DRAG_ACTIVE, (coords, el) => {
-        if (!this.editing) { //  this.sorting) {
+        if (!this.editing) {
           this.whileSorting(el); // from sortable mixin
         }
       });
@@ -176,7 +182,6 @@
       });
 
       this.$bus.$on(EVENT.MODULE_ADD, () => {
-        console.log('module add');
         this.$nextTick(function() {
           const item = this.modules.slice(-1)[0]; // get last (newest) item
 
@@ -186,11 +191,7 @@
       });
 
       this.$bus.$on(EVENT.MODULE_REMOVE, () => {
-        console.log('module remove');
         this.$nextTick(() => {
-          // const deleted = this.modules[this.$store.state.active];
-          // this.gridList._deleteItemPositionFromGrid(deleted);
-
           this.gridList.items = this.modules;
           this.gridList._pullItemsToLeft();
         });
@@ -235,6 +236,15 @@
       });
     },
 
+    mounted() {
+      const grid = this.$refs.grid; // rare time we need to scrape DOM.
+      grid.addEventListener(EVENT.SCROLL, (e) => {
+        if (this.editing) {
+          this.$store.commit('UPDATE_SCROLL_OFFSET', e.target.scrollLeft);
+        }
+      });
+    },
+
     methods: {
       ...mapActions([
         'togglePower',
@@ -253,4 +263,68 @@
   @import 'assets/scss/variables.scss';
   @import 'assets/scss/styles.scss';
   @import 'assets/scss/module.scss';
+
+  #modules {
+  // #canvas {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+
+
+    display:inline-block;
+    width: auto;
+
+    &::-webkit-scrollbar {
+      width: 1em;
+      height: 1em;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $color-grey-dark;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $color-grey-medium;
+      border: 2px solid $color-grey-dark;
+      border-radius: 0.5em;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: $color-grey-dark;
+    }
+  }
+
+  #modules {
+
+  }
+
+  #connections {
+    min-width: 100%;
+    min-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.1s;
+    // transition-delay: 0.2s;
+    transition-delay: $transition-time-slow;
+
+    .play-mode & {
+      opacity: 0;
+      z-index: -1;
+      transition-delay: 0s;
+    }
+  }
+
+  #sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 112px;
+    background-color: #444;
+    z-index: 9999;          // as nodes will increment their z-index
+  }
+
+  .controls {
+    flex: 1;
+  }
 </style>

@@ -15,3 +15,5 @@ export const connections = (state) => state.connections;
 export const parameterKey = (state) => state.parameterKey;
 export const parameters = (state) => (state.parameterSets[state.parameterKey] &&
                                       state.parameterSets[state.parameterKey].parameters || {});
+
+export const bounds = (state) => state.modules.slice(1).reduce(function(max, module) { return Math.max(max, module.x); }, 0);
