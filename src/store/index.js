@@ -38,6 +38,9 @@ const state = {
   // APP: "PERSISTENT" STORAGE
   patchKey: localStorage.getItem(_KEY) || '',        // key of active patch
 
+  // UI: STUFFS
+  canvasOffset: 0,
+
   // TODO: remove; use firebase + SW instead;
   patches: {}                                        // all available patches, cached here
 };

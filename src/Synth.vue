@@ -111,10 +111,10 @@
 
     computed: {
       width() {
-        // const scrollWidth = this.$refs.grid.scrollWidth;
         const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
-
-        return `width: ${canvasWidth}px`;
+        return this.editing
+          ? `width: ${canvasWidth}px`
+          : 'width: auto';
       },
 
       ...mapGetters([

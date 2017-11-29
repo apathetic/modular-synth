@@ -126,6 +126,10 @@ export const UPDATE_RACK_POSITION = (state, data) => {
   module.row = data.row;
 };
 
+export const UPDATE_SCROLL_OFFSET = (state, data) => {
+  state.canvasOffset = data;
+};
+
 
 // -----------------------------------------------
 //  CONNECTIONS
