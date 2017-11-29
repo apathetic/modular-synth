@@ -134,10 +134,10 @@
 
     computed: {
       width() {
-        // const scrollWidth = this.$refs.grid.scrollWidth;
         const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
-
-        return `width: ${canvasWidth}px`;
+        return this.editing
+          ? `width: ${canvasWidth}px`
+          : 'width: auto';
       },
 
       ...mapGetters([
@@ -232,6 +232,15 @@
           case 'ShiftRight':
             this.sorting = false;
             break;
+        }
+      });
+    },
+
+    mounted() {
+      const grid = this.$refs.grid; // rare time we need to scrape DOM.
+      grid.addEventListener(EVENT.SCROLL, (e) => {
+        if (this.editing) {
+          this.$store.commit('UPDATE_SCROLL_OFFSET', e.target.scrollLeft);
         }
       });
     },
