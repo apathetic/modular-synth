@@ -207,6 +207,7 @@ button {
   transition: left $transition-time, top $transition-time;
 }
 
+.dropdown,
 .select {
   background: rgba(85, 85, 85, 0.85); // $color-grey-medium
   color: #fff;
@@ -215,7 +216,7 @@ button {
   border-left: 1px solid $color-grey-medium;
   font-family: $font-secondary;
   font-weight: 300;
-  height: 2em;
+  line-height: 2em;
   padding: 0em 0.5em;
 }
 

@@ -1,5 +1,10 @@
 <template>
-  <div class="drive">
+  <div
+  class="drive module _2U"
+  :class="dragging ? 'dragging' : ''"
+  :style="position"
+  @mousedown.stop="startDragging">
+
     <div class="module-details">
       <h3>Drive</h3>
     </div>

@@ -5,9 +5,12 @@
     </div>
 
     <div class="module-interface">
-      <select class="select" @mousedown.stop v-model="type">
+<!--       <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
-      </select>
+      </select> -->
+
+      <dropdown :options="types" @value="type = $event"></dropdown>
+
 
       <slider param="mod" @value="mod = $event"  :min="0" :max="100"></slider>
 
@@ -35,8 +38,10 @@
 <script>
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
+  import Dropdown from './UI/Dropdown';
 
   export default {
+    mixins: [draggable],
     components: { Knob, Slider, Dropdown },
     props: {
       id: null
@@ -188,13 +193,6 @@
       top: 2em;
       left: 2em;
       z-index: -1;
-      //   font-size: 13.5em;		
-      //   color: #d4d4d4;		
-      //   top: 0.4em;		
-      //   left: -0.3em;		
-      //   z-index: -1;		
-      //   letter-spacing: -.09em;		
-      //   text-shadow: 1px 1px rgba(255,255,255, 0.2);
     }
 
     text {
