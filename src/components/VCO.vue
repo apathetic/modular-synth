@@ -10,9 +10,12 @@
     </div>
 
     <div class="module-interface">
-      <select class="select" @mousedown.stop v-model="type">
+<!--       <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
-      </select>
+      </select> -->
+
+      <dropdown :options="types" @value="type = $event"></dropdown>
+
 
       <slider param="mod" @value="mod = $event"  :min="0" :max="100"></slider>
 
@@ -42,10 +45,11 @@
   import { draggable } from '../mixins/draggable';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
+  import Dropdown from './UI/Dropdown';
 
   export default {
     mixins: [draggable],
-    components: { Knob, Slider },
+    components: { Knob, Slider, Dropdown },
     props: {
       id: null,
       col: null,
@@ -191,12 +195,6 @@
     background: linear-gradient(to bottom, #f2efed 0%,#d9d7d5 98%,#959492 100%);
     color: #000;
 
-    select {
-      position: absolute;
-      top: 14em;
-      left: 11em;
-    }
-
     p {
       position: absolute;
       font-size: 4.5em;
@@ -205,6 +203,7 @@
       color: #bbb;
       top: 2em;
       left: 2em;
+      z-index: -1;
     }
 
     text {
@@ -219,6 +218,12 @@
     .slider {
       position: absolute;
       left: 9em;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 14em;
+      left: 11em;
     }
   }
 </style>

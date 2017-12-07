@@ -239,7 +239,7 @@ export default {
         content: '▿';  // ▽
         position: absolute;
         right: 7px;
-        top: 5px;
+        top: 0;
         pointer-events: none;
       }
     }
