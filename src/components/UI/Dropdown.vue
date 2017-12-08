@@ -23,23 +23,26 @@ export default {
       type: String,
       required: false
     },
-    options: Array
+    options: {
+      type: Array,
+      required: true
+    }
   },
 
   data() {
     return {
       active: false,
       selected: 1,
-      type: 'dropdown'
+      type: 'Dropdown'
     };
   },
 
   created() {
     this.id = this.$parent.id + '-' + this.param;
-    this.$emit('value', this.value); // update parent w/ value
+    this.$emit('value', this.options[0]); // update parent w/ value
     this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
 
-    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
+    console.log('%c[parameter] Creating %s Dropdown', 'color: orange', this.param);
   },
 
   destroyed() {
@@ -62,23 +65,24 @@ export default {
     },
 
     select(index) {
-      console.log(index);
-      this.selected = index;
-      this.value = this.options[index];
+      const value = this.options[index];
 
-      this.$emit('value', this.value); // update parent w/ value
+      this.selected = index;
+      this.$emit('value', value); // update parent w/ value
       this.$store.commit('SET_PARAMETER', {
         id: this.id,
-        value: this.value
+        value: value
       });
     },
 
     // TODO duplication w/ mixins/Parameter.js
     fetchValue() {
-      this.value = this.$store.getters.parameters[this.id] || this.options[0];
-      this.$emit('value', this.value);
+      const value = this.$store.getters.parameters[this.id] || this.options[0];
 
-      console.log('%c[parameter] %s %s set to %f', 'color: orange', this.param, this.type, this.value);
+      this.$emit('value', value);
+      this.selected = this.options.indexOf(value);
+
+      console.log('%c[parameter] %s %s set to %s', 'color: orange', this.param, this.type, value);
     }
   }
 
@@ -95,21 +99,21 @@ export default {
     list-style: none;
     width: 10em;
 
-    &.active li {
-      display: block;
-    }
-
     &:not(.active) li {
       display: none;
+    }
+
+    &.active li {
+      display: block;
+
+      &.active::after {
+        content: '✓';
+      }
     }
 
     li {
       &.active {
         display: block;
-
-        &::after {
-          content: '✓';
-        }
       }
 
       &:hover {
