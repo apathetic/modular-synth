@@ -1,50 +1,33 @@
 <template>
-  <div
-    class="oscillator module _4U"
-    :class="dragging ? 'dragging' : ''"
-    :style="position"
-    @mousedown.stop="startDragging">
-
-    <div class="module-details">
-      <h3>{{ name }}</h3>
-    </div>
-
-    <div class="module-interface">
-      <p>OSC</p>
-      <dropdown param="type"   @value="type = $event" :options="types"></dropdown>
-      <slider   param="mod"    @value="mod = $event"    :min="0"    :max="100"></slider>
-      <knob     param="freq"   @value="freq = $event"   :min="100"  :max="12000" :default="440" mode="log"></knob>
-      <knob     param="PW"     @value="PW = $event"     :min="0"    :max="6.28"></knob>
-      <knob     param="detune" @value="detune = $event" :min="-500" :max="500"></knob>
-    </div>
-
-    <div class="module-connections">
-      <inlets  :ports="inlets"></inlets>
-      <outlets :ports="outlets"></outlets>
-    </div>
-  </div>
+  <module
+      name="oscillator"
+      col="col"
+      row="row"
+      inlets="inlets"
+      outlets="outlets"
+      width="4">
+    <p>OSC</p>
+    <dropdown param="type"   @value="type = $event" :options="types"></dropdown>
+    <slider   param="mod"    @value="mod = $event"    :min="0"    :max="100"></slider>
+    <knob     param="freq"   @value="freq = $event"   :min="100"  :max="12000" :default="440" mode="log"></knob>
+    <knob     param="PW"     @value="PW = $event"     :min="0"    :max="6.28"></knob>
+    <knob     param="detune" @value="detune = $event" :min="-500" :max="500"></knob>
+  </module>
 </template>
 
 <script>
-  import { Parameter } from '../audio';
-  import { draggable } from '../mixins/draggable';
+  import Module from './system/Module';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
   import Dropdown from './UI/Dropdown';
+  import { Parameter } from '../audio';
 
   export default {
-    mixins: [draggable],
-    components: { Knob, Slider, Dropdown },
-    props: {
-      id: null,
-      col: null,
-      row: null
-    },
+    components: { Module, Knob, Slider, Dropdown },
+    props: ['id', 'coords', 'col', 'row'],
 
     data() {
       return {
-        name: 'Oscillator',
-
         freq: 440,
         mod: 0,
         PW: 0,
@@ -177,7 +160,7 @@
   @import '../assets/scss/variables.scss';
 
   .oscillator {
-    background: linear-gradient(to bottom, #f2efed 0%,#d9d7d5 98%,#959492 100%);
+    background: linear-gradient(to bottom, #f2efed 0%, #d9d7d5 98%, #959492 100%);
     color: #000;
 
     p {
