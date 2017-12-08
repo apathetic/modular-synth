@@ -171,6 +171,7 @@ export const clearActive = ({ commit }) => {
 };
 
 // TODO ----------------- move to VUE BUS ? or within App.vue only ...?
+// $emit event ... only connecting.vue needs this...
 export const setFocus = ({ commit }, id) => {
   commit('SET_FOCUS', id);
 };
