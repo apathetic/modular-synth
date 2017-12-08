@@ -321,7 +321,8 @@ export default {
     }
 
     input {
-      font-size: inherit;
+      font-size: 20px; // inherit;
+      font-weight: 100;
       color: inherit;
       border: 0;
       background: none;
@@ -329,7 +330,7 @@ export default {
       height: 100%;
       left: 12px;
       right: $gap;
-      top: 0;
+      top: -2px;
       transition: left $transition-time-slow;
 
       &:focus {
