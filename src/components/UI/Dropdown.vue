@@ -19,6 +19,10 @@ export default {
   // mixins: [parameter],
 
   props: {
+    param: {
+      type: String,
+      required: false
+    },
     options: Array
   },
 
@@ -93,16 +97,21 @@ export default {
 
     &.active li {
       display: block;
+    }
 
-      &.active {
-        &::after {
-          content: '✓'
-        }
-      }
+    &:not(.active) li {
+      display: none;
     }
 
     li {
-      &:not(.active) { display: none; }
+      &.active {
+        display: block;
+
+        &::after {
+          content: '✓';
+        }
+      }
+
       &:hover {
         cursor: pointer;
         color: $color-hover;
