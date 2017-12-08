@@ -1,6 +1,6 @@
 <template>
   <div
-  class="drive module _3U"
+  class="drive module _2U"
   :class="dragging ? 'dragging' : ''"
   :style="position"
   @mousedown.stop="startDragging">
