@@ -40,6 +40,9 @@
     border-top: 1px solid #999;
     color: #000;
 
+    position: absolute;
+    width: 100%;
+
     h3 {
       font-weight: 700;
       padding: 0.1em 0.2em;
@@ -49,8 +52,9 @@
   }
 
   &-interface {
-    padding: 2em 2.4em;
-    position: static;
+    overflow: hidden;
+    padding: 36px 24px 18px;
+    height: 100%;
     visibility: hidden;
     transition: visibility 0s;    // yes you can do this (to delay the toggle of block/none);
   }

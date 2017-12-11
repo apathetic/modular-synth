@@ -76,8 +76,7 @@ export default {
       cutoff: params.cutoff.default,
 
       inlets: [
-        { label: 'in-1' },
-        { label: 'in-2' },
+        { label: 'in' },
         { label: 'mod' }
       ],
       outlets: [
@@ -89,7 +88,11 @@ export default {
 
   created() {
     this.inlets[0].audio = this.input = this.context.createGain();
+    this.inlets[1].audio = this.context.createGain();  // input is -1 : 1
     this.outlets[0].audio = this.output = this.context.createGain();
+
+    // this._delayNode = this.input = this.output = this.context.createDelay(this.toSeconds(options.maxDelay));
+
 
     this.activateNode = this.context.createGain();
     this.dryNode = this.context.createGain();
