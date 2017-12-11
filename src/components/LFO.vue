@@ -21,13 +21,10 @@
         @value="freq = $event">
       </knob>
 
-      <!-- add a DC offset -->
+      <!-- swing is a DC offset -->
       <knob
-        param="offset"
-        :min="-1"
-        :max="1"
-        :decimals="1"
-        @value="offset = $event">
+        param="swing"
+        @value="swing = $event">
       </knob>
 
       <dropdown
