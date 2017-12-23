@@ -16,8 +16,14 @@ export const parameter = {
       type: String,
       default: 'linear'
     },
-    min: 0, // Number,
-    max: 1 // Number
+    min: {
+      type: Number,
+      default: 0
+    },
+    max: {
+      type: Number,
+      default: 1
+    }
   },
 
   data() {
