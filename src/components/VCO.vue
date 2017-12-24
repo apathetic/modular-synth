@@ -106,6 +106,7 @@
       setFreq(f) {
         if (f < 1) { return; } // no DC
         // this.osc_.cancelScheduledValues();
+        // this.osc_.frequency.value = f; // Chrome zippers" this by default ie. introduces at 10-20 ms glide, which sounds like a portamento effect
 
         this.osc_.frequency.exponentialRampToValueAtTime(f, this.context.currentTime + 0.01); // 10ms
         this.freq = f; // updates knob display

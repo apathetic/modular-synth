@@ -43,12 +43,13 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
+import Dropdown from './UI/Dropdown';
 import Knob from './UI/Knob';
 import Slider from './UI/Slider';
 
 export default {
   mixins: [ draggable ],
-  components: { Knob, Slider },
+  components: { Dropdown, Knob, Slider },
   props: {
     id: null,
     col: null,
