@@ -12,6 +12,8 @@
 
 
 <script>
+import { EVENT } from '../../events';
+
 export default {
   data() {
     return {
@@ -94,15 +96,15 @@ export default {
       if (channel === 9) { return; }
 
       if (cmd === 8 || (cmd === 9 && velocity === 0)) { // with MIDI, note on with velocity zero is the same as note off
-        this.$bus.$emit('midi:noteOff', note);
+        this.$bus.$emit(EVENT.MIDI_NOTEOFF, note);
       } else if (cmd === 9) {
-        this.$bus.$emit('midi:noteOn', note, velocity / 127.0);
+        this.$bus.$emit(EVENT.MIDI_NOTEON, note, velocity); // / 127.0);
       } else if (cmd === 11) {
-        this.$bus.$emit('midi:controller', note, velocity / 127.0);
+        this.$bus.$emit(EVENT.MIDI_CONTROLLER, note, velocity); // / 127.0);
       } else if (cmd === 14) {
-        this.$bus.$emit('midi:pitchWheel', ((velocity * 128.0 + note) - 8192) / 8192.0);
+        this.$bus.$emit(EVENT.MIDI_PITCH, ((velocity * 128.0 + note) - 8192) / 8192.0);
       } else if (cmd === 10) {  // poly aftertouch
-        this.$bus.$emit('midi:polyPressure', note, velocity / 127.0);
+        this.$bus.$emit(EVENT.MIDI_POLY, note, velocity); // / 127.0);
       } else {
         console.log(event.data[0] + ' ' + event.data[1] + ' ' + event.data[2]);
       }
