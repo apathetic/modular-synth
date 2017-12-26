@@ -1,20 +1,19 @@
-import { shallow, mount } from 'vue-test-utils';
-import { createRenderer } from 'vue-server-renderer';
-// import VCO from '@/components/VCO.vue';
+const mountVue = require('cypress-vue-unit-test');
+
 import VCO from '../../../src/components/VCO.vue';
+// import VCO from '@/components/VCO.vue';
 import { Util } from '../../support/utils';
 import { Node } from '../../support/dummy';
 
-// const localVue = createLocalVue();
-// // localVue.use(MyPlugin)j // vuex, audioUnit mixins
+const propsData = { id: 1, col: 1, row: 1 };
 
 
 describe('VCO.vue', () => {
-  it('can be created and disposed', () => {
-    const vco = shallow(VCO, {
-      propsData: { }
-    });
+  beforeEach(mountVue(VCO)); // propsData));
 
+  it('can be created and disposed', () => {
+    const vco = cy;
+    // mountVue(VCO);
 
     vco.destroy();
     Util.wasDisposed(vco);
@@ -23,9 +22,9 @@ describe('VCO.vue', () => {
 
   it('should render correct contents', () => {
     const renderer = createRenderer();
-    const vco = shallow(VCO, {
-      propsData: { id: 1, col: 1, row: 1 }
-    });
+    // const vco = shallow(VCO, {
+    //   propsData: { id: 1, col: 1, row: 1 }
+    // });
 
     renderer.renderToString(vco.vm, (err, str) => {
       if (err) throw new Error(err);
@@ -35,9 +34,9 @@ describe('VCO.vue', () => {
 
 
   it('handles input and output connections', () => {
-    const vco = shallow(VCO, {
-      propsData: { }
-    });
+    // const vco = shallow(VCO, {
+    //   propsData: { }
+    // });
 
     vco.connect(Node);
     // Node.connect(vco.inlets[0].data);
