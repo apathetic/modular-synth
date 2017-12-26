@@ -7,7 +7,6 @@ const merge = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.conf');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
-// const DashboardPlugin = require('webpack-dashboard/plugin')
 
 module.exports = merge(baseWebpackConfig, {
   module: {
@@ -28,13 +27,12 @@ module.exports = merge(baseWebpackConfig, {
     },
     publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
-    quiet: true, // necessary for FriendlyErrorsPlugin, DashboardPlugin
+    quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
     }
   },
   plugins: [
-    // new DashboardPlugin(),
     new webpack.DefinePlugin({ 'process.env': config.dev.env }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
