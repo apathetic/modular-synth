@@ -180,6 +180,21 @@
       z-index: -1;
     }
 
+    //   font-size: 13.5em;
+    //   color: #d4d4d4;
+    //   top: 0.4em;
+    //   left: -0.3em;
+    //   z-index: -1;
+    //   letter-spacing: -.09em;
+    //   text-shadow: 1px 1px rgba(255,255,255, 0.2);
+    // }
+
+
+
+
+
+
+
     text {
       color: #000;
     }
