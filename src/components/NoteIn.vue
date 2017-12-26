@@ -10,10 +10,14 @@
     </div>
 
     <div class="module-interface">
-      notein: {{ received }}
       <span class="xxx" :class="{active: active}"></span>
 
-      <br><br>{{ note }}<br>{{ velocity }}
+      <p>note: {{ note }}</p>
+      <p>vel:  ...</p>
+      <p>freq: {{ Math.round(freq) }} Hz</p>
+      <p>amp:  {{ velocity }}</p>
+      <p>bend: {{ bend }}</p>
+      <p>mod:  {{ mod }}</p>
     </div>
 
     <div class="module-connections">
@@ -38,17 +42,18 @@ export default {
   data() {
     return {
       name: 'NoteIn',
-      received: '',
       active: 0,
       note: 0,
       freq: 0,
       velocity: 0,
-      touch: 0,
+      mod: 0,
+      bend: 0,
       outlets: [
         { label: 'freq' },
-        { label: 'gate' },
+        // { label: 'gate' },
         { label: 'vel' },
-        { label: 'touch' }
+        { label: 'bend' },
+        { label: 'mod' }
       ]
     };
   },
@@ -62,8 +67,9 @@ export default {
 
     this.outlets[0].data = 'freq';      // "string" of the property to connect
     this.outlets[1].data = 'velocity';  // for now. should be "gate" or "trigger"...
-    this.outlets[2].data = 'velocity';
-    this.outlets[3].data = 'touch';
+    // this.outlets[2].data = 'gate';
+    this.outlets[2].data = 'bend';
+    this.outlets[3].data = 'mod';
 
 
     // navigator.serviceWorker.register('service-worker.js', {
@@ -148,9 +154,14 @@ export default {
   },
 
   methods: {
+    /**
+     * [noteOn description]
+     * @param  {[type]} note     Midi note.
+     * @param  {[type]} velocity Midi velocity beteen 1 - 127.
+     */
     noteOn(note, velocity) {
       this.note = note;
-      this.velocity = velocity;
+      this.velocity = (velocity / 127.0).toFixed(3);
       this.freq = 440 * (Math.pow(2, ((note - 69) / 12)));
       this.active = note;
     },
@@ -164,11 +175,14 @@ export default {
       }
     },
 
-    controller(note, velocity) {},
-    pitchWheel(data) {},
-    polyPressure(note, pressure) {
+    pitchWheel(bend) {
+      this.bend = +bend.toFixed(3);
+    },
 
-    }
+    controller(target, val) {
+      this.mod = (val / 127.0).toFixed(3);
+    },
+    polyPressure(note, pressure) {}
   }
 };
 </script>

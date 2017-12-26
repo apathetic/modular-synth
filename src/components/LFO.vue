@@ -26,9 +26,17 @@
         @value="freq = $event">
       </knob>
 
-      <select class="select" @mousedown.stop v-model="type">
-        <option v-for="type in types" :value="type">{{ type }}</option>
-      </select>
+      <!-- swing is a DC offset -->
+      <knob
+        param="swing"
+        @value="swing = $event">
+      </knob>
+
+      <dropdown
+        param="type"
+        :options="types"
+        @value="type = $event">
+      </dropdown>
     </div>
 
     <div class="module-connections">
@@ -40,12 +48,13 @@
 
 <script>
 import { draggable } from '../mixins/draggable';
+import Dropdown from './UI/Dropdown';
 import Knob from './UI/Knob';
 import Slider from './UI/Slider';
 
 export default {
   mixins: [ draggable ],
-  components: { Knob, Slider },
+  components: { Dropdown, Knob, Slider },
   props: {
     id: null,
     col: null,

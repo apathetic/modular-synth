@@ -47,7 +47,7 @@ export default {
       'R': 0.1,
 
       inlets: [
-        { label: 'gate',
+        { label: 'vel',
           desc: 'Acts as a trigger for the envelope' },
         { label: 'mod',
           desc: '???' }
