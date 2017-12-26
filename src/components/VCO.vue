@@ -118,7 +118,10 @@
        * @param  {Float} f frequency
        */
       setFreq(f) {
-        this.osc_.frequency.value = f;
+        if (f < 1) { return; } // no DC
+        // this.osc_.cancelScheduledValues();
+
+        this.osc_.frequency.exponentialRampToValueAtTime(f, this.context.currentTime + 0.01); // 10ms
         this.freq = f; // updates knob display
       },
 
@@ -190,6 +193,21 @@
       left: 2em;
       z-index: -1;
     }
+
+    //   font-size: 13.5em;
+    //   color: #d4d4d4;
+    //   top: 0.4em;
+    //   left: -0.3em;
+    //   z-index: -1;
+    //   letter-spacing: -.09em;
+    //   text-shadow: 1px 1px rgba(255,255,255, 0.2);
+    // }
+
+
+
+
+
+
 
     text {
       color: #000;

@@ -97,7 +97,7 @@ export default {
 
   .dropdown {
     list-style: none;
-    width: 10em;
+    width: 7em;
 
     &:not(.active) li {
       display: none;
