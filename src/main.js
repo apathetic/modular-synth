@@ -110,7 +110,8 @@ Vue.directive('context-menu', {
 });
 
 /* eslint-disable no-new */
-const app = new Vue({
+// const app = new Vue({
+new Vue({
   store,
   el: 'main',
   components: { Synth, PatchManager, ContextMenu },
@@ -132,5 +133,5 @@ const app = new Vue({
 });
 
 // if (window.Cypress) {
-window.app = app;
+// window.app = app; // for testing
 // }

@@ -1,10 +1,25 @@
-import VCO from '@/components/VCO.vue';
-import store from '@/store';
-
+import Vue from 'vue';
 import mountVue from 'cypress-vue-unit-test';
-import { extensions } from '../../support/extensions';
+import { createLocalVue, shallow } from 'vue-test-utils';
+
+import VCO from '@/components/VCO.vue';
+import inlets from '@/components/functional/inlets';
+import store from '@/store';
+import { context } from '@/audio';
 import { Utils } from '../../support/utils';
 import { Dummy } from '../../support/dummy';
+
+
+
+const localVue = createLocalVue();
+localVue.mixin({
+  data() {
+    return {
+      context: new window.AudioContext()
+    };
+  }
+});
+
 
 
 let vco;
@@ -15,22 +30,26 @@ const propsData = {
   coords: { x: 0, y: 0 }
 };
 
-
-
+const extensions = {
+  mixin: [{
+    data() {
+      return { context };
+    }
+  }],
+  components: {
+    inlets
+  }
+}
 
 describe('VCO.vue', () => {
-  beforeEach(mountVue(
-    VCO,
-    // {
-    //   store,
-    //   components: {VCO}
-    // },
-    {
-      vue: 'https://unpkg.com/vue',
-      extensions: extensions
-    },
-    propsData)
-  );
+  beforeEach(mountVue(VCO, {
+    vue: 'https://unpkg.com/vue',
+    extensions: extensions
+  }));
+
+  // const getRoot = () => cy.window().its('wes')
+  // const getStore = () => cy.window().its('app.$store')
+  // const getVCO = () => cy.get('.module')
 
   it('can be created and disposed', () => {
     // A)
@@ -74,8 +93,19 @@ describe('VCO.vue', () => {
 
 
   it('handles input and output connections', () => {
-    vco = Cypress.vue;
+    // const wrapper = shallow(VCO, {
+    //   propsData,
+    //   store,
+    //   localVue
+    // });
+    // vco = wrapper.vm;
+    vco = Cypress.vue; // the ref to the component (which was set in "mountVue")
 
+
+
+
+    // vco.connect(Dummy);
+    // Dummy.connect(vco.inlets[0].data);
     Dummy.connect(vco.inlets[1].audio);
     Dummy.connect(vco.inlets[2].audio);
 
@@ -86,18 +116,18 @@ describe('VCO.vue', () => {
   it('can set frequency', () => {
     const freq1 = 123;
     const freq2 = 456;
-
-    vco = Cypress.vue; // the ref to the component (which was set in "mountVue")
+    const vco = shallow(VCO, {
+      propsData: { }
+    });
 
     vco.setFreq(freq1);
-    expect(vco.osc_.frequency.value).to.equal(freq1);
+    expect(vco.osc_.frequency.value).to.be(freq1);
     vco.setFreq(freq2);
-    expect(vco.osc_.frequency.value).to.equal(freq2);
+    expect(vco.osc_.frequency.value).to.be(freq2);
   });
 
 
-  it('has a primary oscillator', () => {
-  });
+  it('has a primary oscillator', () => { });
 
 
   it('can create connection to detune and frequency', () => {
@@ -107,12 +137,11 @@ describe('VCO.vue', () => {
     // instance.dispose();
   });
 
-
-  it ('can get and set the type', () => {
+  it ("can get and set the type", function(){
   });
 
 
-  it('outputs a signal', () => {
+  it("outputs a signal", function(){
     return OutputAudio(function(){
       var lfo = new LFO(100, 10, 20);
       lfo.toMaster();
