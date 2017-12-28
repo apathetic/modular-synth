@@ -24,7 +24,7 @@ export default {
             on: {
               mousedown: (e) => {
                 e.stopPropagation();
-                context.parent.$root.$bus.$emit('connection:start', i, context.parent.id);
+                bus.$emit('connection:start', i, context.parent.id);
               }
             },
             class: { 'outlet': true },
@@ -38,4 +38,3 @@ export default {
     );
   }
 };
-
