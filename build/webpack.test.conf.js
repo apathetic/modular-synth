@@ -1,8 +1,9 @@
-const utils = require('./utils');
+// const utils = require('./utils');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const baseWebpackConfig = require('./webpack.base.conf');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const webpackConfig = merge(baseWebpackConfig, {
   // module: {
