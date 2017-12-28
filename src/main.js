@@ -7,11 +7,10 @@ import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
 
-// Vue.config.silent = true;
-Vue.config.productionTip = false;
 
 const bus = new Vue();
 let authenticated = false;
+Vue.config.productionTip = false;
 
 
 // Global Event Bus
@@ -142,7 +141,7 @@ Vue.directive('context-menu', {
 });
 
 /* eslint-disable no-new */
-new Vue({
+const app = new Vue({
   store,
   el: 'main',
   components: { Synth, PatchManager, ContextMenu },
@@ -162,3 +161,7 @@ new Vue({
     });
   }
 });
+
+// if (window.Cypress) {
+window.app = app;
+// }

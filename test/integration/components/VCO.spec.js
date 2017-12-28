@@ -1,35 +1,102 @@
-const mountVue = require('cypress-vue-unit-test');
+import Vue from 'vue';
+import mountVue from 'cypress-vue-unit-test';
+import { createLocalVue, shallow } from 'vue-test-utils';
 
-import VCO from '../../../src/components/VCO.vue';
-// import VCO from '@/components/VCO.vue';
-import { Util } from '../../support/utils';
-import { Node } from '../../support/dummy';
+import VCO from '@/components/VCO.vue';
+import store from '@/store';
+import { context } from '@/audio';
+import { Utils } from '../../support/utils';
+import { Dummy } from '../../support/dummy';
 
-const propsData = { id: 1, col: 1, row: 1 };
+
+
+const localVue = createLocalVue();
+localVue.mixin({
+  data() {
+    return {
+      context: new window.AudioContext()
+    };
+  }
+});
+
+
+
+let vco;
+const propsData = {
+  id: 1,
+  col: 1,
+  row: 1,
+  coords: { x: 0, y: 0 }
+};
+
+
+// const mountVue = (component) => () => {
+//   cy.document().then(document => {
+//     document.write(vueHtml)
+//     document.close()
+//   })
+//   cy
+//     .window()
+//     .its('Vue')
+//     .then(Vue => {
+//       Vue.mixin({
+//         data() {
+//           return { test: 99 }
+//         }
+//       });
+//       Cypress.vue = new Vue(component).$mount('#app')
+//     })
+// }
 
 
 describe('VCO.vue', () => {
-  beforeEach(mountVue(VCO)); // propsData));
+  // beforeEach(mountVue(VCO)); // propsData));
+  // beforeEach(mountVue({ template='', propsData }))
+
+  // const getRoot = () => cy.window().its('wes')
+  // const getStore = () => cy.window().its('app.$store')
+  // const getVCO = () => cy.get('.module')
 
   it('can be created and disposed', () => {
-    const vco = cy;
+    // A)
     // mountVue(VCO);
+    // vco = Cypress.vue; // the ref to the component (which was set in "mountVue")
+    // console.log(vco);
+    // console.log('--------------------');
 
-    vco.destroy();
-    Util.wasDisposed(vco);
+    // B)
+    // const Constructor = Vue.extend(VCO);
+    // vco = new Constructor({ propsData }).$mount();
+    // console.log(vco);
+    // console.log('--------------------');
+
+    // C)
+    const wrapper = shallow(VCO, {
+      propsData,
+      store,
+      localVue
+    });
+    // wrapper.setProps(propsData)
+    vco = wrapper.vm;
+    console.log(vco);
+    console.log('--------------------');
+
+
+    vco.$destroy();
+    // Utils.wasDisposed(vco);
   });
 
 
   it('should render correct contents', () => {
-    const renderer = createRenderer();
+    // const renderer = createRenderer();
     // const vco = shallow(VCO, {
     //   propsData: { id: 1, col: 1, row: 1 }
     // });
 
-    renderer.renderToString(vco.vm, (err, str) => {
-      if (err) throw new Error(err);
-      expect(str).toMatchSnapshot();
-    });
+    // renderer.renderToString(vco.vm, (err, str) => {
+    //   if (err) throw new Error(err);
+    //   expect(str).toMatchSnapshot();
+    // });
   });
 
 
@@ -38,12 +105,12 @@ describe('VCO.vue', () => {
     //   propsData: { }
     // });
 
-    vco.connect(Node);
-    // Node.connect(vco.inlets[0].data);
-    Node.connect(vco.inlets[1].audio);
-    Node.connect(vco.inlets[2].audio);
+    // vco.connect(Dummy);
+    // Dummy.connect(vco.inlets[0].data);
+    Dummy.connect(vco.inlets[1].audio);
+    Dummy.connect(vco.inlets[2].audio);
 
-    vco.destroy();
+    vco.$destroy();
   });
 
 
@@ -64,10 +131,21 @@ describe('VCO.vue', () => {
   it('has a primary oscillator', () => { });
 
 
-  it('can connect to detune and frequency', () => {
+  it('can create connection to detune and frequency', () => {
     // var instance = new Constr(args);
     // Test.connect(instance.frequency);
     // Test.connect(instance.detune);
     // instance.dispose();
   });
+
+      it ("can get and set the type", function(){
+      });
+
+      it("outputs a signal", function(){
+        return OutputAudio(function(){
+          var lfo = new LFO(100, 10, 20);
+          lfo.toMaster();
+          lfo.start();
+        });
+      });
 });
