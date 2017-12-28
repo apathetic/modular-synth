@@ -1,4 +1,4 @@
-import { context } from '../../src/audio/index';
+import { context } from '@/audio/index';
 
 export const Dummy = {
   input: context.createGain(),
