@@ -1,7 +1,3 @@
-//------------------------------------------------
-//  APPLICATION
-// -----------------------------------------------
-
 <template>
   <section :class="editing ? 'edit-mode': 'play-mode'">
 
@@ -11,18 +7,15 @@
         <div class="inner"></div>
       </div>
 
-      <component v-for="(module, index) in modules"
-        :is="module.type"
-        :id="module.id"
-        :col="module.col"
-        :row="module.row"
-        :coords="{ x:module.x, y:module.y }"
+      <module v-for="(module, index) in modules"
+        :module="module"
         :key="module.id"
 
         @mousedown.native="setActive(module.id)"
         @mouseover.native="setFocus(module.id)"
         @mouseout.native="clearFocus">
-      </component>
+          {{ module }}{{ index }}
+      </module>
 
       <svg id="connections" :style="width">
         <connecting></connecting>
@@ -93,7 +86,8 @@
   import OSC from './components/OSC';
   import Reverb from './components/Reverb';
   import VCF from './components/Filter';
-  import VCO from './components/VCO';
+  // import VCO from './components/VCO';
+  import VCO from './components/VCO_alt';
   import VCA from './components/VCA';
 
   import Debugger from './components/Debugger';
@@ -103,6 +97,7 @@
   import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
+  import module from './components/system/Module2';
 
 
   export default {
@@ -113,6 +108,7 @@
       connecting,
       connection,
       midi,
+      module,
 
       Analyser,
       Comb,
