@@ -14,7 +14,8 @@
 
         @mousedown.native="setActive(module.id)"
         @mouseover.native="setFocus(module.id)"
-        @mouseout.native="clearFocus()">
+        @mouseout.native="clearFocus">
+          {{ module }}{{ index }}
       </module>
 
       <svg id="connections" :style="width">
@@ -86,7 +87,8 @@
   import OSC from './components/OSC';
   import Reverb from './components/Reverb';
   import VCF from './components/Filter';
-  import VCO from './components/VCO';
+  // import VCO from './components/VCO';
+  import VCO from './components/VCO_alt';
   import VCA from './components/VCA';
 
   import Debugger from './components/Debugger';
@@ -96,7 +98,8 @@
   import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
-  import module from './components/system/Module';
+  import module from './components/system/Module2';
+
 
   export default {
     mixins: [sortable],
@@ -106,7 +109,24 @@
       connecting,
       connection,
       midi,
-      module
+      module,
+
+      Analyser,
+      Comb,
+      Compressor,
+      Debugger,
+      Delay,
+      Drive,
+      Env,
+      LFO,
+      Mixer,
+      Node,
+      NoteIn,
+      OSC,
+      Reverb,
+      VCF,
+      VCO,
+      VCA
     },
 
     computed: {
