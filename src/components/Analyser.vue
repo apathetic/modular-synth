@@ -1,5 +1,5 @@
 <template>
-  <div class="analyser 6U">
+  <div class="analyser">
     <div class="module-details">
       <h3>Analyser</h3>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="lfo 2U">
+  <div class="lfo">
     <div class="module-details">
       <h3>LFO</h3>
     </div>

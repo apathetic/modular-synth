@@ -1,5 +1,5 @@
 <template>
-  <div class="vca 2U">
+  <div class="vca">
     <div class="module-details">
       <h3>VCA</h3>
     </div>
