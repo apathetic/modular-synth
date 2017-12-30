@@ -1,5 +1,5 @@
 <template>
-  <div class="oscillator">
+  <div class="oscillator 4U">
     <div class="module-details">
       <h3>Oscillator</h3>
     </div>
@@ -36,12 +36,6 @@
 
     data() {
       return {
-        name: 'Oscillator',
-        x: 0,
-        y: 0,
-        row: 0,
-        col: 0,
-
         freq: 440,
         mod: 0,
         PW: 0,
