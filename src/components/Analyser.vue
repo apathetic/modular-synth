@@ -1,5 +1,5 @@
 <template>
-  <div class="analyser">
+  <div class="analyser 6U">
     <div class="module-details">
       <h3>Analyser</h3>
     </div>
@@ -17,10 +17,10 @@
 
 <script>
   import { mapGetters } from 'vuex';
-
   export default {
     props: {
-      id: null
+      id: null,
+      module: Object
     },
 
     computed: {
@@ -32,7 +32,6 @@
 
     data() {
       return {
-        name: 'Analyser',
         inlets: [
           { label: 'input' }
         ]

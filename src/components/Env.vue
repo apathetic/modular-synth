@@ -20,67 +20,34 @@
 
 
 <script>
-import { signal } from '../audio';
-import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';
+  import { signal } from '../audio';
+  import Knob from './UI/Knob';
 
-export default {
-  mixins: [draggable],
-  components: { Knob },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
+  export default {
+    components: { Knob },
+    props: {
+      id: null,
+      module: Object
+    },
 
-  data() {
-    return {
-      name: 'Env',
-      'A': 0.1,
-      'D': 0.1,
-      'S': 0.6,
-      'R': 0.1,
+    data() {
+      return {
+        'A': 0.1,
+        'D': 0.1,
+        'S': 0.6,
+        'R': 0.1,
 
-      inlets: [
-        { label: 'vel',
-          desc: 'Acts as a trigger for the envelope' },
-        { label: 'mod',
-          desc: '???' }
-      ],
+        inlets: [
+          { label: 'vel',
+            desc: 'Acts as a trigger for the envelope' },
+          { label: 'mod',
+            desc: '???' }
+        ],
 
-      outlets: [
-        { label: 'out' }
-      ]
-    };
-  },
-
-  created() {
-    this.adsr = this.context.createGain();
-    this.adsr.gain.value = 0;
-
-    this.inlets[0].data = this.gate;      // input is mapped to gate fn
-    // this.inlets[1].data = function() {};  // mod?
-
-    this.outlets[0].audio = this.adsr;
-    signal(1).connect(this.adsr);
-
-    console.log('%c[component] Creating Env', 'color: blue');
-  },
-
-  destroyed() {
-    // signal(1).disconnect();   // or is it:
-    this.adsr.disconnect();  // ...?
-
-    // DESTROY signal? TODO
-  },
-
-  methods: {
-    gate(velocity) {
-      if (velocity) {
-        this.start();
-      } else {
-        this.stop();
-      }
+        outlets: [
+          { label: 'out' }
+        ]
+      };
     },
 
     created() {

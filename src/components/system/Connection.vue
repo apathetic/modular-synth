@@ -65,42 +65,48 @@ THOUGHTS:
       id: Number,
       to: Object,   // { port, id }
       from: Object  // { port, id }
-
-      // inlet: Object,  // { port, id }
-      // outlet: Object  // { port, id }
     },
 
     computed: {
       x1() {
-        return this.source.coords.x + cellWidth + 3;
+        // const x = this.fromModule.$children[0].x;
+        // return x + cellWidth + 3;
+        return this.fromModule.x + cellWidth + 3;
       },
       y1() {
-        return this.source.coords.y + (this.from.port * 20) + 27;
+        // const y = this.fromModule.$children[0].y;
+        // return y + (this.from.port * 20) + 27;
+        return this.fromModule.y + (this.from.port * 20) + 27;
       },
       x2() {
-        return this.dest.coords.x - 3;
+        return this.toModule.x - 3;
       },
       y2() {
-        return this.dest.coords.y + (this.to.port * 20) + 27;
+        return this.toModule.y + (this.to.port * 20) + 27;
       }
     },
 
-    data() {
+    data() {                // reference to actual modules in the App:
       return {
+        fromModule: {},     // will be a Vue Component
+        toModule: {},       // will be a Vue Component
         stroke: 'white'
-
-        // For reference (this doesn't need to be reactive):
-        // source: {
-        //   outlet: null,
-        //   module: null,
-        //   id: null
-        // }
       };
     },
 
     created() {
-      this.getToAndFromModules();
-      this.route();
+      this.fromModule = this.getModule(this.from.id);
+      this.toModule = this.getModule(this.to.id);
+
+      console.log(this.fromModule, this.toModule);
+
+      if (this.toModule && this.fromModule) {
+        this.route();
+      // } else {
+      //   this.$destroy();
+      //   console.log('%c[error] connection: missing audioNode', 'color: red');
+      //   console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
+      }
     },
 
     destroyed() {
@@ -116,102 +122,82 @@ THOUGHTS:
        * @return {Void}
        */
       route(connect = true) {
-        // const outlet = this.source.outlet;
-        // const inlet = this.dest.inlet;
-        const outlet = this.source.module.outlets[this.from.port];
-        const inlet = this.dest.module.inlets[this.to.port];
+        const outlet = this.fromModule.outlets[this.from.port];
+        const inlet = this.toModule.inlets[this.to.port];
 
-        try {
-          if (outlet.audio && inlet.audio) {
-            // -------------------
-            // AUDIO -> AUDIO
-            // -------------------
-            const source = outlet.audio;
-            const destination = inlet.audio;
+        if (inlet && outlet) {
+          try {
+            if (outlet.audio && inlet.audio) {
+              // -------------------
+              // AUDIO -> AUDIO
+              // -------------------
+              const source = outlet.audio;
+              const destination = inlet.audio;
 
-            (connect) ? source.connect(destination) : source.disconnect(destination);
+              (connect) ? source.connect(destination) : source.disconnect(destination);
 
-            //
-          } else if (outlet.data && inlet.audio) {
-            // -------------------
-            // DATA -> AUDIO
-            // -------------------
+              //
+            } else if (outlet.data && inlet.audio) {
+              // -------------------
+              // DATA -> AUDIO
+              // -------------------
 
-            console.log('CONNECTION FROM DAT TO AUDIO ', this.from.id, this.to.id);
-            const interpolator = new Parameter(0);
+              console.log('CONNECTION FROM DAT TO AUDIO ', this.from.id, this.to.id);
+              const interpolator = new Parameter(0);
 
-            this.source.module.$watch(outlet.data, interpolator.set);
-            interpolator.output.connect(inlet.audio);
+              this.fromModule.$watch(outlet.data, interpolator.set);
+              interpolator.output.connect(inlet.audio);
 
-            //
-          } else if (outlet.data && inlet.data) {
-            // -------------------
-            // DATA -> DATA
-            // -------------------
-            const action = outlet.data; // STRING
-            const update = inlet.data;  // FUNCTION
+              //
+            } else if (outlet.data && inlet.data) {
+              // -------------------
+              // DATA -> DATA
+              // -------------------
+              const action = outlet.data; // STRING
+              const update = inlet.data;  // FUNCTION
 
-            if (typeof update === 'function') {
-              // "this.unwatch" is a fn that removes itself
-              // "action" is a string -- is refers us to the property on source.module that should be watched;
-              // ... when it is changed, the receiver function, "update" (on toModule), is fired with the new value.
-              this.unwatch = this.source.module.$watch(action, update);
-              this.stroke = '#999';
-              // this.fromModule.$on(action, update);
+              if (typeof update === 'function') {
+                // "this.unwatch" is a fn that removes itself
+                // "action" is a string -- is refers us to the property on fromModule that should be watched;
+                // ... when it is changed, the receiver function, "update" (on toModule), is fired with the new value.
+                this.unwatch = this.fromModule.$watch(action, update);
+                this.stroke = '#999';
+                // this.fromModule.$on(action, update);
 
-            //
+              //
+              }
+            } else {
+              const inType = inlet.data ? 'data' : inlet.audio ? 'audio' : 'unknown';
+              const outType = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
+
+              this.stroke = 'red';
+
+              throw '[error] connection: mismatch (' + outType + ' ⟹ ' + inType + ')';  // eslint-disable-line
             }
-          } else {
-            const inType = inlet.data ? 'data' : inlet.audio ? 'audio' : 'unknown';
-            const outType = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
 
-            this.stroke = 'red';
-
-            throw '[error] connection: mismatch (' + outType + ' ⟹ ' + inType + ')';  // eslint-disable-line
+            // success message:
+            console.log('%c[connection] %s ⟹ %s', 'color: green', this.fromModule.name, this.toModule.name);
+            //
+          } catch (e) {
+            // error message:
+            // e.slice(0, 100)
+            console.log('%c%s', 'color: red', e.toString().slice(0, 100));
+            console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
           }
-
-          // success message:
-          console.log('%c[connection] %s ⟹ %s', 'color: green', this.source.module.name, this.dest.module.name);
-          //
-        } catch (e) {
-          // error message:
-          // e.slice(0, 100)
-          console.log('%c%s', 'color: red', e.toString().slice(0, 100));
-          console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
         }
       },
 
       /**
-       * Fetch a Vue Component from the App, given a particular id.
+       * Fetch a Vue Component from the App, given a particular id. Fetch the currently
+       * focused Component if no id is passed in.
        * NOTE: we fetch the Component from the App (not the Store), as that is what
        *       contains the actual AudioNode.
        * @type {Number} id The id of the module to fetch.
        */
-      getToAndFromModules() {
-        try {
-          const modules = this.$parent.$children;
-          const from = modules.find((m) => { return m.id === this.from.id; });
-          const to = modules.find((m) => { return m.id === this.to.id; });
+      getModule(id) {
+        const App = this.$parent;
 
-          this.dest = {
-            coords: to,
-            module: this.to.id === 0 ? to : to.$children[0],
-            id: this.to.id
-          };
-
-          this.source = {
-            coords: from,
-            module: from.$children[0],
-            id: this.from.id
-          };
-        } catch (e) {
-          this.logError(e);
-        }
-      },
-
-      logError(e) {
-        console.log('%c%s', 'color: red', e.toString().slice(0, 100));
-        console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
+        return App.$children.find((m) => { return m.id === id; });
       },
 
       // VUEX actions, bound as local methods:

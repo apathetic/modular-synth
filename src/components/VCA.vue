@@ -1,5 +1,5 @@
 <template>
-  <div class="vca">
+  <div class="vca 2U">
     <div class="module-details">
       <h3>VCA</h3>
     </div>
@@ -18,7 +18,8 @@
 <script>
   export default {
     props: {
-      id: null
+      id: null,
+      module: Object
     },
 
     data() {
@@ -44,19 +45,18 @@
       };
     },
 
-  created() {
-    const vca = this.context.createGain();
-    // IMPORTANT. Set ORIGINAL gain value i.e. "offset"... which is what is ADDED into future signals. I Think...???
-    // If this is not set, than any signal in will... be additive to itself, or ...something
-    vca.gain.value = 0;
-
-    this.inlets[0].audio = vca;
-    this.inlets[1].audio = vca.gain;
+    created() {
+      const vca = this.context.createGain();
+      // IMPORTANT. Set ORIGINAL gain value i.e. "offset"... which is what is ADDED into future signals. I Think...???
+      // If this is not set, than any signal in will... be additive to itself, or ...something
+      vca.gain.value = 0;
 
       this.inlets[0].audio = vca;
       this.inlets[1].audio = vca.gain;
 
       this.outlets[0].audio = vca;
+
+      console.log('%c[component] Creating VCA', 'color: blue');
     },
 
     destroyed() {
