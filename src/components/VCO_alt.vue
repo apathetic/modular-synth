@@ -1,5 +1,5 @@
 <template>
-  <div class="oscillator 4U">
+  <div class="oscillator">
     <div class="module-details">
       <h3>Oscillator</h3>
     </div>

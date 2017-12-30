@@ -1,7 +1,7 @@
 <template>
   <div
       class="module"
-      :class="[isDragging ? 'dragging' : '']"
+      :class="[width, isDragging ? 'dragging' : '']"
       :style="position"
       @mousedown.stop="startDragging">
 
@@ -16,7 +16,7 @@
 
 <script>
   import { draggable } from '@/mixins/draggable2';
-  // import { rackWidth, rackHeight } from '../../dimensions';
+  import { moduleSize } from '../../dimensions';
   // import { EVENT } from '../../events';
 
   import Analyser from '../Analyser';
@@ -72,14 +72,14 @@
       module: Object
     },
 
-    // computed: {
+    computed: {
     //   position() {
     //     return {
     //       left: (this.$store.state.editing || this.isDragging) ? this.x + 'px' : this.col * rackWidth + 'px',
     //       top: (this.$store.state.editing || this.isDragging) ? this.y + 'px' : this.row * rackHeight + 'px'
     //     };
     //   }
-    // },
+    },
 
     // data() {
     //   return {
@@ -90,6 +90,7 @@
     // },
 
     created() {
+      this.width = `_${moduleSize[this.module.type][0]}U`;
       console.log('%c[component] Creating %s', 'color: blue', this.module.type);
       // this.x = this.module.x;
       // this.y = this.module.y;
