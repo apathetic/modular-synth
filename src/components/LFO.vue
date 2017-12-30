@@ -1,12 +1,7 @@
 <template>
-  <div
-  class="lfo module _2U"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.prevent="startDragging">
-
+  <div class="lfo 2U">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>LFO</h3>
     </div>
 
     <div class="module-interface">
@@ -47,103 +42,103 @@
 </template>
 
 <script>
-import { draggable } from '../mixins/draggable';
-import Dropdown from './UI/Dropdown';
-import Knob from './UI/Knob';
-import Slider from './UI/Slider';
+  import Dropdown from './UI/Dropdown';
+  import Knob from './UI/Knob';
+  import Slider from './UI/Slider';
 
-export default {
-  mixins: [ draggable ],
-  components: { Dropdown, Knob, Slider },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
-
-  data() {
-    return {
-      name: 'LFO',
-      freq: 2.0,
-      mod: 0,
-      min: 0.1,
-      max: 50,
-      phase: 0,
-      type: 'sine',
-      types: ['sine', 'square', 'sawtooth', 'triangle'],
-
-      inlets: [
-        { label: 'reset',
-          desc: '' },
-        { label: 'mod',
-          desc: 'The amount of frequency modulation' }
-      ],
-
-      outlets: [
-        { label: 'output',
-          desc: 'Audio output' }
-      ]
-    };
-  },
-
-  created() {
-    // LFO
-    this.lfo_ = this.context.createOscillator();
-    this.lfo_.type = this.type;
-    this.lfo_.frequency.value = this.freq;
-
-    // Modulation depth
-    this.modDepth_ = this.context.createGain();
-    this.modDepth_.value = 0;
-    this.modDepth_.connect(this.lfo_.detune);
-
-    // Inlets
-    this.inlets[0].data = this.reset; // input is 'data'. mapped to a fn
-    this.inlets[1].audio = this.modDepth_;
-
-    // Outlets
-    this.outlets[0].audio = this.lfo_;
-
-    // Map k-Params
-    this.$watch('freq', this.setFreq);
-    this.$watch('mod', this.setDepth);
-    this.$watch('type', this.setType);
-
-    console.log('%c[component] Creating LFO', 'color: blue');
-
-    this.lfo_.start();
-  },
-
-  methods: {
-    reset() {
-
+  export default {
+    components: { Dropdown, Knob, Slider },
+    props: {
+      id: null,
+      module: Object
     },
 
-    /**
-     * k-rate control of the Oscillator frequency.
-     * @param {Float} f frequency
-     */
-    setFreq(f) {
-      this.lfo_.frequency.value = f;
+    data() {
+      return {
+        freq: 2.0,
+        mod: 0,
+        min: 0.1,
+        max: 50,
+        phase: 0,
+        type: 'sine',
+        types: ['sine', 'square', 'sawtooth', 'triangle'],
+
+        inlets: [
+          {
+            label: 'reset',
+            desc: ''
+          },
+          {
+            label: 'mod',
+            desc: 'The amount of frequency modulation'
+          }
+        ],
+
+        outlets: [
+          {
+            label: 'output',
+            desc: 'Audio output'
+          }
+        ]
+      };
     },
 
-    /**
-     * Update the (frequency) modulation depth.
-     * @param {Float} d Depth, betwen 0 and 100.
-     */
-    setDepth(d) {
-      this.modDepth_.gain.value = d;
+    created() {
+      // LFO
+      this.lfo_ = this.context.createOscillator();
+      this.lfo_.type = this.type;
+      this.lfo_.frequency.value = this.freq;
+
+      // Modulation depth
+      this.modDepth_ = this.context.createGain();
+      this.modDepth_.value = 0;
+      this.modDepth_.connect(this.lfo_.detune);
+
+      // Inlets
+      this.inlets[0].data = this.reset; // input is 'data'. mapped to a fn
+      this.inlets[1].audio = this.modDepth_;
+
+      // Outlets
+      this.outlets[0].audio = this.lfo_;
+
+      // Map k-Params
+      this.$watch('freq', this.setFreq);
+      this.$watch('mod', this.setDepth);
+      this.$watch('type', this.setType);
+
+      this.lfo_.start();
     },
 
-    /**
-     * Update wave type
-     * @param {String} t One of the pre-defined oscillator wave types
-     */
-    setType(t) {
-      this.lfo_.type = t;
+    methods: {
+      reset() {
+
+      },
+
+      /**
+       * k-rate control of the Oscillator frequency.
+       * @param {Float} f frequency
+       */
+      setFreq(f) {
+        this.lfo_.frequency.value = f;
+      },
+
+      /**
+       * Update the (frequency) modulation depth.
+       * @param {Float} d Depth, betwen 0 and 100.
+       */
+      setDepth(d) {
+        this.modDepth_.gain.value = d;
+      },
+
+      /**
+       * Update wave type
+       * @param {String} t One of the pre-defined oscillator wave types
+       */
+      setType(t) {
+        this.lfo_.type = t;
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss">

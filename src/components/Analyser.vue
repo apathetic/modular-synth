@@ -1,12 +1,7 @@
 <template>
-  <div
-  class="analyser module _6U"
-  :class="{dragging: dragging, analysing: power}"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="analyser 6U">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Analyser</h3>
     </div>
 
     <div class="module-interface">
@@ -22,14 +17,10 @@
 
 <script>
   import { mapGetters } from 'vuex';
-  import { draggable } from '../mixins/draggable';
-
   export default {
-    mixins: [draggable],
     props: {
       id: null,
-      col: null,
-      row: null
+      module: Object
     },
 
     computed: {
@@ -41,7 +32,6 @@
 
     data() {
       return {
-        name: 'Analyser',
         inlets: [
           { label: 'input' }
         ]
@@ -65,8 +55,6 @@
           // set buffer to 0 and update display
         }
       });
-
-      console.log('%c[component] Creating Analyser', 'color: blue');
     },
 
     destroyed() {

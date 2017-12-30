@@ -26,7 +26,7 @@
   export default {
     // mixins: [draggable],
     props: {
-      name: 'module'
+      name: null
       // col: 0,
       // row: 0,
       // inlets: [],
