@@ -32,6 +32,8 @@
 
     data() {
       return {
+        name: 'Env',
+
         'A': 0.1,
         'D': 0.1,
         'S': 0.6,

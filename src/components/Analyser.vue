@@ -32,6 +32,7 @@
 
     data() {
       return {
+        name: 'Analyser',
         inlets: [
           { label: 'input' }
         ]
