@@ -1,9 +1,9 @@
 <template>
   <div
-    class="oscillator module _4U"
-    :class="dragging ? 'dragging' : ''"
+    class="module _4U">
+    :class="[name, '_' + width, {dragging: dragging}]"
     :style="position"
-    @mousedown.stop="startDragging">
+    @mousedown.stop="startDragging"
 
     <div class="module-details">
       <h3>{{ name }}</h3>
@@ -21,29 +21,27 @@
 </template>
 
 <script>
-  import { draggable } from '@/mixins/draggable';
+  // import { draggable } from '@/mixins/draggable';
 
   export default {
-    mixins: [draggable],
+    // mixins: [draggable],
     props: {
-      col: 0,
-      row: 0,
-      name: 'module',
-      inlets: [],
-      outlets: [],
-      width: null
+      name: null
+      // col: 0,
+      // row: 0,
+      // inlets: [],
+      // outlets: [],
+      // width: 2
     },
 
     created() {
-      console.log('%c[component] Creating VCO', 'color: blue');
+      console.log('dddd', this.coords);
+      console.log('%c[component] Creating %s', 'color: blue', this.name);
+      console.log(this.name, this.col, this.coords, this.width);
     },
 
     destroyed() {
-      console.log('Destroying VCO ', this.id);
+      console.log('Destroying %s ', this.name);
     }
   };
 </script>
-
-<style lang="scss">
-  @import '../../assets/scss/variables.scss';
-</style>

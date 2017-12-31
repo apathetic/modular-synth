@@ -3,6 +3,9 @@ import store from './store';
 import Synth from './Synth';
 import PatchManager from './PatchManager.vue';
 import ContextMenu from './components/UI/contextMenu';
+// import Inlets from './components/system/Inlets';
+import inlets from './components/functional/inlets';
+// import outlets from './components/functional/outlets';
 import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
@@ -39,67 +42,9 @@ Vue.mixin({
   }
 });
 
-/* * /
-Vue.component('inlets', {
-  functional: true,
-  props: { ports: Array },
-  template: `
-    <div class="inlets">
-      <span v-for="(inlet, index) in ports"
-        :data-label="inlet.label"
-        :data-port="index"
-        class="inlet">
-      </span>
-    </div>
-  `
-});
 
-/* * /
-
-Vue.component('outlets', {
-  functional: true,
-  props: ['ports'],
-  template: `
-  <div v-once class="outlets">
-    <span v-for="(outlet, index) in ports"
-      @mousedown.stop="newConnection(outlet)"
-      :data-label="outlet.label"
-      :data-port="index"
-      class="outlet">
-    </span>
-  </div>
-  `
-});
-
-/* */
-
-// TODO use the vue + compiler bundle for this: ...?
-Vue.component('inlets', {
-  functional: true,
-  props: { ports: Array },
-  render: function(createElement, context) {
-    const ports = context.props.ports;
-
-    return createElement('div',
-      {
-        class: { 'inlets': true }
-      },
-      ports.map((port, i) => {
-        return createElement('span',
-          {
-            class: { 'inlet': true },
-            attrs: {
-              'data-label': port.label,
-              'data-port': i
-            }
-          }
-        );
-      })
-    );
-  }
-});
-/**/
-
+// Global Components (inlets / outlets)
+Vue.component('inlets', inlets);
 Vue.component('outlets', {
   functional: true,
   props: { ports: Array },
@@ -116,7 +61,6 @@ Vue.component('outlets', {
             on: {
               mousedown: (e) => {
                 e.stopPropagation();
-                // store.commit('ADD_CONNECTION', i);  // just port #, as the module is already ref'd in "focused"
                 bus.$emit('connection:start', i, context.parent.id);
               }
             },

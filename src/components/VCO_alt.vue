@@ -1,22 +1,27 @@
 <template>
-  <module
-      name="oscillator"
-      col="col"
-      row="row"
-      inlets="inlets"
-      outlets="outlets"
-      width="4">
-    <p>OSC</p>
-    <dropdown param="type"   @value="type = $event" :options="types"></dropdown>
-    <slider   param="mod"    @value="mod = $event"    :min="0"    :max="100"></slider>
-    <knob     param="freq"   @value="freq = $event"   :min="100"  :max="12000" :default="440" mode="log"></knob>
-    <knob     param="PW"     @value="PW = $event"     :min="0"    :max="6.28"></knob>
-    <knob     param="detune" @value="detune = $event" :min="-500" :max="500"></knob>
-  </module>
+  <div class="oscillator">
+    <div class="module-details">
+      <h3>Oscillator</h3>
+    </div>
+
+    <div class="module-interface">
+      <p>OSC</p>
+      <dropdown param="type"   @value="type = $event" :options="types"></dropdown>
+      <slider   param="mod"    @value="mod = $event"    :min="0"    :max="100"></slider>
+      <knob     param="freq"   @value="freq = $event"   :min="100"  :max="12000" :default="440" mode="log"></knob>
+      <knob     param="PW"     @value="PW = $event"     :min="0"    :max="6.28"></knob>
+      <knob     param="detune" @value="detune = $event" :min="-500" :max="500"></knob>
+    </div>
+
+    <div class="module-connections">
+      <inlets  :ports="inlets"></inlets>
+      <outlets :ports="outlets"></outlets>
+    </div>
+  </div>
 </template>
 
 <script>
-  import Module from './system/Module';
+  import Module from './system/Module2';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
   import Dropdown from './UI/Dropdown';
@@ -24,10 +29,14 @@
 
   export default {
     components: { Module, Knob, Slider, Dropdown },
-    props: ['id', 'coords', 'col', 'row'],
+    props: {
+      id: null,
+      module: Object
+    },
 
     data() {
       return {
+        name: 'VCO',
         freq: 440,
         mod: 0,
         PW: 0,
@@ -84,13 +93,7 @@
       this.$watch('PW', this.setPulse);
       this.$watch('mod', this.setDepth);
 
-      console.log('%c[component] Creating VCO', 'color: blue');
-
       this.osc_.start();
-    },
-
-    destroyed() {
-      console.log('Destroying VCO ', this.id);
     },
 
     methods: {
@@ -101,7 +104,10 @@
        * @param  {Float} f frequency
        */
       setFreq(f) {
-        this.osc_.frequency.value = f;
+        if (f < 1) { return; } // no DC
+        // this.osc_.cancelScheduledValues();
+
+        this.osc_.frequency.exponentialRampToValueAtTime(f, this.context.currentTime + 0.01); // 10ms
         this.freq = f; // updates knob display
       },
 
