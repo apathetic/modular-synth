@@ -113,19 +113,18 @@
       text-align: right;
     }
   }
+
+  > div {
+    height: 100%;
+  }
 }
 
 .play-mode {
   .module {
     width: #{$rackWidth * 3};   // default rack width is 3U
+    // width: auto;
     height: $rackHeight;
     // transition: all $transition-time;
-
-    &._1U { width: #{$rackWidth * 1}; }
-    &._2U { width: #{$rackWidth * 2}; }
-    &._3U { width: #{$rackWidth * 3}; }
-    &._4U { width: #{$rackWidth * 4}; }
-    &._6U { width: #{$rackWidth * 6}; }
 
     &-interface {
       display: block;
@@ -136,5 +135,11 @@
     &-connections {
       display: none;
     }
+
+    &._1U { width: #{$rackWidth * 1}; }
+    &._2U { width: #{$rackWidth * 2}; }
+    &._3U { width: #{$rackWidth * 3}; }
+    &._4U { width: #{$rackWidth * 4}; }
+    &._6U { width: #{$rackWidth * 6}; }
   }
 }

@@ -1,28 +1,19 @@
-//------------------------------------------------
-//  APPLICATION
-// -----------------------------------------------
-
 <template>
   <section :class="editing ? 'edit-mode': 'play-mode'">
 
     <div id="modules" ref="grid" @click.left="clearActive">
-
       <div class="position-highlight">
         <div class="inner"></div>
       </div>
 
-      <component v-for="(module, index) in modules"
-        :is="module.type"
-        :id="module.id"
-        :col="module.col"
-        :row="module.row"
-        :coords="{ x:module.x, y:module.y }"
+      <module v-for="(module, index) in modules"
+        :module="module"
         :key="module.id"
 
         @mousedown.native="setActive(module.id)"
         @mouseover.native="setFocus(module.id)"
-        @mouseout.native="clearFocus">
-      </component>
+        @mouseout.native="clearFocus()">
+      </module>
 
       <svg id="connections" :style="width">
         <connecting></connecting>
@@ -35,7 +26,6 @@
           @mousedown.native="setActive(connection.id)">
         </connection>
       </svg>
-
     </div>
 
     <aside id="sidebar">
@@ -81,29 +71,11 @@
   import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
 
-  import Analyser from './components/Analyser';
-  import Comb from './components/Comb';
-  import Compressor from './components/Compressor';
-  import Delay from './components/Delay';
-  import Drive from './components/Drive';
-  import Env from './components/Env';
-  import LFO from './components/LFO';
-  import Mixer from './components/Mixer';
-  import NoteIn from './components/NoteIn';
-  import OSC from './components/OSC';
-  import Reverb from './components/Reverb';
-  import VCF from './components/Filter';
-  import VCO from './components/VCO';
-  import VCA from './components/VCA';
-
-  import Debugger from './components/Debugger';
-  import Node from './components/Node';
-
   import connecting from './components/system/Connecting';
   import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
-
+  import module from './components/system/Module2';
 
   export default {
     mixins: [sortable],
@@ -113,23 +85,7 @@
       connecting,
       connection,
       midi,
-
-      Analyser,
-      Comb,
-      Compressor,
-      Debugger,
-      Delay,
-      Drive,
-      Env,
-      LFO,
-      Mixer,
-      Node,
-      NoteIn,
-      OSC,
-      Reverb,
-      VCF,
-      VCO,
-      VCA
+      module
     },
 
     computed: {

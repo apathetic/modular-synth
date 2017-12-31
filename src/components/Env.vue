@@ -1,12 +1,7 @@
 <template>
-  <div
-    class="env module _3U"
-    :class="dragging ? 'dragging' : ''"
-    :style="position"
-    @mousedown.stop="startDragging">
-
+  <div class="env 3U">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Env</h3>
     </div>
 
     <div class="module-interface">
@@ -25,97 +20,92 @@
 
 
 <script>
-import { signal } from '../audio';
-import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';
+  import { signal } from '../audio';
+  import Knob from './UI/Knob';
 
-export default {
-  mixins: [draggable],
-  components: { Knob },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
+  export default {
+    components: { Knob },
+    props: {
+      id: null,
+      module: Object
+    },
 
-  data() {
-    return {
-      name: 'Env',
-      'A': 0.1,
-      'D': 0.1,
-      'S': 0.6,
-      'R': 0.1,
+    data() {
+      return {
+        name: 'Env',
 
-      inlets: [
-        { label: 'vel',
-          desc: 'Acts as a trigger for the envelope' },
-        { label: 'mod',
-          desc: '???' }
-      ],
+        'A': 0.1,
+        'D': 0.1,
+        'S': 0.6,
+        'R': 0.1,
 
-      outlets: [
-        { label: 'out' }
-      ]
-    };
-  },
+        inlets: [
+          { label: 'vel',
+            desc: 'Acts as a trigger for the envelope' },
+          { label: 'mod',
+            desc: '???' }
+        ],
 
-  created() {
-    this.adsr = this.context.createGain();
-    this.adsr.gain.value = 0;
+        outlets: [
+          { label: 'out' }
+        ]
+      };
+    },
 
-    this.inlets[0].data = this.gate;      // input is mapped to gate fn
-    // this.inlets[1].data = function() {};  // mod?
+    created() {
+      this.adsr = this.context.createGain();
+      this.adsr.gain.value = 0;
 
-    this.outlets[0].audio = this.adsr;
-    signal(1).connect(this.adsr);
+      this.inlets[0].data = this.gate;      // input is mapped to gate fn
+      // this.inlets[1].data = function() {};  // mod?
 
-    console.log('%c[component] Creating Env', 'color: blue');
-  },
+      this.outlets[0].audio = this.adsr;
+      signal(1).connect(this.adsr);
+    },
 
-  destroyed() {
-    // signal(1).disconnect();   // or is it:
-    this.adsr.disconnect();  // ...?
+    destroyed() {
+      // signal(1).disconnect();   // or is it:
+      this.adsr.disconnect();  // ...?
 
-    // DESTROY signal? TODO
-  },
+      // DESTROY signal? TODO
+    },
 
-  methods: {
-    gate(velocity) {
-      if (velocity) {
-        this.start();
-      } else {
-        this.stop();
+    methods: {
+      gate(velocity) {
+        if (velocity) {
+          this.start();
+        } else {
+          this.stop();
+        }
+      },
+
+      start() {   // "trigger" ?
+        const now = this.context.currentTime;
+        const adsr = this.adsr.gain;
+        const currentValue = adsr.value;  // for the case where the previous envelope is still active
+
+        adsr.cancelScheduledValues(now);
+        adsr.setValueAtTime(currentValue, now);
+
+
+        // perhaps better:
+
+        // setTargetAtTime(to, now, duration)
+        // exponentialRampToValueAtTime
+        adsr.linearRampToValueAtTime(1, now + this.A);
+        adsr.linearRampToValueAtTime(this.S, now + this.A + this.D);
+      },
+
+      stop() {    // "release"
+        const now = this.context.currentTime;
+        const adsr = this.adsr.gain;
+
+        adsr.cancelScheduledValues(0);
+        adsr.setValueAtTime(adsr.value, now);
+        adsr.linearRampToValueAtTime(0, now + this.R);
       }
-    },
-
-    start() {   // "trigger" ?
-      const now = this.context.currentTime;
-      const adsr = this.adsr.gain;
-      const currentValue = adsr.value;  // for the case where the previous envelope is still active
-
-      adsr.cancelScheduledValues(now);
-      adsr.setValueAtTime(currentValue, now);
-
-
-      // perhaps better:
-
-      // setTargetAtTime(to, now, duration)
-      // exponentialRampToValueAtTime
-      adsr.linearRampToValueAtTime(1, now + this.A);
-      adsr.linearRampToValueAtTime(this.S, now + this.A + this.D);
-    },
-
-    stop() {    // "release"
-      const now = this.context.currentTime;
-      const adsr = this.adsr.gain;
-
-      adsr.cancelScheduledValues(0);
-      adsr.setValueAtTime(adsr.value, now);
-      adsr.linearRampToValueAtTime(0, now + this.R);
     }
-  }
-};
-
+  };
 </script>
 
 <style lang="scss">
