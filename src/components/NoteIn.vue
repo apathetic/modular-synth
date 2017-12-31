@@ -34,6 +34,7 @@
 
     data() {
       return {
+        name: 'NoteIn',
         active: 0,
         note: 0,
         freq: 0,

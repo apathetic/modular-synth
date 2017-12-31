@@ -36,6 +36,7 @@
 
     data() {
       return {
+        name: 'VCO',
         freq: 440,
         mod: 0,
         PW: 0,
