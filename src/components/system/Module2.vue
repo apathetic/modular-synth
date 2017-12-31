@@ -90,6 +90,7 @@
     // },
 
     created() {
+      this.id = this.module.id;
       this.width = `_${moduleSize[this.module.type][0]}U`;
       console.log('%c[component] Creating %s', 'color: blue', this.module.type);
       // this.x = this.module.x;

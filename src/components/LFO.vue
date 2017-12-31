@@ -55,6 +55,7 @@
 
     data() {
       return {
+        name: 'LFO',
         freq: 2.0,
         mod: 0,
         min: 0.1,
