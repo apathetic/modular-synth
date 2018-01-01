@@ -21,17 +21,17 @@
 </template>
 
 <script>
-  import { Parameter } from '@/audio';
-  import { draggable } from '@/mixins/draggable';
+  import Module from './system/Module2';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
   import Dropdown from './UI/Dropdown';
+  import { Parameter } from '../audio';
 
   export default {
-    mixins: [draggable],
-    components: { Knob, Slider, Dropdown },
+    components: { Module, Knob, Slider, Dropdown },
     props: {
-      id: null
+      id: null,
+      module: Object
     },
 
     data() {
@@ -92,8 +92,6 @@
       this.$watch('type', this.setType);
       this.$watch('PW', this.setPulse);
       this.$watch('mod', this.setDepth);
-
-      console.log('%c[component] Creating VCO', 'color: blue');
 
       this.osc_.start();
     },
@@ -181,21 +179,6 @@
       left: 2em;
       z-index: -1;
     }
-
-    //   font-size: 13.5em;
-    //   color: #d4d4d4;
-    //   top: 0.4em;
-    //   left: -0.3em;
-    //   z-index: -1;
-    //   letter-spacing: -.09em;
-    //   text-shadow: 1px 1px rgba(255,255,255, 0.2);
-    // }
-
-
-
-
-
-
 
     text {
       color: #000;
