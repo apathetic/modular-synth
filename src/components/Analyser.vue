@@ -19,8 +19,7 @@
   import { mapGetters } from 'vuex';
   export default {
     props: {
-      id: null,
-      module: Object
+      id: null
     },
 
     computed: {

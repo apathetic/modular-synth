@@ -21,17 +21,15 @@
 </template>
 
 <script>
-  import Module from './system/Module2';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
   import Dropdown from './UI/Dropdown';
   import { Parameter } from '../audio';
 
   export default {
-    components: { Module, Knob, Slider, Dropdown },
+    components: { Knob, Slider, Dropdown },
     props: {
-      id: null,
-      module: Object
+      id: null
     },
 
     data() {
