@@ -4,13 +4,30 @@ import Vuex from 'vuex';
 import { context } from '@/audio';
 
 export const extensions = {
-  use: store,
-  // use: Vuex,
+  use: [{
+    install: function(Vue) {
+      Object.defineProperty(Vue.prototype, '$bus', {
+        get() {
+          return { // whatever mocked data
+            $on: function() {},
+            $off: function() {}
+          }
+        }
+      });
+      Object.defineProperty(Vue.prototype, '$store', {
+        get() {
+          return store
+        }
+      });
+    }
+  }],
+
   mixin: [{
     data() {
       return { context };
     }
   }],
+
   components: {
     inlets
   }
