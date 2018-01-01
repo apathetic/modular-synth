@@ -1,12 +1,7 @@
 <template>
-  <div
-    class="oscillator module _4U"
-    :class="dragging ? 'dragging' : ''"
-    :style="position"
-    @mousedown.stop="startDragging">
-
+  <div class="oscillator">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Oscillator</h3>
     </div>
 
     <div class="module-interface">
@@ -26,25 +21,22 @@
 </template>
 
 <script>
-  import { Parameter } from '../audio';
-  import { draggable } from '../mixins/draggable';
+  import Module from './system/Module2';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
   import Dropdown from './UI/Dropdown';
+  import { Parameter } from '../audio';
 
   export default {
-    mixins: [draggable],
-    components: { Knob, Slider, Dropdown },
+    components: { Module, Knob, Slider, Dropdown },
     props: {
       id: null,
-      col: null,
-      row: null
+      module: Object
     },
 
     data() {
       return {
-        name: 'Oscillator',
-
+        name: 'VCO',
         freq: 440,
         mod: 0,
         PW: 0,
@@ -101,13 +93,7 @@
       this.$watch('PW', this.setPulse);
       this.$watch('mod', this.setDepth);
 
-      console.log('%c[component] Creating VCO', 'color: blue');
-
       this.osc_.start();
-    },
-
-    destroyed() {
-      console.log('Destroying VCO ', this.id);
     },
 
     methods: {
@@ -180,7 +166,7 @@
   @import '../assets/scss/variables.scss';
 
   .oscillator {
-    background: linear-gradient(to bottom, #f2efed 0%,#d9d7d5 98%,#959492 100%);
+    background: linear-gradient(to bottom, #f2efed 0%, #d9d7d5 98%, #959492 100%);
     color: #000;
 
     p {
@@ -193,21 +179,6 @@
       left: 2em;
       z-index: -1;
     }
-
-    //   font-size: 13.5em;
-    //   color: #d4d4d4;
-    //   top: 0.4em;
-    //   left: -0.3em;
-    //   z-index: -1;
-    //   letter-spacing: -.09em;
-    //   text-shadow: 1px 1px rgba(255,255,255, 0.2);
-    // }
-
-
-
-
-
-
 
     text {
       color: #000;
