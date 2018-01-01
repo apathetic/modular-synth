@@ -49,8 +49,7 @@
   export default {
     components: { Dropdown, Knob, Slider },
     props: {
-      id: null,
-      module: Object
+      id: null
     },
 
     data() {

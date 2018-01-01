@@ -26,8 +26,7 @@
   export default {
     components: { Knob },
     props: {
-      id: null,
-      module: Object
+      id: null
     },
 
     data() {
