@@ -1,12 +1,7 @@
 <template>
-  <div
-  class="filter module module--tall _3U"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="filter">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Filter</h3>
     </div>
 
     <div class="module-interface">
@@ -36,89 +31,81 @@
   </div>
 </template>
 
-
 <script>
-import { Parameter } from '../audio';
-import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';
+  import { Parameter } from '../audio';
+  import Knob from './UI/Knob';
 
-export default {
-  mixins: [draggable],
-  components: { Knob },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
-
-  data() {
-    return {
-      name: 'Filter',
-
-      freq: 440,
-      mod: 21,
-      Q: 1,
-      type: 'allpass',
-      types: ['allpass', 'bandpass', 'highpass', 'lowpass', 'peaking'],
-
-      inlets: [
-        { label: 'input',
-          desc: 'The signal to filter' },
-        { label: 'freq',
-          desc: 'The filter frequency' },
-        { label: 'mod' }
-      ],
-
-      outlets: [
-        {
-          label: 'output',
-          desc: 'Audio output' }
-      ]
-    };
-  },
-
-  created() {
-    // Filter
-    this.filter = this.context.createBiquadFilter();
-    this.filter.type = this.types[0];
-    this.filter.frequency.value = this.freq;
-    this.filter.Q.value = this.Q; // this.Q_;
-
-    // Mod
-    this.mod_ = new Parameter(this.mod * 500);    // range: 0-500, interval of a 5th
-    this.mod_.output.connect(this.filter.detune); // filter tremolo
-
-    // Inlets
-    this.inlets[0].audio = this.filter;
-    this.inlets[1].data = this.setFreq;
-    this.inlets[2].audio = this.mod_.input;
-
-    // Outlets
-    this.outlets[0].audio = this.filter;
-
-    // Map k-Params
-    this.$watch('freq', this.setFreq);
-    this.$watch('Q', this.setQ);
-    this.$watch('type', this.setType);
-
-    console.log('%c[component] Creating Filter', 'color: blue');
-  },
-
-  methods: {
-    setFreq(f) {
-      this.filter.frequency.value = f;
+  export default {
+    components: { Knob },
+    props: {
+      id: null
     },
 
-    setQ(q) {
-      this.filter.Q.value = q;
+    data() {
+      return {
+        name: 'Filter',
+
+        freq: 440,
+        mod: 21,
+        Q: 1,
+        type: 'allpass',
+        types: ['allpass', 'bandpass', 'highpass', 'lowpass', 'peaking'],
+
+        inlets: [
+          { label: 'input',
+            desc: 'The signal to filter' },
+          { label: 'freq',
+            desc: 'The filter frequency' },
+          { label: 'mod' }
+        ],
+
+        outlets: [
+          {
+            label: 'output',
+            desc: 'Audio output' }
+        ]
+      };
     },
 
-    setType(t) {
-      this.filter.type = t || 'lowpass';
+    created() {
+      // Filter
+      this.filter = this.context.createBiquadFilter();
+      this.filter.type = this.types[0];
+      this.filter.frequency.value = this.freq;
+      this.filter.Q.value = this.Q; // this.Q_;
+
+      // Mod
+      this.mod_ = new Parameter(this.mod * 500);    // range: 0-500, interval of a 5th
+      this.mod_.output.connect(this.filter.detune); // filter tremolo
+
+      // Inlets
+      this.inlets[0].audio = this.filter;
+      this.inlets[1].data = this.setFreq;
+      this.inlets[2].audio = this.mod_.input;
+
+      // Outlets
+      this.outlets[0].audio = this.filter;
+
+      // Map k-Params
+      this.$watch('freq', this.setFreq);
+      this.$watch('Q', this.setQ);
+      this.$watch('type', this.setType);
+    },
+
+    methods: {
+      setFreq(f) {
+        this.filter.frequency.value = f;
+      },
+
+      setQ(q) {
+        this.filter.Q.value = q;
+      },
+
+      setType(t) {
+        this.filter.type = t || 'lowpass';
+      }
     }
-  }
-};
-
+  };
 </script>
 
 <style lang="scss">
@@ -168,5 +155,4 @@ export default {
       left: -4px;
     }
   }
-
 </style>

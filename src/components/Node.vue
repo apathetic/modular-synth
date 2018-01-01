@@ -1,10 +1,5 @@
 <template>
-  <div
-  class="node module _4U"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="node">
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
@@ -28,16 +23,10 @@
   </div>
 </template>
 
-
 <script>
-  import { draggable } from '../mixins/draggable';
-
   export default {
-    mixins: [draggable],
     props: {
-      id: null,
-      col: null,
-      row: null
+      id: null
     },
 
     data() {
@@ -78,8 +67,6 @@
 
       this.outlets[0].audio = this.context.createGain();
       this.outlets[1].audio = this.context.createGain();
-
-      console.log('%c[component] Creating Node', 'color: blue');
     }
 
     // destroyed() {
@@ -88,7 +75,6 @@
     //   this.outlets[1].audio.disconnect();
     // }
   };
-
 </script>
 
 <style lang="scss">
