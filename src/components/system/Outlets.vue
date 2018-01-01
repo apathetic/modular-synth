@@ -12,7 +12,5 @@
 <script>
   export default {
     props: { ports: Array }
-
-
   };
 </script>

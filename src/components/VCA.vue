@@ -18,8 +18,7 @@
 <script>
   export default {
     props: {
-      id: null,
-      module: Object
+      id: null
     },
 
     data() {

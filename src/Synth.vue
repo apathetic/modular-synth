@@ -75,7 +75,7 @@
   import connection from './components/system/Connection';
   import masterOut from './components/system/MasterOut';
   import midi from './components/system/Midi.vue';
-  import module from './components/system/Module2';
+  import module from './components/system/Module';
 
   export default {
     mixins: [sortable],
