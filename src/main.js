@@ -48,7 +48,7 @@ Vue.component('inlets', inlets);
 Vue.component('outlets', outlets);
 
 
-// Register a global custom directive called v-content-menu
+// Register a global custom directive called v-context-menu
 Vue.directive('context-menu', {
   inserted: function(element) {
 

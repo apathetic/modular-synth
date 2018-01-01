@@ -1,7 +1,7 @@
 <template>
   <div
       class="module"
-      :class="[width, isDragging ? 'dragging' : '']"
+      :class="[width, tall, isDragging ? 'dragging' : '']"
       :style="position"
       @mousedown.stop="startDragging">
 
@@ -63,6 +63,7 @@
     created() {
       this.id = this.module.id;
       this.width = `_${moduleSize[this.module.type][0]}U`;
+      this.tall = moduleSize[this.module.type][2] ? 'module--tall' : '';
 
       console.log('%c[component] Creating %s', 'color: blue', this.module.type);
     },

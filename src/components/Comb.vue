@@ -1,10 +1,5 @@
 <template>
-  <div
-  class="comb module _3U"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="comb">
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
@@ -21,82 +16,76 @@
   </div>
 </template>
 
-
 <script>
-import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';
+  import Knob from './UI/Knob';
 
-export default {
-  mixins: [draggable],
-  components: { Knob },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
-
-  data() {
-    return {
-      name: 'Comb',
-
-      freq: 440,
-      types: ['lowpass', 'hipass', 'bandpass', 'notch'],
-      Q: 1,
-
-      inlets: [
-        {
-          label: 'input'
-          // audio: null
-        }, {
-          label: 'input'
-          // audio: null
-        }
-      ],
-
-      outlets: [
-        {
-          label: 'output-1'
-          // audio: null
-        }, {
-          label: 'output-2'
-          // audio: null
-        }
-      ]
-    };
-  },
-
-  created() {
-    this.filter = this.context.createBiquadFilter();
-    this.filter.type = this.types[0];
-    this.filter.frequency.value = this.freq;
-    this.filter.Q.value = this.Q;
-
-    // connect input to our filter
-    this.inlets[0].audio = this.filter;
-    this.outlets[0].audio = this.filter;
-
-    // this.$watch('type', this.setReverb);
-    // this.$watch('freq', this.setDecay);
-    // this.$watch('Q', this.setDecay);
-
-    console.log('%c[component] Creating Comb', 'color: blue');
-  },
-
-  // destroyed() {
-  //   this.filter.disconnect();// this is done in Connection
-  // },
-
-  methods: {
-    setFreq(f) {
-      this.filter.frequency.value = f;
+  export default {
+    components: { Knob },
+    props: {
+      id: null,
+      col: null,
+      row: null
     },
 
-    setType(t) {
-      this.filter.type = this.types[t] || 'lowpass';
-    }
-  }
-};
+    data() {
+      return {
+        name: 'Comb',
 
+        freq: 440,
+        types: ['lowpass', 'hipass', 'bandpass', 'notch'],
+        Q: 1,
+
+        inlets: [
+          {
+            label: 'input'
+            // audio: null
+          }, {
+            label: 'input'
+            // audio: null
+          }
+        ],
+
+        outlets: [
+          {
+            label: 'output-1'
+            // audio: null
+          }, {
+            label: 'output-2'
+            // audio: null
+          }
+        ]
+      };
+    },
+
+    created() {
+      this.filter = this.context.createBiquadFilter();
+      this.filter.type = this.types[0];
+      this.filter.frequency.value = this.freq;
+      this.filter.Q.value = this.Q;
+
+      // connect input to our filter
+      this.inlets[0].audio = this.filter;
+      this.outlets[0].audio = this.filter;
+
+      // this.$watch('type', this.setReverb);
+      // this.$watch('freq', this.setDecay);
+      // this.$watch('Q', this.setDecay);
+    },
+
+    // destroyed() {
+    //   this.filter.disconnect();// this is done in Connection
+    // },
+
+    methods: {
+      setFreq(f) {
+        this.filter.frequency.value = f;
+      },
+
+      setType(t) {
+        this.filter.type = this.types[t] || 'lowpass';
+      }
+    }
+  };
 </script>
 
 <style lang="scss">
