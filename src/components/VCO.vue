@@ -41,7 +41,7 @@
         phase: 0,
         detune: 0,
         type: 'sine',
-        types: ['sine', 'sawtooth', 'triangle'], // 'square', ==> 'pulse' instead
+        types: ['sine', 'sawtooth', 'triangle', 'square'], // ==> 'pulse' instead
 
         inlets: [
           { label: 'freq',
@@ -78,7 +78,7 @@
       this.pulse_ = new Parameter(0);
 
       // Inlets
-      this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate conrol, we connect it here...
+      this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate control, we connect it here...
       this.inlets[1].audio = this.modDepth_;          // NOTE: this is how we control the modulation (ie. in the _receiving_ module rather than the source)
       this.inlets[2].audio = this.pulse_.input;
 

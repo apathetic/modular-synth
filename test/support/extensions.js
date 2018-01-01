@@ -1,4 +1,5 @@
 import inlets from '@/components/functional/inlets';
+import outlets from '@/components/functional/outlets';
 import store from '@/store';
 import Vuex from 'vuex';
 import { context } from '@/audio';
@@ -29,7 +30,8 @@ export const extensions = {
   }],
 
   components: {
-    inlets
+    inlets,
+    outlets
   }
 }
 
