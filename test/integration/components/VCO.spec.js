@@ -21,7 +21,6 @@ const propsData = {
 describe('VCO.vue', () => {
   beforeEach(mountVue(VCO, {
     // vue: 'https://unpkg.com/vue',
-    // vue: '/__cypress/iframes/node_modules/vue/dist/vue.js',
     vue: 'http://localhost:8000/vue.js',
     extensions: extensions
   }));
