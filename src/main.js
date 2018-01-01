@@ -4,9 +4,8 @@ import store from './store';
 import Synth from './Synth';
 import PatchManager from './PatchManager.vue';
 import ContextMenu from './components/UI/contextMenu';
-// import Inlets from './components/system/Inlets';
 import inlets from './components/functional/inlets';
-// import outlets from './components/functional/outlets';
+import outlets from './components/functional/outlets';
 import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
@@ -47,36 +46,7 @@ Vue.mixin({
 
 // Global Components (inlets / outlets)
 Vue.component('inlets', inlets);
-Vue.component('outlets', {
-  functional: true,
-  props: { ports: Array },
-  render: function(createElement, context) {
-    const ports = context.props.ports;
-
-    return createElement('div',
-      {
-        class: { 'outlets': true }
-      },
-      ports.map((port, i) => {
-        return createElement('span',
-          {
-            on: {
-              mousedown: (e) => {
-                e.stopPropagation();
-                context.parent.$root.$bus.$emit('connection:start', i, context.parent.id);
-              }
-            },
-            class: { 'outlet': true },
-            attrs: {
-              'data-label': port.label,
-              'data-port': i
-            }
-          }
-        );
-      })
-    );
-  }
-});
+Vue.component('outlets', outlets);
 
 
 // Register a global custom directive called v-content-menu
