@@ -31,8 +31,7 @@
   import OSC from '../OSC';
   import Reverb from '../Reverb';
   import VCF from '../Filter';
-  // import VCO from '../VCO';
-  import VCO from '../VCO_alt';
+  import VCO from '../VCO';
   import VCA from '../VCA';
 
   import Debugger from '../Debugger';
