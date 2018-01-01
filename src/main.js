@@ -62,7 +62,7 @@ Vue.component('outlets', {
             on: {
               mousedown: (e) => {
                 e.stopPropagation();
-                bus.$emit('connection:start', i, context.parent.id);
+                context.parent.$root.$bus.$emit('connection:start', i, context.parent.id);
               }
             },
             class: { 'outlet': true },
