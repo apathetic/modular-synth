@@ -55,7 +55,7 @@ Vue.directive('context-menu', {
 });
 
 /* eslint-disable no-new */
-const app = new Vue({
+new Vue({
 // new Vue({
   store,
   el: 'main',
@@ -78,5 +78,5 @@ const app = new Vue({
 });
 
 // if (window.Cypress) {
-window.app = app; // for testing
+// window.app = app; // for testing
 // }
