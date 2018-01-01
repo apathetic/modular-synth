@@ -1,4 +1,5 @@
 import Vue from 'vue';
+// import Vuex from 'vuex';
 import store from './store';
 import Synth from './Synth';
 import PatchManager from './PatchManager.vue';
@@ -10,6 +11,7 @@ import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
 
+// Vue.use(Vuex);
 
 const bus = new Vue();
 let authenticated = false;
@@ -83,8 +85,8 @@ Vue.directive('context-menu', {
 });
 
 /* eslint-disable no-new */
-// const app = new Vue({
-new Vue({
+const app = new Vue({
+// new Vue({
   store,
   el: 'main',
   components: { Synth, PatchManager, ContextMenu },
@@ -106,5 +108,5 @@ new Vue({
 });
 
 // if (window.Cypress) {
-// window.app = app; // for testing
+window.app = app; // for testing
 // }

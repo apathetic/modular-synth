@@ -1,5 +1,5 @@
 import VCO from '@/components/VCO.vue';
-import store from '@/store';
+// import store from '@/store';
 
 import mountVue from 'cypress-vue-unit-test';
 import { extensions } from '../../support/extensions';
@@ -19,18 +19,12 @@ const propsData = {
 
 
 describe('VCO.vue', () => {
-  beforeEach(mountVue(
-    VCO,
-    // {
-    //   store,
-    //   components: {VCO}
-    // },
-    {
-      vue: 'https://unpkg.com/vue',
-      extensions: extensions
-    },
-    propsData)
-  );
+  beforeEach(mountVue(VCO, {
+    // vue: 'https://unpkg.com/vue',
+    // vue: '/__cypress/iframes/node_modules/vue/dist/vue.js',
+    vue: 'http://localhost:8000/vue.js',
+    extensions: extensions
+  }));
 
   it('can be created and disposed', () => {
     // A)
