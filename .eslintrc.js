@@ -29,8 +29,9 @@ module.exports = {
     'space-before-function-paren': ['error', 'never'],
     'no-multiple-empty-lines': ['error', {'max': 3}],
     'arrow-parens': 0,
-
     'no-multi-spaces': [1, { 'ignoreEOLComments': true }],
+
+    'vue/no-invalid-v-for': 0,
 
     // don't require .vue extension when importing
     // 'import/extensions': ['error', 'always', {
