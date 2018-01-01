@@ -20,136 +20,58 @@
 </template>
 
 <script>
-import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';
+  import Knob from './UI/Knob';
 
-const params = {
-  delay: {
-    default: 100,
-    min: 20,
-    max: 1000
-  },
-  feedback: {
-    default: 0.45,
-    min: 0,
-    max: 0.9
-  },
-  cutoff: {
-    default: 20000,
-    min: 20,
-    max: 20000
-  },
-  wet: {
-    default: 0.5,
-    min: 0,
-    max: 1
-  },
-  dry: {
-    default: 1,
-    min: 0,
-    max: 1
-  }
-};
+  const params = {
+    delay: {
+      default: 100,
+      min: 20,
+      max: 1000
+    },
+    feedback: {
+      default: 0.45,
+      min: 0,
+      max: 0.9
+    },
+    cutoff: {
+      default: 20000,
+      min: 20,
+      max: 20000
+    },
+    wet: {
+      default: 0.5,
+      min: 0,
+      max: 1
+    },
+    dry: {
+      default: 1,
+      min: 0,
+      max: 1
+    }
+  };
 
-export default {
-  mixins: [draggable],
-  components: { Knob },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
-
-  data() {
-    return {
-      name: 'Delay',
-      delay: params.delay.default,
-      wet: params.wet.default,
-      dry: params.dry.default,
-      feedback: params.feedback.default,
-      cutoff: params.cutoff.default,
-
-      inlets: [
-        { label: 'in' },
-        { label: 'mod' }
-      ],
-      outlets: [
-        { label: 'out-1' },
-        { label: 'out-2' }
-      ]
-    };
-  },
-
-  created() {
-    this.inlets[0].audio = this.input = this.context.createGain();
-    this.inlets[1].audio = this.context.createGain();  // input is -1 : 1
-    this.outlets[0].audio = this.output = this.context.createGain();
-
-    // this._delayNode = this.input = this.output = this.context.createDelay(this.toSeconds(options.maxDelay));
-
-
-    this.activateNode = this.context.createGain();
-    this.dryNode = this.context.createGain();
-    this.wetNode = this.context.createGain();
-    this.filter = this.context.createBiquadFilter();
-    this.delayNode = this.context.createDelay(10);
-    this.feedbackNode = this.context.createGain();
-
-    this.activateNode.connect(this.delayNode);
-    this.activateNode.connect(this.dryNode);
-    this.delayNode.connect(this.filter);
-    this.filter.connect(this.feedbackNode);
-    this.feedbackNode.connect(this.delayNode);
-    this.feedbackNode.connect(this.wetNode);
-    this.wetNode.connect(this.output);
-    this.dryNode.connect(this.output);
-
-    this.filter.type = 'lowpass';
-
-    // this.$watch('delay', this.setFreq);
-    this.$watch('wet', this.setWet);
-    this.$watch('dry', this.setDry);
-    this.$watch('feedback', this.setFeedback);
-    this.$watch('cutoff', this.setCutoff);
-
-    console.log('%c[component] Creating Delay', 'color: blue');
-  },
-
-  destroyed() {
-    // this.inlets[0].disconnect();
-    // this.outlets[0].disconnect();
-    this.activateNode.disconnect();
-    this.delayNode.disconnect();
-    this.filter.disconnect();
-    this.feedbackNode.disconnect();
-    this.wetNode.disconnect();
-    this.dryNode.disconnect();
-  },
-
-  methods: {
-    setDelay(d) {
-      // this.osc.frequency.value = f;
+  export default {
+    components: { Knob },
+    props: {
+      id: null
     },
 
     data() {
       return {
         name: 'Delay',
-        // delay: params.delay.default,
-        // wet: params.wet.default,
-        // dry: params.dry.default,
-        // feedback: params.feedback.default,
-        // cutoff: params.cutoff.default,
-        params: params,
+        delay: params.delay.default,
+        wet: params.wet.default,
+        dry: params.dry.default,
+        feedback: params.feedback.default,
+        cutoff: params.cutoff.default,
 
         inlets: [
-          { label: 'in',
-            desc: 'Signal input' },
-          { label: 'mod',
-            desc: 'Modulation input for delay time' }
+          { label: 'in' },
+          { label: 'mod' }
         ],
         outlets: [
-          { label: 'out-1' }
-          // { label: 'out-2' }
+          { label: 'out-1' },
+          { label: 'out-2' }
         ]
       };
     },
@@ -159,27 +81,26 @@ export default {
       this.inlets[1].audio = this.context.createGain();  // input is -1 : 1
       this.outlets[0].audio = this.output = this.context.createGain();
 
+      // this._delayNode = this.input = this.output = this.context.createDelay(this.toSeconds(options.maxDelay));
+
+
+      this.activateNode = this.context.createGain();
       this.dryNode = this.context.createGain();
       this.wetNode = this.context.createGain();
       this.filter = this.context.createBiquadFilter();
-      this.delayNode = this.context.createDelay(5);
+      this.delayNode = this.context.createDelay(10);
       this.feedbackNode = this.context.createGain();
 
-      this.dryNode.gain.value = params.dry.default;
-      this.wetNode.gain.value = params.wet.default;
-      this.feedbackNode.gain.value = params.feedback.default;
-      this.delayNode.delayTime.value = params.delay.default / 1000.0;
-      this.filter.frequency.value = params.filter.default;
-      this.filter.type = 'lowpass';
-
-      this.input.connect(this.delayNode);
-      this.input.connect(this.dryNode);
+      this.activateNode.connect(this.delayNode);
+      this.activateNode.connect(this.dryNode);
       this.delayNode.connect(this.filter);
       this.filter.connect(this.feedbackNode);
       this.feedbackNode.connect(this.delayNode);
       this.feedbackNode.connect(this.wetNode);
       this.wetNode.connect(this.output);
       this.dryNode.connect(this.output);
+
+      this.filter.type = 'lowpass';
 
       // this.$watch('delay', this.setFreq);
       this.$watch('wet', this.setWet);
@@ -191,7 +112,7 @@ export default {
     destroyed() {
       // this.inlets[0].disconnect();
       // this.outlets[0].disconnect();
-      // this.activateNode.disconnect();
+      this.activateNode.disconnect();
       this.delayNode.disconnect();
       this.filter.disconnect();
       this.feedbackNode.disconnect();

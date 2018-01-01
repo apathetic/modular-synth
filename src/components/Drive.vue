@@ -1,10 +1,5 @@
 <template>
-  <div
-  class="drive module _2U"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="drive">
     <div class="module-details">
       <h3>Drive</h3>
     </div>
@@ -31,7 +26,9 @@
   export default {
     components: { Knob },
     props: {
-      id: null
+      id: null,
+      col: null,
+      row: null
     },
 
     data() {
@@ -53,6 +50,8 @@
       this.outlets[0].audio = this.output = this.context.createGain();
 
       this.$watch('drive', this.setDrive);
+
+      console.log('%c[component] Creating Drive', 'color: blue');
     },
 
     destroyed() {
