@@ -26,9 +26,7 @@
   export default {
     components: { Knob },
     props: {
-      id: null,
-      col: null,
-      row: null
+      id: null
     },
 
     data() {
@@ -50,8 +48,6 @@
       this.outlets[0].audio = this.output = this.context.createGain();
 
       this.$watch('drive', this.setDrive);
-
-      console.log('%c[component] Creating Drive', 'color: blue');
     },
 
     destroyed() {

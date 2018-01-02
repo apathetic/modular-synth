@@ -17,15 +17,11 @@ const dragObj = {
 };
 
 export const draggable = {
-  props: {
-    coords: Object
-  },
-
   computed: {
     position() {
       return {
-        left: (this.$store.state.editing || this.dragging) ? this.x + 'px' : (this.col * rackWidth) + 'px', // * this.w
-        top: (this.$store.state.editing || this.dragging) ? this.y + 'px' : this.row * rackHeight + 'px'
+        left: (this.$store.state.editing || this.isDragging) ? this.x + 'px' : this.module.col * rackWidth + 'px',
+        top: (this.$store.state.editing || this.isDragging) ? this.y + 'px' : this.module.row * rackHeight + 'px'
       };
     }
   },
@@ -34,13 +30,13 @@ export const draggable = {
     return {
       x: 0,
       y: 0,
-      dragging: false
+      isDragging: false
     };
   },
 
   created() {
-    this.x = this.coords.x;
-    this.y = this.coords.y;
+    this.x = this.module.x;
+    this.y = this.module.y;
   },
 
   methods: {
@@ -57,7 +53,7 @@ export const draggable = {
       dragObj.startX = x;
       dragObj.startY = y;
 
-      this.dragging = true;
+      this.isDragging = true;
       this.x = x;                 // necessary as the module's internal coords may be different if in play mode
       this.y = y;
 
@@ -81,14 +77,14 @@ export const draggable = {
     },
 
     stopDragging(event) {
-      this.dragging = false;
+      this.isDragging = false;
       this.$bus.$emit(EVENT.DRAG_END, this.id);
 
       if (this.$store.state.editing) {      // TODO && cursorStartY != this.y etc
         // we only want to update the Store with the
         // new coordinates if we are in editing mode:
         this.$store.commit('UPDATE_GRID_POSITION', {
-          id: this.id,
+          id: this.module.id,
           x: this.x,
           y: this.y
         });
