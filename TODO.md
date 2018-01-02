@@ -21,7 +21,6 @@
 
 
 - General
-  - Some sort of Module base (ie node). Currently so much duplication atm
   - load patch
     - turn off power. Problematic now that Meters plug directly into MasterOut due to Chrome bug.
   - web workers
@@ -78,6 +77,7 @@
 
 
   - General
+    - ~~Some sort of Module base (ie node). Currently so much duplication atm~~
     - ~~loading patches~~
       - ~~*connections load at same time as modules (which are not yet in the DOM), meaning the svg computes props fail.* This is not an issue on page load, however. Audio routing also fails as a result~~
     - ~~saving patches~~
