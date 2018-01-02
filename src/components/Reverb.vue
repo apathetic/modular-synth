@@ -1,7 +1,7 @@
 <template>
   <div class="reverb">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Reverb</h3>
     </div>
 
     <div class="module-interface">
