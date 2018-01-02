@@ -139,8 +139,6 @@
 
       window.removeEventListener(EVENT.KEY_DOWN, this.keydown);
       window.removeEventListener(EVENT.KEY_UP, this.keyup);
-
-      console.log('Destroying NoteIn', this.id);
     },
 
     methods: {

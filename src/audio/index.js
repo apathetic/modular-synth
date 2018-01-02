@@ -59,8 +59,27 @@ export class Parameter {
 
   destroy() {
     this.output.disconnect();
+    this.input = this.output = null;
   }
 }
+// export class Parameter2 {
+//   constructor(value = 0) {
+//     const param = context.createGain();
+
+//     param.gain.value = value;
+//     this.set = (value) => { param.gain.value = value; };
+//     this.param = param;
+//     signal(1).connect(param);
+
+//     return param;
+//   }
+
+//   destroy() {
+//     this.param.disconnect();
+//     this.param = null;
+//   }
+// }
+
 
 
 /**
