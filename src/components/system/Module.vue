@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import { draggable } from '@/mixins/draggable2';
+  import { draggable } from '@/mixins/draggable';
   import { moduleSize } from '../../dimensions';
 
   import Analyser from '../Analyser';

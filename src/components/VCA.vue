@@ -54,8 +54,6 @@
       this.inlets[1].audio = vca.gain;
 
       this.outlets[0].audio = vca;
-
-      console.log('%c[component] Creating VCA', 'color: blue');
     },
 
     destroyed() {
