@@ -1,12 +1,7 @@
 <template>
-  <div
-  class="debugger module _1U"
-  :class="{dragging: dragging}"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="debugger">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Debugger</h3>
     </div>
 
     <div class="module-interface">
@@ -21,14 +16,9 @@
 
 
 <script>
-  import { draggable } from '../mixins/draggable';
-
   export default {
-    mixins: [draggable],
     props: {
-      id: null,
-      col: null,
-      row: null
+      id: null
     },
 
     data() {
@@ -136,7 +126,6 @@
       }
     }
   };
-
 </script>
 
 <style lang="scss">

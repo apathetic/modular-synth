@@ -1,12 +1,7 @@
 <template>
-  <div
-  class="compressor module _3U"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="compressor">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Compressor</h3>
     </div>
 
     <div class="module-interface">
@@ -20,47 +15,39 @@
   </div>
 </template>
 
-
 <script>
-import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';
+  import Knob from './UI/Knob';
 
-export default {
-  mixins: [ draggable ],
-  components: { Knob },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
+  export default {
+    components: { Knob },
+    props: {
+      id: null
+    },
 
-  data() {
-    return {
-      name: 'Compressor',
+    data() {
+      return {
+        name: 'Compressor',
 
-      inlets: [
-        { label: 'input' }
-      ],
-      outlets: [
-        { label: 'output' }
-      ]
-    };
-  },
+        inlets: [
+          { label: 'input' }
+        ],
+        outlets: [
+          { label: 'output' }
+        ]
+      };
+    },
 
-  created() {
-    this.inlets[0].audio = this.input = this.context.createGain();
-    this.outlets[0].audio = this.output = this.context.createGain();
+    created() {
+      this.inlets[0].audio = this.input = this.context.createGain();
+      this.outlets[0].audio = this.output = this.context.createGain();
+    },
 
-    console.log('%c[component] Creating Compressor', 'color: blue');
-  },
+    destroyed() {
+    },
 
-  destroyed() {
-  },
-
-  methods: {
-  }
-};
-
+    methods: {
+    }
+  };
 </script>
 
 <style lang="scss">
