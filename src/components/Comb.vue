@@ -22,9 +22,7 @@
   export default {
     components: { Knob },
     props: {
-      id: null,
-      col: null,
-      row: null
+      id: null
     },
 
     data() {
