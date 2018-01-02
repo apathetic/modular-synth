@@ -1,10 +1,5 @@
 <template>
-  <div
-  class="reverb module _3U"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="reverb">
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
@@ -21,82 +16,74 @@
   </div>
 </template>
 
-
 <script>
-import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';
+  import Knob from './UI/Knob';
 
-export default {
-  mixins: [draggable],
-  components: { Knob },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
-
-  data() {
-    return {
-      name: 'Reverb',
-      seconds: 3,
-      decay: 2,
-
-      inlets: [
-        {
-          label: 'input-1'
-        },
-        {
-          label: 'input-2'
-        }
-      ],
-
-      outlets: [
-        {
-          label: 'output-1'
-        },
-        {
-          label: 'output-2'
-        }
-      ]
-    };
-  },
-
-  created() {
-    const reverb = this.convolver = this.context.createConvolver();
-
-    // inputs
-    this.inlets[0].audio = reverb;
-    this.outlets[0].audio = reverb;
-
-    this.$watch('seconds', this.setReverb);
-    this.$watch('decay', this.setDecay);
-
-    console.log('%c[component] Creating Reverb', 'color: blue');
-  },
-
-  // destroyed() {
-  //   this.convolver.disconnect();
-  // },
-
-  methods: {
-    /**
-     * k-rate control of the Reverb
-     * @param  {Float} s reverb in seconds
-     */
-    setReverb(s) {
-      // this.convolver.reverb.value = s;
+  export default {
+    components: { Knob },
+    props: {
+      id: null
     },
 
-    /**
-     * k-rate control of the Reverb decay
-     * @param  {Float} d decay in seconds
-     */
-    setDecay(d) {
-      // this.convolver.decay.value = d;
-    }
-  }
-};
+    data() {
+      return {
+        name: 'Reverb',
+        seconds: 3,
+        decay: 2,
 
+        inlets: [
+          {
+            label: 'input-1'
+          },
+          {
+            label: 'input-2'
+          }
+        ],
+
+        outlets: [
+          {
+            label: 'output-1'
+          },
+          {
+            label: 'output-2'
+          }
+        ]
+      };
+    },
+
+    created() {
+      const reverb = this.convolver = this.context.createConvolver();
+
+      // inputs
+      this.inlets[0].audio = reverb;
+      this.outlets[0].audio = reverb;
+
+      this.$watch('seconds', this.setReverb);
+      this.$watch('decay', this.setDecay);
+    },
+
+    // destroyed() {
+    //   this.convolver.disconnect();
+    // },
+
+    methods: {
+      /**
+       * k-rate control of the Reverb
+       * @param  {Float} s reverb in seconds
+       */
+      setReverb(s) {
+        // this.convolver.reverb.value = s;
+      },
+
+      /**
+       * k-rate control of the Reverb decay
+       * @param  {Float} d decay in seconds
+       */
+      setDecay(d) {
+        // this.convolver.decay.value = d;
+      }
+    }
+  };
 </script>
 
 <style lang="scss">

@@ -1,12 +1,7 @@
 <template>
-  <div
-  class="drive module _2U"
-  :class="dragging ? 'dragging' : ''"
-  :style="position"
-  @mousedown.stop="startDragging">
-
+  <div class="drive">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Drive</h3>
     </div>
 
     <div class="module-interface">
@@ -25,53 +20,49 @@
   </div>
 </template>
 
-
 <script>
-import { draggable } from '../mixins/draggable';
-import Knob from './UI/Knob';
+  import Knob from './UI/Knob';
 
-export default {
-  mixins: [ draggable ],
-  components: { Knob },
-  props: {
-    id: null,
-    col: null,
-    row: null
-  },
+  export default {
+    components: { Knob },
+    props: {
+      id: null,
+      col: null,
+      row: null
+    },
 
-  data() {
-    return {
-      name: 'Drive',
-      drive: 0.1,
+    data() {
+      return {
+        name: 'Drive',
+        drive: 0.1,
 
-      inlets: [
-        { label: 'input' }
-      ],
-      outlets: [
-        { label: 'output' }
-      ]
-    };
-  },
+        inlets: [
+          { label: 'input' }
+        ],
+        outlets: [
+          { label: 'output' }
+        ]
+      };
+    },
 
-  created() {
-    this.inlets[0].audio = this.input = this.context.createGain();
-    this.outlets[0].audio = this.output = this.context.createGain();
+    created() {
+      this.inlets[0].audio = this.input = this.context.createGain();
+      this.outlets[0].audio = this.output = this.context.createGain();
 
-    this.$watch('drive', this.setDrive);
+      this.$watch('drive', this.setDrive);
 
-    console.log('%c[component] Creating Drive', 'color: blue');
-  },
+      console.log('%c[component] Creating Drive', 'color: blue');
+    },
 
-  destroyed() {
-  },
+    destroyed() {
+    },
 
-  methods: {
-    setDrive(d) {
-      // this.osc.frequency.value = f;
+    methods: {
+      setDrive(d) {
+        // this.osc.frequency.value = f;
+      }
     }
-  }
-};
-
+  };
 </script>
 
 <style lang="scss">

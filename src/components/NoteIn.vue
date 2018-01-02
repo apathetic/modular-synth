@@ -1,11 +1,11 @@
 <template>
-  <div class="note-in 2U">
+  <div class="note-in">
     <div class="module-details">
       <h3>NoteIn</h3>
     </div>
 
     <div class="module-interface">
-      <span class="xxx" :class="{active: active}"></span>
+      <span class="received" :class="{active: active}"></span>
 
       <p>note: {{ note }}</p>
       <p>vel:  ...</p>
@@ -28,8 +28,7 @@
 
   export default {
     props: {
-      id: null,
-      module: Object
+      id: null
     },
 
     data() {
@@ -185,7 +184,7 @@
   @import '../assets/scss/variables.scss';
 
   .note-in {
-    .xxx {
+    .received {
       display: block;
       border-radius: 1em;
       width: 2em;

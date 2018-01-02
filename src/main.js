@@ -1,5 +1,4 @@
 import Vue from 'vue';
-// import Vuex from 'vuex';
 import store from './store';
 import Synth from './Synth';
 import PatchManager from './PatchManager.vue';
@@ -10,8 +9,8 @@ import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
 
-// Vue.use(Vuex);
 
+Vue.config.productionTip = false;
 const bus = new Vue();
 let authenticated = false;
 Vue.config.productionTip = false;
@@ -33,8 +32,7 @@ Object.defineProperty(Vue.prototype, '$authenticated', {
 });
 
 
-// AudioContext Mixin
-// All Components will have access to AudioContext
+// AudioContext Mixin: all Components will have access to AudioContext
 Vue.mixin({
   data() {
     return { context };
@@ -47,7 +45,7 @@ Vue.component('inlets', inlets);
 Vue.component('outlets', outlets);
 
 
-// Register a global custom directive called v-content-menu
+// Register a global custom directive called v-context-menu
 Vue.directive('context-menu', {
   inserted: function(element) {
 

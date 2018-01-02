@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="oscillator module _4U"
-    :class="dragging ? 'dragging' : ''"
-    :style="position"
-    @mousedown.stop="startDragging">
-
+  <div class="oscillator">
     <div class="module-details">
       <h3>{{ name }}</h3>
     </div>
@@ -27,17 +22,13 @@
 
 <script>
   import { Oscillator, PWM } from '../audio';
-  import { draggable } from '../mixins/draggable';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
 
   export default {
-    mixins: [draggable],
     components: { Knob, Slider },
     props: {
-      id: null,
-      col: null,
-      row: null
+      id: null
     },
 
     data() {
@@ -79,8 +70,6 @@
       this.$watch('freq', this.setFreq);
       this.$watch('mod', this.setMod);
       this.$watch('type', this.setType);
-
-      console.log('Creating OSC');
     },
 
     destroyed() {
