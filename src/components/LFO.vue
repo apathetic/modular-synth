@@ -21,10 +21,13 @@
         @value="freq = $event">
       </knob>
 
-      <!-- swing is a DC offset -->
+      <!-- add a DC offset -->
       <knob
-        param="swing"
-        @value="swing = $event">
+        param="offset"
+        :min="-1"
+        :max="1"
+        :decimals="1"
+        @value="offset = $event">
       </knob>
 
       <dropdown
@@ -42,6 +45,7 @@
 </template>
 
 <script>
+  import { Parameter2 } from '../audio';
   import Dropdown from './UI/Dropdown';
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
@@ -60,6 +64,7 @@
         min: 0.1,
         max: 50,
         phase: 0,
+        offset: 0,
         type: 'sine',
         types: ['sine', 'square', 'sawtooth', 'triangle'],
 
@@ -85,28 +90,30 @@
 
     created() {
       // LFO
-      this.lfo_ = this.context.createOscillator();
-      this.lfo_.type = this.type;
-      this.lfo_.frequency.value = this.freq;
+      this.lfo = this.context.createOscillator();
+      this.lfo.type = this.type;
+      this.lfo.frequency.value = this.freq;
 
       // Modulation depth
-      this.modDepth_ = this.context.createGain();
-      this.modDepth_.value = 0;
-      this.modDepth_.connect(this.lfo_.detune);
+      this.modDepth = this.context.createGain();
+      this.modDepth.value = 0;
+      this.modDepth.connect(this.lfo.detune);
+      // this.modDepth = new Parameter2(0);
+      // this.modDepth.connect(this.lfo.detune);
 
       // Inlets
       this.inlets[0].data = this.reset; // input is 'data'. mapped to a fn
-      this.inlets[1].audio = this.modDepth_;
+      this.inlets[1].audio = this.modDepth;
 
       // Outlets
-      this.outlets[0].audio = this.lfo_;
+      this.outlets[0].audio = this.lfo;
 
       // Map k-Params
       this.$watch('freq', this.setFreq);
       this.$watch('mod', this.setDepth);
       this.$watch('type', this.setType);
 
-      this.lfo_.start();
+      this.lfo.start();
     },
 
     methods: {
@@ -119,7 +126,7 @@
        * @param {Float} f frequency
        */
       setFreq(f) {
-        this.lfo_.frequency.value = f;
+        this.lfo.frequency.value = f;
       },
 
       /**
@@ -127,7 +134,8 @@
        * @param {Float} d Depth, betwen 0 and 100.
        */
       setDepth(d) {
-        this.modDepth_.gain.value = d;
+        this.modDepth.gain.value = d;
+        // this.modDepth.set(d);
       },
 
       /**
@@ -135,7 +143,7 @@
        * @param {String} t One of the pre-defined oscillator wave types
        */
       setType(t) {
-        this.lfo_.type = t;
+        this.lfo.type = t;
       }
     }
   };
