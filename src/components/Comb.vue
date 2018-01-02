@@ -1,7 +1,7 @@
 <template>
   <div class="comb">
     <div class="module-details">
-      <h3>{{ name }}</h3>
+      <h3>Comb</h3>
     </div>
 
     <div class="module-interface">
@@ -22,9 +22,7 @@
   export default {
     components: { Knob },
     props: {
-      id: null,
-      col: null,
-      row: null
+      id: null
     },
 
     data() {
