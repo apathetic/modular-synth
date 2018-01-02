@@ -10,8 +10,8 @@ import { mapActions } from 'vuex';
 import { auth } from './store/firebase';
 import { context } from './audio';
 
-// Vue.use(Vuex);
 
+Vue.config.productionTip = false;
 const bus = new Vue();
 let authenticated = false;
 Vue.config.productionTip = false;
@@ -33,8 +33,7 @@ Object.defineProperty(Vue.prototype, '$authenticated', {
 });
 
 
-// AudioContext Mixin
-// All Components will have access to AudioContext
+// AudioContext Mixin: all Components will have access to AudioContext
 Vue.mixin({
   data() {
     return { context };
