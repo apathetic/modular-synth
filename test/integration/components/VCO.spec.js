@@ -1,23 +1,17 @@
 import VCO from '@/components/VCO.vue';
-// import store from '@/store';
-
 import mountVue from 'cypress-vue-unit-test';
 import { extensions } from '../../support/extensions';
 import { Utils, Dummy } from '../../support/utils';
 
-
 let vco;
-
 
 describe('VCO.vue', () => {
   beforeEach(mountVue(VCO, {
-    // vue: 'https://unpkg.com/vue',
-    vue: 'http://localhost:8000/vue.js',
+    vue: 'https://unpkg.com/vue',
     extensions: extensions
   }));
 
   context('Base', () => {
-
     it('can be created and disposed', () => {
       vco = Cypress.vue; // the ref to the component (which was set in "mountVue")
       vco.$destroy();
@@ -30,7 +24,6 @@ describe('VCO.vue', () => {
 
 
   context('UI', () => {
-
     it('should render correct contents', () => {
       // const renderer = createRenderer();
       // const vco = shallow(VCO, { });
@@ -43,8 +36,8 @@ describe('VCO.vue', () => {
     });
   });
 
-  context('Audio', () => {
 
+  context('Audio', () => {
     it('handles input and output connections', () => {
       vco = Cypress.vue;
 
@@ -98,18 +91,16 @@ describe('VCO.vue', () => {
 
 
     it('outputs a signal', () => {
-      return OutputAudio(function(){
+      return OutputAudio(function() {
         var lfo = new LFO(100, 10, 20);
         lfo.toMaster();
         lfo.start();
       });
     });
-
   });
 
 
   context('Type', () => {
-
     it ('can get and set the type', () => {
       const type = 'triangle';
 
