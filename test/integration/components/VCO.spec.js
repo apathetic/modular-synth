@@ -101,7 +101,7 @@ describe('VCO.vue', () => {
 
 
   context('Type', () => {
-    it ('can get and set the type', () => {
+    it('can get and set the type', () => {
       const type = 'triangle';
 
       vco = Cypress.vue;
@@ -110,8 +110,9 @@ describe('VCO.vue', () => {
       expect(vco.osc_.type).to.equal(type);
     });
 
-    it ('handles 4 basic types', () => {
+    it('handles 4 basic types', () => {
       const types = ['triangle', 'sawtooth', 'sine', 'square'];
+
       vco = Cypress.vue;
       for (let i = 0; i < types.length; i++) {
         vco.setType(types[i]);
