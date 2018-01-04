@@ -1,7 +1,7 @@
 import { context } from '@/audio/index';
 
 
-export const Dummy = {
+export const _Dummy = {
   input: context.createGain(),
   connect: function(node) {
     this.input.connect(node);
@@ -10,6 +10,7 @@ export const Dummy = {
     this.input.disconnect();
   }
 };
+export const Dummy = context.createGain();
 
 
 export const Utils = {

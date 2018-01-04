@@ -85,28 +85,28 @@
 
     created() {
       // LFO
-      this.lfo_ = this.context.createOscillator();
-      this.lfo_.type = this.type;
-      this.lfo_.frequency.value = this.freq;
+      this.lfo = this.context.createOscillator();
+      this.lfo.type = this.type;
+      this.lfo.frequency.value = this.freq;
 
       // Modulation depth
       this.modDepth_ = this.context.createGain();
       this.modDepth_.value = 0;
-      this.modDepth_.connect(this.lfo_.detune);
+      this.modDepth_.connect(this.lfo.detune);
 
       // Inlets
       this.inlets[0].data = this.reset; // input is 'data'. mapped to a fn
       this.inlets[1].audio = this.modDepth_;
 
       // Outlets
-      this.outlets[0].audio = this.lfo_;
+      this.outlets[0].audio = this.lfo;
 
       // Map k-Params
       this.$watch('freq', this.setFreq);
       this.$watch('mod', this.setDepth);
       this.$watch('type', this.setType);
 
-      this.lfo_.start();
+      this.lfo.start();
     },
 
     methods: {
@@ -119,7 +119,7 @@
        * @param {Float} f frequency
        */
       setFreq(f) {
-        this.lfo_.frequency.value = f;
+        this.lfo.frequency.value = f;
       },
 
       /**
@@ -135,7 +135,7 @@
        * @param {String} t One of the pre-defined oscillator wave types
        */
       setType(t) {
-        this.lfo_.type = t;
+        this.lfo.type = t;
       }
     }
   };
