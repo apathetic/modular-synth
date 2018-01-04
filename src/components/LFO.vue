@@ -95,11 +95,9 @@
       this.lfo.frequency.value = this.freq;
 
       // Modulation depth
-      this.modDepth = this.context.createGain();
-      this.modDepth.value = 0;
-      this.modDepth.connect(this.lfo.detune);
-      // this.modDepth = new Parameter2(0);
-      // this.modDepth.connect(this.lfo.detune);
+      this.modDepth_ = this.context.createGain();
+      this.modDepth_.value = 0;
+      this.modDepth_.connect(this.lfo.detune);
 
       // Inlets
       this.inlets[0].data = this.reset; // input is 'data'. mapped to a fn

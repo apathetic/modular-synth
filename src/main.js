@@ -12,9 +12,10 @@ import { context } from './audio';
 
 
 Vue.config.productionTip = false;
+
+
 const bus = new Vue();
 let authenticated = false;
-Vue.config.productionTip = false;
 
 
 // Global Event Bus
@@ -55,7 +56,6 @@ Vue.directive('context-menu', {
 
 /* eslint-disable no-new */
 new Vue({
-// new Vue({
   store,
   el: 'main',
   components: { Synth, PatchManager, ContextMenu },
@@ -75,7 +75,3 @@ new Vue({
     });
   }
 });
-
-// if (window.Cypress) {
-// window.app = app; // for testing
-// }
