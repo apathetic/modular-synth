@@ -1,6 +1,6 @@
 <template functional>
   <div class="inlets">
-    <span v-for="(inlet, index) in ports"
+    <span v-for="(inlet, index) in props.ports"
       :data-label="inlet.label"
       :data-port="index"
       class="inlet">
@@ -8,8 +8,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  // export default class inlets extends Vue {
   export default {
-    props: { ports: Array }
+    // @Prop() ports: Array;
+    // props: { ports: Array }
   };
 </script>

@@ -1,12 +1,19 @@
 import Vue from 'vue';
 // import Vuex from 'vuex';
 import store from './store';
-import Synth from './Synth';
+import Synth from './Synth.vue';
 import PatchManager from './PatchManager.vue';
-import ContextMenu from './components/UI/contextMenu';
-import inlets from './components/functional/inlets';
-import outlets from './components/functional/outlets';
-import { mapActions } from 'vuex';
+import ContextMenu from './components/UI/contextMenu.vue';
+// import inlets from "./components/functional/inlets.js";
+// import outlets from './components/functional/outlets.js';
+import inlets from "./components/system/inlets.vue";
+import outlets from './components/system/outlets.vue';
+
+// import { mapActions } from 'vuex';
+import { mapActions } from 'vuex/types/helpers';
+import { Action } from 'vuex/types';
+import { fetchPatches } from "./store/actions";
+
 import { auth } from './store/firebase';
 import { context } from './audio';
 
@@ -24,7 +31,6 @@ Object.defineProperty(Vue.prototype, '$bus', {
     return this.$root.bus;
   }
 });
-
 
 // Global isAuthenticated variable
 Object.defineProperty(Vue.prototype, '$authenticated', {
@@ -54,19 +60,20 @@ Vue.directive('context-menu', {
   }
 });
 
-/* eslint-disable no-new */
+
 new Vue({
   store,
-  el: 'main',
+  el: "main",
   components: { Synth, PatchManager, ContextMenu },
   data: { bus, authenticated },
   methods: {
-    ...mapActions([
-      'fetchPatches'
-    ])
+    fetchPatches
   },
+
+  // @Action('fetchPatches') fetchPatches;
+
   beforeCreate: function() {
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((user: any) => {
       this.authenticated = !!user;
 
       if (this.authenticated) {

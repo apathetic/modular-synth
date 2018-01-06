@@ -6,7 +6,7 @@
         <div class="inner"></div>
       </div>
 
-      <module v-for="(module, index) in modules"
+      <module v-for="module in modules"
         :module="module"
         :key="module.id"
 
@@ -66,18 +66,21 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
   import { mapGetters, mapActions } from 'vuex';
   import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
 
-  import connecting from './components/system/Connecting';
-  import connection from './components/system/Connection';
-  import masterOut from './components/system/MasterOut';
+  import connecting from './components/system/Connecting.vue';
+  import connection from './components/system/Connection.vue';
+  import masterOut from './components/system/MasterOut.vue';
   import midi from './components/system/Midi.vue';
-  import module from './components/system/Module';
+  import module from './components/system/Module.vue';
 
-  export default {
+  import Vue from "vue";
+
+  export default Vue.extend({
+  // export default {
     mixins: [sortable],
 
     components: {
@@ -89,13 +92,14 @@
     },
 
     computed: {
-      width() {
+      width(): string {
         const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
         return this.editing
           ? `width: ${canvasWidth}px`
           : 'width: auto';
       },
 
+      // @mapGetters(['power'])
       ...mapGetters([
         'power',
         'editing',
@@ -153,8 +157,8 @@
         });
       });
 
-      window.addEventListener(EVENT.KEY_DOWN, (e) => {
-        switch (e.code) {
+      window.addEventListener(EVENT.KEY_DOWN, (e: KeyboardEvent) => {
+        switch (e.key) {
           case 'Delete':
           case 'Backspace':
             this.removeModule();
@@ -167,11 +171,11 @@
           case 'Escape':
             // this.togglePower();
             break;
+          case ' ':
           case 'Space':
             // this.togglePlay();  // one day, if i plug in a timeline
             break;
-          case 'ShiftLeft':
-          case 'ShiftRight':
+          case 'Shift':
             // WE only want to rearrange the module-rack if shift is held;
             // otherwise, we probably want to play the module
             // this.toggleSorting;
@@ -182,10 +186,9 @@
         }
       });
 
-      window.addEventListener(EVENT.KEY_UP, (e) => {
-        switch (e.code) {
-          case 'ShiftLeft':
-          case 'ShiftRight':
+      window.addEventListener(EVENT.KEY_UP, (e: KeyboardEvent) => {
+        switch (e.key) {
+          case 'Shift':
             this.sorting = false;
             break;
         }
@@ -194,7 +197,7 @@
 
     mounted() {
       const grid = this.$refs.grid; // rare time we need to scrape DOM.
-      grid.addEventListener(EVENT.SCROLL, (e) => {
+      grid.addEventListener(EVENT.SCROLL, (e: Event) => {
         if (this.editing) {
           this.$store.commit('UPDATE_SCROLL_OFFSET', e.target.scrollLeft);
         }
@@ -212,7 +215,7 @@
         'clearFocus'
       ])
     }
-  };
+  });
 </script>
 
 <style lang="scss">
@@ -249,10 +252,6 @@
     &::-webkit-scrollbar-corner {
       background: $color-grey-dark;
     }
-  }
-
-  #modules {
-
   }
 
   #connections {

@@ -58,16 +58,14 @@ THOUGHTS:
 <script>
   import { cellWidth } from '../../dimensions';
   import { Parameter } from '../../audio';
-  import { mapActions } from 'vuex';
+  // import { mapActions } from 'vuex';
+  import { removeConnection } from '../../store/actions'
 
   export default {
     props: {
       id: Number,
       to: Object,   // { port, id }
       from: Object  // { port, id }
-
-      // inlet: Object,  // { port, id }
-      // outlet: Object  // { port, id }
     },
 
     computed: {
@@ -116,8 +114,6 @@ THOUGHTS:
        * @return {Void}
        */
       route(connect = true) {
-        // const outlet = this.source.outlet;
-        // const inlet = this.dest.inlet;
         const outlet = this.source.module.outlets[this.from.port];
         const inlet = this.dest.module.inlets[this.to.port];
 
@@ -211,6 +207,7 @@ THOUGHTS:
         console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
       },
 
+      // removeConnection
       // VUEX actions, bound as local methods:
       ...mapActions([
         'removeConnection'

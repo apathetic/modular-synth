@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { api, generateKey } from './firebase';
 import { _NAME, _MODULES, _CONNECTIONS, _PARAMETERS } from './index';
 import { DEFAULT } from '../schema';
+import { Action } from 'vuex/types';
 
 
 // -----------------------------------------------
@@ -133,6 +134,7 @@ export const removePatch = ({ commit, state }, key) => {
  * @param  {[type]} commit [description]
  * @return {[type]}        [description]
  */
+@Action
 export const fetchPatches = ({ commit }) => {
   api.load('/patch')
     .then((patches) => {

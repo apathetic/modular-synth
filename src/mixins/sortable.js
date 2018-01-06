@@ -8,38 +8,37 @@
  * elsewhere but referenced here. The two primary ones are:
  *   this.active
  *   this.modules
-
  */
+
 const lanes = 3;
 
 import GridList from '../assets/vendor/gridList';
 import { rackWidth, rackHeight } from '../dimensions';
 
-export const sortable = {
-  methods: {
+@Trait
+export class sortable extends Vue {
+  // export const sortable = {
+  // methods: {
     initSorting(handle) {
       this.handle = handle;
       this.$positionHighlight = this.handle.querySelector('.position-highlight');
       this.$positionHighlight.style.display = 'none';
 
       this.setupGrid();
-    },
+    }
 
     setupGrid() {
       this._widestItem = Math.max.apply(null, this.modules.map(function(item) { return item.w; }));
       this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
       this.gridList = new GridList(this.modules);
       this._applyPositionToItems();
-
-      console.log('%c Setting up sortable ', 'background:#666;color:white;font-weight:bold;');
-      console.log('%c' + this.gridList.toString(), 'font-family:monospace;font-size:10px');
-    },
+    }
 
     startSorting() {
       // Since dragging actually alters the grid, we need to establish the number
       // of cols (+1 extra) before the drag starts
       this._maxGridCols = this.gridList.grid.length;
-    },
+    }
 
     whileSorting(el) {
       // WE need two things, here:
@@ -57,25 +56,27 @@ export const sortable = {
         this._applyPositionToItems();
         this._highlightPositionForItem(item);
       }
-    },
+    }
 
     stopSorting() {
       // this._triggerOnChange()
       this._previousDragPosition = null;
       this._applyPositionToItems();
       this._removePositionHighlight();
-      // console.log(this.gridList.toString());
-    },
+
+      console.log('%c' + this.gridList.toString(), 'font-family:monospace;font-size:10px');
+    }
 
     // -----------------------------------------------------------------
 
+
     _getItemWidth(item) {
       return item.w * rackWidth;
-    },
+    }
 
     _getItemHeight(item) {
       return item.h * rackHeight;
-    },
+    }
 
     _applyPositionToItems() {
       this.modules.forEach((item) => {
@@ -90,7 +91,7 @@ export const sortable = {
       });
 
       this.handle.style.width = (this.gridList.grid.length + this._widestItem) * rackWidth;
-    },
+    }
 
 
     // -----------------------------------------------------------------
@@ -102,7 +103,7 @@ export const sortable = {
       }
       return newPosition[0] !== this._previousDragPosition[0] ||
              newPosition[1] !== this._previousDragPosition[1];
-    },
+    }
 
     _snapItemPositionToGrid(el, item) {
       // var position = el.getBoundingClientRect();
@@ -123,7 +124,7 @@ export const sortable = {
       row = Math.min(row, lanes - item.h);
 
       return [col, row];
-    },
+    }
 
     _highlightPositionForItem(item) {
       this.$positionHighlight.style.width = this._getItemWidth(item) + 'px';
@@ -131,7 +132,7 @@ export const sortable = {
       this.$positionHighlight.style.left = item.col * rackWidth + 'px';
       this.$positionHighlight.style.top = item.row * rackHeight + 'px';
       this.$positionHighlight.style.display = 'block';
-    },
+    }
 
     _removePositionHighlight() {
       this.$positionHighlight.style.display = 'none';
@@ -144,5 +145,5 @@ export const sortable = {
     //   options.onChange.call(
     //     this, this.gridList.getChangedItems(this._items, '$element'));
     // }
-  }
+  // }
 };

@@ -50,6 +50,7 @@ const state = {
 //  STORE
 // -----------------------------------------------
 
+// @Store
 export default new Vuex.Store({
   state,
   getters,
@@ -58,3 +59,10 @@ export default new Vuex.Store({
   plugins
   // strict: process.env.NODE_ENV !== 'production'
 });
+
+// declare module 'vue/types/vue' {
+//   interface Vue {
+//     $bus: string,
+//     $authenticated: boolean
+//   }
+// }

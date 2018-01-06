@@ -1,9 +1,14 @@
+// declare global {
+//   interface Window { 
+//     AudioContext: any; 
+//   }
+// }
 
 /**
  * The application's audio context.
  * @type {AudioContext}
  */
-export const context = window.AudioContext && (new window.AudioContext());
+export const context/*: AudioContext*/ = window.AudioContext && new window.AudioContext();
 
 
 /**
@@ -182,6 +187,14 @@ export class Oscillator {
  * which turns it square ie. a PWM waveform.
  * Reference: https://github.com/pendragon-andyh/WebAudio-PulseOscillator
  */
+// export interface PWM {
+//   frequency: Parameter;
+//   width: Parameter;
+//   _curve: Float32Array;
+//   _saw: AudioNode;
+//   _pulseShaper: WaveShaperNode;
+//   _output: WaveShaperNode;
+// }
 export class PWM {
   constructor(f = 440, w = 0.5) {
     this.frequency = new Parameter(f);
@@ -243,7 +256,7 @@ export class PWM {
     return pulseCurve;
   }
 }
-
+// export PWM;
 
 
 /*
