@@ -1,6 +1,6 @@
-import { shallow } from 'vue-test-utils'
-import { createRenderer } from 'vue-server-renderer'
-import Knob from '@/components/UI/Knob.vue'
+import { shallow } from 'vue-test-utils';
+import { createRenderer } from 'vue-server-renderer';
+import Knob from '@/components/UI/Knob.vue';
 
 /**
  * Simulate a mouse click + drag over a given distance.
@@ -36,10 +36,12 @@ describe('knob.vue', () => {
   it('sets its value in the store when changed', () => {
   });
 
+  it('registers itself in the store when created', () => {
+  });
+
   it('updates internal value on "parameters:load"', () => {
   });
 
   it('displays the correct number of decimals', () => {
   });
-
 });

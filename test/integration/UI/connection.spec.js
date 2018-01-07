@@ -1,10 +1,10 @@
-import { shallow, createLocalVue } from 'vue-test-utils'
-import { createRenderer } from 'vue-server-renderer'
+import { Util, Node } from '../../test/utils';
+import { shallow, createLocalVue } from 'vue-test-utils';
+import { createRenderer } from 'vue-server-renderer';
 import { cellWidth } from '../../src/dimensions';
-import { Util, Node } from '../utils';
-import Synth from '@/Synth.vue';
-import _Node from '@/components/Node.vue';
-import Connection from '@/components/UI/Connection.vue';
+import Synth from '../../src/Synth.vue';
+import _Node from '../../src/components/Node.vue';
+import Connection from '../../src/components/UI/Connection.vue';
 
 const dummyVue = createLocalVue();
 
@@ -13,7 +13,7 @@ const App = shallow(Synth, {
     Node,
     Connection
   }
-})
+});
 
 describe('connection.vue', () => {
   let connection;
@@ -25,7 +25,7 @@ describe('connection.vue', () => {
   it('can be created from an options object', () => {
     connection.setProps({
       to: {
-        id: 1
+        id: 1,
         port: 1
       },
       from: {
@@ -50,19 +50,22 @@ describe('connection.vue', () => {
   it('it removes itself if a connection cannot be made', () => {
   });
 
-  it('a connection must be made between different nodes', () => {
+  it('must be made between different nodes', () => {
   });
 
   it('routes audio correctly between two AudioNodes', () => {
   });
 
-  it('routes data correctly between a data inlet/outlet', () => {
+  it('routes data correctly between data inlet/outlets', () => {
   });
 
   it('audio outlets cannot connect to data inlets', () => {
   });
 
   it('audio is disconnected after removing a connection', () => {
+  });
+
+  it('data is disconnected after removing a connection', () => {
   });
 
   it('sets its coordinates correction', () => {
@@ -77,10 +80,8 @@ describe('connection.vue', () => {
     connection.vm.fromModule = fromModule;
 
     expect(connection.vm.x1).toBe(70 + cellWidth);
-    expect(connection.vm.y1).toBe(xxx);
-    expect(connection.vm.x2).toBe(xxx);
-    expect(connection.vm.y2).toBe(xxx);
-  })
-
-
+    expect(connection.vm.y1).toBe(1);
+    expect(connection.vm.x2).toBe(1);
+    expect(connection.vm.y2).toBe(1);
+  });
 });
