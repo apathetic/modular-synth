@@ -33,30 +33,14 @@
       return {
         name: 'Node',
         inlets: [
-          {
-            label: 'freq'
-            // audio: null // this.input
-          },
-          {
-            label: 'gain'
-            // audio: null // this.input
-          },
-          {
-            label: 'range'
-            // audio: null // this.input
-          }
+          { label: 'freq' },
+          { label: 'gain' },
+          { label: 'range' }
         ],
 
         outlets: [
-          {
-            label: 'output-1'
-            // audio: null // this.outputL   // src?
-          },
-          {
-            // port: 1,
-            label: 'output-2'
-            // audio: null // this.outputR
-          }
+          { label: 'output-1' },
+          { label: 'output-2' }
         ]
       };
     },
@@ -68,12 +52,6 @@
       this.outlets[0].audio = this.context.createGain();
       this.outlets[1].audio = this.context.createGain();
     }
-
-    // destroyed() {
-    //   this.inlets[0].audio.disconnect();
-    //   this.outlets[0].audio.disconnect();
-    //   this.outlets[1].audio.disconnect();
-    // }
   };
 </script>
 

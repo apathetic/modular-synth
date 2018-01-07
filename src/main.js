@@ -11,6 +11,8 @@ import { context } from './audio';
 
 
 Vue.config.productionTip = false;
+
+
 const bus = new Vue();
 let authenticated = false;
 
@@ -34,9 +36,7 @@ Object.defineProperty(Vue.prototype, '$authenticated', {
 // AudioContext Mixin: all Components will have access to AudioContext
 Vue.mixin({
   data() {
-    return {
-      context: context
-    };
+    return { context };
   }
 });
 
