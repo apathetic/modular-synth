@@ -12,6 +12,7 @@
     "lint": "eslint --ext .js,.vue src test"
   },
   "dependencies": {
+    "@types/webaudioapi": "0.0.27",
     "firebase": "^4.8.1",
     "vue": "^2.5.13",
     "vuex": "^3.0.1"

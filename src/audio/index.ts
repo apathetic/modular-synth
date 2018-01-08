@@ -1,20 +1,18 @@
-// declare global {
-//   interface Window { 
-//     AudioContext: any; 
-//   }
-// }
 
 /**
  * The application's audio context.
  * @type {AudioContext}
  */
-export const context/*: AudioContext*/ = window.AudioContext && new window.AudioContext();
+export const context: AudioContext = window.AudioContext && new window.AudioContext();
 
 
 /**
  * Generata a constant stream of 1's at the audio-rate.
  * @type {Object}
  */
+// interface constants {
+//   [key: number]: AudioBufferSourceNode;
+// }
 let constants = {};  // memoize this shizz??
 export function signal(value = 1) {
   if (constants[value]) {
@@ -49,11 +47,16 @@ export function signal(value = 1) {
  * @param {Number} value Initial value of the parameter.
  */
 export class Parameter {
-  constructor(value = 0) {
+  public set: (value: number) => void;
+  public input: GainNode | null;
+  public output: GainNode | null;
+
+  constructor(value: number = 0) {
     const param = context.createGain();
 
     param.gain.value = value;
-    this.set = (value) => { param.gain.value = value; };
+
+    this.set = (value: number) => { param.gain.value = value; };
     this.output = param;
     this.input = param;
 
@@ -63,30 +66,42 @@ export class Parameter {
   }
 
   destroy() {
-    this.output.disconnect();
+    // (<GainNode>this.output).disconnect();
+    this.output && this.output.disconnect();
     this.input = this.output = null;
   }
 }
-// export class Parameter2 {
-//   constructor(value = 0) {
-//     const param = context.createGain();
 
-//     param.gain.value = value;
-//     this.set = (value) => { param.gain.value = value; };
-//     this.param = param;
-//     signal(1).connect(param);
+export class Parameter2 {
+  //   constructor(value = 0) {
+  //     const param = context.createGain();
 
-//     return param;
-//   }
+  //     param.gain.value = value;
+  //     this.set = (value) => { param.gain.value = value; };
+  //     this.param = param;
+  //     signal(1).connect(param);
 
-//   destroy() {
-//     this.param.disconnect();
-//     this.param = null;
-//   }
-// }
+  //     return param;
+  //   }
+
+  //   destroy() {
+  //     this.param.disconnect();
+  //     this.param = null;
+  //   }
+}
 
 
 
+interface ScriptProcessorNodee {
+  // clipLevel: number;
+  // clipping: boolean;
+  // lastClip: number;
+  // clipLag: number;
+  // volume: number;
+  // averaging: number;
+  // connect: (destination: AudioNode) => void;
+  // onaudioprocess: (event: Event) => void;
+}
 /**
  * @class Audio VU meter. Uses deprecated ScriptNode, tho'
  * @param {AudioContext} audioContext The webaudio context.
@@ -94,19 +109,28 @@ export class Parameter {
  * @param {Float} averaging    [description]
  * @param {Integer} clipLag    The release time, in ms, after clipping.
  */
-export class Meter {
-  constructor(canvas, clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
+ export class Meter {
+  private processor: ScriptProcessorNode;
+  private clipLevel: number;
+  private clipping: boolean;
+  private lastClip: number;
+  private clipLag: number;
+  private volume: number;
+  private averaging: number;
+
+  constructor(clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
     // if (!context) { return; }
 
     const processor = this.processor = context.createScriptProcessor(512);
 
     processor.onaudioprocess = this.processAudio;
-    processor.clipping = false;
-    processor.lastClip = 0;
-    processor.volume = 0;
-    processor.clipLevel = clipLevel; //  || 0.98;
-    processor.averaging = averaging; //  || 0.95;
-    processor.clipLag = clipLag; //  || 750;
+
+    this.clipping = false;
+    this.lastClip = 0;
+    this.volume = 0;
+    this.clipLevel = clipLevel; //  || 0.98;
+    this.averaging = averaging; //  || 0.95;
+    this.clipLag = clipLag; //  || 750;
 
     // this will have no effect, since we don't copy the input to the output,
     // but works around a current Chrome bug.
@@ -116,7 +140,7 @@ export class Meter {
     return processor;
   }
 
-  processAudio(event) {
+  processAudio(event: AudioProcessingEvent) {
     var buf = event.inputBuffer.getChannelData(0);
     var bufLength = buf.length;
     var sum = 0;
@@ -140,7 +164,7 @@ export class Meter {
     // want "fast attack, slow release."
     this.volume = Math.max(rms, this.volume * this.averaging);
   };
-  //
+
   // checkClipping() {
   //   if (!this.clipping) {
   //     return false;
@@ -161,9 +185,14 @@ export class Meter {
  * @param {String} t Initial type of the oscillator.
  */
 export class Oscillator {
-  constructor(f, t) {
+  private osc: OscillatorNode;
+  private type: string;
+  public frequency: Parameter | null;
+  public output: OscillatorNode;
+
+  constructor(f: number = 440, t: string = 'sine') {
     this.osc = context.createOscillator();
-    this.osc.type = this.type = t;
+    this.osc.type = /* this.type = */ t;
     this.frequency = new Parameter(f);
     this.frequency.output.connect(this.osc.frequency);
     this.output = this.osc;
@@ -187,18 +216,17 @@ export class Oscillator {
  * which turns it square ie. a PWM waveform.
  * Reference: https://github.com/pendragon-andyh/WebAudio-PulseOscillator
  */
-// export interface PWM {
-//   frequency: Parameter;
-//   width: Parameter;
-//   _curve: Float32Array;
-//   _saw: AudioNode;
-//   _pulseShaper: WaveShaperNode;
-//   _output: WaveShaperNode;
-// }
 export class PWM {
-  constructor(f = 440, w = 0.5) {
-    this.frequency = new Parameter(f);
-    this.width = new Parameter(w);
+  private _saw: OscillatorNode | null; // null so we can destroy(?)
+  private _curve: Float32Array | null;
+  private _pulseShaper: WaveShaperNode | null;
+  public frequency: Parameter;
+  public width: Parameter;
+  public output: WaveShaperNode;
+
+  constructor(f: number = 440, w: number = 0.5) {
+    (<Parameter>this.frequency) = new Parameter(f);
+    (<Parameter>this.width) = new Parameter(w);
 
     this._curve = this.generateCurve();
 
@@ -215,23 +243,28 @@ export class PWM {
 
     // output
     this.output = this._pulseShaper;
-  }
 
-  /**
-   * Start the Oscillator
-   */
-  start() {
+    //start
     this.frequency.output.connect(this._saw.frequency); // control the frequency
     this.width.output.connect(this._pulseShaper); // control pulse width
     this._saw.start();
   }
 
+  // /**
+  //  * Start the Oscillator
+  //  */
+  // start() {
+  //   this.frequency.output.connect((<OscillatorNode>this._saw).frequency); // control the frequency
+  //   this.width.output.connect(<WaveShaperNode>this._pulseShaper);         // control pulse width
+  //   (<OscillatorNode>this._saw).start();
+  // }
+
   /**
    * Un-start the Oscillator
    */
   stop() {
-    this._saw.disconnect();
-    this._pulseShaper.disconnect();
+    (<OscillatorNode>this._saw).disconnect();
+    (<WaveShaperNode>this._pulseShaper).disconnect();
 
     this.frequency.destroy();
     this.width.destroy();
@@ -256,51 +289,5 @@ export class PWM {
     return pulseCurve;
   }
 }
-// export PWM;
 
 
-/*
-//
-//
-//
-function setupNodeMessaging(node) {
-  // This handles communication back from the volume meter
-  node.onmessage = function(event) {
-    if (event.data instanceof Object) {
-      if (event.data.hasOwnProperty('clip')) {
-        this.clip = event.data.clip;
-      }
-      if (event.data.hasOwnProperty('volume')) {
-        this.volume = event.data.volume;
-      }
-    }
-  };
-
-  // Set up some default configuration parameters
-  node.postMessage({
-    'smoothing': 0.9,   // Smoothing parameter
-    'clipLevel': 0.9,   // Level to consider 'clipping'
-    'clipLag': 750,     // How long to keep 'clipping' lit up after clip (ms)
-    'updating': 100      // How frequently to update volume and clip param (ms)
-  });
-
-  // Set up volume and clip attributes.  These will be updated by our onmessage.
-  node.volume = 0;
-  node.clip = false;
-}
-
-var meter = null; // well.... that won't work as it's statically bound at runtime...
-// , vuFactory;
-context.createAudioWorker('workers/meter.js').then(function(factory) {
-  // cache 'factory' in case you want to create more nodes!
-  // vuFactory = factory;
-  meter = factory.createNode([1], []); // we don't need an output, and let's force to mono
-  setupNodeMessaging(meter);
-});
-
-// window.requestAnimationFrame( function(timestamp) {
-//   if (vuNode) {
-//   // Draw a bar based on vuNode.volume and vuNode.clip
-//   }
-// });
-*/

@@ -74,9 +74,9 @@ new Vue({
 
   beforeCreate: function() {
     auth.onAuthStateChanged((user: any) => {
-      this.authenticated = !!user;
+      this.$authenticated = !!user;
 
-      if (this.authenticated) {
+      if (this.$authenticated) {
         this.fetchPatches();
       }
     });

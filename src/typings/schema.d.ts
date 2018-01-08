@@ -1,4 +1,8 @@
-/*
+/**
+ * Provides definitions for API structure
+ */
+
+ /*
 const Schema = {
   type: Object,
   properties:  {
@@ -55,20 +59,42 @@ const Schema = {
   }
 */
 
+export interface API<S> {
+  name: string;
+  id: number;
+  connections: Connection[];
+  modules: Module[];
+  parameterSets: ParamterSet[];
+}
 
+export interface Connection {
+  id: number;
+  from: {
+    id: number;
+    port: number;
+  };
+  to: {
+    id: number;
+    port: number;
+  };
+}
 
-// /**
-//  * Asserts the field is present and correct. If not, tries to fix.
-//  * @param  {[type]} assert [description]
-//  * @param  {[type]} name   [description]
-//  * @param  {[type]} type   [description]
-//  * @return {[type]}        [description]
-//  */
-// function check(assert, name, type) {
-//   if (assert) {
-//     return;
-//   } else {
-//     console.warn('Problem with missing "%s" in patch', name);
-//     assert
-//   }
-// }
+export interface Module {
+  id: number;
+  type: string;
+  col: number;
+  row: number;
+  w: number;
+  h: number;
+  x: number;
+  y: number;
+}
+
+export interface ParamterSet {
+  name: string;
+  parameters: Parameter[];
+}
+
+export interface Parameter {
+  key[: any]: any
+}
