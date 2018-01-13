@@ -95,6 +95,7 @@ export interface ParamterSet {
   parameters: Parameter[];
 }
 
+// export type Parameter = (state: S, getters: any, rootState: R, rootGetters: any) => any;
 export interface Parameter {
-  key[: any]: any
+  [key: string]: string | number;
 }

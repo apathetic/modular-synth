@@ -6,15 +6,18 @@
 export const context: AudioContext = window.AudioContext && new window.AudioContext();
 
 
-/**
- * Generata a constant stream of 1's at the audio-rate.
- * @type {Object}
- */
 // interface constants {
 //   [key: number]: AudioBufferSourceNode;
 // }
-let constants = {};  // memoize this shizz??
-export function signal(value = 1) {
+type constants = { [key: number]: AudioBufferSourceNode };
+let constants: constants = {};  // memoize this shizz??
+
+/**
+ * Generate a constant stream of 1's (or given value) at the audio-rate.
+ * @param value The value, between 0 and 1, to generate.
+ * @type {object}
+ */
+export function signal(value: number = 1) {
   if (constants[value]) {
     return constants[value];
   } else {
@@ -72,22 +75,27 @@ export class Parameter {
   }
 }
 
-export class Parameter2 {
-  //   constructor(value = 0) {
-  //     const param = context.createGain();
+export class Parameter2 extends GainNode {
+  public set: (value: number) => void;
+  public input: GainNode | null;
+  public output: GainNode | null;
 
-  //     param.gain.value = value;
-  //     this.set = (value) => { param.gain.value = value; };
-  //     this.param = param;
-  //     signal(1).connect(param);
+  constructor(value: number = 0) {
+    super();
 
-  //     return param;
-  //   }
+    const param = this; // context.createGain();
 
-  //   destroy() {
-  //     this.param.disconnect();
-  //     this.param = null;
-  //   }
+    param.gain.value = value;
+
+    this.set = (value) => { param.gain.value = value; };
+    signal(1).connect(param);
+
+    return param;
+  }
+
+  destroy() {
+    this.disconnect();
+  }
 }
 
 

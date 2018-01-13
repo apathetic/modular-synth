@@ -11,12 +11,13 @@ import outlets from './components/system/outlets.vue';
 
 // import { mapActions } from 'vuex';
 import { mapActions } from 'vuex/types/helpers';
-import { Action } from 'vuex/types';
 import { fetchPatches } from "./store/actions";
 
 import { auth } from './store/firebase';
 import { context } from './audio';
 
+import { Action } from 'vuex/types';
+import { VueConstructor } from 'vue/types/vue';
 
 Vue.config.productionTip = false;
 
@@ -24,20 +25,20 @@ Vue.config.productionTip = false;
 const bus = new Vue();
 let authenticated = false;
 
-
+// ** MOVED to main.d.ts: 
 // Global Event Bus
-Object.defineProperty(Vue.prototype, '$bus', {
-  get() {
-    return this.$root.bus;
-  }
-});
+// Object.defineProperty(Vue.prototype, '$bus', {
+//   get() {
+//     return this.$root.bus;
+//   }
+// });
 
-// Global isAuthenticated variable
-Object.defineProperty(Vue.prototype, '$authenticated', {
-  get() {
-    return this.$root.authenticated;
-  }
-});
+// // Global isAuthenticated variable
+// Object.defineProperty(Vue.prototype, '$authenticated', {
+//   get() {
+//     return this.$root.authenticated;
+//   }
+// });
 
 
 // AudioContext Mixin: all Components will have access to AudioContext
@@ -70,7 +71,7 @@ new Vue({
     fetchPatches
   },
 
-  // @Action('fetchPatches') fetchPatches;
+  @Action('fetchPatches')fetchPatches;
 
   beforeCreate: function() {
     auth.onAuthStateChanged((user: any) => {

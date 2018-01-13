@@ -15,7 +15,7 @@ module.exports = {
     source: 'src',
     img: 'src',
     image: 'xlink:href'
-  },
-  esModule: true
+  }
+  // esModule: true,
   // ts: 'babel-loader!ts-loader'
 };

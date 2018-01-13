@@ -43,7 +43,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+// import { mapGetters, mapActions } from 'vuex';
+import addModule from '../../store/actions';
 
 export default {
   data() {
@@ -65,9 +66,10 @@ export default {
       };
     },
 
-    ...mapGetters([
-      'editing'
-    ])
+    // ...mapGetters([
+    //   'editing'
+    // ])
+    editing() { return this.$store.state.editing; }
   },
 
   created() {
@@ -121,9 +123,10 @@ export default {
       this.$bus.$emit('module:add');
     },
 
-    ...mapActions([
-      'addModule'
-    ])
+    addModule
+    // ...mapActions([
+    //   'addModule'
+    // ])
   }
 };
 </script>

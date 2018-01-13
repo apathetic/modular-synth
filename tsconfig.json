@@ -2,8 +2,11 @@
   "include": ["src/**/*"],
   "compilerOptions": {
     "lib": [
+      // "es2015.iterable",
       "dom",
-      "es5",
+      // "es6",
+      // "dom.iterable",
+      // "es5",
       "es2015",
       "es2015.promise"
     ],
@@ -13,6 +16,8 @@
     "moduleResolution": "node",
     "sourceMap": true,    
     "noImplicitAny" :true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "downlevelIteration": true
   }
 }
