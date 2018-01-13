@@ -194,15 +194,15 @@ interface ScriptProcessorNodee {
  */
 export class Oscillator {
   private osc: OscillatorNode;
-  private type: string;
+  private type: OscillatorType;
   public frequency: Parameter | null;
   public output: OscillatorNode;
 
-  constructor(f: number = 440, t: string = 'sine') {
+  constructor(f: number = 440, t: OscillatorType = 'sine') {
     this.osc = context.createOscillator();
-    this.osc.type = /* this.type = */ t;
+    this.osc.type = this.type = t;
     this.frequency = new Parameter(f);
-    this.frequency.output.connect(this.osc.frequency);
+    this.frequency.output!.connect(this.osc.frequency);
     this.output = this.osc;
   }
 
@@ -253,8 +253,8 @@ export class PWM {
     this.output = this._pulseShaper;
 
     //start
-    this.frequency.output.connect(this._saw.frequency); // control the frequency
-    this.width.output.connect(this._pulseShaper); // control pulse width
+    this.frequency.output!.connect(this._saw.frequency); // control the frequency
+    this.width.output!.connect(this._pulseShaper); // control pulse width
     this._saw.start();
   }
 
