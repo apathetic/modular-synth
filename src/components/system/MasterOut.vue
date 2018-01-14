@@ -25,100 +25,103 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { EVENT } from '../../events';
-import VU from '../UI/VU';
-// import { meter } from '../../audio';
+  import { mapGetters, mapActions } from 'vuex';
+  import { EVENT } from '../../events';
+  import VU from '../UI/VU';
+  // import { meter } from '../../audio';
 
-export default {
-  components: { VU },
-  computed: {
-    ...mapGetters([
-      'power'
-    ])
-  },
-
-  data() {
-    return {
-      name: 'Master Out',
-      id: 0, // MasterOut is always id 0
-      x: 0,
-      y: 0,
-      gain: 0.5,
-      isMuted: false,
-      inlets: [
-        { label: 'out-1' },
-        { label: 'out-2' }
-      ]
-    };
-  },
-
-  created() {
-    this.stop();
-
-    this.out1 = this.context.createGain();
-    this.out2 = this.context.createGain();
-
-    this.inlets[0].audio = this.out1;
-    this.inlets[1].audio = this.out2;
-
-    this.out1.connect(this.context.destination);
-    this.out2.connect(this.context.destination);
-
-
-    this.$watch('power', (on) => {
-      (on) ? this.start() : this.stop();
-    });
-
-    this.$watch('gain', this.setGain);
-
-    console.log('Creating MasterOut');
-  },
-
-  mounted() {
-    this.modules = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
-    this.determinePosition();
-
-    window.addEventListener(EVENT.RESIZE, this.determinePosition);
-    this.modules.addEventListener(EVENT.SCROLL, this.determinePosition);
-  },
-
-  methods: {
-    start() {
-      this.context.resume();
+  export default {
+    components: { VU },
+    computed: {
+      // ...mapGetters([
+      //   'power'
+      // ])
+      power() { return this.$store.state.power; }
     },
 
-    stop() {
-      this.context.suspend();
+    data() {
+      return {
+        name: 'Master Out',
+        id: 0, // MasterOut is always id 0
+        x: 0,
+        y: 0,
+        gain: 0.5,
+        isMuted: false,
+        inlets: [
+          { label: 'out-1' },
+          { label: 'out-2' }
+        ]
+      };
     },
 
-    setGain(g) {
-      this.out1.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
-      this.out2.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
-    },
+    created() {
+      this.stop();
 
-    determinePosition(e) {
-      const x = this.modules.scrollLeft +               // scroll offset +
-                this.$el.getBoundingClientRect().left;  // viewport offset
-      const y = this.$el.offsetTop;                     // relative to parent
+      this.out1 = this.context.createGain();
+      this.out2 = this.context.createGain();
 
-      this.x = x;
-      this.y = y;
+      this.inlets[0].audio = this.out1;
+      this.inlets[1].audio = this.out2;
 
-      this.$store.commit('UPDATE_GRID_POSITION', {
-        id: 0,
-        x: x,
-        y: y
+      this.out1.connect(this.context.destination);
+      this.out2.connect(this.context.destination);
+
+
+      this.$watch('power', (on) => {
+        (on) ? this.start() : this.stop();
       });
+
+      this.$watch('gain', this.setGain);
+
+      console.log('Creating MasterOut');
     },
 
-    // VUEX actions, bound as local methods:
-    ...mapActions([
-      'setFocus',
-      'clearFocus'
-    ])
-  }
-};
+    mounted() {
+      this.modules = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
+      this.determinePosition();
+
+      window.addEventListener(EVENT.RESIZE, this.determinePosition);
+      this.modules.addEventListener(EVENT.SCROLL, this.determinePosition);
+    },
+
+    methods: {
+      start() {
+        this.context.resume();
+      },
+
+      stop() {
+        this.context.suspend();
+      },
+
+      setGain(g) {
+        this.out1.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
+        this.out2.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
+      },
+
+      determinePosition(e) {
+        const x = this.modules.scrollLeft +               // scroll offset +
+                  this.$el.getBoundingClientRect().left;  // viewport offset
+        const y = this.$el.offsetTop;                     // relative to parent
+
+        this.x = x;
+        this.y = y;
+
+        this.$store.commit('UPDATE_GRID_POSITION', {
+          id: 0,
+          x: x,
+          y: y
+        });
+      },
+
+      // VUEX actions, bound as local methods:
+      // ...mapActions([
+      //   'setFocus',
+      //   'clearFocus'
+      // ])
+      setFocus(id) { return this.$store.commit('SET_FOCUS', id); },
+      clearFocus() { return this.$store.commit('CLEAR_FOCUS'); }
+    }
+  };
 </script>
 
 <style lang="scss">

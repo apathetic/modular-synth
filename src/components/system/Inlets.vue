@@ -8,10 +8,9 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
   // export default class inlets extends Vue {
   export default {
-    // @Prop() ports: Array;
     // props: { ports: Array }
   };
 </script>

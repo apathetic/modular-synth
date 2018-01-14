@@ -20,9 +20,10 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "downlevelIteration": true,
-    "paths": {
-      // "@src/*": ["./*"],
-      // "@store": ["./store/index.ts"]
-    }      
+    // "baseUrl": "/",
+    // "paths": {
+    //   "@src/*": ["./*"],
+    //   "@store": ["./store/index.ts"]
+    // }      
   }
 }

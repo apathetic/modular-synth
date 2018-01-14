@@ -15,30 +15,29 @@ const lanes = 3;
 import GridList from '../assets/vendor/gridList';
 import { rackWidth, rackHeight } from '../dimensions';
 
-@Trait
-export class sortable extends Vue {
-  // export const sortable = {
-  // methods: {
+// export class sortable extends Vue {
+export const sortable = {
+  methods: {
     initSorting(handle) {
       this.handle = handle;
       this.$positionHighlight = this.handle.querySelector('.position-highlight');
       this.$positionHighlight.style.display = 'none';
 
       this.setupGrid();
-    }
+    },
 
     setupGrid() {
       this._widestItem = Math.max.apply(null, this.modules.map(function(item) { return item.w; }));
       this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
       this.gridList = new GridList(this.modules);
       this._applyPositionToItems();
-    }
+    },
 
     startSorting() {
       // Since dragging actually alters the grid, we need to establish the number
       // of cols (+1 extra) before the drag starts
       this._maxGridCols = this.gridList.grid.length;
-    }
+    },
 
     whileSorting(el) {
       // WE need two things, here:
@@ -56,7 +55,7 @@ export class sortable extends Vue {
         this._applyPositionToItems();
         this._highlightPositionForItem(item);
       }
-    }
+    },
 
     stopSorting() {
       // this._triggerOnChange()
@@ -65,18 +64,18 @@ export class sortable extends Vue {
       this._removePositionHighlight();
 
       console.log('%c' + this.gridList.toString(), 'font-family:monospace;font-size:10px');
-    }
+    },
 
     // -----------------------------------------------------------------
 
 
     _getItemWidth(item) {
       return item.w * rackWidth;
-    }
+    },
 
     _getItemHeight(item) {
       return item.h * rackHeight;
-    }
+    },
 
     _applyPositionToItems() {
       this.modules.forEach((item) => {
@@ -91,7 +90,7 @@ export class sortable extends Vue {
       });
 
       this.handle.style.width = (this.gridList.grid.length + this._widestItem) * rackWidth;
-    }
+    },
 
 
     // -----------------------------------------------------------------
@@ -103,7 +102,7 @@ export class sortable extends Vue {
       }
       return newPosition[0] !== this._previousDragPosition[0] ||
              newPosition[1] !== this._previousDragPosition[1];
-    }
+    },
 
     _snapItemPositionToGrid(el, item) {
       // var position = el.getBoundingClientRect();
@@ -124,7 +123,7 @@ export class sortable extends Vue {
       row = Math.min(row, lanes - item.h);
 
       return [col, row];
-    }
+    },
 
     _highlightPositionForItem(item) {
       this.$positionHighlight.style.width = this._getItemWidth(item) + 'px';
@@ -132,7 +131,7 @@ export class sortable extends Vue {
       this.$positionHighlight.style.left = item.col * rackWidth + 'px';
       this.$positionHighlight.style.top = item.row * rackHeight + 'px';
       this.$positionHighlight.style.display = 'block';
-    }
+    },
 
     _removePositionHighlight() {
       this.$positionHighlight.style.display = 'none';
@@ -145,5 +144,5 @@ export class sortable extends Vue {
     //   options.onChange.call(
     //     this, this.gridList.getChangedItems(this._items, '$element'));
     // }
-  // }
+  }
 };

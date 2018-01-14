@@ -4,7 +4,7 @@ import plugins from './plugins';
 import * as mutations from './mutations';
 import * as actions from './actions';
 import * as getters from './getters';
-import { Store } from 'vuex/types'
+// import { Store } from 'vuex/types'
 
 Vue.use(Vuex);
 
@@ -51,7 +51,6 @@ const state = {
 //  STORE
 // -----------------------------------------------
 
-@Store
 export default new Vuex.Store({
   state,
   getters,

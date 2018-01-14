@@ -216,6 +216,6 @@ export const removeModule = ({ commit, state }) => {
 //   commit('ADD_CONNECTION', outlet.port);
 // };
 
-export const removeConnection = ({ commit }, id) => {
-  commit('REMOVE_CONNECTION', id);
-};
+// export const removeConnection = ({ commit }, id) => {
+//   commit('REMOVE_CONNECTION', id);
+// };

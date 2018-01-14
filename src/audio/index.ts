@@ -3,12 +3,10 @@
  * The application's audio context.
  * @type {AudioContext}
  */
-export const context: AudioContext = window.AudioContext && new window.AudioContext();
+export const context: AudioContext = AudioContext && new AudioContext();
 
 
-// interface constants {
-//   [key: number]: AudioBufferSourceNode;
-// }
+
 type constants = { [key: number]: AudioBufferSourceNode };
 let constants: constants = {};  // memoize this shizz??
 
@@ -41,6 +39,7 @@ export function signal(value: number = 1) {
     // return context.createConstantSource(value);  // one day
   }
 };
+
 
 
 /**
@@ -100,16 +99,6 @@ export class Parameter2 extends GainNode {
 
 
 
-interface ScriptProcessorNodee {
-  // clipLevel: number;
-  // clipping: boolean;
-  // lastClip: number;
-  // clipLag: number;
-  // volume: number;
-  // averaging: number;
-  // connect: (destination: AudioNode) => void;
-  // onaudioprocess: (event: Event) => void;
-}
 /**
  * @class Audio VU meter. Uses deprecated ScriptNode, tho'
  * @param {AudioContext} audioContext The webaudio context.
@@ -117,8 +106,8 @@ interface ScriptProcessorNodee {
  * @param {Float} averaging    [description]
  * @param {Integer} clipLag    The release time, in ms, after clipping.
  */
- export class Meter {
-  private processor: ScriptProcessorNode;
+export class Meter /* extends ScriptProcessorNode*/ {
+  // private processor: ScriptProcessorNode;
   private clipLevel: number;
   private clipping: boolean;
   private lastClip: number;

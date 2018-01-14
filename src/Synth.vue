@@ -66,7 +66,7 @@
   </section>
 </template>
 
-<script lang="ts">
+<script>
   import { mapGetters, mapActions } from 'vuex';
   import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
@@ -79,8 +79,7 @@
 
   import Vue from "vue";
 
-  export default Vue.extend({
-  // export default {
+  export default {
     mixins: [sortable],
 
     components: {
@@ -92,7 +91,7 @@
     },
 
     computed: {
-      width(): string {
+      width() {
         const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
         return this.editing
           ? `width: ${canvasWidth}px`
@@ -157,7 +156,7 @@
         });
       });
 
-      window.addEventListener(EVENT.KEY_DOWN, (e: KeyboardEvent) => {
+      window.addEventListener(EVENT.KEY_DOWN, (e) => {
         switch (e.key) {
           case 'Delete':
           case 'Backspace':
@@ -186,7 +185,7 @@
         }
       });
 
-      window.addEventListener(EVENT.KEY_UP, (e: KeyboardEvent) => {
+      window.addEventListener(EVENT.KEY_UP, (e) => {
         switch (e.key) {
           case 'Shift':
             this.sorting = false;
@@ -197,7 +196,7 @@
 
     mounted() {
       const grid = this.$refs.grid; // rare time we need to scrape DOM.
-      grid.addEventListener(EVENT.SCROLL, (e: Event) => {
+      grid.addEventListener(EVENT.SCROLL, (e) => {
         if (this.editing) {
           this.$store.commit('UPDATE_SCROLL_OFFSET', e.target.scrollLeft);
         }
@@ -215,7 +214,7 @@
         'clearFocus'
       ])
     }
-  });
+  }
 </script>
 
 <style lang="scss">
