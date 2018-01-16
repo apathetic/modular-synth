@@ -106,21 +106,25 @@ export class Parameter2 extends GainNode {
  * @param {Float} averaging    [description]
  * @param {Integer} clipLag    The release time, in ms, after clipping.
  */
-export class Meter /* extends ScriptProcessorNode*/ {
+export class Meter extends ScriptProcessorNode {
   // private processor: ScriptProcessorNode;
+  public bufferSize: number;
   private clipLevel: number;
   private clipping: boolean;
   private lastClip: number;
   private clipLag: number;
   private volume: number;
   private averaging: number;
+  // onaudioprocess: (event: AudioProcessingEvent) => void
 
   constructor(clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
-    // if (!context) { return; }
+    // const processor = context.createScriptProcessor(512);
+    // processor.onaudioprocess = this.processAudio;
 
-    const processor = this.processor = context.createScriptProcessor(512);
+    super();
 
-    processor.onaudioprocess = this.processAudio;
+    this.bufferSize = 512;
+    this.onaudioprocess = this.processAudio;
 
     this.clipping = false;
     this.lastClip = 0;
@@ -131,10 +135,11 @@ export class Meter /* extends ScriptProcessorNode*/ {
 
     // this will have no effect, since we don't copy the input to the output,
     // but works around a current Chrome bug.
-    processor.connect(context.destination);
-    // ---------------------------------------------
+    // processor.connect(context.destination);
+    this.connect(context.destination);
 
-    return processor;
+    // return processor;
+    return this;
   }
 
   processAudio(event: AudioProcessingEvent) {

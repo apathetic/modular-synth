@@ -6,15 +6,3 @@ declare module 'vue/types/vue' {
     $authenticated: boolean
   }
 }
-
-// Object.defineProperty(Vue.prototype, '$bus', {
-//   get() {
-//     return this.$root.bus;
-//   }
-// });
-
-// Object.defineProperty(Vue.prototype, '$authenticated', {
-//   get() {
-//     return this.$root.authenticated;
-//   }
-// });

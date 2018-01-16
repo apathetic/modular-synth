@@ -59,7 +59,6 @@ THOUGHTS:
   import { cellWidth } from '../../dimensions';
   import { Parameter } from '../../audio';
   import { mapActions } from 'vuex';
-  // import { removeConnection } from '../../store/actions'
 
   export default {
     props: {

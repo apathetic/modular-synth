@@ -80,6 +80,7 @@
   import Vue from "vue";
 
   export default {
+  // export default Vue.extend({
     mixins: [sortable],
 
     components: {
@@ -214,7 +215,7 @@
         'clearFocus'
       ])
     }
-  }
+  }//);
 </script>
 
 <style lang="scss">

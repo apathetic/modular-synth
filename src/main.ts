@@ -24,6 +24,17 @@ const bus = new Vue();
 let authenticated = false;
 
 
+// Extend the Vue proto with two props:
+Object.defineProperties(Vue.prototype, {
+  $bus: {
+    get() { return this.$root.bus; }
+  },
+  $authenticated: {
+    get() { return this.$root.authenticated; }
+  }
+});
+
+
 // TODO inject at a module level
 // AudioContext Mixin: all Components will have access to AudioContext
 Vue.mixin({
@@ -45,6 +56,7 @@ Vue.component('outlets', outlets);
 
 //   }
 // });
+
 
 
 new Vue({
