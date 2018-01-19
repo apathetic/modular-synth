@@ -35,8 +35,11 @@
   import Debugger from '../Debugger';
   import Node from '../Node';
 
+  // import context from '../../audio';
+
   export default {
     mixins: [draggable],
+    // inject: [ context ],
     components: {
       Analyser,
       Comb,

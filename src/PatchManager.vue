@@ -47,10 +47,8 @@
 
 <script>
 import Auth from './components/system/Auth';
-// import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { EVENT } from './events';
-import { savePatch, loadPatch, addPatch, removePatch } from './store/actions';
-
 
 export default {
   components: {
@@ -103,14 +101,11 @@ export default {
       }
     },
 
-    // ...mapGetters([
-    //   'patches',
-    //   'parameterSets',
-    //   'editing'
-    // ])
-    patches() { return this.$store.state.patches; },
-    parameterSets() { return this.$store.state.parameterSets; },
-    editing() { return this.$store.state.editing; }
+    ...mapGetters([
+      'patches',
+      'parameterSets',
+      'editing'
+    ])
 },
 
   mounted() {
@@ -201,16 +196,12 @@ export default {
 
     // -----------------
 
-    // ...mapActions([
-    //   'savePatch',
-    //   'loadPatch',
-    //   'addPatch',
-    //   'removePatch'
-    // ])
-    savePatch,
-    loadPatch,
-    addPatch,
-    removePatch
+    ...mapActions([
+      'savePatch',
+      'loadPatch',
+      'addPatch',
+      'removePatch'
+    ])
   }
 };
 

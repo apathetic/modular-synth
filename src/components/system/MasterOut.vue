@@ -28,15 +28,13 @@
   import { mapGetters, mapActions } from 'vuex';
   import { EVENT } from '../../events';
   import VU from '../UI/VU';
-  // import { meter } from '../../audio';
 
   export default {
     components: { VU },
     computed: {
-      // ...mapGetters([
-      //   'power'
-      // ])
-      power() { return this.$store.state.power; }
+      ...mapGetters([
+        'power'
+      ])
     },
 
     data() {
@@ -65,7 +63,6 @@
 
       this.out1.connect(this.context.destination);
       this.out2.connect(this.context.destination);
-
 
       this.$watch('power', (on) => {
         (on) ? this.start() : this.stop();
@@ -114,12 +111,10 @@
       },
 
       // VUEX actions, bound as local methods:
-      // ...mapActions([
-      //   'setFocus',
-      //   'clearFocus'
-      // ])
-      setFocus(id) { return this.$store.commit('SET_FOCUS', id); },
-      clearFocus() { return this.$store.commit('CLEAR_FOCUS'); }
+      ...mapActions([
+        'setFocus',
+        'clearFocus'
+      ])
     }
   };
 </script>
