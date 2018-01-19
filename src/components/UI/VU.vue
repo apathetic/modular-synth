@@ -18,7 +18,10 @@ export default {
   },
 
   props: {
-    audio: null // window.AudioNode
+    audio: {
+      type: AudioNode,
+      default: null
+    }
   },
 
   created() {
@@ -30,6 +33,7 @@ export default {
         this.loop();
       } else {
         // set buffer to 0 and update display
+        this.meterContext.clearRect(0, 0, 20, 132);
       }
     });
   },
@@ -42,7 +46,7 @@ export default {
     const meterContext = this.meterContext = this.$refs.vu.getContext('2d');
     let meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, 132);
 
-    this.audio.connect && this.audio.connect(this.meter);
+    this.audio.connect && this.audio.connect(this.meter.input);
 
     meterContext.canvas.width = 20;
     meterContext.canvas.height = 132;
@@ -54,7 +58,10 @@ export default {
 
   methods: {
     draw() {
-      const level = this.meter.volume; // * 0.8; // scale it since values go above 1 when clipping
+      this.meter.process();
+      // const level = this.meter.volume;
+      const level = this.meter.rms;
+      // const level = this.meter.peak;
       const meterContext = this.meterContext;
 
       //                     x, y, width, height
@@ -67,14 +74,9 @@ export default {
 
     loop() {
       if (this.power) {
-        if (this.ticking) {
-          this.draw();
-        }
-
+        this.ticking && this.draw();
         this.ticking = !this.ticking;
         window.requestAnimationFrame(this.loop);
-        // } else {
-        // this.draw();    // draw one final to clear canvas
       }
     }
   }

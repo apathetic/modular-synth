@@ -74,39 +74,38 @@ export class Parameter {
   }
 }
 
-export class Parameter2 extends GainNode {
-  public set: (value: number) => void;
-  public input: GainNode | null;
-  public output: GainNode | null;
+// export class Parameter2 extends GainNode {
+//   public set: (value: number) => void;
+//   public input: GainNode | null;
+//   public output: GainNode | null;
 
-  constructor(value: number = 0) {
-    super();
+//   constructor(value: number = 0) {
+//     super();
 
-    const param = this; // context.createGain();
+//     const param = this; // context.createGain();
 
-    param.gain.value = value;
+//     param.gain.value = value;
 
-    this.set = (value) => { param.gain.value = value; };
-    signal(1).connect(param);
+//     this.set = (value) => { param.gain.value = value; };
+//     signal(1).connect(param);
 
-    return param;
-  }
+//     return param;
+//   }
 
-  destroy() {
-    this.disconnect();
-  }
-}
+//   destroy() {
+//     this.disconnect();
+//   }
+// }
 
 
 
 /**
  * @class Audio VU meter. Uses deprecated ScriptNode, tho'
- * @param {AudioContext} audioContext The webaudio context.
  * @param {Float} clipLevel    The rms peak at which it is considered to clip.
  * @param {Float} averaging    [description]
  * @param {Integer} clipLag    The release time, in ms, after clipping.
  */
-export class Meter extends ScriptProcessorNode {
+export class Meterr extends ScriptProcessorNode {
   // private processor: ScriptProcessorNode;
   public bufferSize: number;
   private clipLevel: number;
@@ -176,6 +175,49 @@ export class Meter extends ScriptProcessorNode {
   //   }
   //   return this.clipping;
   // };
+}
+
+
+
+
+
+
+/**
+ * @class Audio VU meter.
+ */
+export class Meter { //extends AnalyserNode {
+  private analyser: AnalyserNode;
+  private buffer: Float32Array;
+  public rms: number;
+  public peak: number;
+  public input: AudioNode;
+  public output: AudioNode;
+
+  constructor() {
+    this.analyser = context.createAnalyser();
+    this.analyser.fftSize = 1024;
+    this.buffer = new Float32Array(this.analyser.fftSize);
+    this.input = this.output = this.analyser;
+  }
+
+  process() {
+    let sumOfSquares = 0;
+    let peak = 0;
+    let buffer = this.buffer;
+
+    // Copies the connected signal's time-domain samples into the buffer
+    this.analyser.getFloatTimeDomainData(buffer);
+
+    // Compute average power and find peak instantaneous power
+    for (let i = 0; i < buffer.length; i++) {
+      const power = buffer[i] ** 2;
+      sumOfSquares += power;
+      peak = Math.max(power, peak);
+    }
+
+    this.rms = 10 * Math.log10(sumOfSquares / buffer.length);
+    this.peak = 10 * Math.log10(peak);
+  }
 }
 
 

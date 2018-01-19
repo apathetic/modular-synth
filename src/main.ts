@@ -61,7 +61,7 @@ Vue.component('outlets', outlets);
 
 new Vue({
   store,
-  el: "main",
+  el: 'main',
   components: { Synth, PatchManager, ContextMenu },
   data: { bus, authenticated },
   beforeCreate: function() {
