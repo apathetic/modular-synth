@@ -59,23 +59,25 @@ export default {
   methods: {
     draw() {
       this.meter.process();
-      // const level = this.meter.volume;
-      const level = this.meter.rms;
-      // const level = this.meter.peak;
+      this.rms = this.meter.rms;
+      this.peak = this.meter.peak;
+
       const meterContext = this.meterContext;
+      const level = this.rms * 2;      
 
       //                     x, y, width, height
       meterContext.clearRect(0, 0, 20, 132);
-      meterContext.fillStyle = this.meterGraident;
+      meterContext.fillStyle = this.meterGraident;    // fill relevant bits with gradient
       meterContext.fillRect(0, 0, 20, 132);
-      meterContext.fillStyle = 'black';
+      meterContext.fillStyle = 'black';               // paint VU black
       meterContext.fillRect(0, 132 * level, 20, 132);
     },
 
     loop() {
-      if (this.power) {
+      if (this.power) { // TODO check for this.editing, here?
         this.ticking && this.draw();
         this.ticking = !this.ticking;
+
         window.requestAnimationFrame(this.loop);
       }
     }

@@ -65,6 +65,8 @@ export class Parameter {
     // this.input = (audio) ? param.gain : param.gain.value
 
     signal(1).connect(param);
+
+    // return param;
   }
 
   destroy() {
@@ -74,130 +76,32 @@ export class Parameter {
   }
 }
 
-// export class Parameter2 extends GainNode {
-//   public set: (value: number) => void;
-//   public input: GainNode | null;
-//   public output: GainNode | null;
-
-//   constructor(value: number = 0) {
-//     super();
-
-//     const param = this; // context.createGain();
-
-//     param.gain.value = value;
-
-//     this.set = (value) => { param.gain.value = value; };
-//     signal(1).connect(param);
-
-//     return param;
-//   }
-
-//   destroy() {
-//     this.disconnect();
-//   }
-// }
-
-
-
-/**
- * @class Audio VU meter. Uses deprecated ScriptNode, tho'
- * @param {Float} clipLevel    The rms peak at which it is considered to clip.
- * @param {Float} averaging    [description]
- * @param {Integer} clipLag    The release time, in ms, after clipping.
- */
-export class Meterr extends ScriptProcessorNode {
-  // private processor: ScriptProcessorNode;
-  public bufferSize: number;
-  private clipLevel: number;
-  private clipping: boolean;
-  private lastClip: number;
-  private clipLag: number;
-  private volume: number;
-  private averaging: number;
-  // onaudioprocess: (event: AudioProcessingEvent) => void
-
-  constructor(clipLevel = 0.98, averaging = 0.95, clipLag = 750) {
-    // const processor = context.createScriptProcessor(512);
-    // processor.onaudioprocess = this.processAudio;
-
-    super();
-
-    this.bufferSize = 512;
-    this.onaudioprocess = this.processAudio;
-
-    this.clipping = false;
-    this.lastClip = 0;
-    this.volume = 0;
-    this.clipLevel = clipLevel; //  || 0.98;
-    this.averaging = averaging; //  || 0.95;
-    this.clipLag = clipLag; //  || 750;
-
-    // this will have no effect, since we don't copy the input to the output,
-    // but works around a current Chrome bug.
-    // processor.connect(context.destination);
-    this.connect(context.destination);
-
-    // return processor;
-    return this;
-  }
-
-  processAudio(event: AudioProcessingEvent) {
-    var buf = event.inputBuffer.getChannelData(0);
-    var bufLength = buf.length;
-    var sum = 0;
-    var x;
-
-    // Do a root-mean-square on the samples: sum up the squares...
-    for (let i = 0; i < bufLength; i++) {
-      x = buf[i];
-      if (Math.abs(x) >= this.clipLevel) {
-        this.clipping = true;
-        this.lastClip = window.performance.now();
-      }
-      sum += x * x;
-    }
-
-    // ... then take the square root of the sum.
-    var rms = Math.sqrt(sum / bufLength);
-
-    // Now smooth this out with the averaging factor applied
-    // to the previous sample - take the max here because we
-    // want "fast attack, slow release."
-    this.volume = Math.max(rms, this.volume * this.averaging);
-  };
-
-  // checkClipping() {
-  //   if (!this.clipping) {
-  //     return false;
-  //   }
-  //   if ((this.lastClip + this.clipLag) < window.performance.now()) {
-  //     this.clipping = false;
-  //   }
-  //   return this.clipping;
-  // };
-}
-
-
-
-
 
 
 /**
  * @class Audio VU meter.
+ * https://stackoverflow.com/questions/44360301/web-audio-api-creating-a-peak-meter-with-analysernode
  */
-export class Meter { //extends AnalyserNode {
+export class Meter {
   private analyser: AnalyserNode;
   private buffer: Float32Array;
+  public averaging: number;
+  public volume: number;
   public rms: number;
   public peak: number;
   public input: AudioNode;
   public output: AudioNode;
 
-  constructor() {
+  constructor(averaging = 0.95) {
     this.analyser = context.createAnalyser();
     this.analyser.fftSize = 1024;
     this.buffer = new Float32Array(this.analyser.fftSize);
     this.input = this.output = this.analyser;
+    this.volume = 0;
+    this.averaging = averaging;
+
+
+    // return this.analyser;
   }
 
   process() {
@@ -215,8 +119,14 @@ export class Meter { //extends AnalyserNode {
       peak = Math.max(power, peak);
     }
 
-    this.rms = 10 * Math.log10(sumOfSquares / buffer.length);
-    this.peak = 10 * Math.log10(peak);
+
+    // in Db:
+    // this.rms = 10 * Math.log10(sumOfSquares / buffer.length);
+    // this.peak = 10 * Math.log10(peak);
+    this.rms = sumOfSquares / buffer.length;
+    this.peak = peak;
+
+    // this.volume = Math.max(this.rms, this.volume * this.averaging);
   }
 }
 
