@@ -96,7 +96,7 @@
         for (let i = 0, x = 0; i < length; i++) {
           let val = values[i] + 140; // why 140? no idea. Came from Mozilla docs
 
-          val = isFinite(val) ? val : 0;
+          // val = isFinite(val) ? val : 0;
 
           this.visualizer.fillStyle = 'rgba(0, 222, 0, ' + val / 140 + ')';
           // this.visualizer.fillStyle = 'rgb(0, 222, 0)';
