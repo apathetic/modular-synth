@@ -57,7 +57,7 @@
 - AUDIO
   - use audioParam to automate parameters
   - LEVEL is ...broken? Crazy inefficient. Check meter.js where output is connected to audioContext
-
+  - PWM - create waveforms in spectral domain
 
 - Connections
   - connecting to an outlet, connects to the inlet (ie. app doesn't distinguish between these -- just ID and port)

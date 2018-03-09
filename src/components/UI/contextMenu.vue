@@ -43,9 +43,6 @@
 </template>
 
 <script>
-// import { mapGetters, mapActions } from 'vuex';
-// import addModule from '../../store/actions';
-
 export default {
   data() {
     return {
@@ -115,18 +112,13 @@ export default {
     newModule(type) {
       const offset = document.querySelector('header').offsetHeight;
 
-      // this.addModule({
-      this.$store.actions.addModule({
+      this.$store.dispatch('addModule', {
         type,
         coords: [this.coords[0], this.coords[1] - offset]
       });
 
       this.$bus.$emit('module:add');
-    },
-
-    // ...mapActions([
-    //   'addModule'
-    // ])
+    }
   }
 };
 </script>

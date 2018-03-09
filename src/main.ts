@@ -51,11 +51,11 @@ Vue.component('outlets', outlets);
 
 // Register a global custom directive called v-context-menu
 // TODO:
-// Vue.directive('context-menu', {
-//   inserted: function(element) {
-
-//   }
-// });
+Vue.directive('context-menu', {
+  inserted: function(element) {
+    console.log(element, 'contxt');
+  }
+});
 
 
 

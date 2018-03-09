@@ -58,7 +58,7 @@ THOUGHTS:
 <script>
   import { cellWidth } from '../../dimensions';
   import { Parameter } from '../../audio';
-  import { mapActions } from 'vuex';
+  // import { mapActions } from 'vuex';
 
   export default {
     props: {
@@ -207,13 +207,13 @@ THOUGHTS:
       },
 
       // VUEX actions, bound as local methods:
-      ...mapActions([
-        'removeConnection'
-      ])
+      // ...mapActions([
+      //   'removeConnection'
+      // ])
 
-      // removeConnection(id) {
-      //   this.$store.commit('REMOVE_CONNECTION', id);
-      // }
+      removeConnection(id) {
+        this.$store.commit('REMOVE_CONNECTION', id);
+      }
     }
   };
 </script>

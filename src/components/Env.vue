@@ -1,5 +1,5 @@
 <template>
-  <div class="env 3U">
+  <div class="env">
     <div class="module-details">
       <h3>Env</h3>
     </div>

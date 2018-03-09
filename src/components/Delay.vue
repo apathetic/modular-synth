@@ -66,12 +66,14 @@
         cutoff: params.cutoff.default,
 
         inlets: [
-          { label: 'in' },
-          { label: 'mod' }
+          { label: 'in',
+            desc: 'Signal input' },
+          { label: 'mod',
+            desc: 'Modulation input for delay time' }
         ],
         outlets: [
-          { label: 'out-1' },
-          { label: 'out-2' }
+          { label: 'out-1' }
+          // { label: 'out-2' }
         ]
       };
     },
