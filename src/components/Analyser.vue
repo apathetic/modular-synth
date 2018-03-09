@@ -90,7 +90,7 @@
 
         this.visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
 
-        console.log(values);
+        // console.log(values);
         
 
         for (let i = 0, x = 0; i < length; i++) {

@@ -58,7 +58,6 @@ THOUGHTS:
 <script>
   import { cellWidth } from '../../dimensions';
   import { Parameter } from '../../audio';
-  // import { mapActions } from 'vuex';
 
   export default {
     props: {
@@ -205,11 +204,6 @@ THOUGHTS:
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
         console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
       },
-
-      // VUEX actions, bound as local methods:
-      // ...mapActions([
-      //   'removeConnection'
-      // ])
 
       removeConnection(id) {
         this.$store.commit('REMOVE_CONNECTION', id);
