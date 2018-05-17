@@ -12,7 +12,7 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/node:9.2
 
-    working_directory: ~/repo
+    working_directory: ~/malfunction
 
     steps:
       - checkout
@@ -35,7 +35,7 @@ jobs:
       - run: npm run build
 
       # Tests!
-      - run: npm test
+      # - run: npm test
 
   deploy:
     working_directory: ~/malfunction
