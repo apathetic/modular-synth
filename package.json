@@ -30,7 +30,7 @@
     "connect-history-api-fallback": "^1.1.0",
     "copy-webpack-plugin": "^4.2.0",
     "css-loader": "^0.25.0",
-    "cypress": "^1.4.1",
+    "cypress": "^1.4.2",
     "cypress-vue-unit-test": "^1.6.0",
     "eslint": "^4.11.0",
     "eslint-config-standard": "^6.1.0",
