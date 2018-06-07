@@ -1,29 +1,36 @@
 {
-  "include": ["src/**/*"],
   "compilerOptions": {
-    "lib": [
-      // "es2015.iterable",
-      "dom",
-      // "es6",
-      // "dom.iterable",
-      // "es5",
-      "es2015",
-      "es2015.promise"
-    ],
     "target": "es5",
-    "pretty": true,
+    "module": "esnext",
     "strict": true,
-    "module": "es2015",
+    "jsx": "preserve",
+    "importHelpers": true,
     "moduleResolution": "node",
-    "sourceMap": true,    
-    "noImplicitAny" :true,
-    "experimentalDecorators": true,
-    "allowJs": true,
-    "downlevelIteration": true,
-    // "baseUrl": "/",
-    // "paths": {
-    //   "@src/*": ["./*"],
-    //   "@store": ["./store/index.ts"]
-    // }      
-  }
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "node"    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "es2015",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,9 +1,3 @@
 {
-  "fileServerFolder": "./test",
-  "fixturesFolder": " ./test/fixtures",
-  "integrationFolder": "./test/integration",
-  "pluginsFile": "./test/plugins",
-  "supportFile": "./test/support",
-  "screenshotsFolder": "./test/screenshots",
-  "videosFolder": "./test/videos"
+  "pluginsFile": "tests/e2e/plugins/index.js"
 }
