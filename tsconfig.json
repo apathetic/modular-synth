@@ -38,4 +38,8 @@
   "exclude": [
     "node_modules"
   ]
+    // "paths": {
+    //   "@/*": ["./*"],
+    // }
+
 }
