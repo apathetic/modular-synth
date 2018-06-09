@@ -1,0 +1,25 @@
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "es2015",
+      "es2015.promise"
+    ],
+    "target": "es5",
+    "pretty": true,
+    "strict": true,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "sourceMap": true,    
+    "noImplicitAny" :true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "downlevelIteration": true,
+    // "baseUrl": "/",
+    // "paths": {
+    //   "@src/*": ["./*"],
+    //   "@store": ["./store/index.ts"]
+    // }      
+  }
+}

@@ -9,6 +9,10 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
+
+    "noImplicitAny": true,
+    // "allowJs": true,
+
     "types": [
       "node"    ],
     "paths": {
@@ -18,6 +22,7 @@
     },
     "lib": [
       "es2015",
+      // "es2015.promise"
       "dom",
       "dom.iterable",
       "scripthost"

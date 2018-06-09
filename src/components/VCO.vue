@@ -24,7 +24,8 @@
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
   import Dropdown from './UI/Dropdown';
-  import { Parameter } from '../audio';
+  // import { Parameter } from '@/audio'; // webpack resolve alias   ...  '@': resolve('src')
+  import { Parameter } from '/src/audio';
 
   export default {
     components: { Knob, Slider, Dropdown },
@@ -176,12 +177,12 @@
       top: 2em;
       left: 2em;
       z-index: -1;
-      //   font-size: 13.5em;		
-      //   color: #d4d4d4;		
-      //   top: 0.4em;		
-      //   left: -0.3em;		
-      //   z-index: -1;		
-      //   letter-spacing: -.09em;		
+      //   font-size: 13.5em;
+      //   color: #d4d4d4;
+      //   top: 0.4em;
+      //   left: -0.3em;
+      //   z-index: -1;
+      //   letter-spacing: -.09em;
       //   text-shadow: 1px 1px rgba(255,255,255, 0.2);
     }
 

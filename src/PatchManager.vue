@@ -191,7 +191,6 @@ export default {
       this.$store.commit('SET_PARAMETERS_KEY', this.currentParamsKey);
       this.$bus.$emit(EVENT.PARAMETERS_LOAD);
       console.log('%c Fetching parameters ', 'background:#666;color:white;font-weight:bold;');
-      this.$bus.$emit(EVENT.PARAMETERS_LOAD);
     },
 
     // -----------------
