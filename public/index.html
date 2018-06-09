@@ -2,16 +2,17 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>test</title>
+    <title>modular-synth</title>
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon" />
+    <link href="https://fonts.googleapis.com/css?family=Anton|Nunito+Sans:300" rel="stylesheet">
   </head>
   <body>
-    <noscript>
-      <strong>We're sorry but test doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
+
+    <main v-context-menu>
+      <patch-manager></patch-manager>
+      <synth></synth>
+      <context-menu></context-menu>
+    </main>
+
   </body>
 </html>

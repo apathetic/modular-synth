@@ -1,6 +1,6 @@
 {
-  "name": "test",
-  "short_name": "test",
+  "name": "modular-synth",
+  "short_name": "modular-synth",
   "icons": [
     {
       "src": "/img/icons/android-chrome-192x192.png",

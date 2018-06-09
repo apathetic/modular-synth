@@ -1,7 +1,10 @@
 {
-  "name": "test",
-  "version": "0.1.0",
+  "name": "modular-synth",
+  "description": "A modular synth",
+  "author": "wes hatch <wes.hatch@gmail.com>",
+  "version": "1.0.0",
   "private": true,
+  "typings": "src/types/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -9,6 +12,7 @@
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
+    "firebase": "^5.0.4",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.16",
     "vuex": "^3.0.1"
@@ -30,6 +34,6 @@
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
+    "not ie <= 10"
   ]
 }
