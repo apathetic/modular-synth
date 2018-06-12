@@ -9,7 +9,7 @@
     props: {
       id: null
     }
-  }
+  };
 </script>
 
 <style lang="scss">

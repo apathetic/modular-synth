@@ -77,7 +77,7 @@ export default {
 
     onSelect(event) {
       const id = event.target.value;
-      const selected = this.midi.inputs.get(id);    // NOTE: this is not an Array. It is Array-like, and get() is a property unique to it.
+      const selected = this.midi.inputs.get(id);    // NOTE: not an Array; it is Array-like. get() is a property on it
 
       if (this.midiIn) {
         this.midiIn.close();      // close current port

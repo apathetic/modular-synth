@@ -61,7 +61,7 @@ export class Parameter {
 
     param.gain.value = value;
 
-    this.set = (value: number) => { param.gain.value = value; };
+    this.set = (v: number) => { param.gain.value = v; };
     this.output = param;
     this.input = param;
 

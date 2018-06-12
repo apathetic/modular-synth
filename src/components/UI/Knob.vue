@@ -71,7 +71,9 @@ export default {
      * @return {string} The new path attribute.
      */
     arc() {
-      const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+      // 30 -> 330. Dials start 30deg in and end 30deg before 360.
+      const rotationValue = this.internalValue * 300 + 30;
+
       return describeArc(X, Y, SIZE, 30, rotationValue);
     }
 
@@ -96,8 +98,8 @@ export default {
 
   // watch: {
   //   value: function(value) {
-  //     if (!this._temp || value !== this._temp) { // value was changed externally ie. via $store
-  //       this.$store.commit('REGISTER_PARAMETER', this.id); // in the event where the new parameterSet did not contain this param, let's register it
+  //     if (!this._temp || value !== this._temp) {            // value was changed externally ie. via $store
+  //       this.$store.commit('REGISTER_PARAMETER', this.id);  // if parameterSet didnt contain this param, register it
   //       this.internalValue = this.computeValue(value, true);
   //       console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, value);
   //     }
@@ -107,7 +109,9 @@ export default {
   mounted() {
     this.internalValue = this.computeValue(this.value, true);
     this.$refs.track.setAttribute('d', describeArc(X, Y, SIZE, 30, 330)); // draw track
-    // this.$refs.computed.setAttribute('d', describeArc(x, y, SIZE - 4, 30, 330));  // inner track. "actual" value, from varying inputs, etc.
+
+    // inner track ie. visualize "actual" value, from varying inputs, etc :
+    // this.$refs.computed.setAttribute('d', describeArc(x, y, SIZE - 4, 30, 330));
   }
 };
 

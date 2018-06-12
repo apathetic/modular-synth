@@ -1,3 +1,6 @@
+import * as getters from './getters';
+import * as mutations from './mutations';
+import * as actions from './actions';
 import plugins from './plugins';
 import { PatchState } from '../../types/store/';
 
@@ -19,8 +22,8 @@ const state: PatchState = {
 
 export default {
   state,
-  getters: {},
-  mutations: {},
-  actions: {},
+  getters,
+  mutations,
+  actions,
   plugins
 };

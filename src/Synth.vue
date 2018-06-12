@@ -1,4 +1,7 @@
 <template>
+<main data-v-context-menu>
+  <patch-manager></patch-manager>
+
   <section :class="editing ? 'edit-mode': 'play-mode'">
 
     <div id="modules" ref="grid" @click.left="clearActive">
@@ -64,20 +67,23 @@
     </aside>
 
   </section>
+
+  <context-menu></context-menu>
+</main>
 </template>
 
 <script>
+  import Vue from 'vue';
   import { mapGetters, mapActions } from 'vuex';
   import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
-
   import connecting from './components/system/Connecting.vue';
   import connection from './components/system/Connection.vue';
   import masterOut from './components/system/MasterOut.vue';
   import midi from './components/system/Midi.vue';
   import module from './components/system/Module.vue';
-
-  import Vue from 'vue';
+  import patchManager from './components/system/PatchManager.vue';
+  import contextMenu from './components/system/ContextMenu.vue';
 
   export default {
     mixins: [sortable],
@@ -87,7 +93,9 @@
       connecting,
       connection,
       midi,
-      module
+      module,
+      contextMenu,
+      patchManager
     },
 
     computed: {
@@ -98,7 +106,6 @@
           : 'width: auto';
       },
 
-      // @mapGetters(['power'])
       ...mapGetters([
         'power',
         'editing',
@@ -223,14 +230,10 @@
   @import 'assets/scss/module.scss';
 
   #modules {
-  // #canvas {
+    display:inline-block;
     flex: 1;
     overflow-x: auto;
     overflow-y: hidden;
-
-
-
-    display:inline-block;
     width: auto;
 
     &::-webkit-scrollbar {
@@ -257,24 +260,23 @@
     min-width: 100%;
     min-height: 100%;
     position: absolute;
-    top: 0;
     left: 0;
+    top: 0;
     transition: opacity 0.1s;
-    // transition-delay: 0.2s;
     transition-delay: $transition-time-slow;
 
     .play-mode & {
       opacity: 0;
-      z-index: -1;
       transition-delay: 0s;
+      z-index: -1;
     }
   }
 
   #sidebar {
+    background-color: #444;
     display: flex;
     flex-direction: column;
     flex-basis: 112px;
-    background-color: #444;
     z-index: 9999;          // as nodes will increment their z-index
   }
 

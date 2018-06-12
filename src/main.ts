@@ -1,17 +1,11 @@
 import Vue from 'vue';
 import store from './store/';
 import Synth from './Synth.vue';
-import PatchManager from './components/system/PatchManager.vue';
 import inlets from './components/system/Inlets.vue';
 import outlets from './components/system/Outlets.vue';
-import ContextMenu from './components/UI/ContextMenu.vue';
+// import PatchManager from './components/system/PatchManager.vue';
+// import ContextMenu from './components/UI/ContextMenu.vue';
 import './registerServiceWorker';
-
-// import { mapActions } from 'vuex';
-// import { mapActions } from 'vuex/types/helpers';
-// import { fetchPatches } from "./store/actions";
-
-
 import { auth } from './store/firebase';
 import { context } from './audio';
 
@@ -19,8 +13,8 @@ import { context } from './audio';
 Vue.config.productionTip = false;
 
 
-const bus = new Vue();
-const authenticated = false;
+// const bus = new Vue();
+// let authenticated = false;
 
 
 // Extend the Vue proto with two props:
@@ -30,12 +24,12 @@ Object.defineProperties(Vue.prototype, {
   },
   $authenticated: {
     get() { return this.$root.authenticated; },
-    set(auth) { this.$root.authenticated = auth; }
+    set(a) { this.$root.authenticated = a; }
   }
 });
 
 
-// TODO inject at a module level
+// TODO inject at a module level...?
 // AudioContext Mixin: all Components will have access to AudioContext
 Vue.mixin({
   data() {
@@ -50,28 +44,35 @@ Vue.component('outlets', outlets);
 
 
 // Register a global custom directive called v-context-menu
-// TODO:
-Vue.directive('context-menu', {
-  inserted(element) {
-    console.log(element, 'contxt');
-  }
-});
-
+// TODO: move to synth.vue ?
+// https://github.com/vuejs/vue/issues/6385
+// Vue.directive('context-menu', {
+//   const state = new WeakMap()
+//   inserted() {
+//     console.log('inserted');
+//   },
+//   bind(el, binding, vnode) {
+//     //
+//   }
+// });
 
 
 new Vue({
   store,
-  el: 'main',
-  components: { Synth, PatchManager, ContextMenu },
-  data: { bus, authenticated },
+  data: { 
+    bus: new Vue(),
+    authenticated: false
+  },
+  render: (h) => h(Synth),
   beforeCreate() {
     auth.onAuthStateChanged((user: any) => {
       this.$authenticated = !!user;
 
       if (this.$authenticated) {
-        debugger;
         this.$store.dispatch('fetchPatches');
       }
     });
   }
-});
+}).$mount('main');
+
+

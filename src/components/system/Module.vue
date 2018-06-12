@@ -14,6 +14,11 @@
 </template>
 
 <script>
+  // TODO ---------
+  // make into a functional component
+  // https://vuejs.org/v2/guide/render-function.html#Functional-Components
+  // -------------------
+
   import { draggable } from '@/mixins/draggable';
   import { moduleSize } from '../../dimensions';
 

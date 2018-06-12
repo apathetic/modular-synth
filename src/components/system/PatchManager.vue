@@ -65,7 +65,7 @@ export default {
   computed: {
     currentPatchKey: {
       get() {
-        return this.$store.state.patchKey;
+        return this.$store.state.app.patchKey;
       },
       set(key) {
         this.$store.commit('SET_KEY', key);
@@ -74,7 +74,7 @@ export default {
 
     currentParamsKey: {
       get() {
-        return this.$store.state.parameterKey;
+        return this.$store.getters.parameterKey;
       },
       set(key) {
         this.$store.commit('SET_PARAMETERS_KEY', key);
@@ -92,9 +92,9 @@ export default {
 
     currentParamsName: {
       get() {
-        const key = this.$store.state.parameterKey;
-        return (this.$store.state.parameterSets[key] &&
-                this.$store.state.parameterSets[key].name);
+        const key = this.$store.getters.parameterKey;
+        return (this.$store.getters.parameterSets[key] &&
+                this.$store.getters.parameterSets[key].name);
       },
       set(value) {
         this.$store.commit('SET_PARAMETERS_NAME', value);
@@ -179,7 +179,7 @@ export default {
     removeParams(id) {
       const confirm = window.confirm('Delete ' + this.currentParamsName + '?');
 
-      if (this.$store.state.parameterSets.length <= 1 || !confirm) { return; }
+      if (this.$store.getters.parameterSets.length <= 1 || !confirm) { return; }
 
       this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
       this.paramsIndex = this.$refs.params.selectedIndex = 1;

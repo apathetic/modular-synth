@@ -57,7 +57,7 @@ export const loadPatch = ({ commit, state }, key?: string) => {
   commit('LOAD_CONNECTIONS', []); // first, explicitly destroy all connections
 
   // ensure nodes (+ inlets/outlets) are in the DOM...
-  Vue.nextTick(function() {
+  Vue.nextTick(() => {
     // ...then load new connections
     console.log('%c Routing audio... ', 'background:#666;color:white;font-weight:bold;');
     commit('LOAD_CONNECTIONS', patch.connections);
