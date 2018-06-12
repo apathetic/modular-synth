@@ -48,7 +48,7 @@
       Access the clipping through node.checkClipping(); use node.shutdown to get rid of it.
       */
 
-      var processor = this.processor = this.context.createScriptProcessor(512);
+      const processor = this.processor = this.context.createScriptProcessor(512);
       processor.onaudioprocess = volumeAudioProcess;
       processor.clipping = false;
       processor.lastClip = 0;
@@ -69,7 +69,7 @@
         if ((this.lastClip + this.clipLag) < window.performance.now()) {
           this.clipping = false;
           return this.clipping;
-        };
+        }
 
         processor.shutdown = function() {
           this.disconnect();
@@ -80,13 +80,13 @@
       };
 
       function volumeAudioProcess(event) {
-        var buf = event.inputBuffer.getChannelData(0);
-        var bufLength = buf.length;
-        var sum = 0;
-        var x;
+        const buf = event.inputBuffer.getChannelData(0);
+        const bufLength = buf.length;
+        let sum = 0;
+        let x;
 
         // Do a root-mean-square on the samples: sum up the squares...
-        for (var i = 0; i < bufLength; i++) {
+        for (let i = 0; i < bufLength; i++) {
           x = buf[i];
           if (Math.abs(x) >= this.clipLevel) {
             this.clipping = true;
@@ -96,7 +96,7 @@
         }
 
         // ... then take the square root of the sum.
-        var rms = Math.sqrt(sum / bufLength);
+        const rms = Math.sqrt(sum / bufLength);
 
         // Now smooth this out with the averaging factor applied
         // to the previous sample - take the max here because we

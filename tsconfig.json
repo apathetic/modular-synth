@@ -3,15 +3,16 @@
     "target": "es5",
     "module": "esnext",
     "strict": true,
-    "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "downlevelIteration": true,
 
-    "noImplicitAny": true,
-    // "allowJs": true,
+
+    "noImplicitAny": false, // CHANGE TO TRUE TO ENABLE TYPECHECKING
+
 
     "types": [
       "node"    ],

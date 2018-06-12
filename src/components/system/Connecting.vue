@@ -77,7 +77,7 @@ export default {
           this.$store.commit('ADD_CONNECTION', {
             to: {
               id: this.to.id,
-              port: parseInt(port)
+              port: +port // parseInt(port)
             },
             from: {
               id: this.from.id,

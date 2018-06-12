@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import Auth from './components/system/Auth';
+import Auth from './Auth';
 import { mapGetters, mapActions } from 'vuex';
-import { EVENT } from './events';
+import { EVENT } from '../../events';
 
 export default {
   components: {
@@ -146,7 +146,8 @@ export default {
       this.addPatch();                             // CREATE a new blank patch...
       this.loadPatch();                            // ...AND then select it
 
-      this.patchIndex = this.$refs.patch.selectedIndex = Object.keys(this.patches).length;       // as our new patch is at the end of the list
+      // as our new patch is at the end of the list, we can use ".length" as the index
+      this.patchIndex = this.$refs.patch.selectedIndex = Object.keys(this.patches).length;
     },
 
     remove() {
@@ -207,7 +208,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import 'assets/scss/variables.scss';
+  @import '../../assets/scss/variables.scss';
   $gap: 24px;
 
   .patch-manager {

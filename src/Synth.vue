@@ -77,7 +77,7 @@
   import midi from './components/system/Midi.vue';
   import module from './components/system/Module.vue';
 
-  import Vue from "vue";
+  import Vue from 'vue';
 
   export default {
     mixins: [sortable],
@@ -214,7 +214,7 @@
         'clearFocus'
       ])
     }
-  }
+  };
 </script>
 
 <style lang="scss">

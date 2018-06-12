@@ -44,7 +44,7 @@ export default {
 
   mounted() {
     const meterContext = this.meterContext = this.$refs.vu.getContext('2d');
-    let meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, 132);
+    const meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, 132);
 
     this.audio.connect && this.audio.connect(this.meter.input);
 

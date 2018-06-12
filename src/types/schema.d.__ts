@@ -2,6 +2,7 @@
  * Provides definitions for API structure
  */
 
+ //  this is the Store -->>>
 export interface API<S> {
   name: string;
   id: number;

@@ -1,7 +1,8 @@
 import Vue from 'vue';
-import { api, generateKey } from './firebase';
-import { _NAME, _MODULES, _CONNECTIONS, _PARAMETERS } from './index';
-import { DEFAULT } from '../schema';
+import { api, generateKey } from '../firebase';
+import { _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME} from './index';
+import { DEFAULT } from '../../schema';
+import { PatchState } from '../../types/store/';
 
 
 // -----------------------------------------------
@@ -22,8 +23,8 @@ import { DEFAULT } from '../schema';
  * @param  {String} key    The key of the patch to load
  * @return {void}
  */
-export const loadPatch = ({ commit, state }, key) => {
-  let patch;
+export const loadPatch = ({ commit, state }, key?: string) => {
+  let patch: PatchState;
 
   key = key || state.patchKey;    // load a specific patch, or whatever current key is (from localStorage)
 
@@ -34,14 +35,23 @@ export const loadPatch = ({ commit, state }, key) => {
     console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
   } else {
     console.log('%c Loading patch from localStorage ', 'background:#666;color:white;font-weight:bold;');
-    patch = {
-      id: parseInt(localStorage.getItem('id')) || DEFAULT.id,
-      name: localStorage.getItem(_NAME) || DEFAULT.name,
-      modules: JSON.parse(localStorage.getItem(_MODULES)) || DEFAULT.modules,
-      connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || DEFAULT.connections,
-      parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || DEFAULT.parameterSets
-    };
+    // let temp = {
+    //   id: parseInt(localStorage.getItem('id')) || DEFAULT.id,
+    //   name: localStorage.getItem(_NAME) || DEFAULT.name,
+    //   modules: JSON.parse(localStorage.getItem(_MODULES)) || DEFAULT.modules,
+    //   connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || DEFAULT.connections,
+    //   parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || DEFAULT.parameterSets
+    // };
+    const fromStorage = [_ID, _MODULES, _CONNECTIONS, _PARAMETERS].reduce((acc: PatchState, k: string) => {
+      const value = localStorage.getItem(k);
+
+      return value ? acc[k] = JSON.parse(value) : acc;
+    }, { name: localStorage.getItem(_NAME)});
+
+    patch = Object.assign({}, DEFAULT, fromStorage);
+
   }
+
 
   commit('LOAD_PATCH', patch); // load: id, name, modules, and parameterSets
   commit('LOAD_CONNECTIONS', []); // first, explicitly destroy all connections
@@ -143,43 +153,6 @@ export const fetchPatches = ({ commit }) => {
       console.log('Not signed in.');
     });
 };
-
-
-// -----------------------------------------------
-//  APP
-// -----------------------------------------------
-
-export const togglePower = ({ commit }) => {
-  commit('TOGGLE_POWER');
-};
-
-export const toggleEditMode = ({ commit }) => {
-  commit('TOGGLE_EDIT');
-};
-
-
-// -----------------------------------------------
-//  UI
-// -----------------------------------------------
-
-export const setActive = ({ commit }, id) => {
-  commit('SET_ACTIVE', id);
-};
-
-export const clearActive = ({ commit }) => {
-  // commit('CLEAR_ACTIVE');
-};
-
-// TODO ----------------- move to VUE BUS ? or within App.vue only ...?
-// $emit event ... only connecting.vue needs this...
-export const setFocus = ({ commit }, id) => {
-  commit('SET_FOCUS', id);
-};
-
-export const clearFocus = ({ commit }) => {
-  commit('CLEAR_FOCUS');
-};
-// ---------------------------------------
 
 
 // -----------------------------------------------

@@ -47,10 +47,10 @@ export default {
   methods: {
     addDevice(port) {
       const device = {
-        '_uid': port.id,
-        'name': port.name,
-        'state': port.state,
-        'connection': port.connection
+        _uid: port.id,
+        name: port.name,
+        state: port.state,
+        connection: port.connection
       };
       this.devices.push(device);
     },
@@ -58,7 +58,7 @@ export default {
     // update the device list when devices get connected, disconnected, opened or closed
     onStateChange(e) {
       const port = e.port;
-      const found = !!this.devices.find((d) => { return d._uid === port.id; });
+      const found = !!this.devices.find((d) => d._uid === port.id);
 
       console.log('state change ', found, port.connection, port.state);
 
@@ -88,10 +88,10 @@ export default {
     },
 
     onMIDIMessage(event) {
-      let cmd = event.data[0] >> 4;
-      let channel = event.data[0] & 0xf;
-      let note = event.data[1];
-      let velocity = event.data[2];
+      const cmd = event.data[0] >> 4;
+      const channel = event.data[0] & 0xf;
+      const note = event.data[1];
+      const velocity = event.data[2];
 
       if (channel === 9) { return; }
 

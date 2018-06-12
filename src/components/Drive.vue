@@ -50,8 +50,8 @@
       this.$watch('drive', this.setDrive);
     },
 
-    destroyed() {
-    },
+    // destroyed() {
+    // },
 
     methods: {
       setDrive(d) {

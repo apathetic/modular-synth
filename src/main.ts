@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import store from './store/';
 import Synth from './Synth.vue';
-import PatchManager from './PatchManager.vue';
-import ContextMenu from './components/UI/contextMenu.vue';
-import inlets from "./components/system/inlets.vue";
-import outlets from './components/system/outlets.vue';
+import PatchManager from './components/system/PatchManager.vue';
+import inlets from './components/system/Inlets.vue';
+import outlets from './components/system/Outlets.vue';
+import ContextMenu from './components/UI/ContextMenu.vue';
 import './registerServiceWorker';
 
 // import { mapActions } from 'vuex';
@@ -52,7 +52,7 @@ Vue.component('outlets', outlets);
 // Register a global custom directive called v-context-menu
 // TODO:
 Vue.directive('context-menu', {
-  inserted: function(element) {
+  inserted(element) {
     console.log(element, 'contxt');
   }
 });
@@ -64,11 +64,12 @@ new Vue({
   el: 'main',
   components: { Synth, PatchManager, ContextMenu },
   data: { bus, authenticated },
-  beforeCreate: function() {
+  beforeCreate() {
     auth.onAuthStateChanged((user: any) => {
       this.$authenticated = !!user;
 
       if (this.$authenticated) {
+        debugger;
         this.$store.dispatch('fetchPatches');
       }
     });

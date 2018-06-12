@@ -128,10 +128,10 @@
       setDelay(d) {
         // this.osc.frequency.value = f;
       },
-      setWet(w) {},
-      setDry(d) {},
-      setFeedback(f) {},
-      setCutoff(c) {}
+      setWet(w) { /**/ },
+      setDry(d) { /**/ },
+      setFeedback(f) { /**/ },
+      setCutoff(c) { /**/ }
     }
   };
 </script>

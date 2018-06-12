@@ -1,7 +1,18 @@
-import config from '../../config/firebase';
+import config from '../../config.js';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';     // import auth into firebase namespace
 import 'firebase/database'; // import database into firebase namespace
+
+
+
+
+// declare namespace Firebase {
+//   export function generateKey(): string;
+//   export const auth: any;
+// }
+
+
+
 
 firebase.initializeApp(config);
 

@@ -24,8 +24,9 @@
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
   import Dropdown from './UI/Dropdown';
-  // import { Parameter } from '@/audio'; // webpack resolve alias   ...  '@': resolve('src')
-  import { Parameter } from '/src/audio';
+  import { Parameter } from '@/audio'; // webpack resolve alias   ...  '@': resolve('src')
+  // import { Parameter } from '~audio'; // webpack resolve alias   ...  '~': resolve('src')
+  // import { Parameter } from '/src/audio';
 
   export default {
     components: { Knob, Slider, Dropdown },
@@ -80,7 +81,7 @@
 
       // Inlets
       this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate control, we connect it here...
-      this.inlets[1].audio = this.modDepth_;          // NOTE: this is how we control the modulation (ie. in the _receiving_ module rather than the source)
+      this.inlets[1].audio = this.modDepth_;          // NOTE: control the mod in the _dest module_ (vs the source)
       this.inlets[2].audio = this.pulse_.input;
 
       // Outlets

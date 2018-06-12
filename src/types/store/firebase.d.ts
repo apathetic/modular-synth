@@ -1,6 +1,5 @@
-/// <reference types="node" />
 
-declare namespace firebase {
+// declare namespace Firebase {
   export function generateKey(): string;
   export const auth: any;
   export const provider: any;
@@ -12,4 +11,4 @@ declare namespace firebase {
     add(path: string, data: object): Promise<any>;
     remove(path: string): Promise<void>;
   }
-}
+// }

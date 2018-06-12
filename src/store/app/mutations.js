@@ -1,5 +1,5 @@
-import { moduleSize } from '../dimensions';
-import { validateData } from '../schema';
+import { moduleSize } from '../../dimensions';
+import { validateData } from '../../schema';
 
 // -----------------------------------------------
 //  PATCH

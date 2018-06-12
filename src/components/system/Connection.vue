@@ -181,8 +181,8 @@ THOUGHTS:
       getToAndFromModules() {
         try {
           const modules = this.$parent.$children;
-          const from = modules.find((m) => { return m.id === this.from.id; });
-          const to = modules.find((m) => { return m.id === this.to.id; });
+          const from = modules.find((m) => m.id === this.from.id);
+          const to = modules.find((m) => m.id === this.to.id);
 
           this.dest = {
             coords: to,
@@ -202,7 +202,8 @@ THOUGHTS:
 
       logError(e) {
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
-        console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red', this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
+        console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red',
+          this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
       },
 
       removeConnection(id) {

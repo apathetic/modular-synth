@@ -1,3 +1,4 @@
+// namespace µ {
 
 /**
  * The application's audio context.
@@ -6,8 +7,12 @@
 export const context: AudioContext = AudioContext && new AudioContext();
 
 
-type constants = { [key: number]: AudioBufferSourceNode };
-let constants: constants = {};  // memoize this shizz??
+type constants = {
+  [value: number]: AudioBufferSourceNode
+};
+
+const constants: constants = {};  // memoize this shizz??
+
 
 /**
  * Generate a constant stream of 1's (or given value) at the audio-rate.
@@ -37,8 +42,7 @@ export function signal(value: number = 1) {
     return signal;
     // return context.createConstantSource(value);  // one day
   }
-};
-
+}
 
 
 /**
@@ -68,7 +72,7 @@ export class Parameter {
     // return param;
   }
 
-  destroy() {
+  public destroy() {
     // (<GainNode>this.output).disconnect();
     this.output && this.output.disconnect();
     this.input = this.output = null;
@@ -76,20 +80,19 @@ export class Parameter {
 }
 
 
-
 /**
  * @class Audio VU meter.
  * https://stackoverflow.com/questions/44360301/web-audio-api-creating-a-peak-meter-with-analysernode
  */
 export class Meter {
-  private analyser: AnalyserNode;
-  private buffer: Float32Array;
   public averaging: number;
   public volume: number;
   public rms: number;
   public peak: number;
   public input: AudioNode;
   public output: AudioNode;
+  private analyser: AnalyserNode;
+  private buffer: Float32Array;
 
   constructor(averaging = 0.95) {
     this.analyser = context.createAnalyser();
@@ -98,15 +101,15 @@ export class Meter {
     this.input = this.output = this.analyser;
     this.volume = 0;
     this.averaging = averaging;
-
+    this.rms = this.peak = 0;
 
     // return this.analyser;
   }
 
-  process() {
+  public process() {
     let sumOfSquares = 0;
     let peak = 0;
-    let buffer = this.buffer;
+    const buffer = this.buffer;
 
     // Copies the connected signal's time-domain samples into the buffer
     this.analyser.getFloatTimeDomainData(buffer);
@@ -130,7 +133,6 @@ export class Meter {
 }
 
 
-
 /**
  * @class Creates a wrapper around the Oscillator AudioNode, with the ability
  *        to start and stop playing.
@@ -138,10 +140,10 @@ export class Meter {
  * @param {String} t Initial type of the oscillator.
  */
 export class Oscillator {
-  private osc: OscillatorNode;
-  private type: OscillatorType;
   public frequency: Parameter | null;
   public output: OscillatorNode;
+  private osc: OscillatorNode;
+  private type: OscillatorType;
 
   constructor(f: number = 440, t: OscillatorType = 'sine') {
     this.osc = context.createOscillator();
@@ -151,16 +153,15 @@ export class Oscillator {
     this.output = this.osc;
   }
 
-  start() {
+  public start() {
     this.osc.start();
   }
 
-  stop() {
+  public stop() {
     this.osc.stop();
     this.frequency = null;  // .destroy(); ?
   }
 }
-
 
 
 /**
@@ -170,68 +171,69 @@ export class Oscillator {
  * Reference: https://github.com/pendragon-andyh/WebAudio-PulseOscillator
  */
 export class PWM {
-  private _saw: OscillatorNode | null; // null so we can destroy(?)
-  private _curve: Float32Array | null;
-  private _pulseShaper: WaveShaperNode | null;
   public frequency: Parameter;
   public width: Parameter;
   public output: WaveShaperNode;
+  private saw: OscillatorNode | null; // null so we can destroy(?)
+  private curve: Float32Array | null;
+  private pulseShaper: WaveShaperNode | null;
 
   constructor(f: number = 440, w: number = 0.5) {
-    (<Parameter>this.frequency) = new Parameter(f);
-    (<Parameter>this.width) = new Parameter(w);
+    this.frequency = new Parameter(f);
+    this.width = new Parameter(w);
+    // (<Parameter>this.width) = new Parameter(w);
 
-    this._curve = this.generateCurve();
+    this.curve = this.generateCurve();
 
     // create sawtooth
-    this._saw = context.createOscillator();
-    this._saw.type = 'sawtooth';
+    this.saw = context.createOscillator();
+    this.saw.type = 'sawtooth';
 
     // create the waveshaper
-    this._pulseShaper = context.createWaveShaper();
-    this._pulseShaper.curve = this._curve;
+    this.pulseShaper = context.createWaveShaper();
+    this.pulseShaper.curve = this.curve;
 
     // connectify
-    this._saw.connect(this._pulseShaper);
+    this.saw.connect(this.pulseShaper);
 
     // output
-    this.output = this._pulseShaper;
+    this.output = this.pulseShaper;
 
-    //start
-    this.frequency.output!.connect(this._saw.frequency); // control the frequency
-    this.width.output!.connect(this._pulseShaper); // control pulse width
-    this._saw.start();
+    // start
+    this.frequency.output!.connect(this.saw.frequency); // control the frequency
+    this.width.output!.connect(this.pulseShaper); // control pulse width
+    this.saw.start();
   }
 
   // /**
   //  * Start the Oscillator
   //  */
   // start() {
-  //   this.frequency.output.connect((<OscillatorNode>this._saw).frequency); // control the frequency
-  //   this.width.output.connect(<WaveShaperNode>this._pulseShaper);         // control pulse width
-  //   (<OscillatorNode>this._saw).start();
+  //   this.frequency.output.connect((<OscillatorNode>this.saw).frequency); // control the frequency
+  //   this.width.output.connect(<WaveShaperNode>this.pulseShaper);         // control pulse width
+  //   (<OscillatorNode>this.saw).start();
   // }
 
   /**
    * Un-start the Oscillator
    */
-  stop() {
-    (<OscillatorNode>this._saw).disconnect();
-    (<WaveShaperNode>this._pulseShaper).disconnect();
+  public stop() {
+    (this.saw as OscillatorNode).disconnect();
+    (this.pulseShaper as WaveShaperNode).disconnect();
 
     this.frequency.destroy();
     this.width.destroy();
 
-    this._saw = null;
-    this._curve = null;
-    this._pulseShaper = null;
+    this.saw = null;
+    this.curve = null;
+    this.pulseShaper = null;
   }
 
   /**
    * Generate a curve to be used in Waveshaping the Sawtooth wave.
    * NOTE: why 256 samples?? No idea. A goodly number I guess
    */
-  generateCurve() {
+  private generateCurve() {
     const pulseCurve = new Float32Array(256);
 
     for (let i = 0; i < 128; i++) {
@@ -243,4 +245,4 @@ export class PWM {
   }
 }
 
-
+// }

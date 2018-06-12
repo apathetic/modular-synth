@@ -171,9 +171,9 @@
         this.mod = (val / 127.0).toFixed(3);
       },
 
-      polyPressure(note, pressure) {
+      // polyPressure(note, pressure) {
 
-      }
+      // }
     }
   };
 </script>

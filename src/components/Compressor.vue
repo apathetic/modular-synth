@@ -42,8 +42,8 @@
       this.outlets[0].audio = this.output = this.context.createGain();
     },
 
-    destroyed() {
-    },
+    // destroyed() {
+    // },
 
     methods: {
     }

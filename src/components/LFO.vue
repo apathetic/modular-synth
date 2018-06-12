@@ -117,9 +117,9 @@
     },
 
     methods: {
-      reset() {
+      // reset() {
 
-      },
+      // },
 
       /**
        * k-rate control of the Oscillator frequency.

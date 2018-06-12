@@ -91,10 +91,10 @@
         this.visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
 
         // console.log(values);
-        
+
 
         for (let i = 0, x = 0; i < length; i++) {
-          let val = values[i] + 140; // why 140? no idea. Came from Mozilla docs
+          const val = values[i] + 140; // why 140? no idea. Came from Mozilla docs
 
           // val = isFinite(val) ? val : 0;
 
@@ -110,7 +110,7 @@
         if (this.power) {
           if (!this.editing && this.ticking) {
             this.analyse();
-            this.render();            
+            this.render();
           }
 
           this.ticking = !this.ticking;

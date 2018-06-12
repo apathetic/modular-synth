@@ -31,7 +31,7 @@ const X = 24; // half the css knob radius
 const Y = 24;
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-  let angleInRadians = (angleInDegrees + 90) * Math.PI / 180.0;
+  const angleInRadians = (angleInDegrees + 90) * Math.PI / 180.0;
 
   return {
     x: centerX + (radius * Math.cos(angleInRadians)),
@@ -70,7 +70,7 @@ export default {
      * Helper function for the path attribute d in the svg display.
      * @return {string} The new path attribute.
      */
-    arc: function() {
+    arc() {
       const rotationValue = this.internalValue * 300 + 30;    // 30 -> 330. Dials start 30deg in and end 30deg before 360.
       return describeArc(X, Y, SIZE, 30, rotationValue);
     }

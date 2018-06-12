@@ -30,10 +30,11 @@
     data() {
       return {
         name: 'Mixer',
-        'one': 0,
-        'two': 0,
-        'three': 0,
-        'four': 0,
+
+        one: 0,
+        two: 0,
+        three: 0,
+        four: 0,
 
         inlets: [
           { label: 'in-1' },
