@@ -1,9 +1,9 @@
 var config = {
-  apiKey: "AIzaSyBcxE9ynMPhVDdTWVywMAPgx8Tq242FWvE",
+  apiKey: "1234567890",
   authDomain: "malformed-synth.firebaseapp.com",
   databaseURL: "https://malformed-synth.firebaseio.com",
   storageBucket: "malformed-synth.appspot.com",
-  messagingSenderId: "893642604788"
+  messagingSenderId: "1234567890"
 };
 
 module.exports = config;
