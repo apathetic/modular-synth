@@ -160,7 +160,7 @@ export const removeModule = ({ commit, state, getters, rootState }) => {
   // only delete active/focused modules
   // if (state.active === state.focused) {
   if (rootState.app.active === rootState.app.focused) {
-    const id = state.active;
+    const id = rootState.app.active;
 
     commit('REMOVE_MODULE', id);
 

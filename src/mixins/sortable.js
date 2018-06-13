@@ -6,7 +6,7 @@
  *
  * NOTE: As this is a mixin, several object properties are defined
  * elsewhere but referenced here. The two primary ones are:
- *   this.active
+ *   this.activeModule
  *   this.modules
  */
 
@@ -43,7 +43,7 @@ export const sortable = {
       // WE need two things, here:
       //   - "item": which has row, col coords
       //   - "el": HTMLElement which we'll use to determine the module's actual position in the grid
-      var item = this.active; // NOTE: active is available via App.vue in a vuex getter
+      var item = this.activeModule; // NOTE: active is available via App.vue in a vuex getter
       var newPosition = this._snapItemPositionToGrid(el, item);
 
       if (this._dragPositionChanged(newPosition)) {
@@ -80,7 +80,7 @@ export const sortable = {
     _applyPositionToItems() {
       this.modules.forEach((item) => {
         // Don't interfere with the position of the dragged items. TODO - is this the case...?
-        if (this.active !== item) {
+        if (this.activeModule !== item) {
           this.$store.commit('UPDATE_RACK_POSITION', {
             id: item.id,
             col: item.col,

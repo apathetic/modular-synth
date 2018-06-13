@@ -7,8 +7,8 @@
     <div class="add" :class="{active: active === 'add'}">
       <h3>New Module:</h3>
       <ul>
-        <li v-for="module in ['Analyser', 'Comb', 'Compressor','Delay', 'Drive','Env', 'LFO', 'Mixer', 'NoteIn', 'OSC', 'Reverb', 'VCO', 'VCA', 'VCF']"
-            @click="newModule(module)">{{ module }}</li>
+        <li v-for="(module, i) in ['Analyser', 'Comb', 'Compressor','Delay', 'Drive','Env', 'LFO', 'Mixer', 'NoteIn', 'OSC', 'Reverb', 'VCO', 'VCA', 'VCF']"
+            @click="newModule(module)" :key="i">{{ module }}</li>
         <li>---</li>
         <li @click="newModule('Node')">• Node</li>
         <li @click="newModule('Debugger')">• debugger</li>

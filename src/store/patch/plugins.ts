@@ -21,7 +21,7 @@ const localStoragePlugin = (store: Store<PatchState>) => {
   });
 
   store.subscribe((mutation: MutationPayload, { parameterKey }) => {
-    localStorage.setItem(_PARAMETER_KEY, parameterKey!.toString());
+    localStorage.setItem(_PARAMETER_KEY, parameterKey.toString());
   });
 
   store.subscribe((mutation: MutationPayload, { id }) => {

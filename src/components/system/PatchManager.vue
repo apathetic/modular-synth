@@ -22,7 +22,7 @@
         <button class="math remove" @click="remove">-</button>
         <select :value="currentPatchKey" @change="select" ref="patch">
           <option value="" disabled selected>&lt;select patch&gt;</option>
-          <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
+          <option v-for="(patch, key) in patches" :value="key" :key="key">{{ patch.name }}</option>
         </select>
         <input type="text" v-model="currentPatchName">
       </div>

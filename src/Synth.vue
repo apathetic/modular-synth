@@ -40,12 +40,12 @@
           <span class="edit">edit</span>
         </button>
 
-        <p v-if="active">
+        <p v-if="activeModule">
           <strong>Current Module</strong><br>
-          {{ active.type }} (id: {{ active.id }})<br>
-          x, y: {{ active.x }}, {{ active.y }}<br>
-          col, row: {{ active.col }}, {{ active.row }}<br>
-          w, h: {{ active.w }},  {{ active.h }}<br>
+          {{ activeModule.type }} (id: {{ activeModule.id }})<br>
+          x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
+          col, row: {{ activeModule.col }}, {{ activeModule.row }}<br>
+          w, h: {{ activeModule.w }},  {{ activeModule.h }}<br>
         </p>
 
         <midi></midi>
@@ -109,7 +109,7 @@
       ...mapGetters([
         'power',
         'editing',
-        'active',
+        'activeModule',
         'modules',
         'bounds',
         'connections'

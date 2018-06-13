@@ -91,7 +91,9 @@ export const draggable = {
       } else {
         // otherwise, restore the x,y coordinates -- we don't want the
         // module to have moved around when we switch out of play mode
-        const module = this.$store.getters.active;
+        // const active = this.$store.state.app.active;
+        // const module = this.$store.getters.module(active);
+        const module = this.$store.getters.activeModule;
 
         this.x = module.x;
         this.y = module.y;
