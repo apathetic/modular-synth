@@ -11,13 +11,16 @@ export const _CONNECTIONS = 'connections';
 export const _PARAMETERS = 'parameterSets';
 export const _PARAMETER_KEY = 'parameterKey';
 
-const state: PatchState = {
+export const state: PatchState = {
   id: 0,
-  name: '',
-  modules: [],
+  name: '<blank>',
+  modules: [{ type: 'MasterOut', id: 0, x: 0, y: 0 }],
   connections: [],
-  parameterSets: [],
   parameterKey: 0,
+  parameterSets: [{
+    name: '<empty>',
+    parameters: []
+  }]
 };
 
 export default {
@@ -27,3 +30,6 @@ export default {
   actions,
   plugins
 };
+
+
+

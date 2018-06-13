@@ -5,29 +5,19 @@ export interface RootState {
 }
 
 export interface AppState {
-
-  // APP: USER STATE
   power: boolean,
   editing: boolean,
-  focused: undefined,                                // "Hovered": for Module Info, Connections.  TODO move to $bus?
-  active: number,                                    // "Clicked": for Dragging, Deleting.
-
-  // // PATCH: WORKING DATA                             // NOTE: data is populated in actions.js
-  // id: 0,
-  // name: '',
-  // modules: x.Module[],
-  // connections: [],
-  // parameterSets: [],
-  // parameterKey: 0,
+  focused: undefined,       // "Hovered": for Module Info, Connections.  TODO move to $bus?
+  active: number,           // "Clicked": for Dragging, Deleting.
 
   // APP: "PERSISTENT" STORAGE
-  patchKey: string, // localStorage.getItem(_KEY) || '',        // key of active patch
+  patchKey: string,         // key of active patch
 
   // UI: STUFFS
   canvasOffset: 0,
 
   // TODO: remove; use firebase + SW instead;
-  patches: {}                                        // all available patches, cached here
+  patches: {}               // all available patches, cached here
 }
 
 export interface PatchState {
@@ -36,7 +26,7 @@ export interface PatchState {
   modules: Module[],
   connections: Connection[],
   parameterSets: ParameterSet[],
-  parameterKey?: number
+  parameterKey: number
 }
 
 
@@ -55,10 +45,10 @@ export interface Connection {
 export interface Module {
   id: number;
   type: string;
-  col: number;
-  row: number;
-  w: number;
-  h: number;
+  col?: number;
+  row?: number;
+  w?: number;
+  h?: number;
   x: number;
   y: number;
 }
@@ -68,7 +58,7 @@ export interface ParameterSet {
   parameters: Parameter[];
 }
 
-// export type Parameter = (state: S, getters: any, rootState: R, rootGetters: any) => any;
+// export type Parameter...?
 export interface Parameter {
   [key: string]: string | number;
 }

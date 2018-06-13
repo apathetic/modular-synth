@@ -2,16 +2,7 @@ import config from '../../config.js';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';     // import auth into firebase namespace
 import 'firebase/database'; // import database into firebase namespace
-
-
-
-
-// declare namespace Firebase {
-//   export function generateKey(): string;
-//   export const auth: any;
-// }
-
-
+import { state as DEFAULT } from './patch';
 
 
 firebase.initializeApp(config);
@@ -21,13 +12,6 @@ const database = firebase.database();
 export const auth = firebase.auth();
 export const provider = new firebase.auth.GoogleAuthProvider();
 
-/**
- * Generate a key based on the patch's name.
- * @return {[type]} [description]
- */
-// export function generateKey(str) {
-//   return str.toLowerCase().trim().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
-// }
 
 /**
  * Generate a UUID to be used as a key.
@@ -151,3 +135,54 @@ export const api = {
     });
   }
 };
+
+
+
+/**
+ * This validates the Patch Object coming from Firebase, and
+ * ensures that each Object has all the requesite fields. This
+ * is important because everywhere else in the App we assume that
+ * these fields are present -- and Firebase does _not_ store empty
+ * values / arrays, etc. All data checks happen only here.
+ * @param  {Object} patches The Object of the user's patches.
+ * @return {Object) The patches Object, with any data-corrections made.
+ */
+export function validateData(patches) {
+  for (let key in patches) {
+    const patch = patches[key];
+
+    if (!patch.name) {
+      console.warn('Patch "%s" missing name', key);
+      patch.name = DEFAULT.name;
+    }
+
+    if (patch.id === undefined) {
+      console.warn('Patch "%s" missing id. Fixing...', patch.name);
+      patch.id = DEFAULT.id;
+    }
+
+    if (!patch.parameterSets) {
+      console.warn('Patch "%s" missing parameterSets. Fixing...', patch.name);
+      patch.parameterSets = DEFAULT.parameterSets;
+    }
+
+    patch.parameterSets.forEach((set) => {
+      set.name = set.name || '<missing>';
+      if (!set.parameters) {
+        console.warn('Patch "%s" missing parameters in "%s". Fixing...', patch.name, set.name);
+        set.parameters = DEFAULT.parameterSets[0].parameters;
+      }
+    });
+
+    if (!patch.connections) {
+      console.warn('Patch "%s" missing connections. Fixing...', patch.name);
+      patch.connections = DEFAULT.connections;
+    }
+
+    if (!patch.modules) {
+      console.warn('Patch %s no modules.... (not fixed)', patch.name);
+    }
+  }
+
+  return patches;
+}

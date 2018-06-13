@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { api, generateKey } from '../firebase';
-import { _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME} from './index';
-import { DEFAULT } from '../../schema';
+import { _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME, state as DEFAULT } from './index';
 import { PatchState } from '../../types/store/';
 
 
@@ -32,26 +31,20 @@ export const loadPatch = ({ commit, state }, key?: string) => {
   if (key && state.patches[key]) {
     patch = state.patches[key];
     commit('SET_KEY', key);
-    console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
   } else {
-    console.log('%c Loading patch from localStorage ', 'background:#666;color:white;font-weight:bold;');
-    // let temp = {
-    //   id: parseInt(localStorage.getItem('id')) || DEFAULT.id,
-    //   name: localStorage.getItem(_NAME) || DEFAULT.name,
-    //   modules: JSON.parse(localStorage.getItem(_MODULES)) || DEFAULT.modules,
-    //   connections: JSON.parse(localStorage.getItem(_CONNECTIONS)) || DEFAULT.connections,
-    //   parameterSets: JSON.parse(localStorage.getItem(_PARAMETERS)) || DEFAULT.parameterSets
-    // };
-    const fromStorage = [_ID, _MODULES, _CONNECTIONS, _PARAMETERS].reduce((acc: PatchState, k: string) => {
-      const value = localStorage.getItem(k);
+    const fromStorage = [_ID, _MODULES, _CONNECTIONS, _PARAMETERS].reduce(
+      (acc: PatchState, k: string) => {
+        const value = localStorage.getItem(k);
 
-      return value ? acc[k] = JSON.parse(value) : acc;
-    }, { name: localStorage.getItem(_NAME)});
+        return value ? acc[k] = JSON.parse(value) : acc;
+      }, 
+      { name: localStorage.getItem(_NAME)}
+    );
 
     patch = Object.assign({}, DEFAULT, fromStorage);
-
   }
 
+  console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name || '(from localStorage)');
 
   commit('LOAD_PATCH', patch); // load: id, name, modules, and parameterSets
   commit('LOAD_CONNECTIONS', []); // first, explicitly destroy all connections
@@ -71,8 +64,8 @@ export const loadPatch = ({ commit, state }, key?: string) => {
  * Save the current working patch into the backend database, and persist it
  * into localStorage as well.
  * @param  {[type]} commit [description]
- * @param  {[type]} state  [description]
- * @param  {Object} data   Patch and parameter names, other patch data
+ * @param  {PatchState} state The current state of the Patch
+ * @param  {Object} data Patch and parameter names, other patch data  [TODO] this doesnt currently get used.
  * @return {void}
  */
 export const savePatch = ({ commit, state }, data) => {
@@ -163,9 +156,10 @@ export const addModule = ({ commit }, data) => {
   commit('ADD_MODULE', data);
 };
 
-export const removeModule = ({ commit, state }) => {
+export const removeModule = ({ commit, state, getters, rootState }) => {
   // only delete active/focused modules
-  if (state.active === state.focused) {
+  // if (state.active === state.focused) {
+  if (rootState.app.active === rootState.app.focused) {
     const id = state.active;
 
     commit('REMOVE_MODULE', id);

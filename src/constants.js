@@ -1,6 +1,14 @@
+// -----------------------------------------------
+//  APP
+// -----------------------------------------------
+// export const headerHeight = 48;
+
+// -----------------------------------------------
+//  MODULE
+// -----------------------------------------------
+
 export const rackHeight = 240;
 export const rackWidth = 60;
-
 export const cellHeight = 90;
 export const cellWidth = 120;
 

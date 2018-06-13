@@ -1,4 +1,4 @@
-import { validateData } from '../../schema';
+import { validateData } from '../firebase';
 
 // -----------------------------------------------
 //  PATCH

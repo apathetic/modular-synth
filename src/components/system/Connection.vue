@@ -161,7 +161,8 @@ THOUGHTS:
 
             this.stroke = 'red';
 
-            throw '[error] connection: mismatch (' + outType + ' ⟹ ' + inType + ')';  // eslint-disable-line
+            // throw new Error('Connection: mismatch (' + outType + ' ⟹ ' + inType + ')');
+            this.logError('Connection: mismatch (' + outType + ' ⟹ ' + inType + ')');
           }
 
           // success message:
@@ -186,7 +187,7 @@ THOUGHTS:
 
           this.dest = {
             coords: to,
-            module: this.to.id === 0 ? to : to.$children[0],
+            module: this.to.id === 0 ? to : to.$children[0], // compensate for (new) module wrapper
             id: this.to.id
           };
 

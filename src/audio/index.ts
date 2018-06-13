@@ -7,11 +7,8 @@
 export const context: AudioContext = AudioContext && new AudioContext();
 
 
-type constants = {
-  [value: number]: AudioBufferSourceNode
-};
-
-const constants: constants = {};  // memoize this shizz??
+type Constants = {[value: number]: AudioBufferSourceNode};
+const constants: Constants = {};  // memoize this shizz??
 
 
 /**
@@ -24,22 +21,22 @@ export function signal(value: number = 1) {
     return constants[value];
   } else {
     // Generate (mono) buffer with 2 samples
-    const signal = context.createBufferSource();
+    const waveform = context.createBufferSource();
     const buffer = context.createBuffer(1, 2, context.sampleRate);
 
-    // set each sample to 1
+    // set each sample to "value"
     buffer.getChannelData(0)[0] = value;    // 2 items, as Safari chokes on 1
     buffer.getChannelData(0)[1] = value;
 
-    signal.channelCountMode = 'explicit';
-    signal.channelCount = 1;
-    signal.buffer = buffer;
-    signal.loop = true;
-    signal.start(0);
+    waveform.channelCountMode = 'explicit';
+    waveform.channelCount = 1;
+    waveform.buffer = buffer;
+    waveform.loop = true;
+    waveform.start(0);
 
-    constants[value] = signal;
+    constants[value] = waveform;
 
-    return signal;
+    return waveform;
     // return context.createConstantSource(value);  // one day
   }
 }
@@ -115,8 +112,10 @@ export class Meter {
     this.analyser.getFloatTimeDomainData(buffer);
 
     // Compute average power and find peak instantaneous power
-    for (let i = 0; i < buffer.length; i++) {
-      const power = buffer[i] ** 2;
+    // for (let i = 0; i < buffer.length; i++) {
+    //   const power = buffer[i] ** 2;
+    for (const sample of buffer) {
+      const power = sample ** 2;
       sumOfSquares += power;
       peak = Math.max(power, peak);
     }
