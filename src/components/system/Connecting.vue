@@ -30,9 +30,8 @@ export default {
    */
   created() {
     this.$bus.$on('connection:start', (port, id) => {
-      this.from = this.$store.state.modules.find((module) => module.id === id);
+      this.from = this.$store.getters.module(id);
       this.port = port;
-
       this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
       this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
 
@@ -50,7 +49,7 @@ export default {
      * @return {Void}
      */
     drag(event) {
-      this.cursorX = event.clientX + this.$store.state.canvasOffset;
+      this.cursorX = event.clientX + this.$store.state.app.canvasOffset;
       this.cursorY = event.clientY - 48;  // the header height
 
       event.stopPropagation();
@@ -65,14 +64,14 @@ export default {
       const target = event.toElement || event.relatedTarget || event.target || false;
       const port = target.getAttribute('data-port');
 
-      if (target && port) {                         // NOTE: port is a String, so "0" is cool here
-        const focused = this.$store.state.focused;  // ironically, we dont even use the target to fetch the Component
+      if (target && port) {                          // NOTE: port is a String, so "0" is cool here
+        const focused = this.$store.getters.focused; // ironically, we dont even use the target to fetch the Component
 
-        this.to = this.$store.state.modules.find((module) => module.id === focused);
+        this.to = this.$store.getters.module(focused);
 
         if (
-          this.to.id !== this.from.id &&          // if not circular connection
-          this.isUnique()                         // is not a duplicated connection
+          this.to.id !== this.from.id &&            // if not circular connection
+          this.isUnique()                           // is not a duplicated connection
         ) {
           this.$store.commit('ADD_CONNECTION', {
             to: {

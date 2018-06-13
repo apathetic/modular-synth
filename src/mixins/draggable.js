@@ -20,8 +20,8 @@ export const draggable = {
   computed: {
     position() {
       return {
-        left: (this.$store.state.editing || this.isDragging) ? this.x + 'px' : this.module.col * rackWidth + 'px',
-        top: (this.$store.state.editing || this.isDragging) ? this.y + 'px' : this.module.row * rackHeight + 'px'
+        left: (this.$store.getters.editing || this.isDragging) ? this.x + 'px' : this.module.col * rackWidth + 'px',
+        top: (this.$store.getters.editing || this.isDragging) ? this.y + 'px' : this.module.row * rackHeight + 'px'
       };
     }
   },
@@ -80,7 +80,7 @@ export const draggable = {
       this.isDragging = false;
       this.$bus.$emit(EVENT.DRAG_END, this.id);
 
-      if (this.$store.state.editing) {      // TODO && cursorStartY != this.y etc
+      if (this.$store.getters.editing) {      // TODO && cursorStartY != this.y etc
         // we only want to update the Store with the
         // new coordinates if we are in editing mode:
         this.$store.commit('UPDATE_GRID_POSITION', {

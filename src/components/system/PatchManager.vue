@@ -83,7 +83,7 @@ export default {
 
     currentPatchName: {
       get() {
-        return this.$store.state.name;
+        return this.$store.state.patch.name;
       },
       set(value) {
         this.$store.commit('SET_NAME', value);
