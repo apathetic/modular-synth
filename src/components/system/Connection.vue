@@ -56,7 +56,7 @@ THOUGHTS:
 </template>
 
 <script>
-  import { cellWidth } from '../../dimensions';
+  import { cellWidth } from '../../constants';
   import { Parameter } from '../../audio';
 
   export default {

@@ -1,4 +1,4 @@
-import { moduleSize } from '../../dimensions';
+import { moduleSize } from '../../constants';
 
 // -----------------------------------------------
 //  PATCH
@@ -46,9 +46,7 @@ export const ADD_MODULE = (state, data) => {
 };
 
 export const REMOVE_MODULE = (state, id) => {
-  state.modules = state.modules.filter((m) => {
-    return m.id !== id;
-  });
+  state.modules = state.modules.filter((m) => m.id !== id);
 };
 
 
@@ -56,14 +54,14 @@ export const REMOVE_MODULE = (state, id) => {
 //  POSITION
 // -----------------------------------------------
 export const UPDATE_GRID_POSITION = (state, data) => {
-  const module = state.modules.find(function (module) { return module.id === data.id; });
+  const module = state.modules.find((m) => m.id === data.id);
 
   module.x = data.x;
   module.y = data.y;
 };
 
 export const UPDATE_RACK_POSITION = (state, data) => {
-  const module = state.modules.find(function (module) { return module.id === data.id; });
+  const module = state.modules.find((m) => m.id === data.id);
 
   module.col = data.col;
   module.row = data.row;
@@ -80,7 +78,7 @@ export const LOAD_CONNECTIONS = (state, data) => {
 export const ADD_CONNECTION = (state, data) => {
   state.id++;
   state.connections.push({
-    id: parseInt(state.id),
+    id: +state.id, // parseInt(state.id),
     to: data.to,
     from: data.from
   });

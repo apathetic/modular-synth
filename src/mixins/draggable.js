@@ -5,7 +5,7 @@
  * @type {Object}
  */
 
-import { rackWidth, rackHeight } from '../dimensions';
+import { rackWidth, rackHeight } from '../constants';
 import { EVENT } from '../events';
 
 const dragObj = {

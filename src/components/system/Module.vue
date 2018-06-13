@@ -20,7 +20,7 @@
   // -------------------
 
   import { draggable } from '@/mixins/draggable';
-  import { moduleSize } from '../../dimensions';
+  import { moduleSize } from '../../constants';
 
   import Analyser from '../Analyser';
   import Comb from '../Comb';

@@ -249,7 +249,7 @@ export default class GridList {
 
   // _adjustSizeOfItems() {
   //   /**
-  //    * Some items can have 100% height or 100% width. Those dimensions are
+  //    * Some items can have 100% height or 100% width. Those constants are
   //    * expressed as 0. We need to ensure a valid width and height for each of
   //    * those items as the number of items per lane.
   //    */

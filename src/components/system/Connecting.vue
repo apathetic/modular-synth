@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { cellWidth } from '../../dimensions';
+import { cellWidth } from '../../constants';
 import { EVENT } from '../../events';
 
 export default {
