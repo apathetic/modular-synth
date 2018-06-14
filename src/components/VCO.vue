@@ -140,6 +140,9 @@
        */
       setDetune(d) {
         console.log(d);
+        const currentFreq = this.osc_.frequency.value;
+        const freq = currentFreq * Math.pow(2, d);
+
       },
 
       /**

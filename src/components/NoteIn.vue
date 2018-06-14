@@ -23,16 +23,16 @@
 <script>
   import { EVENT } from '../events';
 
-	let noteNames = [];
-	const notes = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ];
+  const noteNames = [];
+  const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-	for (let i = 0; i < 127; i++) {
-		let key = notes[i % 12] + '-';
-		const octave = ((i / 12) | 0) - 1; // MIDI scale starts at octave = -1
+  for (let i = 0; i < 127; i++) {
+    let key = notes[i % 12] + '-';
+    const octave = ((i / 12) | 0) - 1; // MIDI scale starts at octave = -1
 
-		key += octave;
-		noteNames[i] = key;
-	}
+    key += octave;
+    noteNames[i] = key;
+  }
 
   export default {
     props: {
