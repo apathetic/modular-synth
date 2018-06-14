@@ -5,6 +5,6 @@ selenium-debug.log
 dist/
 .vscode/
 ._js
-
+config/firebase.js
 
 
