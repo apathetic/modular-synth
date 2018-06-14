@@ -1,4 +1,4 @@
-import { PatchState } from '../../types/store/';
+import { PatchState } from '../../types/';
 import { _ID, _NAME, _MODULES, _CONNECTIONS, _PARAMETERS, _PARAMETER_KEY } from './index';
 import { Mutation, MutationPayload, Payload, Plugin, Store } from 'vuex';
 

@@ -1,4 +1,4 @@
-import { PatchState, Module, Connection, ParameterSet, Parameter } from '../../types/store/';
+import { PatchState, Module, Connection, ParameterSet, Parameter } from '../../types/';
 
 export const module = (state: PatchState) => (id: number): Module | undefined => state.modules.find((m) => m.id === id);
 export const modules = (state: PatchState): Module[] => state.modules.filter((m) => m.id !== 0);

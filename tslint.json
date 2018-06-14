@@ -32,7 +32,8 @@
 
     "object-literal-shorthand": false,
     "no-console": [false],
-    "XXXno-internal-module": false
+    "max-classes-per-file": false,
+    "no-internal-module": true
 
   }
 }

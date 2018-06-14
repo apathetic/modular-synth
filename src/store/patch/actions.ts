@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { api, generateKey } from '../firebase';
 import { _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME, state as DEFAULT } from './index';
-import { PatchState } from '../../types/store/';
+import { PatchState } from '../../types/';
 
 
 // -----------------------------------------------
@@ -44,7 +44,7 @@ export const loadPatch = ({ commit, state }, key?: string) => {
     patch = Object.assign({}, DEFAULT, fromStorage);
   }
 
-  console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name || '(from localStorage)');
+  console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name || '(localStorage)');
 
   commit('LOAD_PATCH', patch); // load: id, name, modules, and parameterSets
   commit('LOAD_CONNECTIONS', []); // first, explicitly destroy all connections
@@ -59,6 +59,7 @@ export const loadPatch = ({ commit, state }, key?: string) => {
     // commit('LOAD_PARAMETERS', patch.parameters);
   });
 };
+
 
 /**
  * Save the current working patch into the backend database, and persist it
@@ -94,6 +95,7 @@ export const savePatch = ({ commit, state }, data) => {
   });
 };
 
+
 /**
  * Insert a new, blank patch into the workspace.
  * @param {[type]} commit [description]
@@ -116,6 +118,7 @@ export const addPatch = ({ commit, state }) => {
   state.parameterKey = 0;
 };
 
+
 /**
  * Remove a patch.
  * @param {[type]} commit [description]
@@ -130,6 +133,7 @@ export const removePatch = ({ commit, state }, key) => {
   state.parameterKey = 0;
   loadPatch({ commit, state });
 };
+
 
 /**
  * Fetch all of the user's patches from the backend.
@@ -155,6 +159,7 @@ export const fetchPatches = ({ commit }) => {
 export const addModule = ({ commit }, data) => {
   commit('ADD_MODULE', data);
 };
+
 
 export const removeModule = ({ commit, state, getters, rootState }) => {
   // only delete active/focused modules

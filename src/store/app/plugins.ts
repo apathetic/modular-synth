@@ -1,4 +1,4 @@
-import { RootState, AppState, PatchState } from '../../types/store/';
+import { RootState, AppState, PatchState } from '../../types/';
 import { _KEY, } from './index';
 import { Mutation, MutationPayload, Payload, Plugin, Store } from 'vuex';
 
