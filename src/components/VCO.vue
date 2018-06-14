@@ -25,8 +25,6 @@
   import Slider from './UI/Slider';
   import Dropdown from './UI/Dropdown';
   import { Parameter } from '@/audio'; // webpack resolve alias   ...  '@': resolve('src')
-  // import { Parameter } from '~audio'; // webpack resolve alias   ...  '~': resolve('src')
-  // import { Parameter } from '/src/audio';
 
   export default {
     components: { Knob, Slider, Dropdown },

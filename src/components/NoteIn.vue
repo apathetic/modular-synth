@@ -7,10 +7,9 @@
     <div class="module-interface">
       <span class="received" :class="{active: active}"></span>
 
-      <p>note: {{ note }}</p>
-      <p>vel:  ...</p>
+      <p>note: {{ noteName }} ({{ note }})</p>
       <p>freq: {{ Math.round(freq) }} Hz</p>
-      <p>amp:  {{ velocity }}</p>
+      <p>vel:  {{ velocity }}</p>
       <p>bend: {{ bend }}</p>
       <p>mod:  {{ mod }}</p>
     </div>
@@ -22,13 +21,28 @@
 </template>
 
 <script>
-  // import Module from './system/Module2';
-  // import { signal } from '../audio';
   import { EVENT } from '../events';
+
+	let noteNames = [];
+	const notes = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ];
+
+	for (let i = 0; i < 127; i++) {
+		let key = notes[i % 12] + '-';
+		const octave = ((i / 12) | 0) - 1; // MIDI scale starts at octave = -1
+
+		key += octave;
+		noteNames[i] = key;
+	}
 
   export default {
     props: {
       id: null
+    },
+
+    computed: {
+      noteName() {
+        return noteNames[this.note] || '';
+      }
     },
 
     data() {
