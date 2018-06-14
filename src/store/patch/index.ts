@@ -1,7 +1,6 @@
 import * as getters from './getters';
 import * as mutations from './mutations';
 import * as actions from './actions';
-import plugins from './plugins';
 import { PatchState } from '../../types/';
 
 export const _ID = 'id';
@@ -18,7 +17,7 @@ export const state: PatchState = {
   connections: [],
   parameterKey: 0,
   parameterSets: [{
-    name: '<empty>',
+    name: '<blank>',
     parameters: []
   }]
 };
@@ -27,9 +26,5 @@ export default {
   state,
   getters,
   mutations,
-  actions,
-  plugins
+  actions
 };
-
-
-
