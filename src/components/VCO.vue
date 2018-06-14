@@ -45,10 +45,13 @@
 
         inlets: [
           { label: 'freq',
-            desc: 'The frequency of the Oscillator. [A-rate / k-rate]'
+            desc: 'The frequency of the Oscillator. [a-rate / k-rate]'
           },
           { label: 'mod',
             desc: 'Modulation input, ie. LFO or similar. Depth is controlled via the slider'
+          },
+          { label: 'detune',
+            desc: 'Detune the oscillator frequency, similar to bend'
           },
           { label: 'pulse',
             desc: 'Pulse width modulation. [0 - 1]'
@@ -79,8 +82,9 @@
 
       // Inlets
       this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate control, we connect it here...
-      this.inlets[1].audio = this.modDepth_;          // NOTE: control the mod in the _dest module_ (vs the source)
-      this.inlets[2].audio = this.pulse_.input;
+      this.inlets[1].audio = this.modDepth_;
+      this.inlets[2].data = this.setDetune;
+      this.inlets[3].audio = this.pulse_.input;
 
       // Outlets
       this.outlets[0].audio = this.osc_;
@@ -119,7 +123,7 @@
 
       /**
        * Update Modulation depth. Range is from 0 to 500 cents.
-       * @param  {Float} g  Depth, between 0 and 100.
+       * @param {Float} d Depth, between 0 and 100.
        */
       setDepth(d) {
         const currentFreq = this.osc_.frequency.value;
@@ -127,9 +131,15 @@
         const freq = currentFreq * Math.pow(2, cents / 1200);
         // const depth = currentFreq * d / 100.0;
 
-        console.log(freq);
-
         this.modDepth_.gain.value = d; // freq - currentFreq;
+      },
+
+      /**
+       * Update Oscillator detune
+       * @param  {Float} d Detune, between 0 and 1.
+       */
+      setDetune(d) {
+        console.log(d);
       },
 
       /**
@@ -151,6 +161,9 @@
         return this._phase * (180 / Math.PI);
       },
 
+      /**
+       * 
+       */
       setPhase(phase) {
         this._phase = phase * Math.PI / 180;
         // reset the type

@@ -7,7 +7,7 @@
     <div class="module-interface">
       <span class="received" :class="{active: active}"></span>
 
-      <p>note: {{ noteName }} ({{ note }})</p>
+      <p>note: {{ noteName }}</p>
       <p>freq: {{ Math.round(freq) }} Hz</p>
       <p>vel:  {{ velocity }}</p>
       <p>bend: {{ bend }}</p>
@@ -73,7 +73,6 @@
 
       this.outlets[0].data = 'freq';      // "string" of the property to connect
       this.outlets[1].data = 'velocity';  // for now. should be "gate" or "trigger"...
-      // this.outlets[2].data = 'gate';
       this.outlets[2].data = 'bend';
       this.outlets[3].data = 'mod';
 
