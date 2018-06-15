@@ -63,7 +63,7 @@ export default {
       this.peak = this.meter.peak;
 
       const meterContext = this.meterContext;
-      const level = this.rms * 2;      
+      const level = this.rms * 2;
 
       //                     x, y, width, height
       meterContext.clearRect(0, 0, 20, 132);

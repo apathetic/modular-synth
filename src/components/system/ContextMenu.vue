@@ -76,7 +76,7 @@ export default {
 
       // if (header === e.target || header.contains(e.target)) {
       //   this.active = 'file';
-      // } else 
+      // } else
       if (grid === e.target || grid.contains(e.target)) {
         this.active = 'add';
       } else {

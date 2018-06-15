@@ -15,7 +15,8 @@
 
 
     "types": [
-      "node"    ],
+      "node"
+    ],
     "paths": {
       "@/*": [
         "src/*"
@@ -39,8 +40,4 @@
   "exclude": [
     "node_modules"
   ]
-    // "paths": {
-    //   "@/*": ["./*"],
-    // }
-
 }
