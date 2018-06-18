@@ -46,7 +46,7 @@ jobs:
       - run: echo ${CIRCLE_BRANCH}
 
       # - run: scp -oStrictHostKeyChecking=no -r $CIRCLE_PROJECT_REPONAME/build ${DEPLOY_USER}@${DEPLOY_IP}:${DEPLOY_PATH} 
-      - run: scp -oStrictHostKeyChecking=no -r ./build ${DEPLOY_USER}@${DEPLOY_IP}:${DEPLOY_PATH}`
+      - run: scp -oStrictHostKeyChecking=no -r ./build ${DEPLOY_USER}@${DEPLOY_IP}:${DEPLOY_PATH}
 
 
 workflows:
