@@ -1,6 +1,8 @@
 # modular-synth
 
-Experiments in WebAudio
+[![CircleCI](https://circleci.com/gh/apathetic/modular-synth/tree/master.svg?style=svg)](https://circleci.com/gh/apathetic/modular-synth/tree/master)
+
+> Experiments in WebAudio
 
 Note: much of this code inspired by:
 * https://tonejs.github.io
@@ -25,98 +27,9 @@ npm run build
 npm test
 ```
 
+## Docs
 
+* [Component structure](components.md)
+* [Component roadmap](roadmap.md)
+* [Application events](events.md)
 
-
-## APPLICATION NOTES:
-
-**EVENTS**
-  - App
-    - app:load
-    - app:sort    // app:sorting:init
-  - module
-    - module:add
-    - module:remove
-  - parameters
-    - parameters:load
-  - audio
-    - audio:start
-    - audio:stop
-  - drag
-    - drag:start
-    - drag:active
-    - drag:end
-  - midi
-    - midi:noteOn
-    - midi:noteOff
-    - midi:controller
-    - midi:pitchWheel
-    - midi:polyPressure
-
-
-**ROUTING / PORT TYPES**
-  - inlets:
-    - in
-    - out
-  - data types:
-    - audioParam (a-rate)
-      - pitch / freq
-      - mod (A, B, FM?)
-    - control data (k-rate)
-      - triggers or bangs (events?):
-        - gate
-        - reset (more for sequencing)
-        - sync (ie. phase)
-
-
-**NODE ROADMAP**
-  - BASE
-    - ~~ENV~~
-    - OSC
-      - ~~simple~~
-      - fat osc
-      - pwm osc
-      - fm osc
-    - ~~LFO~~
-    - FILT
-      - ~~simple~~
-      - resonant
-      - moog
-      - comb
-    - ~~VCA~~
-      - ~~MULT (deprecated)~~
-
-
-  - FX
-    - reverb
-      - simple
-    - delay
-      - simple
-      - ping pong
-    - bitcrusher
-
-
-  - timing
-    - clock
-    - stepper / arpeggiator
-    - click divider(maybe?)
-    - quant(maybe?)
-
-
-  - routing
-    - mixer (mini)
-    - ~~audio out~~
-
-
-  - MIDI
-    - noteIn
-      - ~~pitch~~
-      - ~~gate~~
-    - bend
-    - velocity
-    - mod-wheel
-    - aftertouch
-    - MIDI learn
-
-
-  ---------------
