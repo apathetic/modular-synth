@@ -3,6 +3,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';     // import auth into firebase namespace
 import 'firebase/database'; // import database into firebase namespace
 import { state as DEFAULT } from './patch';
+import { API } from '../types/firebase';
 
 
 firebase.initializeApp(config);
@@ -33,7 +34,7 @@ export const provider = new firebase.auth.GoogleAuthProvider();
 export function generateKey() {
   const PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
   let now = new Date().getTime();
-  let timeStampChars = new Array(8);
+  const timeStampChars = new Array(8);
   let result;
 
   // 8 characters of timestamp data at the beginning
@@ -47,7 +48,7 @@ export function generateKey() {
 
   // 4 more characters of randomness
   for (let i = 0; i < 4; i++) {
-    let random = Math.floor(Math.random() * 64);
+    const random = Math.floor(Math.random() * 64);
     result += PUSH_CHARS.charAt(random);
   }
 
@@ -60,23 +61,26 @@ export function generateKey() {
  * Simple Firebase API (CRUD) wrapper.
  * @type {Object}
  */
-export const api = {
+export const api: API = {
   /**
    * Fetch data from Firebase. This happens only once (ie. no "listeners")
+   * @param path The Firebase path to data to load.
    * @return {Promise} The loaded data.
    */
   load(path) {
-    if (auth.currentUser) {
-      const getSnapshot = database.ref(path).once('value');
+    return new Promise((resolve, reject) => {
+      if (auth.currentUser) {
+        const getSnapshot = database.ref(path).once('value');
 
-      return new Promise((resolve, reject) => {
         getSnapshot
           .then((response) => {
             resolve(response.val());
           })
           .catch(reject);
-      });
-    }
+      } else {
+        reject('Not logged in to Firebase');
+      }
+    });
   },
 
   /**
@@ -126,12 +130,13 @@ export const api = {
    * @return {Promise}
    */
   remove(path) {
-    if (path === '/' || !path) { return; }
-
-    const item = database.ref(path);
-
     return new Promise((resolve, reject) => {
-      item.remove().then(resolve).catch(reject);
+      if (path === '/' || !path) {
+        resolve();
+      } else {
+        const item = database.ref(path);
+        item.remove().then(resolve).catch(reject);
+      }
     });
   }
 };
@@ -148,7 +153,9 @@ export const api = {
  * @return {Object) The patches Object, with any data-corrections made.
  */
 export function validateData(patches) {
-  for (let key in patches) {
+  for (const key in patches) {
+    if (!patches.hasOwnProperty(key)) { continue; }
+
     const patch = patches[key];
 
     if (!patch.name) {

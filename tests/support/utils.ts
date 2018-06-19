@@ -1,7 +1,7 @@
 import { context } from '@/audio/';
 
 
-export const _Dummy = {
+export const Dummy = {
   input: context.createGain(),
   connect: function(node) {
     this.input.connect(node);
@@ -10,13 +10,16 @@ export const _Dummy = {
     this.input.disconnect();
   }
 };
-export const Dummy = context.createGain();
+// export const Dummy = context.createGain();
 
 
 export const Utils = {
-  wasDisposed: function(obj) {
-    for (var prop in obj) {
-      var member = obj[prop];
+  wasDisposed: (obj) => {
+    for (const prop in obj) {
+      if (!obj.hasOwnProperty(prop)) { continue; }
+
+      const member = obj[prop];
+
       if (typeof member !== 'function' &&
         typeof member !== 'string' &&
         typeof member !== 'number' &&

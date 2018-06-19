@@ -1,16 +1,16 @@
 import inlets from '@/components/functional/inlets';
 import outlets from '@/components/functional/outlets';
 // import store from 'src/store';
-import { context } from '@/audio/index.ts';
+import { context } from '@/audio/';
 
 export const extensions = {
   use: [{
-    install: function(Vue) {
+    install: (Vue) => {
       Object.defineProperty(Vue.prototype, '$bus', {
         get() {
           return { // whatever mocked data
-            $on: function() {},
-            $off: function() {}
+            $on: () => { /* empty */ },
+            $off: () => { /* empty */ }
           };
         }
       });

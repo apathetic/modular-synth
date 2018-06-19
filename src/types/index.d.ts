@@ -1,34 +1,34 @@
 
 export interface RootState {
-  app: AppState,
-  patch: PatchState
+  app: AppState;
+  patch: PatchState;
 }
 
 
 export interface AppState {
-  power: boolean,
-  editing: boolean,
-  focused: undefined,       // "Hovered": for Module Info, Connections.  TODO move to $bus?
-  active: number,           // "Clicked": for Dragging, Deleting.
+  power: boolean;
+  editing: boolean;
+  focused: undefined;       // "Hovered": for Module Info, Connections.  TODO move to $bus?
+  active: number;           // "Clicked": for Dragging, Deleting.
 
   // APP: "PERSISTENT" STORAGE
-  patchKey: string,         // key of active patch
+  patchKey: string;         // key of active patch
 
   // UI: STUFFS
-  canvasOffset: 0,
+  canvasOffset: 0;
 
   // TODO: remove; use firebase + SW instead;
-  patches: {}               // all available patches, cached here
+  patches: {};               // all available patches, cached here
 }
 
 
 export interface PatchState {
-  id: number,
-  name: string,
-  modules: Module[],
-  connections: Connection[],
-  parameterSets: ParameterSet[],
-  parameterKey: number
+  id: number;
+  name: string;
+  modules: Module[];
+  connections: Connection[];
+  parameterSets: ParameterSet[];
+  parameterKey: number;
 }
 
 
