@@ -10,9 +10,12 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:e2e": "vue-cli-service test:e2e"
+    "test:alt": "vue-cli-service test:e2e",
+    "test:e2e": "cypress open",
+    "test": "cypress run"
   },
   "dependencies": {
+    "cypress-vue-unit-test": "^1.11.0",
     "firebase": "^5.0.4",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.16",

@@ -32,10 +32,11 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "cypress/**/*.ts",
+    "../../node_modules/cypress",
+
   ],
   "exclude": [
     "node_modules"
