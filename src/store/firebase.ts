@@ -119,8 +119,7 @@ export const api: API = {
       items.push(data)
         .then((response) => {
           resolve(response.key);
-        })
-        .catch(reject);
+        });
     });
   },
 
