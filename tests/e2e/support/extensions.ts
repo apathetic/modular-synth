@@ -1,6 +1,6 @@
 import inlets from '@/components/functional/inlets';
 import outlets from '@/components/functional/outlets';
-import store from '@/store';
+// import store from 'src/store';
 import { context } from '@/audio';
 
 export const extensions = {
@@ -14,11 +14,11 @@ export const extensions = {
           };
         }
       });
-      Object.defineProperty(Vue.prototype, '$store', {
-        get() {
-          return store;
-        }
-      });
+      // Object.defineProperty(Vue.prototype, '$store', {
+      //   get() {
+      //     return store;
+      //   }
+      // });
     }
   }],
 

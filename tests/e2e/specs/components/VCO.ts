@@ -7,13 +7,13 @@ let vco;
 
 describe('VCO.vue', () => {
   beforeEach(mountVue(VCO, {
-    vue: 'https://unpkg.com/vue',
+    // vue: 'https://unpkg.com/vue',
     extensions: extensions
   }));
 
   context('Base', () => {
     it('can be created and disposed', () => {
-      vco = Cypress.vue; // the ref to the component (which was set in "mountVue")
+      vco = Cypress.vue; // the ref to the component (which was set up in "mountVue")
       vco.$destroy();
       // vco.$nextTick(() => {
         // console.log(vco);

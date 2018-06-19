@@ -1,4 +1,4 @@
-import { context } from '@/audio/index';
+import { context } from '@/audio/';
 
 
 export const _Dummy = {
