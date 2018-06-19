@@ -34,5 +34,3 @@ export const extensions = {
   }
 };
 
-// const getStore = () => cy.window().its('app.$store')
-// const getVCO = () => cy.get('.module')

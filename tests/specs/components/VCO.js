@@ -1,38 +1,31 @@
 import VCO from '@/components/VCO.vue';
 import mountVue from 'cypress-vue-unit-test';
 import { extensions } from '../../support/extensions';
-import { Utils, Dummy } from '../../support/utils';
+import { wasDisposed, dummy } from '../../support/utils';
 
 let vco;
 
 describe('VCO.vue', () => {
   beforeEach(mountVue(VCO, {
-    // vue: 'https://unpkg.com/vue',
-    extensions: extensions
+    extensions
   }));
 
   context('Base', () => {
     it('can be created and disposed', () => {
       vco = Cypress.vue; // the ref to the component (which was set up in "mountVue")
       vco.$destroy();
-      // vco.$nextTick(() => {
-        // console.log(vco);
-        Utils.wasDisposed(vco);
-      // });
+      vco.$nextTick(() => {
+        wasDisposed(vco);
+      });
     });
   });
 
 
   context('UI', () => {
     it('should render correct contents', () => {
-      // const renderer = createRenderer();
-      // const vco = shallow(VCO, { });
+      cy.get('.oscillator').snapshot()
 
-      // renderer.renderToString(vco.vm, (err, str) => {
-      //   if (err) throw new Error(err);
-      //   expect(str).toMatchSnapshot();
-      // });
-      throw Error('need content snapshot'); // TODO
+      // throw Error('need content snapshot'); // TODO
     });
   });
 
@@ -41,8 +34,8 @@ describe('VCO.vue', () => {
     it('handles input and output connections', () => {
       vco = Cypress.vue;
 
-      Dummy.connect(vco.inlets[1].audio);
-      Dummy.connect(vco.inlets[2].audio);
+      dummy.connect(vco.inlets[1].audio);
+      dummy.connect(vco.inlets[2].audio);
 
       vco.$destroy();
     });
@@ -63,6 +56,15 @@ describe('VCO.vue', () => {
       setTimeout(() => {
         expect(vco.osc_.frequency.value).to.equal(freq2);
       }, 100); // account for ramp / transition time
+    });
+
+
+    it('outputs a signal', () => {
+      vco = Cypress.vue;
+      vco.setFreq(100);
+
+      // expect(vco.outlets[0].audio.to. xxxx // be a signal
+      vco.outlets[0].audio.connect(dummy);
     });
 
 
@@ -89,14 +91,6 @@ describe('VCO.vue', () => {
       // instance.dispose();
     });
 
-
-    it('outputs a signal', () => {
-      return OutputAudio(function() {
-        var lfo = new LFO(100, 10, 20);
-        lfo.toMaster();
-        lfo.start();
-      });
-    });
   });
 
 
