@@ -67,7 +67,7 @@ export const parameter = {
 
     this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
 
-    console.log('%c[parameter] Creating %s Knob', 'color: orange', this.param);
+    console.log('%c[parameter] Creating %s Knob', 'color: lightblue', this.param);
   },
 
   destroyed() {

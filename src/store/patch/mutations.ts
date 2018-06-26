@@ -106,7 +106,6 @@ export const ADD_PARAMETERS = (state) => {
 };
 //                  PARAMETER_SET
 export const REMOVE_PARAMETERS = (state, key) => {
-  // state.patches[state.patchKey].parameterSets.splice(id, 1); // let's try mutating the array directly
   state.parameterSets.splice(key, 1); // let's try mutating the array directly
 };
 

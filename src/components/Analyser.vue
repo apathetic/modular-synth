@@ -70,13 +70,11 @@
     },
 
     methods: {
-      // from Tone.js
       analyse() {
         if (this._type === 'FFT') {
-          // FFT
           this.analyser.getFloatFrequencyData(this._buffer);
+                        // getByteFrequencyData()
         } else {
-          // waveform
           this.analyser.getFloatTimeDomainData(this._buffer);
         }
       },

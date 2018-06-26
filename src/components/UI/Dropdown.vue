@@ -42,7 +42,8 @@ export default {
     this.$emit('value', this.options[0]); // update parent w/ value
     this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
 
-    console.log('%c[parameter] Creating %s Dropdown', 'color: orange', this.param);
+    // TODO integrate w/ parameter.js
+    console.log('%c[parameter] Creating %s Dropdown', 'color: lightblue', this.param);
   },
 
   destroyed() {
