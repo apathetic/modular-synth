@@ -44,9 +44,10 @@ jobs:
     steps:
       # Log the current branch
       - run: echo ${CIRCLE_BRANCH}
-
-      # - run: scp -oStrictHostKeyChecking=no -r $CIRCLE_PROJECT_REPONAME/build ${DEPLOY_USER}@${DEPLOY_IP}:${DEPLOY_PATH} 
-      - run: scp -oStrictHostKeyChecking=no -r ./build ${DEPLOY_USER}@${DEPLOY_IP}:${DEPLOY_PATH}
+      - run:
+          name: Update Code in Droplet
+          # note: DROPLET_USER / DROPLET_IP vars are added in the CircleCI dashboard
+          command: scp -oStrictHostKeyChecking=no -r ./build ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}/build
 
 
 workflows:
