@@ -12,7 +12,7 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/node:9.2
 
-    # working_directory: ~/malfunction
+    working_directory: ~/modular-synth
 
     steps:
       - checkout
@@ -38,7 +38,7 @@ jobs:
       # - run: npm test
 
   deploy:
-    # working_directory: ~/malfunction
+    working_directory: ~/modular-synth
     docker:
       - image: circleci/node:9-browsers
     steps:
@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Update Code in Droplet
           # note: DROPLET_USER / DROPLET_IP vars are added in the CircleCI dashboard
-          command: scp -oStrictHostKeyChecking=no -r ./build ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}/build
+          command: scp -oStrictHostKeyChecking=no -r ./modular-synth ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}/build
 
 
 workflows:
