@@ -41,11 +41,12 @@
 
     created() {
       this.analyser = this.inlets[0].audio = this.context.createAnalyser();
-      this.analyser.fftSize = 512; // 1024;
-      this.analyser.maxDecibels = -30;
-      this.analyser.minDecibels = -100;
+      this.analyser.fftSize = 256; // 512;
+      this.analyser.maxDecibels = -20; // max value to represent; any freq bins with amplitude above this will be 255
+      this.analyser.minDecibels = -90; // min value to represent; any freq bins with amplitude below this will be 0
 
-      this._buffer = new Float32Array(this.analyser.frequencyBinCount);
+      // this._buffer = new Float32Array(this.analyser.frequencyBinCount);
+      this._buffer = new Uint8Array(this.analyser.frequencyBinCount);
       this._type = 'FFT';
       this.ticking = true;
 
@@ -54,7 +55,8 @@
           this.loop();
         } else {
           // set buffer to 0 and update display
-          this.visualizer.clearRect(0, 0, 222, 356);
+          // this._buffer.forEach(sample => sample = 0);
+          this.visualizer.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         }
       });
     },
@@ -67,40 +69,52 @@
 
     mounted() {
       this.visualizer = this.$refs.visualization.getContext('2d');
+      this.canvasWidth = this.visualizer.canvas.width;
+      this.canvasHeight = this.visualizer.canvas.height;
     },
 
     methods: {
       analyse() {
         if (this._type === 'FFT') {
-          this.analyser.getFloatFrequencyData(this._buffer);
-                        // getByteFrequencyData()
+          // this.analyser.getFloatFrequencyData(this._buffer);
+          this.analyser.getByteFrequencyData(this._buffer);
         } else {
           this.analyser.getFloatTimeDomainData(this._buffer);
         }
       },
 
       render() {
-        const values = this._buffer;
-        const length = values.length;
-        const canvasWidth = this.visualizer.canvas.width;
-        const canvasHeight = this.visualizer.canvas.height;
-        const barWidth = canvasWidth / length;
+        if (this._type === 'FFT') {
+          const values = this._buffer;
+          const h = this.canvasHeight;
+          const w = this.canvasWidth;
+          const barWidth = w / values.length;
+          let x = 0;
 
-        this.visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
+          this.visualizer.clearRect(0, 0, w, h);
 
-        // console.log(values);
+          for (const val of values) {
+            this.visualizer.fillStyle = `rgba(0,222,0, ${val / 255})`;  // 0 -> 255 when getByteData
+            this.visualizer.fillRect(x, h - val / 2, barWidth, val / 2);
+            // this.visualizer.fillRect(x, canvasHeight - val, barWidth, val);
 
-
-        for (let i = 0, x = 0; i < length; i++) {
-          const val = values[i] + 140; // why 140? no idea. Came from Mozilla docs
-
-          // val = isFinite(val) ? val : 0;
-
-          this.visualizer.fillStyle = 'rgba(0, 222, 0, ' + val / 140 + ')';
-          // this.visualizer.fillStyle = 'rgb(0, 222, 0)';
-          this.visualizer.fillRect(x, canvasHeight - val, barWidth, val);
-
-          x += barWidth + 1;
+            x += barWidth + 1;
+          }
+        } else {
+        //   waveContext.clearRect(0, 0, canvasWidth, canvasHeight);
+        //   var values = waveform.analyse();
+        //   waveContext.beginPath();
+        //   waveContext.lineJoin = "round";
+        //   waveContext.lineWidth = 6;
+        //   waveContext.strokeStyle = waveformGradient;
+        //   waveContext.moveTo(0, (values[0] / 255) * canvasHeight);
+        //   for (var i = 1, len = values.length; i < len; i++){
+        //     var val = values[i] / 255;
+        //     var x = canvasWidth * (i / len);
+        //     var y = val * canvasHeight;
+        //     waveContext.lineTo(x, y);
+        //   }
+        // waveContext.stroke();
         }
       },
 
@@ -128,21 +142,21 @@
     overflow: hidden;
 
     .module-interface {
-      padding: 0;
+      padding: 14px 1px 1px;
     }
     canvas {
       height: 222px;
       width: 356px;
       display: block;
-      left: 1px;
-      opacity: 0;
+      // left: 1px;
+      // opacity: 0;
       transition: opacity $transition-time;
     }
 
-    &.analysing {
-      canvas {
-        opacity: 1;
-      }
-    }
+    // &.analysing {
+    //   canvas {
+    //     opacity: 1;
+    //   }
+    // }
   };
 </style>

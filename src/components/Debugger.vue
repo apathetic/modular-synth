@@ -131,11 +131,7 @@
 <style lang="scss">
   @import '../assets/scss/variables.scss';
 
-  .analyser {
+  .debugger {
     overflow: hidden;
-
-    .module-interface {
-      padding: 0;
-    }
   };
 </style>
