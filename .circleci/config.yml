@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Update Code in Droplet
           # note: DROPLET_USER / DROPLET_IP vars are added in the CircleCI dashboard
-          command: scp -oStrictHostKeyChecking=no -r ./build ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}/build
+          command: scp -oStrictHostKeyChecking=no -r ./dist ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}/build
 
 
 workflows:
