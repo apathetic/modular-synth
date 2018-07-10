@@ -12,42 +12,57 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/node:9.2
 
-    # working_directory: ~/modular-synth
+    working_directory: ~/synth
 
     steps:
       - checkout
 
+      - attach_workspace:
+          at: ~/synth
+
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-synth-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - v1-synth-
 
       - run: npm install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v1-synth-{{ checksum "package.json" }}
 
       # Build!
       - run: npm run build
+
+      # ** SUPER IMPORTANT **   keeps the /dist/ folder around for other steps
+      - persist_to_workspace:
+          root: .
+          paths: dist
 
       # Tests!
       # - run: npm test
 
   deploy:
-    # working_directory: ~/modular-synth
+    working_directory: ~/synth
     docker:
       - image: circleci/node:9-browsers
     steps:
+
+      # this contains the /dist folder, which we persisted in the build job
+      - attach_workspace:
+          at: ~/synth
+
       # Log the current branch
       - run: echo ${CIRCLE_BRANCH}
+
       - run:
           name: Update Code in Droplet
           # note: DROPLET_USER / DROPLET_IP vars are added in the CircleCI dashboard
-          command: scp -oStrictHostKeyChecking=no -r ./dist ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}/build
+          command: scp -oStrictHostKeyChecking=no -r ~/synth/dist/. ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}
+          # command: rsync -e "ssh -o StrictHostKeyChecking=no" -r ~/synth/dist ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}/build
 
 
 workflows:
