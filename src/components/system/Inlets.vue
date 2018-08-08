@@ -9,7 +9,6 @@
 </template>
 
 <script>
-  // export default class inlets extends Vue {
   export default {
     // props: { ports: Array }
   };

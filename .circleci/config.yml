@@ -62,7 +62,7 @@ jobs:
           name: Update Code in Droplet
           # note: DROPLET_USER / DROPLET_IP vars are added in the CircleCI dashboard
           command: scp -oStrictHostKeyChecking=no -r ~/synth/dist/. ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}
-          # command: rsync -e "ssh -o StrictHostKeyChecking=no" -r ~/synth/dist ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}/build
+          # command: rsync -e "ssh -o StrictHostKeyChecking=no" -r ~/synth/dist/. ${DROPLET_USER}@${DROPLET_IP}:${DROPLET_PATH}
 
 
 workflows:

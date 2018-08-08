@@ -1,17 +1,9 @@
+// NOTE: unused. Kept around for posterity / reference
+// see system/Inlets.vue
 
 export default {
   functional: true,
   props: { ports: Array },
-  // template: `
-  //   <div class="inlets">
-  //     <span v-for="(inlet, index) in ports"
-  //       :data-label="inlet.label"
-  //       :data-port="index"
-  //       class="inlet">
-  //     </span>
-  //   </div>
-  // `
-
   render: function(createElement, context) {
     const ports = context.props.ports;
 

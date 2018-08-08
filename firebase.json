@@ -4,18 +4,29 @@
      ".read": "auth.uid !== null",
      ".write": "auth.uid !== null",
 
+     "id": {
+        ".validate": "newData.isNumber() && newData.val() % 1 === 0"
+      },
+
       "name": {
         ".validate": "newData.isString()"
       },
-      "id": {
-        ".validate": "newData.isNumber() && newData.val() % 1 === 0"
-      },
+
       "connections": {
         ".validate": "Array.isArray(newData)",
-        "id": {},
-        "to": {},
-        "from": {}
+        "id": {
+          ".validate": "newData.isNumber() && newData.val() % 1 === 0"
+        },
+        "to": {
+          "id": {},
+          "port": {}
+        },
+        "from": {
+          "id": {},
+          "port": {}
+        }
       },
+
       "modules" : {
         ".validate": "Array.isArray(newData)",
         "id" : {
@@ -43,14 +54,15 @@
           ".validate": "newData.isNumber() && newData.val() % 1 === 0"
         }
       },
+
       "parameterSets" : {
         ".validate": "Array.isArray(newData)",
         "name" : {
           ".validate": "newData.isString()"
         },
-        "parameters": {}
+        "parameters": {
+        }
       }
-
     }
   }
 }
