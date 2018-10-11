@@ -1,20 +1,20 @@
 import { context } from '@/audio/';
 
-const d = context.createGain();
+// const d = context.createGain();
 
-export const dummy = {
-  connect: (node) => {
-    d.connect(node);
-  },
-  disconnect: () => {
-    d.disconnect();
-  }
-};
-// export const Dummy = context.createGain();
+// export const dummy = {
+//   set: (g) => {
+//     d.gain.value = g;
+//   },
+//   connect: (node) => {
+//     d.connect(node);
+//   },
+//   disconnect: () => {
+//     d.disconnect();
+//   }
+// };
+export const dummy = context.createGain();
 
-
-// export const Utils = {
-//   wasDisposed: (obj) => {
 export const wasDisposed = (obj) => {
   for (const prop in obj) {
       if (!obj.hasOwnProperty(prop)) { continue; }
@@ -35,9 +35,6 @@ export const wasDisposed = (obj) => {
       }
     }
 };
-// };
-
-
 
 export const getStore = () => {
   // const getStore = () => cy.window().its('app.$store')

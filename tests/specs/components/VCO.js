@@ -6,9 +6,11 @@ import { wasDisposed, dummy } from '../../support/utils';
 let vco;
 
 describe('VCO.vue', () => {
+
   beforeEach(mountVue(VCO, {
     extensions
   }));
+
 
   context('Base', () => {
     it('can be created and disposed', () => {
@@ -23,7 +25,7 @@ describe('VCO.vue', () => {
 
   context('UI', () => {
     it('should render correct contents', () => {
-      cy.get('.oscillator').snapshot()
+      cy.get('.oscillator').snapshot();
 
       // throw Error('need content snapshot'); // TODO
     });
@@ -31,31 +33,46 @@ describe('VCO.vue', () => {
 
 
   context('Audio', () => {
-    it('handles input and output connections', () => {
+
+    it('can set frequency', () => {
+      const f = 123;
+
+      vco = Cypress.vue;
+      vco.setFreq(f);
+
+      // account for freq ramp / transition time
+      cy.wait(20).then(() => {
+        expect(vco.freq).to.equal(f);
+        expect(vco.osc_.frequency.value).to.equal(f);
+      });
+    });
+
+
+    it('can set mod depth', () => {
       vco = Cypress.vue;
 
+      dummy.gain.value = 100;
       dummy.connect(vco.inlets[1].audio);
-      dummy.connect(vco.inlets[2].audio);
+
+      // expect  vco.osc_.detune.to.be 100
 
       vco.$destroy();
     });
 
 
-    it('can set frequency', () => {
-      const freq1 = 123;
-      const freq2 = 456;
-
+    it('can set pulse width', () => {
+      // var instance = new Constr(args);
+      // Test.connect(instance.frequency);
+      // Test.connect(instance.detune);
+      // instance.dispose();
       vco = Cypress.vue;
 
-      vco.setFreq(freq1);
-      setTimeout(() => {
-        expect(vco.osc_.frequency.value).to.equal(freq1);
-      }, 100); // account for ramp / transition time
+      dummy.gain.value = 100;
+      dummy.connect(vco.inlets[3].audio);
 
-      vco.setFreq(freq2);
-      setTimeout(() => {
-        expect(vco.osc_.frequency.value).to.equal(freq2);
-      }, 100); // account for ramp / transition time
+      // expect  vco.pulse_.to.be 100
+
+      vco.$destroy();
     });
 
 
@@ -81,14 +98,6 @@ describe('VCO.vue', () => {
 
 
     it('has a primary oscillator', () => {
-    });
-
-
-    it('can create connection to detune and frequency', () => {
-      // var instance = new Constr(args);
-      // Test.connect(instance.frequency);
-      // Test.connect(instance.detune);
-      // instance.dispose();
     });
 
   });
