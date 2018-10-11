@@ -5,6 +5,8 @@
   "pluginsFile": "tests/plugins/index.js",
   "supportFile": "tests/support/index.ts",
   "screenshotsFolder": "tests/screenshots",
-  "videosFolder": "tests/videos"
+  "videosFolder": "tests/videos",
+  "projectId": "zt64m4",
+
+  "numTestsKeptInMemory": 0
 }
-  

@@ -74,7 +74,7 @@
       // Modulation depth
       // this.modDepth_ = new Parameter(0);
       this.modDepth_ = this.context.createGain();
-      this.modDepth_.value = 0;
+      this.modDepth_.gain.value = 0;
       this.modDepth_.connect(this.osc_.detune);      // input connects to audioParam (freq) "mod"
 
       // Pulse width
@@ -165,7 +165,7 @@
       },
 
       /**
-       * 
+       *
        */
       setPhase(phase) {
         this._phase = phase * Math.PI / 180;
