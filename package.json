@@ -12,7 +12,9 @@
     "lint": "vue-cli-service lint",
     "test:alt": "vue-cli-service test:e2e",
     "test:e2e": "cypress open",
-    "test": "cypress run"
+    "test": "cypress run",
+    "storybook": "start-storybook -p 6006 -c .storybook",
+    "storybook:build": "build-storybook"
   },
   "dependencies": {
     "firebase": "^5.0.4",
@@ -22,6 +24,10 @@
   },
   "devDependencies": {
     "@cypress/snapshot": "^2.0.1",
+    "@storybook/addon-actions": "^4.0.0-alpha.25",
+    "@storybook/addons": "^4.0.0-alpha.25",
+    "@storybook/cli": "^4.0.0-alpha.25",
+    "@storybook/vue": "^4.0.0-alpha.25",
     "@vue/cli-plugin-e2e-cypress": "^3.0.0-beta.15",
     "@vue/cli-plugin-pwa": "^3.0.0-beta.15",
     "@vue/cli-plugin-typescript": "^3.0.0-beta.15",
