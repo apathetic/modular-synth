@@ -1,5 +1,6 @@
+import Vue from 'vue';
 import { storiesOf } from '@storybook/vue';
-// import VCO from '@/components/VCO.vue';
+import VCO from '@/components/VCO.vue';
 
 storiesOf('VCO', module)
   .add('story as a template', () => '<VCO :rounded="true">story as a function template</VCO>')

@@ -36,9 +36,9 @@ module.exports = (baseConfig, env, config) => {
   });
 
   config.resolve.extensions.push('.ts', '.vue');
+  // config.resolve.alias['@'] = ''
   config.resolve.alias = {
     ...config.resolve.alias,
-    vue$: 'vue/dist/vue.esm.js',
     '@': path.resolve(__dirname, '../src')
   };
 
