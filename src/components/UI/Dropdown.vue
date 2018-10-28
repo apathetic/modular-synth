@@ -93,8 +93,8 @@ export default {
 
 
 <style lang="scss">
-  // @import '@/assets/scss/variables.scss';
-  @import '../../assets/scss/variables.scss';
+  // @import '@/styles/variables.scss';
+  @import '../../styles/variables.scss';
 
   .dropdown {
     list-style: none;

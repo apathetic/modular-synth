@@ -225,9 +225,9 @@
 </script>
 
 <style lang="scss">
-  @import 'assets/scss/variables.scss';
-  @import 'assets/scss/styles.scss';
-  @import 'assets/scss/module.scss';
+  @import 'styles/variables.scss';
+  @import 'styles/styles.scss';
+  @import 'styles/module.scss';
 
   #modules {
     display:inline-block;

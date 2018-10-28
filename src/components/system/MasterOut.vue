@@ -120,7 +120,7 @@
 </script>
 
 <style lang="scss">
-  @import '../../assets/scss/variables.scss';
+  @import '../../styles/variables.scss';
   $height: 132px;
 
   #master-out {

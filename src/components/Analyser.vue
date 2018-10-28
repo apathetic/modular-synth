@@ -136,7 +136,7 @@
 </script>
 
 <style lang="scss">
-  @import '../assets/scss/variables.scss';
+  @import '../styles/variables.scss';
 
   .analyser {
     overflow: hidden;

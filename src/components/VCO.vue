@@ -177,7 +177,7 @@
 </script>
 
 <style lang="scss">
-  @import '../assets/scss/variables.scss';
+  @import '../styles/variables.scss';
 
   .oscillator {
     background: linear-gradient(to bottom, #f2efed 0%, #d9d7d5 98%, #959492 100%);
