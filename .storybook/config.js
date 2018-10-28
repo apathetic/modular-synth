@@ -8,7 +8,7 @@ import outlets from '@/components/system/Outlets.vue';
 
 
 // styles
-import '@/assets/scss/styles.scss';
+import '@/styles/styles.scss';
 
 
 // Import your custom components.
