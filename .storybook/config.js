@@ -3,12 +3,12 @@ import { context } from '@/audio';
 
 import Vue from 'vue';
 import Vuex from 'vuex'; // Vue plugins
-import inlets from '@/components/system/Inlets.vue';
-import outlets from '@/components/system/Outlets.vue';
-
+import Inlets from '@/components/system/Inlets.vue';
+import Outlets from '@/components/system/Outlets.vue';
 
 // styles
 import '@/styles/styles.scss';
+import '@/styles/module.scss';
 
 
 // Import your custom components.
@@ -25,15 +25,17 @@ Vue.mixin({
 
 // Register custom components.
 // Global Components (inlets / outlets)
-Vue.component('inlets', inlets);
-Vue.component('outlets', outlets);
+Vue.component('inlets', Inlets);
+Vue.component('outlets', Outlets);
+
+// Vue.component('Module', Module);
 Vue.component('VCO', VCO);
 
 // const req = require.context('../src/stories', true, /.stories.ts$/);
 
 function loadStories() {
   // You can require as many stories as you need.
-  require('../src/stories/index.js');
+  require('../src/stories/VCO.js');
   // req.keys().forEach(filename => req(filename));
 }
 
