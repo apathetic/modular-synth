@@ -68,10 +68,17 @@
       module: Object
     },
 
+    computed: {
+      width() {
+        return `_${moduleSize[this.module.type][0]}U`;
+      },
+      tall() {
+        return moduleSize[this.module.type][2] ? 'module--tall' : '';
+      }
+    },
+
     created() {
-      this.id = this.module.id;
-      this.width = `_${moduleSize[this.module.type][0]}U`;
-      this.tall = moduleSize[this.module.type][2] ? 'module--tall' : '';
+      this.id = this.module.id; // NOTE: this is the ID used by the Connector to route audio
 
       console.log('%c[component] Creating %s', 'color: blue', this.module.type);
     },
