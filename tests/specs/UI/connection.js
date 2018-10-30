@@ -1,87 +1,88 @@
-import { Util, Node } from '../../test/utils';
-import { shallow, createLocalVue } from 'vue-test-utils';
-import { createRenderer } from 'vue-server-renderer';
-import { cellWidth } from '../../src/dimensions';
-import Synth from '../../src/Synth.vue';
-import _Node from '../../src/components/Node.vue';
-import Connection from '../../src/components/UI/Connection.vue';
+import Connection from '@/components/system/Connection.vue';
+// import VCO from '@/components/VCO.vue';
+import { cellWidth } from '@/constants';
 
-const dummyVue = createLocalVue();
+import mountVue from 'cypress-vue-unit-test';
+import { extensions } from '../../support/extensions';
+import { wasDisposed, dummy } from '../../support/utils';
 
-const App = shallow(Synth, {
-  stubs: {
-    Node,
-    Connection
-  }
-});
+// const components = { VCO };
+const CONNECTION_DATA = {
+  to: { id: 1, port: 1 },
+  from: { id: 2, port: 2 }
+};
 
-describe('connection.vue', () => {
+describe('Connection.vue', () => {
   let connection;
 
-  beforeEach(() => {
-    connection = shallow(Connection, { });
-  });
+  beforeEach(mountVue(Connection, {
+    extensions,
+    data: CONNECTION_DATA
+    // ...components
+    // html: '<VCO><Connection><VCO>'
+  }));
 
-  it('can be created from an options object', () => {
-    connection.setProps({
-      to: {
-        id: 1,
-        port: 1
-      },
-      from: {
-        id: 2,
-        port: 2
-      }
+  context('Base', () => {
+    it('can be created from an options object', () => {
+      connection = Cypress.vue; // the ref to the component (which was set up in "mountVue")
+
+      // connection.setProps(CONNECTION_DATA);
+      expect(connection.toModule).to.equal(200);
+      expect(connection.fromModule).to.equal(-20);
+      connection.destroy();
     });
-    expect(connection.toModule).to.equal(200);
-    expect(connection.fromModule).to.equal(-20);
-    connection.destroy();
+
+    // it('can remove a connection', () => {
+    // });
+
+    // it('contains references to the "to" and "from" IDs', () => {
+    // });
+
+    it('contains references to the "to" and "from" vue modules', () => {
+    });
+
+    it('it removes itself if a connection cannot be made', () => {
+    });
   });
 
-  // it('can remove a connection', () => {
-  // });
+  context('Audio', () => {
+    it('must be made between different nodes', () => {
+    });
 
-  // it('contains references to the "to" and "from" IDs', () => {
-  // });
+    it('routes audio correctly between two AudioNodes', () => {
+    });
 
-  it('contains references to the "to" and "from" vue modules', () => {
+    it('routes data correctly between data inlet/outlets', () => {
+    });
+
+    it('audio outlets cannot connect to data inlets', () => {
+    });
+
+    it('audio is disconnected after removing a connection', () => {
+    });
   });
 
-  it('it removes itself if a connection cannot be made', () => {
+  context('Data', () => {
+    it('data is disconnected after removing a connection', () => {
+    });
   });
 
-  it('must be made between different nodes', () => {
-  });
+  context('UI', () => {
+    it('sets its coordinates correctly', () => {
+      const toModule = {
+        x: 123, y: 45
+      };
+      const fromModule = {
+        x: 67, y: 89
+      };
 
-  it('routes audio correctly between two AudioNodes', () => {
-  });
+      connection.vm.toModule = toModule;
+      connection.vm.fromModule = fromModule;
 
-  it('routes data correctly between data inlet/outlets', () => {
-  });
-
-  it('audio outlets cannot connect to data inlets', () => {
-  });
-
-  it('audio is disconnected after removing a connection', () => {
-  });
-
-  it('data is disconnected after removing a connection', () => {
-  });
-
-  it('sets its coordinates correction', () => {
-    const toModule = {
-      x: 123, y: 45
-    };
-    const fromModule = {
-      x: 67, y: 89
-    };
-
-    connection.vm.toModule = toModule;
-    connection.vm.fromModule = fromModule;
-
-    expect(connection.vm.x1).toBe(70 + cellWidth);
-    expect(connection.vm.y1).toBe(1);
-    expect(connection.vm.x2).toBe(1);
-    expect(connection.vm.y2).toBe(1);
+      expect(connection.vm.x1).toBe(70 + cellWidth);
+      expect(connection.vm.y1).toBe(1);
+      expect(connection.vm.x2).toBe(1);
+      expect(connection.vm.y2).toBe(1);
+    });
   });
 });

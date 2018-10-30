@@ -3,9 +3,8 @@ import mountVue from 'cypress-vue-unit-test';
 import { extensions } from '../../support/extensions';
 import { wasDisposed, dummy } from '../../support/utils';
 
-let vco;
-
 describe('VCO.vue', () => {
+  let vco;
 
   beforeEach(mountVue(VCO, {
     extensions

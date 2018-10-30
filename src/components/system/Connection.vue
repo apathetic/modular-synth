@@ -205,11 +205,7 @@ THOUGHTS:
        */
       getToAndFromModules() {
         try {
-          // NOTE: these are _rendered_ modules in the App -- not the `modules` from the store
-          const modules = this.$parent.$children; // all <Connections> are $children of <Rack>
-
-          // root > Synth > MasterOut
-          const masterOut = this.$root.$children[0].$children.find(m => m.id === 0);
+          const modules = this.$parent.$children; // TODO filter this. It contains patchmanager, midi, etc.  Computed prop?
           const from = modules.find((m) => m.id === this.from.id);
           const to = modules.find((m) => m.id === this.to.id) || masterOut;
 

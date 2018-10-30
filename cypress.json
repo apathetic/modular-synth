@@ -6,7 +6,7 @@
   "supportFile": "tests/support/index.ts",
   "screenshotsFolder": "tests/screenshots",
   "videosFolder": "tests/videos",
-  "projectId": "zt64m4",
+  "numTestsKeptInMemory": 0,
 
-  "numTestsKeptInMemory": 0
+  "projectId": "zt64m4"
 }

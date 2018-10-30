@@ -38,6 +38,7 @@ export const loadPatch = ({ commit, state }, key?: string) => {
     } catch (err) { /*  */ }
 
     patch = Object.assign({}, DEFAULT, fromStorage);
+    // patch = { ...DEFAULT, ...fromStorage };
   }
 
   console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name || '(localStorage)');
