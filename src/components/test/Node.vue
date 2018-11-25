@@ -35,7 +35,6 @@
         inlets: [
           { label: 'freq' },
           { label: 'gain' },
-          { label: 'range' }
         ],
 
         outlets: [
@@ -48,6 +47,7 @@
     created() {
       // dummy outlet for test
       this.inlets[0].audio = this.context.createGain();
+      this.inlets[1].audio = this.context.createGain();
 
       this.outlets[0].audio = this.context.createGain();
       this.outlets[1].audio = this.context.createGain();

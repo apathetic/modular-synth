@@ -38,8 +38,10 @@
   import VCO from '@/components/VCO';
   import VCA from '@/components/VCA';
 
-  import Debugger from '@/components/Debugger';
-  import Node from '@/components/Node';
+  import Debugger from '../test/Debugger';
+  import Node from '../test/Node';
+
+  // import context from '../../audio';
 
   export default {
     mixins: [ draggable ],

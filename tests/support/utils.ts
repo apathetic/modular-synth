@@ -13,7 +13,7 @@ import { context } from '@/audio/';
 //     d.disconnect();
 //   }
 // };
-export const dummy = context.createGain();
+// export const dummy = context.createGain();
 
 export const wasDisposed = (obj) => {
   for (const prop in obj) {
@@ -37,6 +37,6 @@ export const wasDisposed = (obj) => {
 };
 
 export const getStore = () => {
-  // const getStore = () => cy.window().its('app.$store')
+  cy.window().its('app.$store');
 };
 // getStore().its('state').should('have.keys', ['loading', 'newTodo', 'todos'])

@@ -1,29 +1,58 @@
 import Connection from '@/components/system/Connection.vue';
-// import VCO from '@/components/VCO.vue';
+import Node from '@/components/test/Node.vue';
 import { cellWidth } from '@/constants';
 
 import mountVue from 'cypress-vue-unit-test';
 import { extensions } from '../../support/extensions';
-import { wasDisposed, dummy } from '../../support/utils';
+import { wasDisposed } from '../../support/utils';
 
-// const components = { VCO };
-const CONNECTION_DATA = {
-  to: { id: 1, port: 1 },
-  from: { id: 2, port: 2 }
-};
 
 describe('Connection.vue', () => {
   let connection;
 
-  beforeEach(mountVue(Connection, {
-    extensions,
-    data: CONNECTION_DATA
-    // ...components
-    // html: '<VCO><Connection><VCO>'
+  const template = `
+    <div>
+      <Connection
+        :to="to"
+        :from="from">
+      </Connection>
+      <Node :id="1"></Node>
+      <Node :id="2"></Node>
+    </div>`;
+
+  const data = {
+    to: { id: 1, port: 1 },
+    from: { id: 2, port: 2 }
+  };
+
+  const components = {
+    Connection,
+    Node
+  };
+
+  beforeEach(mountVue({ template, data, components }, {
+    extensions
   }));
 
+
   context('Base', () => {
-    it('can be created from an options object', () => {
+    it('can be created', () => {
+      connection = Cypress.vue; // the ref to the component (which was set up in "mountVue")
+    });
+
+    it('can be destroyed', () => {
+      connection = Cypress.vue;
+
+      cy.spy(connection, 'removeConnection');
+
+      // do thing.
+
+      expect(connection.removeConnection).to.be.called;
+      // expect $store mutation to have been called.
+    });
+
+
+    it('resolves references to "to" and "from" nodes', () => {
       connection = Cypress.vue; // the ref to the component (which was set up in "mountVue")
 
       // connection.setProps(CONNECTION_DATA);
@@ -32,13 +61,8 @@ describe('Connection.vue', () => {
       connection.destroy();
     });
 
-    // it('can remove a connection', () => {
-    // });
+    it('can connect to MasterOut', () => {
 
-    // it('contains references to the "to" and "from" IDs', () => {
-    // });
-
-    it('contains references to the "to" and "from" vue modules', () => {
     });
 
     it('it removes itself if a connection cannot be made', () => {
@@ -68,6 +92,12 @@ describe('Connection.vue', () => {
   });
 
   context('UI', () => {
+    it('should render correct (SVG) contents', () => {
+      cy.get('line').snapshot();
+
+      // throw Error('need content snapshot'); // TODO
+    });
+
     it('sets its coordinates correctly', () => {
       const toModule = {
         x: 123, y: 45
