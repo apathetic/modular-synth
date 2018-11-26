@@ -9,7 +9,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     app: appState,
-    patch: patchState
+    patch: patchState,
+    // user: userState,
+    // audio: audio stuffs / nodes ?
   },
   plugins
   // strict: process.env.NODE_ENV !== 'production'

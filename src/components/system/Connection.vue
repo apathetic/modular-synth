@@ -136,7 +136,7 @@ THOUGHTS:
        * @return {Void}
        */
       route(connect = true) {
-        const outlet = this.source.module.outlets[this.from.port];
+        const outlet = this.source.outlets[this.from.port];
         const inlet = this.dest.module.inlets[this.to.port];
 
         try {
@@ -158,7 +158,8 @@ THOUGHTS:
             console.log('CONNECTION FROM DAT TO AUDIO ', this.from.id, this.to.id);
             const interpolator = new Parameter(0);
 
-            this.source.module.$watch(outlet.data, interpolator.set);
+            // this.source.module.$watch(outlet.data, interpolator.set);
+            this.$watch(outlet.data, interpolator.set);
             interpolator.output.connect(inlet.audio);
 
             //
@@ -173,7 +174,8 @@ THOUGHTS:
               // "this.unwatch" is a fn that removes itself
               // "action" is a string -- is refers us to the property on source.module that should be watched;
               // ... when it is changed, the receiver function, "update" (on toModule), is fired with the new value.
-              this.unwatch = this.source.module.$watch(action, update);
+              // this.unwatch = this.source.module.$watch(action, update);
+              this.unwatch = this.$watch(action, update);
               this.stroke = '#999';
               // this.fromModule.$on(action, update);
 
@@ -199,26 +201,30 @@ THOUGHTS:
 
       /**
        * Fetch a Vue Component from the App, given a particular id.
-       * NOTE: we fetch the Component from the App (not the Store), as that is what
+       * NOTE: we fetch the Module from the App (not the Store), as that is what
        *       contains the actual AudioNode.
        * @type {Number} id The id of the module to fetch.
        */
       getToAndFromModules() {
         try {
-          const modules = this.$parent.$children; // TODO filter this. It contains patchmanager, midi, etc.  Computed prop?
+          // TODO filter this.
+          // It contains patchmanager, midi, etc.  Computed prop?
+          // BRITTLE. Depends on Connection / Module being direct children of App
+          const modules = this.$parent.$children;
           const from = modules.find((m) => m.id === this.from.id);
           const to = modules.find((m) => m.id === this.to.id) || masterOut;
 
           this.dest = {
+            id: this.to.id,
             coords: to,
-            module: this.to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
-            id: this.to.id
+            module: this.to.id === 0 ? to : to.$children[0] // compensate for (new) module wrapper
           };
 
           this.source = {
-            coords: from,
-            module: from.$children[0],
-            id: this.from.id
+            id: this.from.id,
+            coords: from,               // Coords are in MODULE
+            module: from.$children[0],  // Audio/Data is in NODE
+            outlets: from.$children[0].outlets
           };
         } catch (e) {
           this.logError(e);

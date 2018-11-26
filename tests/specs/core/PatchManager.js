@@ -1,10 +1,11 @@
 // import { shallow, createLocalVue } from 'vue-test-utils';
-import PatchManager from '@/PatchManager.vue';
+import PatchManager from '@/components/system/PatchManager.vue';
+import mountVue from 'cypress-vue-unit-test';
 import { extensions } from '../../support/extensions';
 
 
 describe('PatchManager.vue', () => {
-  let patchManager;
+  // let patchManager;
 
   beforeEach(mountVue(PatchManager, {
     extensions
@@ -20,28 +21,21 @@ describe('PatchManager.vue', () => {
       // const patchmanager = shallow(PatchManager, {
       //   propsData: {}
       // });
-      patchmanager = Cypress.vue; // the ref to the component (which was set up in "mountVue")
+      let patchmanager = Cypress.vue;
 
       // ...
-      expect(patchmanager).toMatchSnapshot();
     });
 
     it('can load a patch', () => {
-      const patchmanager = shallow(PatchManager, {
-        propsData: {}
-      });
+      let patchmanager = Cypress.vue; // the ref to the component (which was set up in "mountVue")
 
       // ...
-      expect(patchmanager).toMatchSnapshot();
     });
 
     it('can save a patch', () => {
-      const patchmanager = shallow(PatchManager, {
-        propsData: {}
-      });
+      let patchmanager = Cypress.vue;
 
       // ...
-      expect(patchmanager).toMatchSnapshot();
     });
 
     it('when in edit mode, can add a new patch', () => {
@@ -67,13 +61,11 @@ describe('PatchManager.vue', () => {
 
   context('UI', () => {
     it('renders the correct content', () => {
-      patchmanager = Cypress.vue; // the ref to the component (which was set up in "mountVue")
-
-      patchmanager.snapshot('initial')
+      let patchmanager = Cypress.vue;
     });
 
     it('updates display when new patch is selected', () => {
-      patchmanager = Cypress.vue; // the ref to the component (which was set up in "mountVue")
+      let patchmanager = Cypress.vue;
 
       // patchmanager
 

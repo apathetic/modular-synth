@@ -1,4 +1,5 @@
 import Connection from '@/components/system/Connection.vue';
+import Module from '@/components/system/Module.vue';
 import Node from '@/components/test/Node.vue';
 import { cellWidth } from '@/constants';
 

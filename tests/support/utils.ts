@@ -37,6 +37,6 @@ export const wasDisposed = (obj) => {
 };
 
 export const getStore = () => {
-  cy.window().its('app.$store');
+  // cy!.window().its('app.$store');
 };
 // getStore().its('state').should('have.keys', ['loading', 'newTodo', 'todos'])

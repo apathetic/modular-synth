@@ -30,6 +30,7 @@
   import VU from '../UI/VU';
 
   export default {
+    name: 'MasterOut',
     components: { VU },
     computed: {
       ...mapGetters([
@@ -39,7 +40,7 @@
 
     data() {
       return {
-        name: 'Master Out',
+        // name: 'Master Out',
         id: 0, // MasterOut is always id 0
         x: 0,
         y: 0,

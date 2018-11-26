@@ -66,6 +66,7 @@
 
   export default {
     name: 'Synth',
+
     mixins: [sortable],
 
     components: {

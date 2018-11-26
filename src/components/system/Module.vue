@@ -44,8 +44,10 @@
   // import context from '../../audio';
 
   export default {
-    mixins: [ draggable ],
-    provide: [ context ],
+    name: 'Module',
+
+    mixins: [draggable],
+    // inject: [ context ],
     components: {
       Analyser,
       Comb,
