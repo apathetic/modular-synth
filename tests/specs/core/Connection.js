@@ -1,5 +1,5 @@
 import Connection from '@/components/system/Connection.vue';
-import Module from '@/components/system/Module.vue';
+import Module from '@/components/system/Module.vue';  // Connection expects the audio node to be wrapped in this guy
 import Node from '@/components/test/Node.vue';
 import { cellWidth } from '@/constants';
 
@@ -14,20 +14,26 @@ describe('Connection.vue', () => {
   const template = `
     <div>
       <Connection
+        :id="10"
         :to="to"
         :from="from">
       </Connection>
-      <Node :id="1"></Node>
-      <Node :id="2"></Node>
+
+      <Module :module="node1"></Module>
+      <Module :module="node2"></Module>
     </div>`;
 
   const data = {
-    to: { id: 1, port: 1 },
-    from: { id: 2, port: 2 }
+    to: { id: 1, port: 0 },         // connection data
+    from: { id: 2, port: 1 },       // connection data
+
+    node1: { id: 1, type: 'Node' }, // Test data
+    node2: { id: 2, type: 'Node' }  // Test data
   };
 
   const components = {
     Connection,
+    Module,
     Node
   };
 
@@ -38,7 +44,9 @@ describe('Connection.vue', () => {
 
   context('Base', () => {
     it('can be created', () => {
-      connection = Cypress.vue; // the ref to the component (which was set up in "mountVue")
+      connection = Cypress.vue; // the ref to the APP
+                                // HOW do get the component (which was set up in "mountVue") ?
+      connection = connection.$children[0];
     });
 
     it('can be destroyed', () => {

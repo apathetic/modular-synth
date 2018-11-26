@@ -136,7 +136,7 @@ THOUGHTS:
        * @return {Void}
        */
       route(connect = true) {
-        const outlet = this.source.outlets[this.from.port];
+        const outlet = this.source.module.outlets[this.from.port];
         const inlet = this.dest.module.inlets[this.to.port];
 
         try {
@@ -192,7 +192,7 @@ THOUGHTS:
           }
 
           // success message:
-          console.log('%c[connection] %s ⟹ %s', 'color: green', this.source.module.name, this.dest.module.name);
+          console.log('%c[connection] %s ⟹ %s', 'color: green', this.source.module.name, this.dest.name);
           //
         } catch (e) {
           this.logError(e);
@@ -210,14 +210,21 @@ THOUGHTS:
           // TODO filter this.
           // It contains patchmanager, midi, etc.  Computed prop?
           // BRITTLE. Depends on Connection / Module being direct children of App
-          const modules = this.$parent.$children;
+
+          // const modules = this.$parent.$children;
+          const modules = this.$root.$children[0].$children;
+
           const from = modules.find((m) => m.id === this.from.id);
-          const to = modules.find((m) => m.id === this.to.id) || masterOut;
+          const to = modules.find((m) => m.id === this.to.id);
+          const node = this.to.id === 0 ? to : to.$children[0];
 
           this.dest = {
             id: this.to.id,
             coords: to,
-            module: this.to.id === 0 ? to : to.$children[0] // compensate for (new) module wrapper
+            module: this.to.id === 0 ? to : to.$children[0],
+
+            name: node.name,
+            inlets: node.inlets
           };
 
           this.source = {
