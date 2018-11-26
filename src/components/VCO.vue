@@ -102,6 +102,15 @@
       this.osc_.start();
     },
 
+
+    destroyed() {
+      this.pulse_.destroy();
+      this.osc_.stop();
+      this.osc_.disconnect(); // this is done in Connection
+      this.modDepth_.disconnect();
+    },
+
+
     methods: {
       /**
        * k-rate control of the Oscillator frequency.

@@ -63,8 +63,8 @@
     },
 
     destroyed() {
-      // signal(1).disconnect();   // or is it:
-      this.adsr.disconnect();  // ...?
+      signal(1).disconnect(this.adsr);
+      this.adsr.disconnect(); // this is done in Connection
 
       // DESTROY signal? TODO
     },
