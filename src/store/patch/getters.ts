@@ -13,8 +13,3 @@ export const modules = (state: PatchState): Module[] => state.modules.filter((m)
 export const parameters = (state: PatchState): Parameter[] => (
     parameterSets[state.parameterKey] &&
     parameterSets[state.parameterKey].parameters || []);
-
-export const parametersName = (state: PatchState) => {
-  const key = state.parameterKey;
-  return (state.parameterSets[key] && state.parameterSets[key].name) || '';
-};
