@@ -25,4 +25,4 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 
-require('@cypress/snapshot').register();
+// require('@cypress/snapshot').register();

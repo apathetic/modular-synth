@@ -1,5 +1,5 @@
-import inlets from '@/components/functional/inlets';
-import outlets from '@/components/functional/outlets';
+import inlets from '@/components/system/Inlets.vue';
+import outlets from '@/components/system/Outlets.vue';
 // import store from 'src/store';
 import { context } from '@/audio/';
 

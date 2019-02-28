@@ -41,18 +41,21 @@
     </div>
 
     <auth></auth>
+    <!-- <sign-in></sign-in> -->
 
   </header>
 </template>
 
 <script>
 import Auth from './Auth';
-import { mapGetters, mapActions } from 'vuex';
+// import SignIn from './SignIn';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import { EVENT } from '../../events';
 
 export default {
   components: {
-    Auth
+    Auth,
+    // SignIn
   },
 
   data() {
@@ -230,6 +233,39 @@ export default {
       }
     }
 
+    &:not(.active) {
+      .dropdowns,
+      .save {
+        z-index: -1;
+      }
+    }
+
+    &.editing {
+      .math {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      input {
+        left: $gap;
+      }
+    }
+
+    &:not(.editing) {
+      input {
+        pointer-events: none;
+      }
+
+      .select {
+        &:hover {
+          color: $color-highlight;
+        }
+      }
+    }
+  }
+
+  .dropdowns {
+
     .select {
       color: #fff;
       margin: 0 5px;
@@ -278,36 +314,6 @@ export default {
 
       &:hover {
         color: $color-highlight;
-      }
-    }
-
-    &.editing {
-      .math {
-        transform: scale(1);
-        opacity: 1;
-      }
-
-      input {
-        left: $gap;
-      }
-    }
-
-    &:not(.editing) {
-      input {
-        pointer-events: none;
-      }
-
-      .select {
-        &:hover {
-          color: $color-highlight;
-        }
-      }
-    }
-
-    &:not(.active) {
-      .dropdowns,
-      .save {
-        z-index: -1;
       }
     }
 

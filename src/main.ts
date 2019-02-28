@@ -38,20 +38,6 @@ Vue.component('inlets', inlets);
 Vue.component('outlets', outlets);
 
 
-// Register a global custom directive called v-context-menu
-// TODO: move to synth.vue ?
-// https://github.com/vuejs/vue/issues/6385
-// Vue.directive('context-menu', {
-//   const state = new WeakMap()
-//   inserted() {
-//     console.log('inserted');
-//   },
-//   bind(el, binding, vnode) {
-//     //
-//   }
-// });
-
-
 new Vue({
   store,
   data: {

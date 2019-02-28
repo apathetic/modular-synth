@@ -32,8 +32,6 @@ export default {
   @import '../../styles/variables.scss';
 
   .auth {
-    // float: left;
-    // margin-right: 1em;
     align-self: center;
 
     button:not(.active) {
