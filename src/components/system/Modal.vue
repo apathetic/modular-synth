@@ -4,7 +4,7 @@
         :class="[{'is-visible': visible}, 'modal']"
         @click="close"
     >
-      <!-- <button class="modal__close" @click="close"></button> -->
+      <button class="modal__close" @click="close"></button>
       <div class="modal__content" @click.stop>
         <slot></slot>
       </div>
