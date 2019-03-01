@@ -72,18 +72,18 @@ export default {
         return this.$store.state.app.patchKey;
       },
       set(key) {
-        this.$store.commit('SET_KEY', key);
+        this.$store.commit('app/SET_KEY', key);
       }
     },
 
-    currentParamsKey: {
-      get() {
-        return this.$store.getters.parameterKey;
-      },
-      set(key) {
-        this.$store.commit('SET_PARAMETERS_KEY', key);
-      }
-    },
+    // currentParamsKey: {
+    //   get() {
+    //     return this.$store.getters.parameterKey;
+    //   },
+    //   set(key) {
+    //     this.$store.commit('SET_PARAMETERS_KEY', key);
+    //   }
+    // },
 
     currentPatchName: {
       get() {
@@ -94,23 +94,29 @@ export default {
       }
     },
 
-    currentParamsName: {
-      get() {
-        const key = this.$store.getters.parameterKey;
-        return (this.$store.getters.parameterSets[key] &&
-                this.$store.getters.parameterSets[key].name);
-      },
-      set(value) {
-        this.$store.commit('SET_PARAMETERS_NAME', value);
-      }
-    },
+    ...mapState('patch', {
+      parameterSets: 'parameterSets',
+      currentParamsKey: 'parameterKey'
+    }),
 
-    ...mapGetters([
+    ...mapState('app', [
       'patches',
-      'parameterSets',
-      'editing'
-    ])
-},
+      'editing',
+      'patchKey'
+    ]),
+
+    ...mapGetters('patch', {
+      // 'parameterSets',
+      // 'currentParamsKey',
+      currentParamsName: 'parametersName'
+    })
+  },
+
+  watch: {
+    currentParamsName: function(value) {
+      this.$store.commit('SET_PARAMETERS_NAME', value);
+    }
+  },
 
   mounted() {
     this.load();
@@ -196,11 +202,16 @@ export default {
     selectParams(e) {
       this.currentParamsKey = e.target.value;
       this.paramsIndex = e.target.selectedIndex;
+        // this.$store.commit('SET_PARAMETERS_KEY', key);
+
+      this.$store.commit('SET_PARAMETERS_KEY', this.currentParamsKey);
+      this.$bus.$emit(EVENT.PARAMETERS_LOAD);
+      console.log('%c Fetching parameters ', 'background:#666;color:white;font-weight:bold;');
     },
 
     // -----------------
 
-    ...mapActions([
+    ...mapActions('app', [
       'savePatch',
       'loadPatch',
       'addPatch',

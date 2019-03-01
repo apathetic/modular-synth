@@ -23,6 +23,7 @@ export const state: PatchState = {
 };
 
 export default {
+  namespaced: true,
   state,
   getters,
   mutations,

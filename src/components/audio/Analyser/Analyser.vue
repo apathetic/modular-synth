@@ -16,7 +16,7 @@
 
 
 <script>
-  import { mapGetters } from 'vuex';
+  import { mapState } from 'vuex';
 
   export default {
     props: {
@@ -24,7 +24,7 @@
     },
 
     computed: {
-      ...mapGetters([
+      ...mapState('app', [
         'power',
         'editing'
       ])

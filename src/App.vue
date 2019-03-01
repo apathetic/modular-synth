@@ -46,13 +46,16 @@
 
     </section>
 
-    <context-menu></context-menu>
-  </main>
+  <context-menu></context-menu>
+
+
+</main>
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex';
-  // import { sortable } from './mixins/sortable';
+  import Vue from 'vue';
+  import { mapState, mapGetters, mapActions } from 'vuex';
+  import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
   import masterOut from './components/system/MasterOut.vue';
   import midi from './components/system/Midi.vue';
@@ -81,13 +84,27 @@
     },
 
     computed: {
-      ...mapGetters([
+      width() {
+        const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
+        return this.editing
+          ? `width: ${canvasWidth}px`
+          : 'width: auto';
+      },
+
+      ...mapState('app', [
         'power',
         'editing',
-        'activeModule',
+      ]),
+
+      // ...mapState('patch', [
+      //   'connections',
+      // ]),
+
+      ...mapGetters('patch', [
         'modules',
-        'bounds',
-        'connections'
+        'connections',
+        'activeModule',
+        'bounds'
       ])
     },
 
@@ -139,7 +156,7 @@
     },
 
     methods: {
-      ...mapActions([
+      ...mapActions('app', [
         'togglePower',
         'toggleEditMode',
         'removeModule',

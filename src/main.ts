@@ -55,7 +55,7 @@ new Vue({
       this.$authenticated = !!user;
 
       if (this.$authenticated) {
-        this.$store.dispatch('fetchPatches');
+        this.$store.dispatch('app/fetchPatches');
       }
     });
   }

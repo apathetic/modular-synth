@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex';
+  import { mapState, mapActions } from 'vuex';
   import { EVENT } from '../../events';
   import VU from '../UI/VU';
 
@@ -33,7 +33,7 @@
     name: 'MasterOut',
     components: { VU },
     computed: {
-      ...mapGetters([
+      ...mapState('app', [
         'power'
       ])
     },
@@ -109,7 +109,7 @@
         this.x = x;
         this.y = y;
 
-        this.$store.commit('UPDATE_GRID_POSITION', {
+        this.$store.commit('patch/UPDATE_GRID_POSITION', {
           id: 0,
           x: x,
           y: y
@@ -117,7 +117,7 @@
       },
 
       // VUEX actions, bound as local methods:
-      ...mapActions([
+      ...mapActions('app', [
         'setFocus',
         'clearFocus'
       ])

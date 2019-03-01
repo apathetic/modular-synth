@@ -10,14 +10,17 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 
 
 <script>
-  import { mapGetters } from 'vuex';
+  import { mapGetters, mapState } from 'vuex';
   import { Meter } from '@/audio';
 
   export default {
     name: 'ui-VU',
 
     computed: {
-      ...mapGetters([
+      // ...mapGetters([
+      //   'power'
+      // ])
+      ...mapState('app', [
         'power'
       ])
     },

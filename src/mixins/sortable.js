@@ -81,7 +81,7 @@ export const sortable = {
       this.modules.forEach((item) => {
         // Don't interfere with the position of the dragged items. TODO - is this the case...?
         if (this.activeModule !== item) {
-          this.$store.commit('UPDATE_RACK_POSITION', {
+          this.$store.commit('patch/UPDATE_RACK_POSITION', {
             id: item.id,
             col: item.col,
             row: item.row

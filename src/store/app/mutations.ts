@@ -4,6 +4,21 @@ import { validateData } from '../firebase';
 //  PATCH
 // -----------------------------------------------
 
+// loads modules, id, and patch name
+// connection, parameters are loaded below
+export const LOAD_PATCH = (state, patch) => {
+  if (patch) {
+    state.id = patch.id;
+    state.name = patch.name;
+    state.modules = patch.modules;
+    state.parameterSets = patch.parameterSets;
+    // NOTE: parameters (knobs, sliders, etc) are created only after
+    // their parent; they then register themselves within the store.
+    // Parameter _values_ are then fetched once the params:load event
+    // is fired
+  }
+};
+
 export const SAVE_PATCH = (state, data) => {
   const patch = data.patch;
   const key = data.key;

@@ -20,7 +20,7 @@ const state: AppState = {
 };
 
 export default {
-  namespaced: false, // true,
+  namespaced: true,
   state,
   getters,
   mutations,
