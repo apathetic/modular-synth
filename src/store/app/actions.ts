@@ -46,8 +46,9 @@ export const loadPatch = ({ commit, state }, key?: string) => {
   //       Modules must be mounted first, so that all AudioNodes are available
   //       to the Connections; likewise the Modules' settings need to be
   //       available before Parameters are instantiated.
-  commit('LOAD_PATCH', patch);     // fetches: id, name, modules, and parameterSets
-  commit('LOAD_CONNECTIONS', []);  // first, explicitly destroy all connections
+  commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
+  commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
+  commit('SET_PARAMETERS_KEY', -1); // and temp unset this so that it'll trigger a mutation on next tick
 
   // ensure nodes (+ inlets/outlets) are in the DOM...
   Vue.nextTick(() => {
@@ -56,7 +57,8 @@ export const loadPatch = ({ commit, state }, key?: string) => {
     commit('LOAD_CONNECTIONS', patch.connections);
 
     // ...lastly, load parameters
-    // commit('LOAD_PARAMETERS', patch.parameters);
+    console.log('%c Setting parameters... ', 'background:#666;color:white;font-weight:bold;');
+    commit('SET_PARAMETERS_KEY', 0);
   });
 };
 

@@ -4,6 +4,7 @@
  * @type {Object}
  */
 
+import { mapState, mapGetters } from 'vuex';
 import { EVENT } from '../events';
 
 export const parameter = {
@@ -43,7 +44,6 @@ export const parameter = {
     this.id = this.$parent.id + '-' + this.param;
     this.range = this.max - this.min;
     this.$emit('value', this.value); // update parent w/ value
-    // this.$emit('update:value', this.value); // update parent w/ value
 
     // this.$store.commit('REGISTER_PARAMETER', this.id);
 
@@ -65,9 +65,9 @@ export const parameter = {
     window.addEventListener(EVENT.MOUSE_UP, this.mouseup);
     window.addEventListener(EVENT.MOUSE_MOVE, this.mousemove);
 
-    this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
+    // this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
 
-    console.log('%c[parameter] Creating %s Knob', 'color: lightblue', this.param);
+    console.log('%c[parameter] Creating %s %s', 'color: lightblue', this.param, this.type);
   },
 
   destroyed() {
@@ -76,9 +76,19 @@ export const parameter = {
     window.removeEventListener(EVENT.MOUSE_UP, this.mouseup);
     window.removeEventListener(EVENT.MOUSE_MOVE, this.mousemove);
 
-    console.log('%c[parameter] Destroying %s %s', 'color: grey', this.type, this.id);
+    console.log('%c[parameter] Destroying %s %s', 'color: grey', this.param, this.type);
   },
 
+  computed: {
+    ...mapGetters(['parameterKey'])
+  },
+
+  watch: {
+    // watch the store: patch/parameterKey... if it changes, update value
+    parameterKey() {
+      this.fetchValue();
+    }
+  },
 
   methods: {
     /**
@@ -91,7 +101,6 @@ export const parameter = {
       this.startValue = this.internalValue;
       this.startY = e.clientY;
     },
-
 
     /**
      * Updates new knob values on mouse move.
