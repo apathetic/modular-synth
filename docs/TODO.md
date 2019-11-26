@@ -21,6 +21,11 @@
 
 
 - General
+
+
+- parameter mixin... add/remove dynamically (vs. adding all knobs and listenting for "active")
+- better Connection logic/fallback
+
   - load patch
     - turn off power. Problematic now that Meters plug directly into MasterOut due to Chrome bug.
   - web workers

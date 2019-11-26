@@ -67,3 +67,16 @@ export interface ParameterSet {
 export interface Parameter {
   [key: string]: string | number;
 }
+
+export interface Inlet {
+  data?: Function;
+  audio?: AudioNode;
+  label?: string;
+  desc?: string;
+}
+export interface Outlet {
+  data?: Function;
+  audio?: AudioNode;
+  label?: string;
+  desc?: string;
+}

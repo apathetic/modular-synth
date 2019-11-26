@@ -50,8 +50,8 @@ export function signal(value: number = 1) {
  */
 export class Parameter {
   public set: (value: number) => void;
-  public input: GainNode | null;
-  public output: GainNode | null;
+  public input?: GainNode;
+  public output?: GainNode;
 
   constructor(value: number = 0) {
     const param = context.createGain();
@@ -72,7 +72,7 @@ export class Parameter {
   public destroy() {
     // (<GainNode>this.output).disconnect();
     this.output && this.output.disconnect();
-    this.input = this.output = null;
+    this.input = this.output = undefined;
   }
 }
 
@@ -139,7 +139,7 @@ export class Meter {
  * @param {String} t Initial type of the oscillator.
  */
 export class Oscillator {
-  public frequency: Parameter | null;
+  public frequency: Parameter;
   public output: OscillatorNode;
   private osc: OscillatorNode;
   private type: OscillatorType;
@@ -158,7 +158,7 @@ export class Oscillator {
 
   public stop() {
     this.osc.stop();
-    this.frequency = null;  // .destroy(); ?
+    this.frequency.destroy();
   }
 }
 

@@ -1,75 +1,75 @@
 <template>
-<main data-v-context-menu>
-  <patch-manager></patch-manager>
+  <main data-v-context-menu>
+    <patch-manager></patch-manager>
 
-  <section :class="editing ? 'edit-mode': 'play-mode'">
+    <section :class="editing ? 'edit-mode': 'play-mode'">
 
-    <div id="modules" ref="grid" @click.left="clearActive">
-      <div class="position-highlight">
-        <div class="inner"></div>
+      <div id="modules" ref="grid" @click.left="clearActive">
+        <div class="position-highlight">
+          <div class="inner"></div>
+        </div>
+
+        <module v-for="module in modules"
+          :module="module"
+          :key="module.id"
+
+          @mousedown.native="setActive(module.id)"
+          @mouseover.native="setFocus(module.id)"
+          @mouseout.native="clearFocus()">
+        </module>
+
+        <svg id="connections" :style="width">
+          <connecting></connecting>
+          <connection v-for="connection in connections"
+            :id="connection.id"
+            :to="connection.to"
+            :from="connection.from"
+            :key="connection.id"
+
+            @mousedown.native="setActive(connection.id)">
+          </connection>
+        </svg>
       </div>
 
-      <module v-for="module in modules"
-        :module="module"
-        :key="module.id"
+      <aside id="sidebar">
+        <div class="controls pad">
+          <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
 
-        @mousedown.native="setActive(module.id)"
-        @mouseover.native="setFocus(module.id)"
-        @mouseout.native="clearFocus()">
-      </module>
+          <button class="mode" @click="toggleEditMode">
+            <span class="play">play</span>
+            <span class="edit">edit</span>
+          </button>
 
-      <svg id="connections" :style="width">
-        <connecting></connecting>
-        <connection v-for="connection in connections"
-          :id="connection.id"
-          :to="connection.to"
-          :from="connection.from"
-          :key="connection.id"
+          <p v-if="activeModule">
+            <strong>Current Module</strong><br>
+            {{ activeModule.type }} (id: {{ activeModule.id }})<br>
+            x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
+            col, row: {{ activeModule.col }}, {{ activeModule.row }}<br>
+            w, h: {{ activeModule.w }},  {{ activeModule.h }}<br>
+          </p>
 
-          @mousedown.native="setActive(connection.id)">
-        </connection>
-      </svg>
-    </div>
+          <midi></midi>
 
-    <aside id="sidebar">
-      <div class="controls pad">
-        <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
+        </div>
 
-        <button class="mode" @click="toggleEditMode">
-          <span class="play">play</span>
-          <span class="edit">edit</span>
-        </button>
+        <master-out></master-out>
 
-        <p v-if="activeModule">
-          <strong>Current Module</strong><br>
-          {{ activeModule.type }} (id: {{ activeModule.id }})<br>
-          x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
-          col, row: {{ activeModule.col }}, {{ activeModule.row }}<br>
-          w, h: {{ activeModule.w }},  {{ activeModule.h }}<br>
-        </p>
+        <div class="power pad">
+          <button
+            :class="power ? 'on' : 'off'"
+            @click="togglePower">
 
-        <midi></midi>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+              <path d="M28,18c0,6.629-5.375,12-12,12C9.371,30,4,24.629,4,18c0-5.223,3.34-9.652,8-11.301v4.41C9.617,12.496,8,15.047,8,18 c0,4.418,3.582,8,8,8s8-3.582,8-8c0-2.953-1.621-5.504-4-6.891v-4.41C24.656,8.348,28,12.777,28,18z M16,16c1.105,0,2-0.895,2-2V4 c0-1.104-0.895-2-2-2s-2,0.896-2,2v10C14,15.105,14.895,16,16,16z" />
+            </svg>
+          </button>
+        </div>
+      </aside>
 
-      </div>
+    </section>
 
-      <master-out></master-out>
-
-      <div class="power pad">
-        <button
-          :class="power ? 'on' : 'off'"
-          @click="togglePower">
-
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-            <path d="M28,18c0,6.629-5.375,12-12,12C9.371,30,4,24.629,4,18c0-5.223,3.34-9.652,8-11.301v4.41C9.617,12.496,8,15.047,8,18 c0,4.418,3.582,8,8,8s8-3.582,8-8c0-2.953-1.621-5.504-4-6.891v-4.41C24.656,8.348,28,12.777,28,18z M16,16c1.105,0,2-0.895,2-2V4 c0-1.104-0.895-2-2-2s-2,0.896-2,2v10C14,15.105,14.895,16,16,16z" />
-          </svg>
-        </button>
-      </div>
-    </aside>
-
-  </section>
-
-  <context-menu></context-menu>
-</main>
+    <context-menu></context-menu>
+  </main>
 </template>
 
 <script>

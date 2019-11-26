@@ -32,9 +32,11 @@ export const provider = new firebase.auth.GoogleAuthProvider();
  * @return {[type]} [description]
  */
 export function generateKey() {
+  // return '_' + Math.random().toString(36).substr(2, 9);
+
   const PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
-  let now = new Date().getTime();
   const timeStampChars = new Array(8);
+  let now = new Date().getTime();
   let result;
 
   // 8 characters of timestamp data at the beginning

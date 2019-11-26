@@ -20,31 +20,30 @@
   // -------------------
 
   import { draggable } from '@/mixins/draggable';
-  import { moduleSize } from '../../constants';
+  import { context } from '@/audio';
+  import { moduleSize } from '@/constants';
 
-  import Analyser from '../Analyser';
-  import Comb from '../Comb';
-  import Compressor from '../Compressor';
-  import Delay from '../Delay';
-  import Drive from '../Drive';
-  import Env from '../Env';
-  import LFO from '../LFO';
-  import Mixer from '../Mixer';
-  import NoteIn from '../NoteIn';
-  import OSC from '../OSC';
-  import Reverb from '../Reverb';
-  import VCF from '../Filter';
-  import VCO from '../VCO';
-  import VCA from '../VCA';
+  import Analyser from '@/components/Analyser';
+  import Comb from '@/components/Comb';
+  import Compressor from '@/components/Compressor';
+  import Delay from '@/components/Delay';
+  import Drive from '@/components/Drive';
+  import Env from '@/components/Env';
+  import LFO from '@/components/LFO';
+  import Mixer from '@/components/Mixer';
+  import NoteIn from '@/components/NoteIn';
+  import OSC from '@/components/OSC';
+  import Reverb from '@/components/Reverb';
+  import VCF from '@/components/Filter';
+  import VCO from '@/components/VCO';
+  import VCA from '@/components/VCA';
 
-  import Debugger from '../Debugger';
-  import Node from '../Node';
-
-  // import context from '../../audio';
+  import Debugger from '@/components/Debugger';
+  import Node from '@/components/Node';
 
   export default {
-    mixins: [draggable],
-    // inject: [ context ],
+    mixins: [ draggable ],
+    provide: [ context ],
     components: {
       Analyser,
       Comb,
