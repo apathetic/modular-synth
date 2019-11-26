@@ -46,10 +46,8 @@
 
     </section>
 
-  <context-menu></context-menu>
-
-
-</main>
+    <context-menu></context-menu>
+  </main>
 </template>
 
 <script>

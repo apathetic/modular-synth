@@ -76,27 +76,27 @@ export default {
       }
     },
 
-    // currentParamsKey: {
-    //   get() {
-    //     return this.$store.getters.parameterKey;
-    //   },
-    //   set(key) {
-    //     this.$store.commit('SET_PARAMETERS_KEY', key);
-    //   }
-    // },
+    currentParamsKey: {
+      get() {
+        return this.$store.state.patch.parameterKey;
+      },
+      set(key) {
+        this.$store.commit('patch/SET_PARAMETERS_KEY', key, { root:true });
+      }
+    },
 
     currentPatchName: {
       get() {
         return this.$store.state.patch.name;
       },
       set(value) {
-        this.$store.commit('SET_NAME', value);
+        this.$store.commit('patch/SET_NAME', value);
       }
     },
 
     ...mapState('patch', {
       parameterSets: 'parameterSets',
-      currentParamsKey: 'parameterKey'
+      // currentParamsKey: 'parameterKey'
     }),
 
     ...mapState('app', [
@@ -176,7 +176,7 @@ export default {
     select(e) {
       this.currentPatchKey = e.target.value;
       this.patchIndex = e.target.selectedIndex;
-      this.currentParamsKey = 0;                   // always select 1st set when new patch loaded
+      this.currentParamsKey = 0; // always select 1st set when new patch loaded
       this.load();
     },
 

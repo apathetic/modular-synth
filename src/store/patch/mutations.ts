@@ -95,6 +95,10 @@ export const REMOVE_CONNECTION = (state, id) => {
 // -----------------------------------------------
 //  PARAMETERS
 // -----------------------------------------------
+
+/**
+ * Adds a new SET of PARAMETERS to the store
+ */
 export const ADD_PARAMETERS = (state) => {
   const key = state.parameterKey;
   const set = state.parameterSets[key];
@@ -105,22 +109,34 @@ export const ADD_PARAMETERS = (state) => {
 
   state.parameterSets.push(copy);
 };
-//                  PARAMETER_SET
+
+/**
+ * Removes a SET of PARAMETERS from the store
+ */
 export const REMOVE_PARAMETERS = (state, key) => {
   state.parameterSets.splice(key, 1); // let's try mutating the array directly
 };
 
-//               PARAMETER_SET_NAME
+/**
+ * SETS the NAME of a particular SET of PARAMETERS
+ */
 export const SET_PARAMETERS_NAME = (state, name) => {
   const key = state.parameterKey;
 
   state.parameterSets[key].name = name;
 };
 
+/**
+ * Stores the KEY of the currently active parameter set.
+ */
 export const SET_PARAMETERS_KEY = (state, key) => {
   state.parameterKey = key;
 };
 
+/*
+ * When init'd, a PARAMETER "registers" itself with the store
+ * [TODO] UNUSED..?
+ */
 export const REGISTER_PARAMETER = (state, id) => {
   const key = state.parameterKey;
   const set = state.parameterSets[key];
@@ -133,6 +149,9 @@ export const REGISTER_PARAMETER = (state, id) => {
   }
 };
 
+/**
+ * Removes a particular PARAMETER from a PARAMETER SET
+ */
 export const REMOVE_PARAMETER = (state, id) => {
   state.parameterSets.forEach(set => {
     if (set.parameters[id]) {
@@ -141,6 +160,9 @@ export const REMOVE_PARAMETER = (state, id) => {
   });
 };
 
+/**
+ * SETS a PARAMETER'S value within a particular PARAMETER SET
+ */
 export const SET_PARAMETER = (state, data) => {
   const key = state.parameterKey;
   const set = state.parameterSets[key];

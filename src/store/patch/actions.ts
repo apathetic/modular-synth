@@ -8,9 +8,9 @@ import { PatchState } from '../../types/';
 //  MODULES
 // -----------------------------------------------
 
-export const addModule = ({ commit }, data) => {
-  commit('ADD_MODULE', data);
-};
+// export const addModule = ({ commit }, data) => {
+//   commit('ADD_MODULE', data);
+// };
 
 
 export const removeModule = ({ commit, state, getters, rootState }) => {

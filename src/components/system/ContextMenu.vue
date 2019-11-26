@@ -30,8 +30,7 @@
 </template>
 
 <script>
-  import { EVENT } from '@/events';
-  import * as Modules from '@/components/';
+  import { mapMutations } from 'vuex';
 
   export default {
     data() {
@@ -89,7 +88,7 @@
           return false;
         }
 
-        if (this.$store.getters.editing) {
+        if (this.$store.getters['app/editing']) {
           this.coords = [e.pageX, e.pageY];
         }
       });
@@ -98,15 +97,20 @@
     methods: {
       newModule(type) {
         const offset = document.querySelector('header').offsetHeight;
-
-        this.$store.dispatch('addModule', {
+        const data = {
           type,
           coords: [this.coords[0], this.coords[1] - offset]
-        });
+        };
 
-        this.$bus.$emit(EVENT.MODULE_ADD);
-      }
-    }
+        this.add(data);
+        // this.$store.dispatch('addModule', data);
+        this.$bus.$emit('module:add');
+      },
+
+      ...mapMutations('patch', {
+        add: 'ADD_MODULE'
+      })
+    },
   };
 </script>
 

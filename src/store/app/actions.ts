@@ -58,7 +58,7 @@ export const loadPatch = ({ commit, state }, key?: string) => {
 
     // ...lastly, load parameters
     console.log('%c Setting parameters... ', 'background:#666;color:white;font-weight:bold;');
-    commit('SET_PARAMETERS_KEY', 0);
+    commit('patch/SET_PARAMETERS_KEY', 0, { root: true });
   });
 };
 
