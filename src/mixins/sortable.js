@@ -43,8 +43,8 @@ export const sortable = {
       // WE need two things, here:
       //   - "item": which has row, col coords
       //   - "el": HTMLElement which we'll use to determine the module's actual position in the grid
-      const item = this.$store.getters['activeModule'];
-      var newPosition = this._snapItemPositionToGrid(el, item);
+      const item = this.$store.getters['app/activeModule'];
+      const newPosition = this._snapItemPositionToGrid(el, item);
 
       if (this._dragPositionChanged(newPosition)) {
         this._previousDragPosition = newPosition;
@@ -81,11 +81,12 @@ export const sortable = {
       this.modules.forEach((item) => {
         // Don't interfere with the position of the dragged items. TODO - is this the case...?
         if (this.activeModule !== item) {
-          this.$store.commit('patch/UPDATE_RACK_POSITION', {
+          const item = {
             id: item.id,
             col: item.col,
             row: item.row
-          });
+          };
+          this.$store.commit('patch/UPDATE_RACK_POSITION', item, { root: true });
         }
       });
 

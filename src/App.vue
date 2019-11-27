@@ -51,9 +51,8 @@
 </template>
 
 <script>
-  import Vue from 'vue';
   import { mapState, mapGetters, mapActions } from 'vuex';
-  import { sortable } from './mixins/sortable';
+  // import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
   import masterOut from './components/system/MasterOut.vue';
   import midi from './components/system/Midi.vue';
@@ -82,27 +81,18 @@
     },
 
     computed: {
-      width() {
-        const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
-        return this.editing
-          ? `width: ${canvasWidth}px`
-          : 'width: auto';
-      },
+      ...mapState({
+        power: state => state.app.power,
+        editing: state => state.app.editing,
+        connections: state => state.patch.connections,
+      }),
 
-      ...mapState('app', [
-        'power',
-        'editing',
+      ...mapGetters('app', [
+        'activeModule',
       ]),
-
-      // ...mapState('patch', [
-      //   'connections',
-      // ]),
 
       ...mapGetters('patch', [
         'modules',
-        'connections',
-        'activeModule',
-        'bounds'
       ])
     },
 
@@ -154,12 +144,12 @@
     },
 
     methods: {
-      ...mapActions('app', [
-        'togglePower',
-        'toggleEditMode',
-        'removeModule',
-        'clearActive',
-      ])
+      ...mapActions({
+        togglePower: 'app/togglePower',
+        toggleEditMode: 'app/toggleEditMode',
+        removeModule: 'app/removeModule',
+        clearActive: 'app/clearActive',
+      })
     }
   };
 </script>

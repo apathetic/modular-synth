@@ -7,7 +7,6 @@
     <div class="add" :class="{active: active === 'add'}">
       <h3>New Module:</h3>
       <ul>
-        <!-- <li v-for="(module, i) in ['Analyser', 'Comb', 'Compressor', 'Delay', 'Drive','Env', 'LFO', 'Mixer', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']" -->
         <li v-for="(module, i) in modules" @click="newModule(module)" :key="i">{{ module }}</li>
         <li>---</li>
         <li @click="newModule('Node')">• Node</li>
@@ -30,6 +29,7 @@
 </template>
 
 <script>
+  import * as Modules from '@/components/';
   import { mapMutations } from 'vuex';
 
   export default {
@@ -102,14 +102,13 @@
           coords: [this.coords[0], this.coords[1] - offset]
         };
 
-        this.add(data);
-        // this.$store.dispatch('addModule', data);
+        this.ADD_MODULE(data);
         this.$bus.$emit('module:add');
       },
 
-      ...mapMutations('patch', {
-        add: 'ADD_MODULE'
-      })
+      ...mapMutations('patch', [
+        'ADD_MODULE'
+      ])
     },
   };
 </script>

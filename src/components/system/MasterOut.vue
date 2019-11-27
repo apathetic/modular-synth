@@ -81,7 +81,7 @@
       window.addEventListener(EVENT.RESIZE, this.determinePosition);
       this.modules.addEventListener(EVENT.SCROLL, this.determinePosition);
 
-      this.$store.commit('ADD_TO_REGISTRY', {
+      this.$store.commit('app/ADD_TO_REGISTRY', {
         id: 0,
         node: this,
       });
@@ -113,7 +113,7 @@
           id: 0,
           x: x,
           y: y
-        });
+        }, { root: true });
       },
 
       // VUEX actions, bound as local methods:

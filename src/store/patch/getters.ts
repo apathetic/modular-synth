@@ -17,9 +17,5 @@ export const parameters = (state: PatchState): Parameter[] => (
 
 export const parametersName = (state: PatchState) => {
   const key = state.parameterKey;
-
   return (state.parameterSets[key] && state.parameterSets[key].name) || '';
 };
-
-export const activeModule = (state, getters) => getters.modules.find((m) => m.id === state.active);
-export const bounds = (state, getters) => getters.modules.reduce((max, mod) => Math.max(max, mod.x), 0);

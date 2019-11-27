@@ -42,7 +42,7 @@
     },
 
     mounted() {
-      this.$store.commit('ADD_TO_REGISTRY', {
+      this.$store.commit('app/ADD_TO_REGISTRY', {
         id: this.id,
         node: this.$children[0], // this.$slots.default
       });

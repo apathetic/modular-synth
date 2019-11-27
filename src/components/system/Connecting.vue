@@ -30,7 +30,7 @@ export default {
    */
   created() {
     this.$bus.$on('connection:start', (port, id) => {
-      this.from = this.$store.getters.module(id);
+      this.from = this.$store.getters['patch/module'](id);
       this.port = port;
       this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
       this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
@@ -64,16 +64,17 @@ export default {
       const target = event.toElement || event.relatedTarget || event.target || false;
       const port = target.getAttribute('data-port');
 
-      if (target && port) {                          // NOTE: port is a String, so "0" is cool here
-        const focused = this.$store.getters.focused; // ironically, we dont even use the target to fetch the Component
+      if (target && port) { // NOTE: port is a String, so "0" is cool here
+        // ironically, we dont even use the target to fetch the Component:
+        const focused = this.$store.getters['app/focused'];
 
-        this.to = this.$store.getters.module(focused);
+        this.to = this.$store.getters['patch/module'](focused);
 
         if (
           this.to.id !== this.from.id &&            // if not circular connection
           this.isUnique()                           // is not a duplicated connection
         ) {
-          this.$store.commit('ADD_CONNECTION', {
+          this.$store.commit('patch/ADD_CONNECTION', {
             to: {
               id: this.to.id,
               port: +port // parseInt(port)
@@ -82,7 +83,7 @@ export default {
               id: this.from.id,
               port: this.port
             }
-          });
+          }, { root: true });
         }
       }
 

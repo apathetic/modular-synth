@@ -79,7 +79,7 @@
 
       // TODO duplication w/ mixins/Parameter.js
       fetchValue() {
-        const value = this.$store.getters.parameters[this.id] || this.options[0];
+        const value = this.$store.getters['patch/parameters'][this.id] || this.options[0];
 
         this.$emit('value', value);
         this.selected = this.options.indexOf(value);

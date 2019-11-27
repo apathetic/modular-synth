@@ -75,7 +75,7 @@
           ? `width: ${canvasWidth}px`
           : 'width: auto';
       },
-      ...mapGetters([
+      ...mapGetters('app', [
         'editing',
         'bounds',
       ])
@@ -132,7 +132,7 @@
     },
 
     methods: {
-      ...mapActions([
+      ...mapActions('app', [
         'setActive',
         'clearActive',
         'setFocus',

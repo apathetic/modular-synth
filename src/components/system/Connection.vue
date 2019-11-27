@@ -43,7 +43,13 @@
        */
       dest() {
         const node = this.node(this.to.id); // audio stuffs
-        if (!node) { this.logError('node not registered'); return; }
+
+        if (!node) {
+          console.warn('Connection: possible error, could not find a Node with id: ', this.to.id);
+          this.$destroy();
+          return;
+        }
+
         // const module = this.module(this.to.id); // UI stuffs
         const module = this.to.id === 0 ? node : node.$parent; // UI stuffs
 
@@ -78,10 +84,9 @@
         };
       },
 
-      ...mapGetters([
-        'node',    // audio
-        // 'module',  // UI
-      ])
+      ...mapGetters({
+        node: 'app/node'
+      })
     },
 
     data() {

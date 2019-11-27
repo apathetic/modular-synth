@@ -85,7 +85,7 @@ is a "freq" parameter in the parent Component.
       //  */
       // value: {
       //   get() {
-      //     return this.$store.getters.parameters[this.id] || this.default || 0;
+      //     return this.$store.getters['patch/parameters'][this.id] || this.default || 0;
       //   },
 
       //   set(value) {

@@ -19,7 +19,7 @@ const dragObj = {
 export const draggable = {
   computed: {
     position() {
-      const compute = this.$store.getters.editing || this.isDragging;
+      const compute = this.$store.getters['app/editing'] || this.isDragging;
       return {
         left: (compute) ? this.x + 'px' : this.module.col * rackWidth + 'px',
         top: (compute) ? this.y + 'px' : this.module.row * rackHeight + 'px'
@@ -81,20 +81,21 @@ export const draggable = {
       this.isDragging = false;
       this.$bus.$emit(EVENT.DRAG_END, this.id);
 
-      if (this.$store.getters.editing) {      // TODO && cursorStartY != this.y etc
+      if (this.$store.getters['app/editing']) {      // TODO && cursorStartY != this.y etc
         // we only want to update the Store with the
         // new coordinates if we are in editing mode:
-        this.$store.commit('UPDATE_GRID_POSITION', {
+        const item = {
           id: this.module.id,
           x: this.x,
           y: this.y
-        });
+        };
+        this.$store.commit('patch/UPDATE_GRID_POSITION', item, { root: true });
       } else {
         // otherwise, restore the x,y coordinates -- we don't want the
         // module to have moved around when we switch out of play mode
         // const active = this.$store.state.app.active;
-        // const module = this.$store.getters.module(active);
-        const module = this.$store.getters.activeModule;
+        // const module = this.$store.getters['patch/module'](active);
+        const module = this.$store.getters['app/activeModule'];
 
         this.x = module.x;
         this.y = module.y;

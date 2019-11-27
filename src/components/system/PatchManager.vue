@@ -50,7 +50,7 @@
 <script>
 import Auth from './Auth';
 // import SignIn from './SignIn';
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import { EVENT } from '../../events';
 
 export default {
@@ -72,7 +72,7 @@ export default {
         return this.$store.state.app.patchKey;
       },
       set(key) {
-        this.$store.commit('app/SET_KEY', key);
+        this.SET_KEY(key);
       }
     },
 
@@ -81,7 +81,7 @@ export default {
         return this.$store.state.patch.parameterKey;
       },
       set(key) {
-        this.$store.commit('patch/SET_PARAMETERS_KEY', key, { root:true });
+        this.SET_PARAMETERS_KEY(key);
       }
     },
 
@@ -90,14 +90,13 @@ export default {
         return this.$store.state.patch.name;
       },
       set(value) {
-        this.$store.commit('patch/SET_NAME', value);
+        this.SET_NAME(value);
       }
     },
 
-    ...mapState('patch', {
-      parameterSets: 'parameterSets',
-      // currentParamsKey: 'parameterKey'
-    }),
+    ...mapState('patch', [
+      'parameterSets',
+    ]),
 
     ...mapState('app', [
       'patches',
@@ -114,7 +113,7 @@ export default {
 
   watch: {
     currentParamsName: function(value) {
-      this.$store.commit('SET_PARAMETERS_NAME', value);
+      this.SET_PARAMETERS_NAME(value);
     }
   },
 
@@ -183,18 +182,17 @@ export default {
     // -----------------
 
     addParams() {
-      this.$store.commit('ADD_PARAMETERS');
+      this.ADD_PARAMETERS();
       this.currentParamsKey = this.parameterSets.length - 1;
-
       this.paramsIndex = this.$refs.params.selectedIndex = this.parameterSets.length;
     },
 
     removeParams(id) {
       const confirm = window.confirm('Delete ' + this.currentParamsName + '?');
 
-      if (this.$store.getters.parameterSets.length <= 1 || !confirm) { return; }
+      if (this.$store.getters['patch/parameterSets'].length <= 1 || !confirm) { return; }
 
-      this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
+      this.REMOVE_PARAMETERS(this.currentParamsKey);
       this.paramsIndex = this.$refs.params.selectedIndex = 1;
       this.currentParamsKey = 0;
     },
@@ -202,9 +200,8 @@ export default {
     selectParams(e) {
       this.currentParamsKey = e.target.value;
       this.paramsIndex = e.target.selectedIndex;
-        // this.$store.commit('SET_PARAMETERS_KEY', key);
 
-      this.$store.commit('SET_PARAMETERS_KEY', this.currentParamsKey);
+      this.SET_PARAMETERS_KEY(this.currentParamsKey);
       this.$bus.$emit(EVENT.PARAMETERS_LOAD);
       console.log('%c Fetching parameters ', 'background:#666;color:white;font-weight:bold;');
     },
@@ -216,7 +213,19 @@ export default {
       'loadPatch',
       'addPatch',
       'removePatch'
-    ])
+    ]),
+
+    ...mapMutations('app', [
+      'SET_KEY'
+    ]),
+
+    ...mapMutations('patch', [
+      'ADD_PARAMETERS', // ?
+      'REMOVE_PARAMETERS', // ?
+      'SET_PARAMETERS_KEY',
+      'SET_PARAMETERS_NAME',
+      'SET_NAME',
+    ]),
   }
 };
 

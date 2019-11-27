@@ -4,7 +4,7 @@
  * @type {Object}
  */
 
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { EVENT } from '../events';
 
 export const parameter = {
@@ -71,7 +71,7 @@ export const parameter = {
   },
 
   destroyed() {
-    this.$store.commit('REMOVE_PARAMETER', this.id);
+    this.REMOVE_PARAMETER(this.id);
     this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
     window.removeEventListener(EVENT.MOUSE_UP, this.mouseup);
     window.removeEventListener(EVENT.MOUSE_MOVE, this.mousemove);
@@ -80,7 +80,9 @@ export const parameter = {
   },
 
   computed: {
-    ...mapGetters(['parameterKey'])
+    ...mapState({
+      parameterKey: state => state.parameterKey
+    })
   },
 
   watch: {
@@ -116,7 +118,7 @@ export const parameter = {
       this.value = this.computeValue(internalValue);
 
       this.$emit('value', this.value); // update parent w/ value
-      this.$store.commit('SET_PARAMETER', {
+      this.SET_PARAMETER({
         id: this.id,
         value: this.value
       });
@@ -142,17 +144,25 @@ export const parameter = {
       }
     },
 
+    /**
+     *
+     */
     fetchValue() {
       /*
       NOTE: this is only necessary when the parameterSet does *not* contain values for
       all parameters. In essence, this function will update itself when the parameterSet
       is changed, to either the value in the $store (if it exists) or the default value.
       */
-      this.value = this.$store.getters.parameters[this.id] || this.default || 0;
+      this.value = this.$store.getters['patch/parameters'][this.id] || this.default || 0;
       this.internalValue = this.computeValue(this.value, true);
       this.$emit('value', this.value);
 
       console.log('%c[parameter] %s %s set to %f', 'color: orange', this.param, this.type, this.value);
-    }
+    },
+
+    ...mapMutations('patch', [
+      'SET_PARAMETER',
+      'REMOVE_PARAMETER',
+    ]),
   }
 };
