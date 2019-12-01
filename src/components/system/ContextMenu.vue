@@ -30,80 +30,80 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      active: '',
-      coords: []
-    };
-  },
-
-  computed: {
-    visible() {
-      return !!this.coords.length;
+  export default {
+    data() {
+      return {
+        active: '',
+        coords: []
+      };
     },
 
-    position() {
-      return {
-        left: this.coords[0] + 'px' || 0,
-        top: this.coords[1] + 'px' || 0
-      };
-    }
-  },
+    computed: {
+      visible() {
+        return !!this.coords.length;
+      },
 
-  created() {
-    window.addEventListener('click', (e) => {
-      this.coords = [];
-    });
-
-    window.addEventListener('keydown', (e) => {
-      switch (e.code) {
-        case 'Escape':
-          this.coords = [];
-          break;
-        default:
-          // console.log(e.code);
+      position() {
+        return {
+          left: this.coords[0] + 'px' || 0,
+          top: this.coords[1] + 'px' || 0
+        };
       }
-    });
-  },
+    },
 
-  mounted() {
-    const header = document.querySelector('header');
-    const grid = document.querySelector('#modules');
-
-    document.body.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-
-      // if (header === e.target || header.contains(e.target)) {
-      //   this.active = 'file';
-      // } else
-      if (grid === e.target || grid.contains(e.target)) {
-        this.active = 'add';
-      } else {
+    created() {
+      window.addEventListener('click', (e) => {
         this.coords = [];
-        this.active = '';
-        return false;
-      }
-
-      if (this.$store.getters.editing) {
-        this.coords = [e.pageX, e.pageY];
-      }
-    });
-  },
-
-  methods: {
-    newModule(type) {
-      const offset = document.querySelector('header').offsetHeight;
-
-      this.$store.dispatch('addModule', {
-        type,
-        coords: [this.coords[0], this.coords[1] - offset]
       });
 
-      this.$bus.$emit('module:add');
+      window.addEventListener('keydown', (e) => {
+        switch (e.code) {
+          case 'Escape':
+            this.coords = [];
+            break;
+          default:
+            // console.log(e.code);
+        }
+      });
+    },
+
+    mounted() {
+      const header = document.querySelector('header');
+      const grid = document.querySelector('#modules');
+
+      document.body.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+
+        // if (header === e.target || header.contains(e.target)) {
+        //   this.active = 'file';
+        // } else
+        if (grid === e.target || grid.contains(e.target)) {
+          this.active = 'add';
+        } else {
+          this.coords = [];
+          this.active = '';
+          return false;
+        }
+
+        if (this.$store.getters.editing) {
+          this.coords = [e.pageX, e.pageY];
+        }
+      });
+    },
+
+    methods: {
+      newModule(type) {
+        const offset = document.querySelector('header').offsetHeight;
+
+        this.$store.dispatch('addModule', {
+          type,
+          coords: [this.coords[0], this.coords[1] - offset]
+        });
+
+        this.$bus.$emit('module:add');
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss">

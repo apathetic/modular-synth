@@ -79,7 +79,7 @@
     created() {
       this.id = this.module.id; // NOTE: this is the ID used by the Connector to route audio
 
-      console.log('%c[component] Creating %s', 'color: blue', this.module.type);
+      console.log('%c[component] Creating %s', 'color: green', this.module.type);
     },
 
     destroyed() {
