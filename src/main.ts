@@ -1,14 +1,16 @@
 import Vue from 'vue';
 import store from './store';
 import Synth from './Synth.vue';
+import CompositionAPI from '@vue/composition-api';
 import inlets from './components/system/Inlets.vue';
 import outlets from './components/system/Outlets.vue';
-import './registerServiceWorker';
 import { auth } from './store/firebase';
 import { context } from './audio';
+import './registerServiceWorker';
 
 
 Vue.config.productionTip = false;
+Vue.use(CompositionAPI);
 
 
 

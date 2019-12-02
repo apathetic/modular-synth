@@ -1,10 +1,16 @@
 <template>
-  <main data-v-context-menu>
+  <main data-v-context-menu:modules>
     <patch-manager></patch-manager>
 
-    <section :class="editing ? 'edit-mode': 'play-mode'">
+    <section :class="editing ? 'edit-mode': 'play-mode'"  @click.left="clearActive">
 
-      <div id="modules" ref="grid" @click.left="clearActive">
+      <Rack
+        :modules="modules"
+        :connections="connections"
+      />
+
+    <!--
+      <div id="modules" ref="grid">
         <div class="position-highlight">
           <div class="inner"></div>
         </div>
@@ -25,11 +31,11 @@
             :to="connection.to"
             :from="connection.from"
             :key="connection.id"
-
             @mousedown.native="setActive(connection.id)">
           </connection>
         </svg>
       </div>
+    -->
 
       <aside id="sidebar">
         <div class="controls pad">
@@ -73,7 +79,6 @@
 </template>
 
 <script>
-  import Vue from 'vue';
   import { mapGetters, mapActions } from 'vuex';
   import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
@@ -85,10 +90,14 @@
   import patchManager from './components/system/PatchManager.vue';
   import contextMenu from './components/system/ContextMenu.vue';
 
+  import Rack from './components/system/Rack/';
+
   export default {
+    name: 'Synth',
     mixins: [sortable],
 
     components: {
+      Rack,
       masterOut,
       connecting,
       connection,
@@ -124,44 +133,6 @@
 
     created() {
       console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold');
-
-      this.$bus.$on(EVENT.DRAG_START, (coords, el) => {
-        if (!this.editing) {
-          this.startSorting(); // from sortable mixin
-        }
-      });
-
-      this.$bus.$on(EVENT.DRAG_ACTIVE, (coords, el) => {
-        if (!this.editing) {
-          this.whileSorting(el); // from sortable mixin
-        }
-      });
-
-      this.$bus.$on(EVENT.DRAG_END, () => {
-        if (!this.editing) {
-          this.stopSorting(); // from sortable mixin
-        }
-      });
-
-      this.$bus.$on(EVENT.APP_SORT, () => {
-        this.initSorting(this.$refs.grid);
-      });
-
-      this.$bus.$on(EVENT.MODULE_ADD, () => {
-        this.$nextTick(function() {
-          const item = this.modules.slice(-1)[0]; // get last (newest) item
-
-          this.gridList.items = this.modules;
-          this.gridList.moveItemToPosition(item, [0, 0]);
-        });
-      });
-
-      this.$bus.$on(EVENT.MODULE_REMOVE, () => {
-        this.$nextTick(() => {
-          this.gridList.items = this.modules;
-          this.gridList._pullItemsToLeft();
-        });
-      });
 
       window.addEventListener(EVENT.KEY_DOWN, (e) => {
         switch (e.key) {
@@ -202,12 +173,12 @@
     },
 
     mounted() {
-      const grid = this.$refs.grid; // rare time we need to scrape DOM.
-      grid.addEventListener(EVENT.SCROLL, (e) => {
-        if (this.editing) {
-          this.$store.commit('UPDATE_SCROLL_OFFSET', e.target.scrollLeft);
-        }
-      });
+      // const grid = this.$refs.grid; // rare time we need to scrape DOM.
+      // grid.addEventListener(EVENT.SCROLL, (e) => {
+      //   if (this.editing) {
+      //     this.$store.commit('UPDATE_SCROLL_OFFSET', e.target.scrollLeft);
+      //   }
+      // });
     },
 
     methods: {

@@ -45,7 +45,7 @@ THOUGHTS:
 
 <template>
   <line
-    @click="removeConnection(id)"
+    @click="removeConnection"
     :x1="x1"
     :y1="y1"
     :x2="x2"
@@ -56,6 +56,7 @@ THOUGHTS:
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
   import { cellWidth } from '../../constants';
   import { Parameter } from '../../audio';
 
@@ -78,7 +79,30 @@ THOUGHTS:
       },
       y2() {
         return this.dest.coords.y + (this.to.port * 20) + 27;
-      }
+      },
+
+      // dest() {
+      //   const to = this.module(to.id); // GAAAH not the actual module, but the data representing it in the $store
+      //   return to ? {
+      //     id: to.id,
+      //     coords: to, // note, also get a bunch of other things...
+      //     module: to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
+      //     // inlets: to.module.inlets,
+      //     // name: to.module.name,
+      //   } : undefined;
+      // },
+      // source() {
+      //   const from = this.module(this.from.id);
+      //   return from ? {
+      //     id: from.id,
+      //     coords: from,
+      //     module: from.$children[0],
+      //   } : undefined;
+      // },
+
+      ...mapGetters([
+        'module'
+      ])
     },
 
     data() {
@@ -181,13 +205,17 @@ THOUGHTS:
        */
       getToAndFromModules() {
         try {
-          const modules = this.$parent.$children;
+          // NOTE: these are _rendered_ modules in the App -- not the `modules` from the store
+          const modules = this.$parent.$children; // all <Connections> are $children of <Rack>
+
+          // root > Synth > MasterOut
+          const masterOut = this.$root.$children[0].$children.find(m => m.id === 0);
           const from = modules.find((m) => m.id === this.from.id);
-          const to = modules.find((m) => m.id === this.to.id);
+          const to = modules.find((m) => m.id === this.to.id) || masterOut;
 
           this.dest = {
             coords: to,
-            module: this.to.id === 0 ? to : to.$children[0], // compensate for (new) module wrapper
+            module: this.to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
             id: this.to.id
           };
 
@@ -198,6 +226,8 @@ THOUGHTS:
           };
         } catch (e) {
           this.logError(e);
+          this.removeConnection();
+          // this.$destroy();
         }
       },
 
@@ -207,8 +237,8 @@ THOUGHTS:
           this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
       },
 
-      removeConnection(id) {
-        this.$store.commit('REMOVE_CONNECTION', id);
+      removeConnection() {
+        this.$store.commit('REMOVE_CONNECTION', this.id);
       }
     }
   };

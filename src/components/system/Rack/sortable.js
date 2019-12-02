@@ -43,7 +43,9 @@ export const sortable = {
       // WE need two things, here:
       //   - "item": which has row, col coords
       //   - "el": HTMLElement which we'll use to determine the module's actual position in the grid
+      // var item = this.activeModule; // NOTE: active is available via App.vue in a vuex getter
       const item = this.$store.getters['activeModule'];
+
       var newPosition = this._snapItemPositionToGrid(el, item);
 
       if (this._dragPositionChanged(newPosition)) {
