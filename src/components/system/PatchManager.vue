@@ -1,6 +1,6 @@
 <template>
   <header
-    v-context-menu:file
+    xxxx-v-contextmenu:file
     class="patch-manager pad"
     :class="{
       'active':  $root.authenticated,
@@ -140,6 +140,7 @@ export default {
         // console.log('%c Setting parameters ', 'background:#666;color:white;font-weight:bold;');
         // this.$bus.$emit(EVENT.PARAMETERS_LOAD);
         this.$bus.$emit(EVENT.APP_SORT);
+
         // import { initSort } from Grid/sortable';
         // initSort();
       });

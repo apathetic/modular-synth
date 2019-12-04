@@ -2,7 +2,7 @@
   <div
     id="modules"
     ref="grid"
-    v-context-menu:modules
+    v-contextmenu:modules
   >
     <div class="position-highlight">
       <div class="inner"></div>

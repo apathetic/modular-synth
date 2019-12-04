@@ -8,10 +8,12 @@ import { auth } from './store/firebase';
 import { context } from './audio';
 import './registerServiceWorker';
 
+import contextmenu from '@/plugins/contextmenu.ts';
+
 
 Vue.config.productionTip = false;
 Vue.use(CompositionAPI);
-
+Vue.directive('contextmenu', contextmenu);
 
 
 // Extend the Vue proto with two props:
