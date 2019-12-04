@@ -1,5 +1,6 @@
 <template>
   <header
+    v-context-menu:file
     class="patch-manager pad"
     :class="{
       'active':  $root.authenticated,

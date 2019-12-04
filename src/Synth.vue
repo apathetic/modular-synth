@@ -1,5 +1,5 @@
 <template>
-  <main data-v-context-menu:modules>
+  <main>
     <patch-manager></patch-manager>
 
     <section :class="editing ? 'edit-mode': 'play-mode'"  @click.left="clearActive">
@@ -8,34 +8,6 @@
         :modules="modules"
         :connections="connections"
       />
-
-    <!--
-      <div id="modules" ref="grid">
-        <div class="position-highlight">
-          <div class="inner"></div>
-        </div>
-
-        <module v-for="module in modules"
-          :module="module"
-          :key="module.id"
-
-          @mousedown.native="setActive(module.id)"
-          @mouseover.native="setFocus(module.id)"
-          @mouseout.native="clearFocus()">
-        </module>
-
-        <svg id="connections" :style="width">
-          <connecting></connecting>
-          <connection v-for="connection in connections"
-            :id="connection.id"
-            :to="connection.to"
-            :from="connection.from"
-            :key="connection.id"
-            @mousedown.native="setActive(connection.id)">
-          </connection>
-        </svg>
-      </div>
-    -->
 
       <aside id="sidebar">
         <div class="controls pad">
@@ -172,24 +144,12 @@
       });
     },
 
-    mounted() {
-      // const grid = this.$refs.grid; // rare time we need to scrape DOM.
-      // grid.addEventListener(EVENT.SCROLL, (e) => {
-      //   if (this.editing) {
-      //     this.$store.commit('UPDATE_SCROLL_OFFSET', e.target.scrollLeft);
-      //   }
-      // });
-    },
-
     methods: {
       ...mapActions([
         'togglePower',
         'toggleEditMode',
         'removeModule',
-        'setActive',
         'clearActive',
-        'setFocus',
-        'clearFocus'
       ])
     }
   };
