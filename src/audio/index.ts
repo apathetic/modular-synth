@@ -1,12 +1,32 @@
 // namespace µ {
 
+interface Node {
+  inlets?: [
+    // {
+    //   label
+    //   desc
+    //   type type: 'audio' | 'data';
+    // }
+  ];
+  outlets?: [];
+}
+
 /**
  * The application's audio context.
  * @type {AudioContext}
  */
 export const context: AudioContext = AudioContext && new AudioContext();
 
+/**
+ * Store references to all WebAudio components. They are indexed by
+ * `id` - the same `id` used to referece the `module` in teh $store.
+ */
+type Nodes = {[value: number]: Node};
+export const registry: Nodes = {};
 
+/**
+ *
+ */
 type Constants = {[value: number]: AudioBufferSourceNode};
 const constants: Constants = {};  // memoize this shizz??
 

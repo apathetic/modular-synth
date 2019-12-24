@@ -58,7 +58,7 @@ THOUGHTS:
 <script>
   import { mapGetters } from 'vuex';
   import { cellWidth } from '../../constants';
-  import { Parameter } from '../../audio';
+  import { Parameter, registry } from '@/audio';
 
   export default {
     props: {
@@ -81,16 +81,18 @@ THOUGHTS:
         return this.dest.coords.y + (this.to.port * 20) + 27;
       },
 
-      // dest() {
-      //   const to = this.module(to.id); // GAAAH not the actual module, but the data representing it in the $store
-      //   return to ? {
-      //     id: to.id,
-      //     coords: to, // note, also get a bunch of other things...
-      //     module: to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
-      //     // inlets: to.module.inlets,
-      //     // name: to.module.name,
-      //   } : undefined;
-      // },
+      destX() {
+        const to = registry[this.to.id]; // <Unit>
+        const module = to.$children[0];  // <VCO>, eg
+
+        return to ? {
+          id: this.to.id,
+          coords: to, // note, also get a bunch of other things...
+          // module: to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
+          inlets: to.$children[0].inlets,
+          // name: to.module.name,
+        } : undefined;
+      },
       // source() {
       //   const from = this.module(this.from.id);
       //   return from ? {
@@ -119,7 +121,9 @@ THOUGHTS:
     },
 
     created() {
-      this.getToAndFromModules();
+      console.log(registry);
+
+      // this.getToAndFromModules();
       this.route();
     },
 
@@ -136,8 +140,8 @@ THOUGHTS:
        * @return {Void}
        */
       route(connect = true) {
-        const outlet = this.source.module.outlets[this.from.port];
         const inlet = this.dest.module.inlets[this.to.port];
+        const outlet = this.source.module.outlets[this.from.port];
 
         try {
           if (outlet.audio && inlet.audio) {
@@ -201,14 +205,15 @@ THOUGHTS:
           //
         } catch (e) {
           this.logError(e);
+          this.removeConnection();
         }
       },
 
       /**
-       * Fetch a Vue Component from the App, given a particular id.
-       * NOTE: we fetch the Module from the App (not the Store), as that is what
-       *       contains the actual AudioNode.
-       * @type {Number} id The id of the module to fetch.
+       * Fetch an _AudioNode_ from the App, given a particular id.
+       * NOTE: we are _not_ fetching the Vue Component -- we need the
+       * actual WebAudio interface.
+       * @type {Number} id The id of the node to fetch.
        */
       getToAndFromModules() {
         try {

@@ -12,7 +12,7 @@
 
 <script>
   import { draggable } from '@/mixins/draggable';
-  import { context } from '@/audio';
+  import { context, registry } from '@/audio';
   import { moduleSize } from '@/constants';
 
   export default {
@@ -32,12 +32,25 @@
 
     created() {
       this.id = this.module.id; // NOTE: this is the ID used by the Connector to route audio
-
       console.log('%c[component] Creating %s', 'color: green', this.module.type);
+    },
+
+    mounted() {
+      // register MODULE in global MODULE REGiSTRY
+      // const { registry } = import '@/audio'
+      // registry[this.id] = this.$children[0];
+
+      // registry[this.id] = {
+      //   coords: {x:this.x, y:this.y},
+      //   inlets: this.$children.inlets
+      //   outlets:
+      // }
+
     },
 
     destroyed() {
       console.log('Destroying %s ', this.module.type);
+      delete registry[this.id];
     }
   };
 </script>
