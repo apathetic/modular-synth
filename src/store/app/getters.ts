@@ -1,8 +1,10 @@
-import { AppState } from '../../types/';
 
-export const patches = (state: AppState) => state.patches;
-export const power = (state: AppState) => state.power;
-export const editing = (state: AppState) => state.editing;
-export const focused = (state: AppState) => state.focused;
-export const activeModule = (state: AppState, getters) => getters.modules.find((module) => module.id === state.active);
+// these shoud use mapState
+export const patches = (state) => state.patches;
+export const power = (state) => state.power;
+export const editing = (state) => state.editing;
+export const focused = (state) => state.focused;
+
+// these are getters
+export const activeModule = (state, getters) => getters.modules.find((module) => module.id === state.active);
 export const bounds = (state, getters) => getters.modules.reduce((max, module) => Math.max(max, module.x), 0);

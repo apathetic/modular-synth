@@ -48,7 +48,7 @@
   import Connection from '@/components/system/Connection.vue';
   import Modules from '@/components/';
   import Unit from './Unit';
-  import Debugger from '@/components/Debugger';
+  import Debugger from '@/components/test/Debugger';
 
   export default {
     provide: [ context ],

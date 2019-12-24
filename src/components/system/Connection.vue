@@ -158,8 +158,13 @@ THOUGHTS:
             console.log('CONNECTION FROM DAT TO AUDIO ', this.from.id, this.to.id);
             const interpolator = new Parameter(0);
 
-            // this.source.module.$watch(outlet.data, interpolator.set);
-            this.$watch(outlet.data, interpolator.set);
+
+
+            this.source.module.$watch(outlet.data, interpolator.set);
+            // this.$watch(outlet.data, interpolator.set);
+
+
+
             interpolator.output.connect(inlet.audio);
 
             //
@@ -174,8 +179,8 @@ THOUGHTS:
               // "this.unwatch" is a fn that removes itself
               // "action" is a string -- is refers us to the property on source.module that should be watched;
               // ... when it is changed, the receiver function, "update" (on toModule), is fired with the new value.
-              // this.unwatch = this.source.module.$watch(action, update);
-              this.unwatch = this.$watch(action, update);
+              this.unwatch = this.source.module.$watch(action, update);
+              // this.unwatch = this.$watch(action, update);
               this.stroke = '#999';
               // this.fromModule.$on(action, update);
 
@@ -207,21 +212,22 @@ THOUGHTS:
        */
       getToAndFromModules() {
         try {
-          // TODO filter this.
-          // It contains patchmanager, midi, etc.  Computed prop?
-          // BRITTLE. Depends on Connection / Module being direct children of App
+          // NOTE: these are _rendered_ modules in the App -- not the `modules` from the
 
-          // const modules = this.$parent.$children;
-          const modules = this.$root.$children[0].$children;
+          // BRITTLE. Depends on Connection / Module being direct children of <Rack>
+          const modules = this.$parent.$children; // should be <Rack>.
+
+          // root > Synth > MasterOut
+          const masterOut = this.$root.$children[0].$children.find(m => m.id === 0);
 
           const from = modules.find((m) => m.id === this.from.id);
-          const to = modules.find((m) => m.id === this.to.id);
+          const to = modules.find((m) => m.id === this.to.id) || masterOut;
           const node = this.to.id === 0 ? to : to.$children[0];
 
           this.dest = {
             id: this.to.id,
             coords: to,
-            module: this.to.id === 0 ? to : to.$children[0],
+            module: this.to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
 
             name: node.name,
             inlets: node.inlets
