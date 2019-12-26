@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { api, generateKey } from '../firebase';
 import { _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME, state as DEFAULT } from '../patch';
-import { AppState, PatchState } from '../../types/';
+import { PatchState } from '../../types/';
 
 
 // -----------------------------------------------
@@ -12,7 +12,7 @@ import { AppState, PatchState } from '../../types/';
  * Load a Patch from the Store; patches that have been previously fetched and
  * cached may be loaded directly, else fallback to localStorage.
  * @param  {[type]} commit [description]
- * @param  {AppState} state [description]
+ * @param  {PatchState} state [description]
  * @param  {string} key The key of the patch to load
  * @return {void}
  */

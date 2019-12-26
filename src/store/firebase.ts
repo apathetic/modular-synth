@@ -1,17 +1,18 @@
 import config from '../../config.js';
-import * as firebase from 'firebase/app';
-import 'firebase/auth';     // import auth into firebase namespace
-import 'firebase/database'; // import database into firebase namespace
 import { state as DEFAULT } from './patch';
 import { API } from '../types/firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';     // import auth into firebase namespace
+import 'firebase/database';
 
 
 firebase.initializeApp(config);
-
 const database = firebase.database();
 
-export const auth = firebase.auth();
+export const auth = firebase.auth(); // createAuth();
 export const provider = new firebase.auth.GoogleAuthProvider();
+
+
 
 
 /**
@@ -26,6 +27,7 @@ export const provider = new firebase.auth.GoogleAuthProvider();
 //     return v.toString(16);
 //   });
 // }
+
 
 /**
  * Generate a "Firebase friendly" unique identifier that may be sorted lexigraphically.
@@ -56,7 +58,6 @@ export function generateKey() {
 
   return result;
 }
-
 
 
 /**

@@ -1,6 +1,7 @@
 import Vue from 'vue';
-import store from './store';
 import Synth from './Synth.vue';
+import { createStore } from './store';
+// import { createRouter } from './router';
 import CompositionAPI from '@vue/composition-api';
 import inlets from './components/system/Inlets.vue';
 import outlets from './components/system/Outlets.vue';
@@ -14,6 +15,9 @@ import contextmenu from '@/plugins/contextmenu.ts';
 Vue.config.productionTip = false;
 Vue.use(CompositionAPI);
 Vue.directive('contextmenu', contextmenu);
+
+const store = createStore();
+// const router = createRouter();
 
 
 // Extend the Vue proto with two props:
@@ -43,6 +47,7 @@ Vue.component('outlets', outlets);
 
 
 new Vue({
+  // router,
   store,
   data: {
     bus: new Vue(),

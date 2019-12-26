@@ -69,13 +69,14 @@ export interface Parameter {
 }
 
 export interface Inlet {
-  data?: Function;
+  // data: () => void | audio: AudioNode;
   audio?: AudioNode;
+  data?: () => void;
   label?: string;
   desc?: string;
 }
 export interface Outlet {
-  data?: Function;
+  data?: () => void;
   audio?: AudioNode;
   label?: string;
   desc?: string;
