@@ -1,15 +1,8 @@
 THE Connector provides a visual representation of the connection between two
 modules (aka a line) as well as the audio connection information in each module.
 
-Required (to/from):
-audioNode
-port
-x
-y
-
-
 The Connector will bind to each module's x,y coordinates to provide real-time
-updates for each end of the line. It will also bind the audio inputs / outputs
+updates for each line endpoint. It will also bind the audio inputs / outputs
 in each module, so that audio connections can be made.
 
 In the Store, we have "to" and "from" info in the following format:
@@ -55,10 +48,11 @@ THOUGHTS:
   </line>
 </template>
 
+
 <script>
   import { mapGetters } from 'vuex';
-  import { cellWidth } from '../../constants';
-  import { Parameter, registry } from '@/audio';
+  import { cellWidth } from '@/constants';
+  import { Parameter } from '@/audio';
 
   export default {
     props: {
@@ -81,36 +75,45 @@ THOUGHTS:
         return this.dest.coords.y + (this.to.port * 20) + 27;
       },
 
-      // For reference
-      // {
-      //   node: { inlets },
-      //   coords: { x, y }
-      //   name: ... // for logging
-      // }
-      destX() {
-        const to = registry[this.to.id]; // <Unit>
-        const module = to.$children[0];  // <VCO>, eg
+      /**
+       * Calculate destination information
+       *   - audio inlets
+       *   - UI coords
+       */
+      dest() {
+        const node = this.node(this.to.id); // audio stuffs
+        const module = this.module(this.to.id); // UI stuffs
 
-        return to ? {
-          id: this.to.id,
-          coords: to, // note, also get a bunch of other things...
-          // module: to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
-          inlets: to.$children[0].inlets,
-          // name: to.module.name,
-        } : undefined;
+        return {
+          name: module.type,
+          coords: { x: module.x, y: module.y },
+          node,
+          // inlets: node.inlets,
+        };
       },
-      // source() {
-      //   const from = this.module(this.from.id);
-      //   return from ? {
-      //     id: from.id,
-      //     coords: from,
-      //     module: from.$children[0],
-      //   } : undefined;
-      // },
 
-      // ...mapGetters([
-      //   'module'
-      // ])
+      /**
+       * Calculate source information
+       *   - audio outlets
+       *   - UI coords
+       * @return {Node}
+       */
+      source() {
+        const node = this.node(this.from.id); // audio stuffs
+        const module = this.module(this.from.id); // UI stuffs
+
+        return {
+          name: module.type,
+          coords: { x: module.x, y: module.y },
+          node,
+          // outlets: node.outlets,
+        };
+      },
+
+      ...mapGetters([
+        'node',    // audio
+        'module',  // UI
+      ])
     },
 
     data() {
@@ -120,9 +123,6 @@ THOUGHTS:
     },
 
     created() {
-      console.log(registry);
-
-      this.getToAndFromModules();
       this.route();
     },
 
@@ -140,7 +140,7 @@ THOUGHTS:
        */
       route(connect = true) {
         const inlet = this.dest.node.inlets[this.to.port];
-        const outlet = this.source.module.outlets[this.from.port];
+        const outlet = this.source.node.outlets[this.from.port];
 
         try {
           if (outlet.audio && inlet.audio) {
@@ -163,7 +163,7 @@ THOUGHTS:
 
 
 
-            this.source.module.$watch(outlet.data, interpolator.set);
+            this.source.node.$watch(outlet.data, interpolator.set);
             // this.$watch(outlet.data, interpolator.set);
 
 
@@ -182,7 +182,7 @@ THOUGHTS:
               // "this.unwatch" is a fn that removes itself
               // "action" is a string -- is refers us to the property on source.node that should be watched;
               // ... when it is changed, the receiver function, "update" (on toModule), is fired with the new value.
-              this.unwatch = this.source.module.$watch(action, update);
+              this.unwatch = this.source.node.$watch(action, update);
               // this.unwatch = this.$watch(action, update);
               this.stroke = '#999';
               // this.fromModule.$on(action, update);
@@ -208,45 +208,6 @@ THOUGHTS:
         }
       },
 
-      /**
-       * Fetch an _AudioNode_ from the App, given a particular id.
-       * NOTE: we are _not_ fetching the Vue Component -- we need the
-       * actual WebAudio interface.
-       * @type {Number} id The id of the node to fetch.
-       */
-      getToAndFromModules() {
-        try {
-          // NOTE: these are _rendered_ modules in the App -- not the `modules` from the
-
-          // BRITTLE. Depends on Connection / Module being direct children of <Rack>
-          const modules = this.$parent.$children; // should be <Rack>.
-
-          // root > Synth > MasterOut
-          const masterOut = this.$root.$children[0].$children.find(m => m.id === 0);
-
-          const from = modules.find((m) => m.id === this.from.id);
-          const to = modules.find((m) => m.id === this.to.id) || masterOut;
-          const node = this.to.id === 0 ? to : to.$children[0];
-
-          this.dest = {
-            name: node.name, // for logging
-            coords: to, // {x, y} = to,
-            node: node,
-            // inlets: node.inlets
-          };
-
-          this.source = {
-            coords: from,               // Coords are in MODULE
-            module: from.$children[0],  // Audio/Data is in NODE
-            outlets: from.$children[0].outlets
-          };
-        } catch (e) {
-          this.logError(e);
-          this.removeConnection();
-          // this.$destroy();
-        }
-      },
-
       logError(e) {
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
         console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red',
@@ -259,6 +220,7 @@ THOUGHTS:
     }
   };
 </script>
+
 
 <style lang="scss">
   svg {

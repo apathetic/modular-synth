@@ -6,7 +6,9 @@ export const parameterKey = (state: PatchState): number => state.parameterKey;
 export const parameterSets = (state: PatchState): ParameterSet[] => state.parameterSets;
 
 // getters
-export const module = (state: PatchState) => (id: number): Module | undefined => state.modules.find((m) => m.id === id);
+export const module = (state: PatchState) => (id: number): Module | {} => {
+  return state.modules.find((m) => m.id === id) || {};
+};
 export const modules = (state: PatchState): Module[] => state.modules.filter((m) => m.id !== 0);
 export const parameters = (state: PatchState, getters): Parameter[] => {
   return (

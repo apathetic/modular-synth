@@ -38,12 +38,12 @@ export const TOGGLE_EDIT = (state) => {
   state.editing = !state.editing;
 };
 
-export const ADD_TO_REGISTRY = (state, node) => {
-  state.registry[node.id] = node;
+export const ADD_TO_REGISTRY = (state, payload) => {
+  state.registry[payload.id] = payload.node;
 };
 
-export const REMOVE_FROM_REGISTRY = (state, node) => {
-  delete state.registry[node.id];
+export const REMOVE_FROM_REGISTRY = (state, id) => {
+  delete state.registry[id];
 };
 
 

@@ -84,10 +84,6 @@
       this.$store.commit('ADD_TO_REGISTRY', {
         id: 0,
         node: this,
-        coords: {
-          x: this.x,
-          y: this.y
-        }
       });
     },
 

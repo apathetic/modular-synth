@@ -58,10 +58,10 @@ export interface Module {
 }
 // A reference to the rendered node (ie. in the APP)
 //  * with webaudio inlets/outlets
-//  * also includes coords
+//  * also includes coords?
 export interface Node {
   name: string;
-  coords: { x: number, y: number };
+  // coords: { x: number, y: number };
   // inlets?: Inlet[];
   // outlets?: Outlet[];
   node: {

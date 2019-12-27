@@ -22,6 +22,7 @@
 
 - General
 
+- Connection.vue --> typescript-ify
 
 - parameter mixin... add/remove dynamically (vs. adding all knobs and listenting for "active")
 - better Connection logic/fallback

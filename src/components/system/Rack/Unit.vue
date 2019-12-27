@@ -12,7 +12,7 @@
 
 <script>
   import { draggable } from '@/mixins/draggable';
-  import { context, registry } from '@/audio';
+  import { context } from '@/audio';
   import { moduleSize } from '@/constants';
 
   export default {
@@ -39,18 +39,12 @@
       this.$store.commit('ADD_TO_REGISTRY', {
         id: this.id,
         node: this.$children[0],
-        coords: {
-          x: this.x,
-          y: this.y
-        }
       });
     },
 
     destroyed() {
       console.log('Destroying %s ', this.module.type);
-      this.$store.commit('REMOVE_FROM_REGISTRY', {
-        id: this.id,
-      });
+      this.$store.commit('REMOVE_FROM_REGISTRY', this.id);
     }
   };
 </script>

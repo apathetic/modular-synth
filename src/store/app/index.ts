@@ -13,9 +13,7 @@ const state: AppState = {
 
   patchKey: localStorage.getItem(_KEY) || '',       // key of active patch
   canvasOffset: 0,                                  // UI stuffs
-
-  registry: {},
-  // modules: [], // APP modules?  ie. references to object with: coords/webaudio inlets/webaudio outlets
+  registry: {},                                     // references to all audio "nodes" in the app
 
   // TODO: remove; use firebase + SW instead;
   patches: {}                                       // all available patches, cached here

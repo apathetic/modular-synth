@@ -1,4 +1,3 @@
-// import Synth from '@/main';
 import { AppState, Node } from '@/types/';
 
 // these shoud use mapState
@@ -12,4 +11,4 @@ export const activeModule = (state, getters) => getters.modules.find((module) =>
 export const bounds = (state, getters) => getters.modules.reduce((max, module) => Math.max(max, module.x), 0);
 export const node = (state: AppState) => (id: number): Node => {
   return state.registry[id];
-}
+};
