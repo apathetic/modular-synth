@@ -51,6 +51,7 @@
   import Debugger from '@/components/test/Debugger';
 
   export default {
+    name: 'Rack',
     provide: [ context ],
     mixins: [ sortable ], // draggable
 

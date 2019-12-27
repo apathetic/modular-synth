@@ -36,21 +36,21 @@
     },
 
     mounted() {
-      // register MODULE in global MODULE REGiSTRY
-      // const { registry } = import '@/audio'
-      // registry[this.id] = this.$children[0];
-
-      // registry[this.id] = {
-      //   coords: {x:this.x, y:this.y},
-      //   inlets: this.$children.inlets
-      //   outlets:
-      // }
-
+      this.$store.commit('ADD_TO_REGISTRY', {
+        id: this.id,
+        node: this.$children[0],
+        coords: {
+          x: this.x,
+          y: this.y
+        }
+      });
     },
 
     destroyed() {
       console.log('Destroying %s ', this.module.type);
-      delete registry[this.id];
+      this.$store.commit('REMOVE_FROM_REGISTRY', {
+        id: this.id,
+      });
     }
   };
 </script>

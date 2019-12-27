@@ -38,11 +38,18 @@ export const TOGGLE_EDIT = (state) => {
   state.editing = !state.editing;
 };
 
+export const ADD_TO_REGISTRY = (state, node) => {
+  state.registry[node.id] = node;
+};
+
+export const REMOVE_FROM_REGISTRY = (state, node) => {
+  delete state.registry[node.id];
+};
+
 
 // -----------------------------------------------
 //  UI
 // -----------------------------------------------
-// TODO ----------------- move to VUE BUS ?
 export const SET_ACTIVE = (state, id) => {
   state.active = id;
 };

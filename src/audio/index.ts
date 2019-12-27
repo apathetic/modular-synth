@@ -1,15 +1,5 @@
 // namespace µ {
 
-interface Node {
-  inlets?: [
-    // {
-    //   label
-    //   desc
-    //   type type: 'audio' | 'data';
-    // }
-  ];
-  outlets?: [];
-}
 
 /**
  * The application's audio context.

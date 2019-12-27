@@ -64,7 +64,7 @@ THOUGHTS:
     props: {
       id: Number,
       to: Object,   // { port, id }
-      from: Object  // { port, id }
+      from: Object,  // { port, id }
     },
 
     computed: {
@@ -81,6 +81,12 @@ THOUGHTS:
         return this.dest.coords.y + (this.to.port * 20) + 27;
       },
 
+      // For reference
+      // {
+      //   node: { inlets },
+      //   coords: { x, y }
+      //   name: ... // for logging
+      // }
       destX() {
         const to = registry[this.to.id]; // <Unit>
         const module = to.$children[0];  // <VCO>, eg
@@ -102,28 +108,21 @@ THOUGHTS:
       //   } : undefined;
       // },
 
-      ...mapGetters([
-        'module'
-      ])
+      // ...mapGetters([
+      //   'module'
+      // ])
     },
 
     data() {
       return {
         stroke: 'white'
-
-        // For reference (this doesn't need to be reactive):
-        // source: {
-        //   outlet: null,
-        //   module: null,
-        //   id: null
-        // }
       };
     },
 
     created() {
       console.log(registry);
 
-      // this.getToAndFromModules();
+      this.getToAndFromModules();
       this.route();
     },
 
@@ -140,7 +139,7 @@ THOUGHTS:
        * @return {Void}
        */
       route(connect = true) {
-        const inlet = this.dest.module.inlets[this.to.port];
+        const inlet = this.dest.node.inlets[this.to.port];
         const outlet = this.source.module.outlets[this.from.port];
 
         try {
@@ -181,7 +180,7 @@ THOUGHTS:
 
             if (typeof update === 'function') {
               // "this.unwatch" is a fn that removes itself
-              // "action" is a string -- is refers us to the property on source.module that should be watched;
+              // "action" is a string -- is refers us to the property on source.node that should be watched;
               // ... when it is changed, the receiver function, "update" (on toModule), is fired with the new value.
               this.unwatch = this.source.module.$watch(action, update);
               // this.unwatch = this.$watch(action, update);
@@ -201,7 +200,7 @@ THOUGHTS:
           }
 
           // success message:
-          console.log('%c[connection] %s ⟹ %s', 'color: green', this.source.module.name, this.dest.name);
+          console.log('%c[connection] %s ⟹ %s', 'color: green', this.source.name, this.dest.name);
           //
         } catch (e) {
           this.logError(e);
@@ -230,16 +229,13 @@ THOUGHTS:
           const node = this.to.id === 0 ? to : to.$children[0];
 
           this.dest = {
-            id: this.to.id,
-            coords: to,
-            module: this.to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
-
-            name: node.name,
-            inlets: node.inlets
+            name: node.name, // for logging
+            coords: to, // {x, y} = to,
+            node: node,
+            // inlets: node.inlets
           };
 
           this.source = {
-            id: this.from.id,
             coords: from,               // Coords are in MODULE
             module: from.$children[0],  // Audio/Data is in NODE
             outlets: from.$children[0].outlets

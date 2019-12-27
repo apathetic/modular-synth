@@ -80,6 +80,15 @@
 
       window.addEventListener(EVENT.RESIZE, this.determinePosition);
       this.modules.addEventListener(EVENT.SCROLL, this.determinePosition);
+
+      this.$store.commit('ADD_TO_REGISTRY', {
+        id: 0,
+        node: this,
+        coords: {
+          x: this.x,
+          y: this.y
+        }
+      });
     },
 
     methods: {
