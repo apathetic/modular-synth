@@ -19,9 +19,10 @@ const dragObj = {
 export const draggable = {
   computed: {
     position() {
+      const compute = this.$store.getters.editing || this.isDragging;
       return {
-        left: (this.$store.getters.editing || this.isDragging) ? this.x + 'px' : this.module.col * rackWidth + 'px',
-        top: (this.$store.getters.editing || this.isDragging) ? this.y + 'px' : this.module.row * rackHeight + 'px'
+        left: (compute) ? this.x + 'px' : this.module.col * rackWidth + 'px',
+        top: (compute) ? this.y + 'px' : this.module.row * rackHeight + 'px'
       };
     }
   },

@@ -64,7 +64,13 @@
     },
 
     props: {
-      module: Object
+      module: {
+        type: Object,
+        required: true,
+        validator(value) {
+          return !!(value.type && value.id);
+        }
+      }
     },
 
     computed: {

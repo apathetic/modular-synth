@@ -81,13 +81,6 @@
     },
 
     computed: {
-      width() {
-        const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
-        return this.editing
-          ? `width: ${canvasWidth}px`
-          : 'width: auto';
-      },
-
       ...mapGetters([
         'power',
         'editing',

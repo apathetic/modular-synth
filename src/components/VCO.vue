@@ -33,7 +33,13 @@
       Dropdown
     },
     props: {
-      id: null
+      /**
+       * Used as a reference by `Connection` to connect modules
+       */
+      id: {
+        default: undefined,
+        required: true
+      }
     },
 
     data() {
