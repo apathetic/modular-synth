@@ -33,6 +33,7 @@ export const ADD_MODULE = (state, data) => {
   const size = moduleSize[type] || [1, 1];
 
   state.id++;
+  // TODO: state.modules[state.id] = {... } ?
   state.modules.push({
     id: state.id,
     type: type,

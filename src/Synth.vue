@@ -58,7 +58,7 @@
   import connection from './components/system/Connection.vue';
   import masterOut from './components/system/MasterOut.vue';
   import midi from './components/system/Midi.vue';
-  import module from './components/system/Module.vue';
+  // import module from './components/system/Module.vue';
   import patchManager from './components/system/PatchManager.vue';
   import contextMenu from './components/system/ContextMenu.vue';
 
@@ -75,7 +75,7 @@
       connecting,
       connection,
       midi,
-      module,
+      // module,
       contextMenu,
       patchManager
     },
