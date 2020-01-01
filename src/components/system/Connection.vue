@@ -48,7 +48,6 @@ THOUGHTS:
   </line>
 </template>
 
-
 <script>
   import { mapGetters } from 'vuex';
   import { cellWidth } from '@/constants';
@@ -75,45 +74,36 @@ THOUGHTS:
         return this.dest.coords.y + (this.to.port * 20) + 27;
       },
 
-      /**
-       * Calculate destination information
-       *   - audio inlets
-       *   - UI coords
-       */
-      dest() {
-        const node = this.node(this.to.id); // audio stuffs
-        const module = this.module(this.to.id); // UI stuffs
+      // For reference
+      // {
+      //   node: { inlets },
+      //   coords: { x, y }
+      //   name: ... // for logging
+      // }
+      // destX() {
+      //   const to = registry[this.to.id]; // <Unit>
+      //   const module = to.$children[0];  // <VCO>, eg
 
-        return {
-          name: module.type,
-          coords: { x: module.x, y: module.y },
-          node,
-          // inlets: node.inlets,
-        };
-      },
+      //   return to ? {
+      //     id: this.to.id,
+      //     coords: to, // note, also get a bunch of other things...
+      //     // module: to.id === 0 ? to : to.$children[0], // module is first (only) child of Unit wrapper
+      //     inlets: to.$children[0].inlets,
+      //     // name: to.module.name,
+      //   } : undefined;
+      // },
+      // source() {
+      //   const from = this.module(this.from.id);
+      //   return from ? {
+      //     id: from.id,
+      //     coords: from,
+      //     module: from.$children[0],
+      //   } : undefined;
+      // },
 
-      /**
-       * Calculate source information
-       *   - audio outlets
-       *   - UI coords
-       * @return {Node}
-       */
-      source() {
-        const node = this.node(this.from.id); // audio stuffs
-        const module = this.module(this.from.id); // UI stuffs
-
-        return {
-          name: module.type,
-          coords: { x: module.x, y: module.y },
-          node,
-          // outlets: node.outlets,
-        };
-      },
-
-      ...mapGetters([
-        'node',    // audio
-        'module',  // UI
-      ])
+      // ...mapGetters([
+      //   'module'
+      // ])
     },
 
     data() {
@@ -123,6 +113,7 @@ THOUGHTS:
     },
 
     created() {
+      this.getToAndFromModules();
       this.route();
     },
 
@@ -203,15 +194,53 @@ THOUGHTS:
           console.log('%c[connection] %s ⟹ %s', 'color: green', this.source.name, this.dest.name);
           //
         } catch (e) {
-        // bail whenever the connection fails.
-          this.removeConnection();
           this.logError(e);
+          this.removeConnection();
+        }
+      },
+
+      /**
+       * Fetch an _AudioNode_ from the App, given a particular id.
+       * NOTE: we are _not_ fetching the Vue Component -- we need the
+       * actual WebAudio interface.
+       * @type {Number} id The id of the node to fetch.
+       */
+      getToAndFromModules() {
+        try {
+          // NOTE: these are _rendered_ modules in the App -- not the `modules` from the
+
+          // BRITTLE. Depends on Connection / Module being direct children of <Rack>
+          const modules = this.$parent.$children; // should be <Rack>.
+
+          // root > Synth > MasterOut
+          const masterOut = this.$root.$children[0].$children.find(m => m.id === 0);
+
+          const from = modules.find((m) => m.id === this.from.id);
+          const to = modules.find((m) => m.id === this.to.id) || masterOut;
+          const node = this.to.id === 0 ? to : to.$children[0];
+
+          this.dest = {
+            name: node.name, // for logging
+            coords: to, // {x, y} = to,
+            node: node,
+            // inlets: node.inlets
+          };
+
+          this.source = {
+            coords: from,               // Coords are in MODULE
+            node: from.$children[0],  // Audio/Data is in NODE
+            outlets: from.$children[0].outlets
+          };
+        } catch (e) {
+          this.logError(e);
+          this.removeConnection();
+          // this.$destroy();
         }
       },
 
       logError(e) {
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
-        console.log('%c[error] connection: #%s.%d ⟹ #%s[%d]', 'color: red',
+        console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red',
           this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
       },
 
@@ -221,7 +250,6 @@ THOUGHTS:
     }
   };
 </script>
-
 
 <style lang="scss">
   svg {
