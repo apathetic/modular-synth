@@ -82,10 +82,11 @@ THOUGHTS:
        */
       dest() {
         const node = this.node(this.to.id); // audio stuffs
-        const module = this.module(this.to.id); // UI stuffs
+        // const module = this.module(this.to.id); // UI stuffs
+        const module = this.to.id === 0 ? node : node.$parent; // UI stuffs
 
         return {
-          name: module.type,
+          name: node.type,
           coords: { x: module.x, y: module.y },
           node,
           // inlets: node.inlets,
@@ -100,10 +101,11 @@ THOUGHTS:
        */
       source() {
         const node = this.node(this.from.id); // audio stuffs
-        const module = this.module(this.from.id); // UI stuffs
+        // const module = this.module(this.from.id); // UI stuffs
+        const module = node.$parent;
 
         return {
-          name: module.type,
+          name: node.type,
           coords: { x: module.x, y: module.y },
           node,
           // outlets: node.outlets,
@@ -217,7 +219,7 @@ THOUGHTS:
 
       removeConnection() {
         this.$store.commit('REMOVE_CONNECTION', this.id);
-      }
+      },
     }
   };
 </script>

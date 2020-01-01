@@ -30,6 +30,7 @@
 </template>
 
 <script>
+  import { EVENT } from '../../events';
   export default {
     data() {
       return {
@@ -100,7 +101,7 @@
           coords: [this.coords[0], this.coords[1] - offset]
         });
 
-        this.$bus.$emit('module:add');
+        this.$bus.$emit(EVENT.MODULE_ADD);
       }
     }
   };
