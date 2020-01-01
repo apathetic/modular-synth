@@ -8,9 +8,9 @@ export default {
   },
   bind(el, binding, vnode) {
     const s = JSON.stringify;
-    console.log(`
-      argument: ${s(binding.arg)}
-      vnode keys: ${Object.keys(vnode).join(', ')}
-    `);
+    // console.log(`
+    //   argument: ${s(binding.arg)}
+    //   vnode keys: ${Object.keys(vnode).join(', ')}
+    // `);
   }
 };
