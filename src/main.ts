@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Synth from './Synth.vue';
+import App from './App.vue';
 import { createStore } from './store';
 // import { createRouter } from './router';
 import CompositionAPI from '@vue/composition-api';
@@ -53,7 +53,7 @@ new Vue({
     bus: new Vue(),
     authenticated: false
   },
-  render: (h) => h(Synth),
+  render: (h) => h(App),
   beforeCreate() {
     auth.onAuthStateChanged((user: any) => {
       this.$authenticated = !!user;

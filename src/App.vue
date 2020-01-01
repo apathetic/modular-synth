@@ -4,7 +4,7 @@
 
     <section :class="editing ? 'edit-mode': 'play-mode'"  @click.left="clearActive">
 
-      <Rack
+      <Synth
         :modules="modules"
         :connections="connections"
       />
@@ -52,30 +52,30 @@
 
 <script>
   import { mapGetters, mapActions } from 'vuex';
-  import { sortable } from './mixins/sortable';
+  // import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
-  import connecting from './components/system/Connecting.vue';
-  import connection from './components/system/Connection.vue';
   import masterOut from './components/system/MasterOut.vue';
   import midi from './components/system/Midi.vue';
-  // import module from './components/system/Module.vue';
   import patchManager from './components/system/PatchManager.vue';
   import contextMenu from './components/system/ContextMenu.vue';
 
-  import Rack from './components/system/Rack/';
+
+  import connecting from './components/system/Connecting.vue';
+  import connection from './components/system/Connection.vue';
+
+
+
+  import Synth from './components/system/Synth/';
 
   export default {
-    name: 'Synth',
+    name: 'App',
 
-    mixins: [sortable],
+    // mixins: [sortable],
 
     components: {
-      Rack,
+      Synth,
       masterOut,
-      connecting,
-      connection,
       midi,
-      // module,
       contextMenu,
       patchManager
     },
