@@ -10,10 +10,11 @@ export const module = (state: PatchState) => (id: number): Module | {} => {
   return state.modules.find((m) => m.id === id) || {};
 };
 export const modules = (state: PatchState): Module[] => state.modules.filter((m) => m.id !== 0);
-export const parameters = (state: PatchState, getters): Parameter[] => {
-  return (
-    (getters.parameterSets[state.parameterKey] &&
-      getters.parameterSets[state.parameterKey].parameters) ||
-    []
-  );
+export const parameters = (state: PatchState): Parameter[] => (
+    parameterSets[state.parameterKey] &&
+    parameterSets[state.parameterKey].parameters || []);
+
+export const parametersName = (state: PatchState) => {
+  const key = state.parameterKey;
+  return (state.parameterSets[key] && state.parameterSets[key].name) || '';
 };

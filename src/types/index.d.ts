@@ -67,7 +67,7 @@ export interface Node {
   node: {
     inlets?: Inlet[];
     outlets?: Outlet[];
-  }
+  };
 }
 
 

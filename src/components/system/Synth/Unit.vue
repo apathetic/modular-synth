@@ -32,13 +32,19 @@
 
     created() {
       this.id = this.module.id; // NOTE: this is the ID used by the Connector to route audio
+
+      // this.$store.commit('ADD_TO_REGISTRY', {
+      //   id: this.id,
+      //   node: this.$children[0], // this.$slots.default
+      // });
+
       console.log('%c[component] Creating %s', 'color: green', this.module.type);
     },
 
     mounted() {
       this.$store.commit('ADD_TO_REGISTRY', {
         id: this.id,
-        node: this.$children[0],
+        node: this.$children[0], // this.$slots.default
       });
     },
 

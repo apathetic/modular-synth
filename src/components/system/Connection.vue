@@ -81,11 +81,12 @@ THOUGHTS:
        */
       dest() {
         const node = this.node(this.to.id); // audio stuffs
+        if (!node) { this.logError('node not registered'); return; }
         // const module = this.module(this.to.id); // UI stuffs
         const module = this.to.id === 0 ? node : node.$parent; // UI stuffs
 
         return {
-          name: node.type,
+          name: node.name,
           coords: { x: module.x, y: module.y },
           node,
           // inlets: node.inlets,
@@ -101,10 +102,14 @@ THOUGHTS:
       source() {
         const node = this.node(this.from.id); // audio stuffs
         // const module = this.module(this.from.id); // UI stuffs
+
+        if (!node) { this.logError('node not registered'); return; }
+
+
         const module = node.$parent;
 
         return {
-          name: node.type,
+          name: node.name,
           coords: { x: module.x, y: module.y },
           node,
           // outlets: node.outlets,
@@ -130,6 +135,7 @@ THOUGHTS:
     destroyed() {
       this.route(false);
       this.unwatch && this.unwatch();
+      console.log('removed', this.id);
     },
 
     methods: {
@@ -211,8 +217,13 @@ THOUGHTS:
 
       logError(e) {
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
-        console.log('%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red',
-          this.from.id, this.from.port + 1, this.to.id, this.to.port + 1);
+        console.log(
+          '%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red',
+          this.from.id, this.from.port + 1, this.to.id, this.to.port + 1
+        );
+
+        // bail whenever the connection fails.
+        this.removeConnection();
       },
 
       removeConnection() {
