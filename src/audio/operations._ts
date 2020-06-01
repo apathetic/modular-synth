@@ -1,0 +1,15 @@
+// THINGS in here operate on an audio chain.
+// THey are present in the EDIT mode, but will "disappear"
+// for PLAY mode
+
+import { signal } from "."
+
+multiply
+
+
+add
+
+normalize
+
+
+signal...?
