@@ -2,7 +2,7 @@
   <div
     id="modules"
     ref="grid"
-    v-contextmenu:modules
+    XXXXv-contextmenu:modules
   >
     <div class="position-highlight">
       <div class="inner"></div>
@@ -46,7 +46,7 @@
 
   import Connecting from '@/components/system/Connecting.vue';
   import Connection from '@/components/system/Connection.vue';
-  import Modules from '@/components/';
+  import * as Modules from '@/components/';
   import Unit from './Unit';
   import Debugger from '@/components/test/Debugger';
 

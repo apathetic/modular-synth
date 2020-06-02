@@ -9,7 +9,7 @@
     </div>
 
     <div class="module-connections">
-      <inlets :ports="inlets"></inlets>
+      <Inlets :ports="inlets"></Inlets>
     </div>
   </div>
 </template>

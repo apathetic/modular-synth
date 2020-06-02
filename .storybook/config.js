@@ -12,7 +12,7 @@ import '@/styles/module.scss';
 
 
 // Import your custom components.
-import VCO from '../src/components/VCO.vue';
+import OSC from '@/components/audio/OSC';
 
 // Install Vue plugins n' mixins
 Vue.use(Vuex);
@@ -29,13 +29,13 @@ Vue.component('inlets', Inlets);
 Vue.component('outlets', Outlets);
 
 // Vue.component('Module', Module);
-Vue.component('VCO', VCO);
+Vue.component('OSC', OSC);
 
 // const req = require.context('../src/stories', true, /.stories.ts$/);
 
 function loadStories() {
   // You can require as many stories as you need.
-  require('../src/stories/VCO.js');
+  require('../src/stories/OSC.js');
   // req.keys().forEach(filename => req(filename));
 }
 

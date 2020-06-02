@@ -17,8 +17,8 @@
     </div>
 
     <div class="module-connections">
-      <inlets :ports="inlets"></inlets>
-      <outlets :ports="outlets"></outlets>
+      <Inlets :ports="inlets"></Inlets>
+      <Outlets :ports="outlets"></Outlets>
     </div>
   </div>
 </template>

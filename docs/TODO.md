@@ -1,26 +1,26 @@
-# modular-synth
+# modular-synth: TODO
 
-## TODO
+## Features
 
-** DONT BOTHER trying to manage `patches` in the store; rather, keep them in
-   Firebase, and cache them using a SW so that loading time is snappy
+- make the **default patch** a simple ADSR synth, rather than blank. will help a few folks get up a nd running, can always remove if you want
 
-** Service worker: manage `patches` between different tabs, enabling a
-   polyphonic synth where the SW intercepts the midi notes and assigns each
-   to a free voice (ie tab). Similarly, different patches to be run in
-   parallel, where each tab could be likened to a track in a DAW.
+- DON'T BOTHER trying to manage `patches` in the store; rather, keep them in Firebase / Firestore, and cache them using a SW so that loading time is snappy
 
-** Machine learning: auto-generate patches based on common or popular ones.
+- **Service worker**: manage `patches` between different tabs, enabling a **polyphonic synth** where the SW intercepts the midi notes and assigns each to a free voice (ie tab).  Similarly, different patches to be run in parallel, where each tab could be likened to a track in a DAW.
 
-** create server that spits out OSC notes, 24/7. Different styles / genres
-   depending on time of day (like a radio station). Then, modify Note-In to
-   stream from it.
-   ... or, every port is a different thing: disco inferno (on :8000),
-   aleatoric wackiness (on :8001), etc
+- **Machine learning**: auto-generate patches based on common or popular ones. All patches are stored as JSON, and can be tagged using common descriptors.
+
+- create server that spits out **OSC** notes, 24/7
+    - modify Note-In to stream from it.
+    - Different styles / genres depending on time of day (like a radio station)...?
+    - or, every port is a different thing: disco inferno (on :8000), aleatoric wackiness (on :8001), etc
 
 
+- **Rust --> webassembly** for the inner workings of the audio engine
 
-- General
+
+
+## Issues
 
 - Connection.vue --> typescript-ify
 

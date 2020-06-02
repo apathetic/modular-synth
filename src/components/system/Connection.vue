@@ -44,7 +44,8 @@ THOUGHTS:
     :x2="x2"
     :y2="y2"
     :stroke="stroke"
-    stroke-width="3">
+    stroke-width="3"
+  >
   </line>
 </template>
 
@@ -56,8 +57,8 @@ THOUGHTS:
   export default {
     props: {
       id: Number,
-      to: Object,   // { port, id }
-      from: Object,  // { port, id }
+      to: Object, // { port, id }
+      from: Object, // { port, id }
     },
 
     computed: {
@@ -81,7 +82,10 @@ THOUGHTS:
        */
       dest() {
         const node = this.node(this.to.id); // audio stuffs
-        if (!node) { this.logError('node not registered'); return; }
+        if (!node) {
+          this.logError("node not registered");
+          return;
+        }
         // const module = this.module(this.to.id); // UI stuffs
         const module = this.to.id === 0 ? node : node.$parent; // UI stuffs
 
@@ -103,8 +107,10 @@ THOUGHTS:
         const node = this.node(this.from.id); // audio stuffs
         // const module = this.module(this.from.id); // UI stuffs
 
-        if (!node) { this.logError('node not registered'); return; }
-
+        if (!node) {
+          this.logError("node not registered");
+          return;
+        }
 
         const module = node.$parent;
 
@@ -157,7 +163,9 @@ THOUGHTS:
             const source = outlet.audio;
             const destination = inlet.audio;
 
-            (connect) ? source.connect(destination) : source.disconnect(destination);
+            connect
+              ? source.connect(destination)
+              : source.disconnect(destination);
 
             //
           } else if (outlet.data && inlet.audio) {
@@ -183,7 +191,7 @@ THOUGHTS:
             // DATA -> DATA
             // -------------------
             const action = outlet.data; // STRING
-            const update = inlet.data;  // FUNCTION
+            const update = inlet.data; // FUNCTION
 
             if (typeof update === 'function') {
               // "this.unwatch" is a fn that removes itself
@@ -194,7 +202,7 @@ THOUGHTS:
               this.stroke = '#999';
               // this.fromModule.$on(action, update);
 
-            //
+              //
             }
           } else {
             const inType = inlet.data ? 'data' : inlet.audio ? 'audio' : 'unknown';

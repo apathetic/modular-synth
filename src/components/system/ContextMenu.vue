@@ -7,8 +7,8 @@
     <div class="add" :class="{active: active === 'add'}">
       <h3>New Module:</h3>
       <ul>
-        <li v-for="(module, i) in ['Analyser', 'Comb', 'Compressor','Delay', 'Drive','Env', 'LFO', 'Mixer', 'NoteIn', 'OSC', 'Reverb', 'VCO', 'VCA', 'VCF']"
-            @click="newModule(module)" :key="i">{{ module }}</li>
+        <!-- <li v-for="(module, i) in ['Analyser', 'Comb', 'Compressor', 'Delay', 'Drive','Env', 'LFO', 'Mixer', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']" -->
+        <li v-for="(module, i) in modules" @click="newModule(module)" :key="i">{{ module }}</li>
         <li>---</li>
         <li @click="newModule('Node')">• Node</li>
         <li @click="newModule('Debugger')">• debugger</li>
@@ -30,12 +30,15 @@
 </template>
 
 <script>
-  import { EVENT } from '../../events';
+  import { EVENT } from '@/events';
+  import * as Modules from '@/components/';
+
   export default {
     data() {
       return {
         active: '',
-        coords: []
+        coords: [],
+        modules: Object.keys(Modules)
       };
     },
 
