@@ -1,22 +1,22 @@
 import Vue from 'vue';
 import App from './App.vue';
-import { createStore } from './store';
-// import { createRouter } from './router';
+import store from './store';
+// import router from './router';
 import CompositionAPI from '@vue/composition-api';
-import inlets from './components/system/Inlets.vue';
-import outlets from './components/system/Outlets.vue';
 import { auth } from './store/firebase';
 import { context } from './audio';
-import './registerServiceWorker';
 
-import contextmenu from '@/plugins/contextmenu.ts';
+import { registerComponents, registerServiceWorker } from '@/utils/register';
 
 
 Vue.config.productionTip = false;
 Vue.use(CompositionAPI);
-Vue.directive('contextmenu', contextmenu);
 
-const store = createStore();
+
+registerComponents();
+registerServiceWorker();
+
+// const store = createStore();
 // const router = createRouter();
 
 
@@ -40,10 +40,6 @@ Vue.mixin({
   }
 });
 
-
-// Global Components (inlets / outlets)
-Vue.component('inlets', inlets);
-Vue.component('outlets', outlets);
 
 
 new Vue({

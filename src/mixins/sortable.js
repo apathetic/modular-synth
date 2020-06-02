@@ -12,7 +12,7 @@
 
 const lanes = 3;
 
-import GridList from '../assets/vendor/gridList';
+import GridList from '@/utils/gridList';
 import { rackWidth, rackHeight } from '../constants';
 
 // export class sortable extends Vue {
