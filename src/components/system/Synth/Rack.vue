@@ -38,22 +38,25 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'pinia';
+import { useAppStore } from '@/stores/app';
+  // import { mapGetters, mapActions } from 'vuex';
   import { context } from '@/audio';
-  import { mapGetters, mapActions } from 'vuex';
-  import { sortable } from '@/mixins/sortable';
+  // import { sortable } from '@/mixins/sortable';
+  import { useSortable } from '@/composables';
   import { draggable } from '@/mixins/draggable';
   import { EVENT } from '@/events';
 
   import Connecting from '@/components/system/Connecting.vue';
   import Connection from '@/components/system/Connection.vue';
   import * as Modules from '@/components/';
-  import Unit from './Unit';
-  import Debugger from '@/components/test/Debugger';
+  import Unit from './Unit.vue';
+  import Debugger from '@/components/test/Debugger.vue';
 
   export default {
     name: 'Rack',
     provide: [ context ],
-    mixins: [ sortable ], // draggable
+    // mixins: [ sortable ], // draggable
 
     components: {
       ...Modules,
@@ -75,13 +78,19 @@
           ? `width: ${canvasWidth}px`
           : 'width: auto';
       },
-      ...mapGetters([
+      ...mapState(useAppStore, [
         'editing',
         'bounds',
       ])
     },
 
     created() {
+
+      const { initSorting } = useSortable();
+
+      initSorting(this.$refs.grid);
+
+    /*
       const bus = this.$root.$bus;
       bus.$on(EVENT.DRAG_START, (coords, el) => {
         if (!this.editing) {
@@ -102,7 +111,7 @@
       });
 
       bus.$on(EVENT.APP_SORT, () => {
-        this.initSorting(this.$refs.grid);
+        this.initializePositions(this.$refs.grid);
       });
 
       bus.$on(EVENT.MODULE_ADD, () => {
@@ -120,6 +129,8 @@
           this.gridList._pullItemsToLeft();
         });
       });
+  */
+
     },
 
     mounted() {
@@ -132,7 +143,7 @@
     },
 
     methods: {
-      ...mapActions([
+      ...mapActions(useAppStore, [
         'setActive',
         'clearActive',
         'setFocus',

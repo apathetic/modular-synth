@@ -19,11 +19,11 @@
 
       <div class="patch select">
         <span>0{{ patchIndex }}</span>
-        <button class="math add" @click="add">+</button>
-        <button class="math remove" @click="remove">-</button>
-        <select :value="currentPatchKey" @change="select" ref="patch">
+        <button class="math add" @click="addPatch">+</button>
+        <button class="math remove" @click="removePatch">-</button>
+        <select v-model="currentPatchKey" ref="patchRef">
           <option value="" disabled selected>&lt;select patch&gt;</option>
-          <option v-for="(patch, key) in patches" :value="key" :key="key">{{ patch.name }}</option>
+          <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
         </select>
         <input type="text" v-model="currentPatchName">
       </div>
@@ -32,11 +32,11 @@
         <span>0{{ paramsIndex }}</span>
         <button class="math add" @click="addParams">+</button>
         <button class="math remove" @click="removeParams">-</button>
-        <select :value="currentParamsKey" @change="selectParams" ref="params">
-          <option value="" disabled selected>&lt;select settings&gt;</option>
-          <option v-for="(params, index) in parameterSets" :value="index">{{ params.name }}</option>
+        <select v-model="currentParamsKey" ref="configRef">
+          <option value="" disabled selected>&lt;select configs&gt;</option>
+          <option v-for="(params, key) in parameterSets" :value="key">{{ params.name }}</option>
         </select>
-        <input type="text" v-model="currentParamsName">
+        <input type="text" v-model="currentConfigName">
       </div>
 
     </div>
@@ -48,168 +48,318 @@
 </template>
 
 <script>
-import Auth from './Auth';
 // import SignIn from './SignIn';
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { defineComponent, computed, reactive, watch, ref, unref, nextTick } from 'vue';
+import { useSortable } from '@/composables';
+import { useAppStore } from '@/stores/app';
+
+
+
+import Auth from './Auth.vue';
 import { EVENT } from '../../events';
 
-export default {
-  components: {
-    Auth,
-    // SignIn
-  },
 
-  data() {
-    return {
-      patchIndex: 1,
-      paramsIndex: 1
-    };
-  },
 
-  computed: {
-    currentPatchKey: {
-      get() {
-        return this.$store.state.app.patchKey;
-      },
-      set(key) {
-        this.$store.commit('SET_KEY', key);
-      }
-    },
 
-    currentParamsKey: {
-      get() {
-        return this.$store.getters.parameterKey;
-      },
-      set(key) {
-        this.$store.commit('SET_PARAMETERS_KEY', key);
-      }
-    },
+export default defineComponent({
+  props: {},
+  components: { Auth },
+  setup () {
+    const store = useAppStore();
+    const { resetSorting } = useSortable();
+    const patchRef = ref(null);
+    const configRef = ref(null);
 
-    currentPatchName: {
-      get() {
-        return this.$store.state.patch.name;
-      },
-      set(value) {
-        this.$store.commit('SET_NAME', value);
-      }
-    },
-
-    currentParamsName: {
-      get() {
-        const key = this.$store.getters.parameterKey;
-        return (this.$store.getters.parameterSets[key] &&
-                this.$store.getters.parameterSets[key].name);
-      },
-      set(value) {
-        this.$store.commit('SET_PARAMETERS_NAME', value);
-      }
-    },
-
-    ...mapGetters([
-      'patches',
-      'parameterSets',
-      'editing'
-    ])
-},
-
-  mounted() {
-    this.load();
-
-    // update patchIndex display and selected option in dropdown
-    // NOTE: <select> doesn't seem to be ready at mount
-    // const options = this.$refs.patch.options;
-    // console.log(options.length, Object.keys(this.patches).length);
-    // update the 00 display
-    // update the <select> selectedIndex
-    // Array.prototype.forEach.call(options, (opt, i) => {
-    //   if (opt.value === this.currentPatchKey) {
-    //     this.patchIndex = i;
-    //     this.$refs.patch.selectedIndex = i;
-    //   }
+    // const state = reactive({
+    //   patchIndex: 1, // patches.indexOf(patchKey)
+    //   paramsIndex: 1 // params.indexOf(paramsKey)
     // });
-  },
 
-  methods: {
-    save() {
-      this.savePatch();
-    },
+    const patch = computed(() => store.patch);
+    const patches = computed(() => store.patches);
+    const configs = computed(() => store.patch?.configs);
 
-    load() {
-      this.loadPatch();
-      this.$nextTick(function() {
-        // console.log('%c Setting parameters ', 'background:#666;color:white;font-weight:bold;');
-        // this.$bus.$emit(EVENT.PARAMETERS_LOAD);
-        this.$bus.$emit(EVENT.APP_SORT);
+    // TODO local state:
+    const currentPatchKey = computed(() => store.patchKey)
+    const currentConfigKey = computed(() => store.configKey);
 
-        // import { initSort } from Grid/sortable';
-        // initSort();
+
+    const currentPatchName = computed({
+      get() { return store.patch.name },
+      set(value) { store.patch.name = value }
+    });
+    const currentConfigName = computed({
+      get() {
+        const patch = store.patch;
+        const key = store.paramsKey;
+        return store.configs[key]?.name;
+      },
+      set(value) {
+        const key = store.parameterKey;
+        store.parameterSets[key].name = value;
+      }
+    });
+
+
+    const editing = () => store.editing();
+    const save = () => store.savePatch();
+    const load = () => {
+      store.loadPatch();
+      nextTick(() => {
+        // this.$bus.$emit(EVENT.APP_SORT);
+        resetSorting();
       });
-    },
+    };
 
-    // -----------------
-
-    add() {
-      if (this.patches.length >= 9) { return; }
-      this.addPatch();                             // CREATE a new blank patch...
-      this.loadPatch();                            // ...AND then select it
+    const addPatch = () => {
+      // if (patches.length >= 9) { return; }
+      store.addPatch();    // CREATE a new blank patch...
+      store.loadPatch();   // ...AND then select it
 
       // as our new patch is at the end of the list, we can use ".length" as the index
-      this.patchIndex = this.$refs.patch.selectedIndex = Object.keys(this.patches).length;
+      state.patchIndex = patch.selectedIndex = Object.keys(patches).length;
+    };
+
+    const removePatch = () => {
+      const confirm = window.confirm('Delete ' + currentPatchName + '?');
+
+      if (unref(patches).length <= 1 || !confirm) { return; }
+
+      store.removePatch(currentPatchKey);
+      // state.patchIndex = patch.selectedIndex = 1;
+
+      // currentPatchKey = 0;
+      store.patchKey = 0; // or patches[0].key...?
+    };
+
+    watch(currentPatchKey, (key, old) => {
+      // this.currentPatchKey = e.target.value;
+      // this.patchIndex = e.target.selectedIndex;
+      // currentParamsKey = 0;    // always select 1st set when new patch loaded
+
+      // store.patchKey = key;
+      store.paramsKey = 0;
+      load();
+    });
+
+    // -----------------
+
+    const addConfig = () => {
+      // this.$store.commit('ADD_PARAMETERS');
+      // this.currentConfigKey = this.parameterSets.length - 1;
+      // this.ConfigIndex = this.$refs.Config.selectedIndex = this.parameterSets.length;
+    };
+
+    const removeConfig = (id) => {
+      // const confirm = window.confirm('Delete ' + this.currentConfigName + '?');
+      // if (this.$store.getters.parameterSets.length <= 1 || !confirm) { return; }
+
+      // this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
+      // this.paramsIndex = this.$refs.params.selectedIndex = 1;
+      // this.currentParamsKey = 0;
+    };
+
+    // selectParams(e) {
+    //   this.currentParamsKey = e.target.value;
+    //   this.paramsIndex = e.target.selectedIndex;
+    // },
+
+    // onMounted() {
+    load();
+    // },
+
+    return {
+      // ...toRefs(state),
+      editing,
+      save,
+      currentPatchKey,
+      currentConfigKey,
+      currentPatchName,
+      currentConfigName,
+
+      patchRef,
+      patches,
+      addPatch,
+      removePatch,
+
+      configRef,
+      configs,
+      addConfig,
+      removeConfig,
+    }
+  },
+});
+
+
+
+
+
+
+
+/*
+  export default {
+    components: {
+      Auth,
+      // SignIn
     },
 
-    remove() {
-      const confirm = window.confirm('Delete ' + this.currentPatchName + '?');
-
-      if (this.patches.length <= 1 || !confirm) { return; }
-
-      this.removePatch(this.currentPatchKey);
-      this.patchIndex = this.$refs.patch.selectedIndex = 1;
-      this.currentPatchKey = 0;
+    data() {
+      return {
+        patchIndex: 1,
+        paramsIndex: 1
+      };
     },
 
-    select(e) {
-      this.currentPatchKey = e.target.value;
-      this.patchIndex = e.target.selectedIndex;
-      this.currentParamsKey = 0;                   // always select 1st set when new patch loaded
+    computed: {
+      // currentPatchKey: {
+      //   get() {
+      //     return this.$store.state.app.patchKey;
+      //   },
+      //   set(key) {
+      //     this.$store.commit('SET_KEY', key);
+      //   }
+      // },
+      ...mapState(usestore, {
+        currentPatchKey: (state) => state.patchKey
+      },
+
+
+      currentParamsKey: {
+        get() {
+          return this.$store.getters.parameterKey;
+        },
+        set(key) {
+          this.$store.commit('SET_PARAMETERS_KEY', key);
+        }
+      },
+
+      currentPatchName: {
+        get() {
+          return this.$store.state.patch.name;
+        },
+        set(value) {
+          this.$store.commit('SET_NAME', value);
+        }
+      },
+
+      currentConfigName: {
+        get() {
+          const key = this.$store.getters.parameterKey;
+          return (this.$store.getters.parameterSets[key] &&
+                  this.$store.getters.parameterSets[key].name);
+        },
+        set(value) {
+          this.$store.commit('SET_PARAMETERS_NAME', value);
+        }
+      },
+
+      ...mapState(useAppStore, [
+        'patches',
+        'editing'
+        // 'parameterSets',
+      ])
+    },
+
+    mounted() {
       this.load();
+
+      // update patchIndex display and selected option in dropdown
+      // NOTE: <select> doesn't seem to be ready at mount
+      // const options = this.$refs.patch.options;
+      // console.log(options.length, Object.keys(this.patches).length);
+      // update the 00 display
+      // update the <select> selectedIndex
+      // Array.prototype.forEach.call(options, (opt, i) => {
+      //   if (opt.value === this.currentPatchKey) {
+      //     this.patchIndex = i;
+      //     this.$refs.patch.selectedIndex = i;
+      //   }
+      // });
     },
 
-    // -----------------
+    methods: {
+      save() {
+        this.savePatch();
+      },
 
-    addParams() {
-      this.$store.commit('ADD_PARAMETERS');
-      this.currentParamsKey = this.parameterSets.length - 1;
+      load() {
+        this.loadPatch();
+        this.$nextTick(function() {
+          // console.log('%c Setting parameters ', 'background:#666;color:white;font-weight:bold;');
+          // this.$bus.$emit(EVENT.PARAMETERS_LOAD);
+          this.$bus.$emit(EVENT.APP_SORT);
 
-      this.paramsIndex = this.$refs.params.selectedIndex = this.parameterSets.length;
-    },
+          // import { initSort } from Grid/sortable';
+          // initSort();
+        });
+      },
 
-    removeParams(id) {
-      const confirm = window.confirm('Delete ' + this.currentParamsName + '?');
+      // -----------------
 
-      if (this.$store.getters.parameterSets.length <= 1 || !confirm) { return; }
+      add() {
+        if (this.patches.length >= 9) { return; }
+        this.addPatch();                             // CREATE a new blank patch...
+        this.loadPatch();                            // ...AND then select it
 
-      this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
-      this.paramsIndex = this.$refs.params.selectedIndex = 1;
-      this.currentParamsKey = 0;
-    },
+        // as our new patch is at the end of the list, we can use ".length" as the index
+        this.patchIndex = this.$refs.patch.selectedIndex = Object.keys(this.patches).length;
+      },
 
-    selectParams(e) {
-      this.currentParamsKey = e.target.value;
-      this.paramsIndex = e.target.selectedIndex;
-    },
+      remove() {
+        const confirm = window.confirm('Delete ' + this.currentPatchName + '?');
 
-    // -----------------
+        if (this.patches.length <= 1 || !confirm) { return; }
 
-    ...mapActions([
-      'savePatch',
-      'loadPatch',
-      'addPatch',
-      'removePatch'
-    ])
-  }
-};
+        this.removePatch(this.currentPatchKey);
+        this.patchIndex = this.$refs.patch.selectedIndex = 1;
+        this.currentPatchKey = 0;
+      },
+
+      select(e) {
+        this.currentPatchKey = e.target.value;
+        this.patchIndex = e.target.selectedIndex;
+        this.currentParamsKey = 0;                   // always select 1st set when new patch loaded
+        this.load();
+      },
+
+      // -----------------
+
+      addParams() {
+        this.$store.commit('ADD_PARAMETERS');
+        this.currentParamsKey = this.parameterSets.length - 1;
+
+        this.paramsIndex = this.$refs.params.selectedIndex = this.parameterSets.length;
+      },
+
+      removeParams(id) {
+        const confirm = window.confirm('Delete ' + this.currentConfigName + '?');
+
+        if (this.$store.getters.parameterSets.length <= 1 || !confirm) { return; }
+
+        this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
+        this.paramsIndex = this.$refs.params.selectedIndex = 1;
+        this.currentParamsKey = 0;
+      },
+
+      selectParams(e) {
+        this.currentParamsKey = e.target.value;
+        this.paramsIndex = e.target.selectedIndex;
+      },
+
+      // -----------------
+
+      ...mapActions(useAppStore, [
+        'savePatch',
+        'loadPatch',
+        'addPatch',
+        'removePatch'
+      ])
+    }
+  };
+*/
 
 </script>
+
 
 <style lang="scss">
   @import '../../styles/variables.scss';
@@ -248,7 +398,7 @@ export default {
       }
 
       input {
-        left: $gap;
+        left: var(--gap);
       }
     }
 
@@ -259,7 +409,7 @@ export default {
 
       .select {
         &:hover {
-          color: $color-highlight;
+          color: var(--color-highlight);
         }
       }
     }
@@ -286,7 +436,7 @@ export default {
       display: block;
 
       border-radius: 50%;
-      background: $color-grey-medium;
+      background: var(--color-grey-medium);
       border: 1px solid rgba(black, 0.1);
 
       font-size: 1em;
@@ -303,7 +453,7 @@ export default {
 
       opacity: 0;
       transform: scale(0);
-      transition: all $transition-time-slow;
+      transition: all var(--transition-time-slow);
 
       &.add {
         top: -4px;
@@ -314,7 +464,7 @@ export default {
       }
 
       &:hover {
-        color: $color-highlight;
+        color: var(--color-highlight);
       }
     }
 
@@ -322,7 +472,7 @@ export default {
       background: none;
       min-width: 16em;
       height: 100%;
-      padding-right: $gap;
+      padding-right: var(--gap);
       font-size: inherit;
       color: inherit;
       opacity: 0;
@@ -337,9 +487,9 @@ export default {
       position: absolute;
       height: 100%;
       left: 12px;
-      right: $gap;
+      right: var(--gap);
       top: -2px;
-      transition: left $transition-time-slow;
+      transition: left var(--transition-time-slow);
 
       &:focus {
         outline: none;
@@ -352,7 +502,7 @@ export default {
       font: 3em / 0.7em 'Anton';
       letter-spacing: 0.05em;
       position: absolute;
-      right: $gap;
+      right: var(--gap);
       opacity: 0.25;
       text-shadow: 1px 1px 2px #000;
       overflow: hidden;

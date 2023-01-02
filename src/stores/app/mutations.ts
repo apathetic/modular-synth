@@ -1,4 +1,4 @@
-import { validateData } from '../firebase';
+import { validateData } from '@/utils/firebase';
 
 // -----------------------------------------------
 //  PATCH
@@ -38,6 +38,7 @@ export const TOGGLE_EDIT = (state) => {
   state.editing = !state.editing;
 };
 
+// better name: MODULES ...?  WEBAUDIO_NODES?
 export const ADD_TO_REGISTRY = (state, payload) => {
   state.registry[payload.id] = payload.node;
 };

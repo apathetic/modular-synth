@@ -140,7 +140,7 @@
       position: absolute;
       font-size: 4.5em;
       font-weight: lighter;
-      font-family: $font-secondary;
+      font-family: var(--font-secondary)
       color: #bbb;
       top: 1.5em;
       left: 2em;

@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <div class="inlets">
     <span v-for="(inlet, index) in props.ports"
       :data-label="inlet.label"

@@ -8,28 +8,31 @@ export interface RootState {
 export interface AppState {
   power: boolean;
   editing: boolean;
-  focused: undefined;       // "Hovered": for Module Info, Connections.  TODO move to $bus?
-  active: number;           // "Clicked": for Dragging, Deleting.
-  registry: {[value: number]: Node};         // references to Node (object with coords, webaudio inlets/outlets)
 
-  // APP: "PERSISTENT" STORAGE
-  patchKey: string;         // key of active patch
+  focused: any;      // "hovered": for Module Info, Connections
+  active: number;    // "clicked": for dragging, deleting.  ...activeModule?
+
+  patches: Patch[];  // all available patches
+  patchKey: string;  // key of active patch.  activePatch? currentPatch?
+  // paramsKey: 0,      // key of active params. activeParams?
+  configKey: 0,    // key of active params. activeParams?
+
+
+  // modules..?
+  registry: {[value: number]: Node};  // references to all audio nodes in the current patch
 
   // UI: STUFFS
-  canvasOffset: 0;
+  canvasOffset: number;
 
-  // TODO: remove; use firebase + SW instead;
-  patches: {};               // all available patches, cached here
 }
 
 
-export interface PatchState {
+export interface Patch {
   id: number;
   name: string;
   modules: Module[];
   connections: Connection[];
-  parameterSets: ParameterSet[];
-  parameterKey: number;
+  configs: Config[];
 }
 
 
@@ -56,6 +59,9 @@ export interface Module {
   x: number;
   y: number;
 }
+
+
+// Node //   Node (object with coords, webaudio inlets/outlets)
 // A reference to the rendered node (ie. in the APP)
 //  * with webaudio inlets/outlets
 //  * also includes coords?
@@ -71,15 +77,18 @@ export interface Node {
 }
 
 
-export interface ParameterSet {
+export interface Config {
   name: string;
   parameters: Parameter[];
 }
 
 
-// export type Parameter...?
+
+export type parameterLabel = `${Module.id}-${string}`;
+
 export interface Parameter {
-  [key: string]: string | number;
+  // [key: string]: string | number;
+  [parameterLabel]: string | number;
 }
 
 export interface Inlet {

@@ -13,8 +13,8 @@
         min="0"
         max="1"
         step="0.05"
-        v-model="gain">
-      </input>
+        v-model="gain"
+      />
       <VU :audio="out2" />
     </div>
 
@@ -24,8 +24,11 @@
   </div>
 </template>
 
+
 <script>
-  import { mapGetters, mapActions } from 'vuex';
+  // import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
+import { useAppStore } from '@/stores/app';
   import { EVENT } from '../../events';
   import VU from '../UI/VU';
 
@@ -33,7 +36,7 @@
     name: 'MasterOut',
     components: { VU },
     computed: {
-      ...mapGetters([
+      ...mapState(useAppStore, [
         'power'
       ])
     },
@@ -117,7 +120,7 @@
       },
 
       // VUEX actions, bound as local methods:
-      ...mapActions([
+      ...mapActions(useAppStore, [
         'setFocus',
         'clearFocus'
       ])
@@ -140,7 +143,7 @@
 
     canvas {
       width: 20px;
-      height: $height;
+      height: var(--height);
     }
 
     .module-interface {
@@ -155,7 +158,7 @@
   // .slider,
   input[type="range"] {
     z-index: 1;
-    width: $height;
+    width: var(--height);
     height: 40px;
     margin-top: 46px;
     position: absolute;
@@ -168,7 +171,7 @@
 
     &::-webkit-slider-runnable-track {
       height: 5px;
-      background: $color-grey-dark;
+      background: var(--color-grey-dark);
       border: none;
     }
 

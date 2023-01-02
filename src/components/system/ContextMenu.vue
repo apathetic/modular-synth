@@ -31,7 +31,15 @@
 
 <script>
   import { EVENT } from '@/events';
-  import * as Modules from '@/components/';
+  import * as Modules from '@/components';
+
+
+
+
+  import { usePatchStore } from '@/stores/patch';
+
+
+
 
   export default {
     data() {
@@ -97,11 +105,18 @@
 
     methods: {
       newModule(type) {
+        const patchStore = usePatchStore();
         const offset = document.querySelector('header').offsetHeight;
+        const [x, y] = this.coords;
 
-        this.$store.dispatch('addModule', {
+        // this.$store.dispatch('addModule', {
+        //   type,
+        //   coords: [this.coords[0], this.coords[1] - offset]
+        // });
+
+        patchStore.addModule({
           type,
-          coords: [this.coords[0], this.coords[1] - offset]
+          coords: [x, y - offset]
         });
 
         this.$bus.$emit(EVENT.MODULE_ADD);
@@ -110,58 +125,57 @@
   };
 </script>
 
-<style lang="scss">
-  @import '../../styles/variables.scss';
-
+<style>
   .contextmenu {
     position: fixed;
     visibility: hidden;
 
     width: 160px;
-    border: 1px solid $color-grey-dark;
-    border-radius: $border-radius;
-    background: $color-grey-light;
-    color: $color-grey-dark;
+    border: 1px solid var(--color-grey-dark);
+    border-radius: var(--border-radius);
+    background: var(--color-grey-light);
+    color: var(--color-grey-dark);
 
     padding: 0.5em 0;
 
     z-index: 10000;
-
-    &::before {
-      content: '';
-      display: block;
-      border-radius: 50%;
-      background: inherit;
-      width: 1em;
-      height: 1em;
-      z-index: 1;
-      position: absolute;
-      border: 2px solid red;
-      top: -7px;
-      left: -7px;
-    }
-
-    h3 {
-      padding: 0.2em 1em;
-    }
-
-    li {
-      list-style: none;
-      cursor: default;
-      font-size: 1.2rem;
-      padding: 0.2em 1em;
-
-      &:hover {
-        background-color: $color-highlight;
-      }
-    }
-
-    div {
-      display: none;
-    }
-
-    .active {
-      display: block;
-    }
   }
+
+  .contextmenu::before {
+    content: '';
+    display: block;
+    border-radius: 50%;
+    background: inherit;
+    width: 1em;
+    height: 1em;
+    z-index: 1;
+    position: absolute;
+    border: 2px solid red;
+    top: -7px;
+    left: -7px;
+  }
+
+  .contextmenu h3 {
+    padding: 0.2em 1em;
+  }
+
+  .contextmenu li {
+    list-style: none;
+    cursor: default;
+    font-size: 1.2rem;
+    padding: 0.2em 1em;
+  }
+
+  .contextmenu li:hover {
+    background-color: var(--color-highlight);
+  }
+
+  .contextmenu li div {
+    display: none;
+  }
+
+  .contextmenu li .active {
+    display: block;
+  }
+
 </style>

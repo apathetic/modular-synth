@@ -133,11 +133,11 @@ is a "freq" parameter in the parent Component.
     }
 
     .track {
-      stroke: $color-grey-medium;
+      stroke: var(--color-grey-medium);
     }
 
     .display {
-      stroke: $color-highlight;
+      stroke: var(--color-highlight);
     }
   }
 </style>

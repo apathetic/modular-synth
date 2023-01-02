@@ -1,7 +1,7 @@
-import Vue from 'vue';
-import { api, generateKey } from '../firebase';
-import { _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME, state as DEFAULT } from './index';
-import { PatchState } from '../../types/';
+// import Vue from 'vue';
+// import { api, generateKey } from '../firebase';
+// import { /* _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME, */ state as DEFAULT } from './index';
+// import type { PatchState } from '@/types';
 
 
 // -----------------------------------------------
@@ -9,6 +9,7 @@ import { PatchState } from '../../types/';
 // -----------------------------------------------
 
 export const addModule = ({ commit }, data) => {
+  debugger;
   commit('ADD_MODULE', data);
 };
 

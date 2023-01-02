@@ -116,7 +116,7 @@
 
       &:hover {
         cursor: pointer;
-        color: $color-hover;
+        color: var(--color-hover);
       }
     }
   }

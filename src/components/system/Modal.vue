@@ -43,7 +43,7 @@ $duration: 0.2s;
 	position: fixed;
 	right: 0;
 	top: 0;
-	transition: opacity $duration ease;
+	transition: opacity var(--duration) ease;
   z-index: -1;
 
   &__content {
@@ -58,12 +58,12 @@ $duration: 0.2s;
 
     transform: translateY(-30px) scale(1.1);
     opacity: 0;
-    transition: all $duration;
-    transition-delay: $duration;
+    transition: all var(--duration);
+    transition-delay: var(--duration);
 
     .is-visible & {
-    	transform: translateY(0) scale(1);
-	    opacity: 1;
+      transform: translateY(0) scale(1);
+      opacity: 1;
     }
   }
 
@@ -78,14 +78,14 @@ $duration: 0.2s;
     z-index: 900;
 
     &::after {
-	    content: "\00d7";
+      content: "\00d7";
     }
   }
 
   &.is-visible {
-  	opacity: 1;
+    opacity: 1;
     pointer-events: all;
-	  z-index: 10000;
+    z-index: 10000;
   }
 }
 </style>

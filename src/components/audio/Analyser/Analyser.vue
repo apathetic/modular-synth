@@ -16,19 +16,31 @@
 
 
 <script>
-  import { mapGetters } from 'vuex';
+  // import { mapGetters } from 'vuex';
+  import { useAppStore } from '@/stores/app';
 
   export default {
     props: {
       id: null
     },
 
-    computed: {
-      ...mapGetters([
-        'power',
-        'editing'
-      ])
+    setup() {
+      const appStore = useAppStore();
+      return { appStore };
     },
+
+    computed: {
+      // ...mapState(useAppStore, ['power']),
+      power() { return this.appStore.power },
+      editing() { return this.appStore.editing }
+    },
+
+    // computed: {
+    //   ...mapGetters([
+    //     'power',
+    //     'editing'
+    //   ])
+    // },
 
     data() {
       return {
@@ -61,7 +73,7 @@
       });
     },
 
-    destroyed() {
+    unmounted() {
       // this.analyser.disconnect();// this is done in Connection
 
       this._buffer = null; //  ... Float32Array destroy ...??
@@ -137,6 +149,8 @@
 
 
 <style lang="scss">
+  // @import 'styles/variables.scss';
+
   .analyser {
     overflow: hidden;
 
@@ -149,7 +163,7 @@
       display: block;
       // left: 1px;
       // opacity: 0;
-      transition: opacity $transition-time;
+      transition: opacity var(--transition-time)
     }
 
     // &.analysing {

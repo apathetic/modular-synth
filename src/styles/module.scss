@@ -5,14 +5,14 @@
 --------------------------------- */
 
 .module {
-  height: $cellHeight;
-  width: $cellWidth;
-  border: 1px solid $color-grey-dark;
-  border-radius: $border-radius;
+  height: var(--cellHeight);
+  width: var(--cellWidth);
+  border: 1px solid var(--color-grey-dark);
+  border-radius: var(--border-radius);
   position: absolute;
-  transition: all $transition-time-slow;
-  // transition: all $transition-time;
-  // transition: left $transition-time-slow, top $transition-time-slow, border $transition-time;
+  transition: all var(--transition-time-slow);
+  // transition: all var(--transition-time)
+  // transition: left $transition-time-slow, top $transition-time-slow, border var(--transition-time)
   transition-timing-function: ease-in-out;
   z-index: 1;
 
@@ -121,25 +121,25 @@
 
 .play-mode {
   .module {
-    width: #{$rackWidth * 3};   // default rack width is 3U
+    width: calc(var(--rackWidth) * 3);   // default rack width is 3U
     // width: auto;
-    height: $rackHeight;
-    // transition: all $transition-time;
+    height: var(--rackHeight);
+    // transition: all var(--transition-time)
 
     &-interface {
       display: block;
       visibility: visible;
-      transition-delay: $transition-time-slow;
+      transition-delay: var(--transition-time-slow);
     }
 
     &-connections {
       display: none;
     }
 
-    &._1U { width: #{$rackWidth * 1}; }
-    &._2U { width: #{$rackWidth * 2}; }
-    &._3U { width: #{$rackWidth * 3}; }
-    &._4U { width: #{$rackWidth * 4}; }
-    &._6U { width: #{$rackWidth * 6}; }
+    &._1U { width: calc(var(--rackWidth) * 1); }
+    &._2U { width: calc(var(--rackWidth) * 2); }
+    &._3U { width: calc(var(--rackWidth) * 3); }
+    &._4U { width: calc(var(--rackWidth) * 4); }
+    &._6U { width: calc(var(--rackWidth) * 6); }
   }
 }

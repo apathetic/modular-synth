@@ -18,15 +18,16 @@ import { rackWidth, rackHeight } from '../constants';
 // export class sortable extends Vue {
 export const sortable = {
   methods: {
-    initSorting(handle) {
+    // initSorting(handle) {
+    setUp(handle) {
       this.handle = handle;
       this.$positionHighlight = this.handle.querySelector('.position-highlight');
       this.$positionHighlight.style.display = 'none';
 
-      this.setupGrid();
+      // this.initializePositions();
     },
 
-    setupGrid() {
+    initializePositions() {
       this._widestItem = Math.max.apply(null, this.modules.map(function(item) { return item.w; }));
       this._tallestItem = Math.max.apply(null, this.modules.map(function(item) { return item.h; }));
       this.gridList = new GridList(this.modules);

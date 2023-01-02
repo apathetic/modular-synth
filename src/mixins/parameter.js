@@ -4,7 +4,9 @@
  * @type {Object}
  */
 
-import { mapState, mapGetters } from 'vuex';
+// import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'pinia';
+import { usePatchStore } from '@/stores/patch';
 import { EVENT } from '../events';
 
 export const parameter = {
@@ -80,7 +82,8 @@ export const parameter = {
   },
 
   computed: {
-    ...mapGetters(['parameterKey'])
+    // ...mapGetters(['parameterKey'])
+    ...mapState(usePatchStore, ['parameterKey']),
   },
 
   watch: {

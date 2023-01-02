@@ -1,7 +1,8 @@
-import Vue from 'vue';
-import { api, generateKey } from '../firebase';
-import { _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME, state as DEFAULT } from '../patch';
-import { PatchState } from '../../types/';
+// import Vue from 'vue';
+import { nextTick } from 'vue';
+import { api, generateKey } from '@/utils/firebase';
+import { /* _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME,  */ state as DEFAULT } from '@/stores/patch';
+import type { PatchState } from '@/types';
 
 
 // -----------------------------------------------
@@ -11,12 +12,14 @@ import { PatchState } from '../../types/';
 /**
  * Load a Patch from the Store; patches that have been previously fetched and
  * cached may be loaded directly, else fallback to localStorage.
- * @param  {[type]} commit [description]
- * @param  {PatchState} state [description]
+ * @this  {Store} reference to the pinia store
  * @param  {string} key The key of the patch to load
  * @return {void}
  */
-export const loadPatch = ({ commit, state }, key?: string) => {
+export function loadPatch (key?: string) {
+  console.log('exported ppp', this);
+}
+export const loadPatchh = ({ commit, state }, key?: string) => {
   let patch: PatchState;
 
   key = key || state.patchKey;     // load a specific patch, or whatever current key is (from localStorage)
@@ -25,19 +28,20 @@ export const loadPatch = ({ commit, state }, key?: string) => {
     patch = state.patches[key];
     commit('SET_KEY', key);
   } else {
-    let fromStorage;
-    const base = { name: localStorage.getItem(_NAME) || DEFAULT.name };
+    patch = DEFAULT();
+    // let fromStorage;
+    // const base = { name: localStorage.getItem(_NAME) };
 
-    try {
-      fromStorage = [_ID, _MODULES, _CONNECTIONS, _PARAMETERS].reduce((acc, k) => {
-        const value = localStorage.getItem(k);
+    // try {
+      // * fromStorage * / patch = [_ID, _MODULES, _CONNECTIONS, _PARAMETERS].reduce((acc, k) => {
+      //   const value = localStorage.getItem(k);
+      //   if (value) { acc[k] = JSON.parse(value); }
 
-        if (value) { acc[k] = JSON.parse(value); }
-        return acc;
-      }, base);
-    } catch (err) { /*  */ }
+      //   return acc;
+      // }, base);
+    // } catch (err) { /*  */ }
 
-    patch = Object.assign({}, DEFAULT, fromStorage);
+    // patch = Object.assign({}, DEFAULT, fromStorage);
     // patch = { ...DEFAULT, ...fromStorage };
   }
 
@@ -52,7 +56,7 @@ export const loadPatch = ({ commit, state }, key?: string) => {
   commit('SET_PARAMETERS_KEY', -1); // and temp unset this so that it'll trigger a mutation on next tick
 
   // ensure nodes (+ inlets/outlets) are in the DOM...
-  Vue.nextTick(() => {
+  nextTick(() => {
     // ...then load new connections
     console.log('%c Routing audio... ', 'background:#666;color:white;font-weight:bold;');
     commit('LOAD_CONNECTIONS', patch.connections);

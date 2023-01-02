@@ -49,7 +49,9 @@ THOUGHTS:
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  // import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
+import { useAppStore } from '@/stores/app';
   import { cellWidth } from '@/constants';
   import { Parameter } from '@/audio';
 
@@ -116,7 +118,7 @@ THOUGHTS:
         };
       },
 
-      ...mapGetters([
+      ...mapState(useAppStore, [
         'node',    // audio
         // 'module',  // UI
       ])

@@ -192,16 +192,17 @@
 </script>
 
 <style lang="scss">
+  // @import 'styles/variables.scss';
   .note-in {
     .received {
       display: block;
       border-radius: 1em;
       width: 2em;
       height: 2em;
-      background: $color-grey-medium;
+      background: var(--color-grey-medium);
 
       &.active {
-        background: $color-green;
+        background: var(--color-green);
       }
     }
   }

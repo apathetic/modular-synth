@@ -8,12 +8,16 @@
 </template>
 
 <script>
-import { auth, provider } from '../../store/firebase';
+// import { auth, provider } from '@/stores/firebase';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+const provider = new GoogleAuthProvider();
+const auth = getAuth();
 
 export default {
   methods: {
     signIn() {
-      auth.signInWithPopup(provider).catch((err) => {
+      // const auth = getAuth();
+      signInWithPopup(auth, provider).catch((err) => {
         if (err.code === 'auth/web-storage-unsupported') {
           window.alert(err.message);
         }
@@ -21,6 +25,7 @@ export default {
     },
 
     signOut() {
+      // const auth = getAuth();
       auth.signOut();
     }
   }
@@ -29,19 +34,17 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../../styles/variables.scss';
-
   .auth {
     align-self: center;
 
     button:not(.active) {
-      box-shadow: 0 0 0 0 rgba($color-grey-light, 0.7);
+      box-shadow: 0 0 0 0 rgba(var(--color-grey-light), 0.7);
       animation: pulse 1s infinite alternate;
     }
   }
 
   @keyframes pulse {
-    to { box-shadow: 0 0 0.8em 0.2em rgba($color-grey-light, 0.7); }
+    to { box-shadow: 0 0 0.8em 0.2em rgba(var(--color-grey-light), 0.7); }
   }
 
 </style>

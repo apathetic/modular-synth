@@ -1,19 +1,21 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
-import store from './store';
+// import store from './stores';
 // import router from './router';
-import CompositionAPI from '@vue/composition-api';
-import { auth } from './store/firebase';
-import { context } from './audio';
+// import CompositionAPI from '@vue/composition-api';
+// import { auth } from './stores/firebase';
+// import { context } from './audio';
 
+import { createStore } from '@/stores';
 import { registerComponents, registerServiceWorker } from '@/utils/register';
 
-
-Vue.config.productionTip = false;
-Vue.use(CompositionAPI);
+import '@/styles/styles.scss';
 
 
-registerComponents();
+const app = createApp(App);
+
+createStore(app);
+registerComponents(app);
 registerServiceWorker();
 
 // const store = createStore();
@@ -21,32 +23,34 @@ registerServiceWorker();
 
 
 // Extend the Vue proto with two props:
-Object.defineProperties(Vue.prototype, {
-  $bus: {
-    get() { return this.$root.bus; }
-  },
-  $authenticated: {
-    get() { return this.$root.authenticated; },
-    set(a) { this.$root.authenticated = a; }
-  }
-});
+// Object.defineProperties(Vue.prototype, {
+//   $bus: {
+//     get() { return this.$root.bus; }
+//   },
+//   $authenticated: {
+//     get() { return this.$root.authenticated; },
+//     set(a) { this.$root.authenticated = a; }
+//   }
+// });
 
 
 // TODO inject at a module level...?
 // AudioContext Mixin: all Components will have access to AudioContext
-Vue.mixin({
-  data() {
-    return { context };
-  }
-});
+// Vue.mixin({
+//   data() {
+//     return { context };
+//   }
+// });
 
 
 
-new Vue({
+app.mount('main');
+
+/* new Vue({
   // router,
-  store,
+  // store,
   data: {
-    bus: new Vue(),
+    // bus: new Vue(),
     authenticated: false
   },
   render: (h) => h(App),
@@ -60,3 +64,4 @@ new Vue({
     });
   }
 }).$mount('main');
+ */

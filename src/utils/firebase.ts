@@ -1,16 +1,17 @@
-import config from '../../config.js';
-import { state as DEFAULT } from './patch';
-import { API } from '../types/firebase';
-import * as firebase from 'firebase/app';
-import 'firebase/auth';     // import auth into firebase namespace
-import 'firebase/database';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs } from "firebase/firestore";
+
+import firebaseConfig from '../../firebase.config.js';
+// import type { API } from '@/types/firebase';
 
 
-firebase.initializeApp(config);
-const database = firebase.database();
+const app = initializeApp(firebaseConfig);
+const database = getFirestore(app);
 
-export const auth = firebase.auth(); // createAuth();
-export const provider = new firebase.auth.GoogleAuthProvider();
+export const auth = getAuth();
+const user = auth.currentUser;
 
 
 
@@ -64,26 +65,36 @@ export function generateKey() {
  * Simple Firebase API (CRUD) wrapper.
  * @type {Object}
  */
-export const api: API = {
+export const api = {
   /**
    * Fetch data from Firebase. This happens only once (ie. no "listeners")
    * @param path The Firebase path to data to load.
    * @return {Promise} The loaded data.
    */
-  load(path) {
-    return new Promise((resolve, reject) => {
-      if (auth.currentUser) {
-        const getSnapshot = database.ref(path).once('value');
+  async load (path) {
 
-        getSnapshot
-          .then((response) => {
-            resolve(response.val());
-          })
-          .catch(reject);
-      } else {
-        reject('Not logged in to Firebase');
-      }
-    });
+    // const auth = getAuth();
+    // const user = auth.currentUser;
+
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+
+      const querySnapshot = await getDocs(collection(database, path));
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+      });
+
+      // const getSnapshot = database.ref(path).once('value');
+      // getSnapshot
+      //   .then((response) => {
+      //     resolve(response.val());
+      //   })
+      //   .catch(reject);
+    } else {
+      // reject('Not logged in to Firebase');
+      throw new Error('Not logged in to Firebase');
+    }
   },
 
   /**

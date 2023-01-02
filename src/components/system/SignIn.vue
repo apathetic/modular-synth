@@ -29,7 +29,7 @@
 
 <script>
 import Modal from './Modal';
-import { auth } from '@/store/firebase';
+import { auth } from '@/utils/firebase';
 
 export default {
   name: 'SignIn',

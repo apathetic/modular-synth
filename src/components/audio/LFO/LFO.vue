@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import { Parameter2 } from '@/audio';
+  // import { Parameter2 } from '@/audio';
   // import Dropdown from '@/components/UI/Dropdown';
   // import Knob from '@/components/UI/Knob';
   // import Slider from '@/components/UI/Slider';

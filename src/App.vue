@@ -2,11 +2,12 @@
   <main>
     <patch-manager></patch-manager>
 
-    <section :class="editing ? 'edit-mode': 'play-mode'"  @click.left="clearActive">
+    <!-- <section :class="editing ? 'edit-mode': 'play-mode'"  @click.left="clearActive"> -->
+      <section>
 
       <Synth
-        :modules="modules"
-        :connections="connections"
+        :modules="[] /* modules */"
+        :connections="[] /*connections */"
       />
 
       <aside id="sidebar">
@@ -18,7 +19,7 @@
             <span class="edit">edit</span>
           </button>
 
-          <p v-if="activeModule">
+          <p v-if="false /*activeModule*/">
             <strong>Current Module</strong><br>
             {{ activeModule.type }} (id: {{ activeModule.id }})<br>
             x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
@@ -50,14 +51,22 @@
   </main>
 </template>
 
-<script>
-  import { mapGetters, mapActions } from 'vuex';
+<script type="ts">
+  // import { mapGetters, mapActions } from 'vuex';
+  import { mapState, mapActions } from 'pinia';
+  import { useAppStore } from '@/stores/app';
+  import { usePatchStore } from '@/stores/patch';
+
   // import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
   import masterOut from './components/system/MasterOut.vue';
   import midi from './components/system/Midi.vue';
   import patchManager from './components/system/PatchManager.vue';
   import contextMenu from './components/system/ContextMenu.vue';
+
+import { auth } from '@/utils/firebase';
+import { onAuthStateChanged } from "firebase/auth";
+import { context } from './audio';
 
 
   import connecting from './components/system/Connecting.vue';
@@ -81,22 +90,50 @@
     },
 
     computed: {
-      ...mapGetters([
-        'power',
-        'editing',
-        'activeModule',
-        'modules',
+      // ...mapGetters([
+      //   'power',
+      //   'editing',
+      //   'activeModule',
+      //   'modules',
+      //   'bounds',
+      //   'connections'
+      // ])
+      editing() { return 3; },
+
+      ...mapState(useAppStore, [
+          'power',
+          'activeModule',
+          // 'editing'
+      ]),
+      ...mapState(usePatchStore, [
+        // 'modules',
         'bounds',
         'connections'
-      ])
+      ]),
+
+      // TODO find a better way to accommodate MasterOut:
+      ...mapState(usePatchStore, {
+        'modules': (state) => state.modules.filter((m) => m.id !== 0)
+      })
+
     },
 
     data() {
       return {
-        sorting: false
+        sorting: false,
+        authenticated: false
       };
     },
+    beforeCreate() {
+      // auth.onAuthStateChanged((user) => {
+      onAuthStateChanged(auth, (user) => {
+        this.$authenticated = !!user;
 
+        if (this.$authenticated) {
+          this.$store.dispatch('fetchPatches');
+        }
+      });
+    },
     created() {
       console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold');
 
@@ -139,19 +176,20 @@
     },
 
     methods: {
-      ...mapActions([
+      ...mapActions(useAppStore, [
         'togglePower',
         'toggleEditMode',
-        'removeModule',
         'clearActive',
-      ])
+      ]),
+
+        // 'removeModule',
     }
   };
 </script>
 
 <style lang="scss">
   @import 'styles/variables.scss';
-  @import 'styles/styles.scss';
+  /* @import 'styles/styles.scss'; */
   @import 'styles/module.scss';
 
   #modules {
@@ -167,17 +205,17 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: $color-grey-dark;
+      background: var(--color-grey-dark);
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: $color-grey-medium;
-      border: 2px solid $color-grey-dark;
+      background-color: var(--color-grey-medium);
+      border: 2px solid var(--color-grey-dark);
       border-radius: 0.5em;
     }
 
     &::-webkit-scrollbar-corner {
-      background: $color-grey-dark;
+      background: var(--color-grey-dark);
     }
   }
 
@@ -188,7 +226,7 @@
     left: 0;
     top: 0;
     transition: opacity 0.1s;
-    transition-delay: $transition-time-slow;
+    transition-delay: var(--transition-time-slow);
 
     .play-mode & {
       opacity: 0;
