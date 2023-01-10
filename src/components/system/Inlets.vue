@@ -1,6 +1,6 @@
 <template>
   <div class="inlets">
-    <span v-for="(inlet, index) in props.ports"
+    <span v-for="(inlet, index) in ports"
       :data-label="inlet.label"
       :data-port="index"
       class="inlet">
@@ -10,6 +10,6 @@
 
 <script>
   export default {
-    // props: { ports: Array }
+    props: { ports: Array }
   };
 </script>

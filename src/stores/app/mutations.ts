@@ -38,34 +38,34 @@ export const TOGGLE_EDIT = (state) => {
   state.editing = !state.editing;
 };
 
-// better name: MODULES ...?  WEBAUDIO_NODES?
-export const ADD_TO_REGISTRY = (state, payload) => {
-  state.registry[payload.id] = payload.node;
-};
+// // better name: MODULES ...?  WEBAUDIO_NODES?
+// export const ADD_TO_REGISTRY = (state, payload) => {
+//   state.registry[payload.id] = payload.node;
+// };
 
-export const REMOVE_FROM_REGISTRY = (state, id) => {
-  delete state.registry[id];
-};
+// export const REMOVE_FROM_REGISTRY = (state, id) => {
+//   delete state.registry[id];
+// };
 
 
 // -----------------------------------------------
 //  UI
 // -----------------------------------------------
-export const SET_ACTIVE = (state, id) => {
-  state.active = id;
-};
+// export const SET_ACTIVE = (state, id) => {
+//   state.active = id;
+// };
 
-export const CLEAR_ACTIVE = (state) => {
-  state.active = undefined;
-};
+// export const CLEAR_ACTIVE = (state) => {
+//   state.active = undefined;
+// };
 
-export const SET_FOCUS = (state, id) => {
-  state.focused = id;
-};
+// export const SET_FOCUS = (state, id) => {
+//   state.focused = id;
+// };
 
-export const CLEAR_FOCUS = (state) => {
-  state.focused = undefined;
-};
+// export const CLEAR_FOCUS = (state) => {
+//   state.focused = undefined;
+// };
 
 
 

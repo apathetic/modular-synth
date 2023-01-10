@@ -2,6 +2,7 @@
   <div
     id="modules"
     ref="grid"
+    @scroll="onScroll"
     XXXXv-contextmenu:modules
   >
     <div class="position-highlight">
@@ -38,57 +39,86 @@
 </template>
 
 <script>
+import { defineComponent, reactive, computed, onMounted, ref, watch, provide } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import { useAppStore } from '@/stores/app';
-  // import { mapGetters, mapActions } from 'vuex';
-  import { context } from '@/audio';
-  // import { sortable } from '@/mixins/sortable';
-  import { useSortable } from '@/composables';
-  import { draggable } from '@/mixins/draggable';
-  import { EVENT } from '@/events';
+import { useSortable } from '@/composables';
 
-  import Connecting from '@/components/system/Connecting.vue';
-  import Connection from '@/components/system/Connection.vue';
-  import * as Modules from '@/components/';
-  import Unit from './Unit.vue';
-  import Debugger from '@/components/test/Debugger.vue';
+// import { context } from '@/audio';
+import { draggable } from '@/mixins/draggable';
+import { EVENT } from '@/events';
 
-  export default {
-    name: 'Rack',
-    provide: [ context ],
-    // mixins: [ sortable ], // draggable
+import * as Modules from '@/components/';
+import Connecting from '@/components/system/Connecting.vue';
+import Connection from '@/components/system/Connection.vue';
+import Debugger from '@/components/test/Debugger.vue';
 
-    components: {
-      ...Modules,
-      Unit,
-      Connecting,
-      Connection,
-      Debugger,
-    },
+import Unit from './Unit.vue';
 
-    props: {
-      modules: Array,
-      connections: Array,
-    },
+export default defineComponent({
+  name: 'Synth',
 
-    computed: {
-      width() {
-        const canvasWidth = this.bounds + 124 + 40; // .. + module width + 40
-        return this.editing
-          ? `width: ${canvasWidth}px`
-          : 'width: auto';
-      },
-      ...mapState(useAppStore, [
-        'editing',
-        'bounds',
-      ])
-    },
+  components: {
+    ...Modules,
+    Unit,
+    Connecting,
+    Connection,
+    Debugger,
+  },
 
-    created() {
+  props: {
+    modules: Array,
+    connections: Array,
+  },
 
-      const { initSorting } = useSortable();
+  setup({ modules, connections }) {
+    console.log('setting up rack');
 
-      initSorting(this.$refs.grid);
+    const { initSorting } = useSortable();
+    const store = useAppStore();
+    const grid = ref(null); // template $ref
+
+    const isEditing = computed(() => store.editing);
+    // const bounds = computed(() => store.bounds);
+    const width = computed(() => {
+      // const canvasWidth = bounds.value + 124 + 40; // .. + module width + 40
+      // return `width: ${ isEditing ? canvasWidth + 'px' : 'auto' }`;
+    });
+
+    // provide('context', context);
+
+    onMounted(() => {
+      initSorting(grid.value, modules);
+    });
+
+    watch(modules, (mod, old) => {
+      initSorting(grid.value, mod);
+    });
+
+    // const active = computed(() => store.active)
+    function setActive(id) { store.active = id; }
+    function clearActive() { store.active = undefined; }
+    function setFocus(id) { store.focused = id; }
+    function clearFocus() { store.focused = undefined; }
+    function onScroll(e) {
+      if (editing) {
+        // store.scrollOffset = e.target.scrollLeft
+      }
+    }
+
+
+
+    return {
+      grid,
+      onScroll,
+      width,
+
+      setActive,
+      clearActive,
+      setFocus,
+      clearFocus,
+    }
+
 
     /*
       const bus = this.$root.$bus;
@@ -129,26 +159,11 @@ import { useAppStore } from '@/stores/app';
           this.gridList._pullItemsToLeft();
         });
       });
-  */
+    */
 
-    },
+  },
 
-    mounted() {
-      // const grid = this.$refs.grid; // rare time we need to scrape DOM.
-      // grid.addEventListener(EVENT.SCROLL, (e) => {
-      //   if (this.editing) {
-      //     this.$store.commit('UPDATE_SCROLL_OFFSET', e.target.scrollLeft);
-      //   }
-      // });
-    },
 
-    methods: {
-      ...mapActions(useAppStore, [
-        'setActive',
-        'clearActive',
-        'setFocus',
-        'clearFocus'
-      ])
-    }
-  };
+});
+
 </script>

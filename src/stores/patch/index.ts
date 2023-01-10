@@ -16,8 +16,8 @@ export const state = () => <PatchState>{
   name: '<blank>',
   modules: [{ type: 'MasterOut', id: 0, x: 0, y: 0 }],
   connections: [],
-  parameterKey: 0,
-  parameterSets: [{
+  // parameterKey: 0,
+  configs: [{
     name: '<blank>',
     parameters: []
   }]

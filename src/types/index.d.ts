@@ -8,27 +8,26 @@ export interface RootState {
 export interface AppState {
   power: boolean;
   editing: boolean;
-
   focused: any;      // "hovered": for Module Info, Connections
   active: number;    // "clicked": for dragging, deleting.  ...activeModule?
 
   patches: Patch[];  // all available patches
-  patchKey: string;  // key of active patch.  activePatch? currentPatch?
-  // paramsKey: 0,      // key of active params. activeParams?
-  configKey: 0,    // key of active params. activeParams?
+  patchKey: number;  // key of active patch.  activePatch? currentPatch?
+  configKey: number; // key of active params. activeconfig?
 
-
-  // modules..?
-  registry: {[value: number]: Node};  // references to all audio nodes in the current patch
+  // nodes..?
+  // references to all audio nodes in the current patch.
+  // Nodes/Modules are kinda conflated / they share the same `this` instance ... :(
+  registry: {[value: number]: Node};
 
   // UI: STUFFS
   canvasOffset: number;
-
 }
 
+type PatchKey = string; // uuid/firebaseKey/...
 
 export interface Patch {
-  id: number;
+  id: PatchKey;
   name: string;
   modules: Module[];
   connections: Connection[];

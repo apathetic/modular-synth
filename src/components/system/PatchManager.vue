@@ -18,7 +18,7 @@
     <div class="dropdowns">
 
       <div class="patch select">
-        <span>0{{ patchIndex }}</span>
+        <span>0{{ currentPatchKey }}</span>
         <button class="math add" @click="addPatch">+</button>
         <button class="math remove" @click="removePatch">-</button>
         <select v-model="currentPatchKey" ref="patchRef">
@@ -29,12 +29,12 @@
       </div>
 
       <div class="params select">
-        <span>0{{ paramsIndex }}</span>
-        <button class="math add" @click="addParams">+</button>
-        <button class="math remove" @click="removeParams">-</button>
-        <select v-model="currentParamsKey" ref="configRef">
+        <span>0{{ currentConfigKey }}</span>
+        <button class="math add" @click="addConfig">+</button>
+        <button class="math remove" @click="removeConfig">-</button>
+        <select v-model="currentConfigKey" ref="configRef">
           <option value="" disabled selected>&lt;select configs&gt;</option>
-          <option v-for="(params, key) in parameterSets" :value="key">{{ params.name }}</option>
+          <option v-for="(config, key) in configs" :value="key">{{ config.name }}</option>
         </select>
         <input type="text" v-model="currentConfigName">
       </div>
@@ -67,25 +67,20 @@ export default defineComponent({
   setup () {
     const store = useAppStore();
     const { resetSorting } = useSortable();
+
     const patchRef = ref(null);
     const configRef = ref(null);
 
-    // const state = reactive({
-    //   patchIndex: 1, // patches.indexOf(patchKey)
-    //   paramsIndex: 1 // params.indexOf(paramsKey)
-    // });
-
+    const editing = computed(() => store.editing);
     const patch = computed(() => store.patch);
     const patches = computed(() => store.patches);
-    const configs = computed(() => store.patch?.configs);
-
-    // TODO local state:
-    const currentPatchKey = computed(() => store.patchKey)
-    const currentConfigKey = computed(() => store.configKey);
+    const configs = computed(() => store.configs);
+    const currentPatchKey = ref(store.patchKey); // initialize w/ store value
+    const currentConfigKey = ref(store.configKey);
 
 
     const currentPatchName = computed({
-      get() { return store.patch.name },
+      get() { return store.patch?.name },
       set(value) { store.patch.name = value }
     });
     const currentConfigName = computed({
@@ -101,7 +96,6 @@ export default defineComponent({
     });
 
 
-    const editing = () => store.editing();
     const save = () => store.savePatch();
     const load = () => {
       store.loadPatch();
@@ -137,7 +131,7 @@ export default defineComponent({
       // this.patchIndex = e.target.selectedIndex;
       // currentParamsKey = 0;    // always select 1st set when new patch loaded
 
-      // store.patchKey = key;
+      store.patchKey = key;
       store.paramsKey = 0;
       load();
     });
@@ -172,6 +166,7 @@ export default defineComponent({
       // ...toRefs(state),
       editing,
       save,
+
       currentPatchKey,
       currentConfigKey,
       currentPatchName,

@@ -1,6 +1,6 @@
 <template>
   <div class="outlets">
-    <span v-for="(outlet, index) in props.ports"
+    <span v-for="(outlet, index) in ports"
       @mousedown.stop="parent.$root.$bus.$emit('connection:start', index, parent.id);"
       :data-label="outlet.label"
       :data-port="index"
@@ -10,7 +10,10 @@
 </template>
 
 <script>
+  // import { useConnection } from @/composables;
+  // const { startConnecting } = useConnection();
+
   export default {
-    // props: { ports: Array }
+    props: { ports: Array }
   };
 </script>

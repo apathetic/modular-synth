@@ -11,8 +11,12 @@
 </template>
 
 <script>
+import { watch } from 'vue';
 import { cellWidth } from '../../constants';
 import { EVENT } from '../../events';
+
+import { useConnection } from '@/composables';
+
 
 export default {
   data() {
@@ -29,8 +33,27 @@ export default {
    *
    */
   created() {
-    this.$bus.$on('connection:start', (port, id) => {
-      this.from = this.$store.getters.module(id);
+
+    // this.$bus.$on('connection:start', (port, id) => {
+    //   this.from = this.$store.getters.module(id);
+    //   this.port = port;
+    //   this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
+    //   this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
+
+    //   document.addEventListener(EVENT.MOUSE_MOVE, this.drag);
+    //   document.addEventListener(EVENT.MOUSE_UP, this.dragEnd);
+
+    //   this.active = true;
+    // });
+
+    const { activeConnector } = useConnection(); // current connector
+    watch(activeConnector, ({ port, id }/* , old */) => {
+      if (!connector) {
+        this.active = false;
+        return;
+      }
+
+      this.from = store.module(id);
       this.port = port;
       this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
       this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
@@ -39,6 +62,7 @@ export default {
       document.addEventListener(EVENT.MOUSE_UP, this.dragEnd);
 
       this.active = true;
+
     });
   },
 

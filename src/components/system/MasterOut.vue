@@ -27,6 +27,8 @@
 
 <script>
   // import { mapGetters, mapActions } from 'vuex';
+// import { inject } from 'vue'
+
 import { mapState, mapActions } from 'pinia';
 import { useAppStore } from '@/stores/app';
   import { EVENT } from '../../events';
@@ -34,6 +36,7 @@ import { useAppStore } from '@/stores/app';
 
   export default {
     name: 'MasterOut',
+    inject: [ 'context' ],
     components: { VU },
     computed: {
       ...mapState(useAppStore, [
@@ -68,11 +71,14 @@ import { useAppStore } from '@/stores/app';
       this.out1.connect(this.context.destination);
       this.out2.connect(this.context.destination);
 
+      this.$watch('gain', this.setGain);
+
+
+      // TODO move out of here
       this.$watch('power', (on) => {
         (on) ? this.start() : this.stop();
       });
 
-      this.$watch('gain', this.setGain);
 
       console.log('Creating MasterOut');
     },
@@ -84,20 +90,16 @@ import { useAppStore } from '@/stores/app';
       window.addEventListener(EVENT.RESIZE, this.determinePosition);
       this.modules.addEventListener(EVENT.SCROLL, this.determinePosition);
 
-      this.$store.commit('ADD_TO_REGISTRY', {
+      this.addToRegistry({
         id: 0,
         node: this,
       });
     },
 
     methods: {
-      start() {
-        this.context.resume();
-      },
-
-      stop() {
-        this.context.suspend();
-      },
+      // TODO move out of here
+      start() { this.context.resume(); },
+      stop() { this.context.suspend(); },
 
       setGain(g) {
         this.out1.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
@@ -112,15 +114,17 @@ import { useAppStore } from '@/stores/app';
         this.x = x;
         this.y = y;
 
-        this.$store.commit('UPDATE_GRID_POSITION', {
+        this.updateGridPosition({
           id: 0,
           x: x,
           y: y
         });
       },
 
-      // VUEX actions, bound as local methods:
+      // store actions, bound as local methods:
       ...mapActions(useAppStore, [
+        'updateGridPosition',
+        'addToRegistry',
         'setFocus',
         'clearFocus'
       ])

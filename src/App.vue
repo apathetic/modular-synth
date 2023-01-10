@@ -66,11 +66,11 @@
 
 import { auth } from '@/utils/firebase';
 import { onAuthStateChanged } from "firebase/auth";
-import { context } from './audio';
+// import { context } from './audio';
 
 
-  import connecting from './components/system/Connecting.vue';
-  import connection from './components/system/Connection.vue';
+  // import connecting from './components/system/Connecting.vue';
+  // import connection from './components/system/Connection.vue';
 
 
 
@@ -103,7 +103,8 @@ import { context } from './audio';
       ...mapState(useAppStore, [
           'power',
           'activeModule',
-          // 'editing'
+          'authenticated',
+          'editing'
       ]),
       ...mapState(usePatchStore, [
         // 'modules',
@@ -121,16 +122,22 @@ import { context } from './audio';
     data() {
       return {
         sorting: false,
-        authenticated: false
+        // authenticated: false
       };
     },
     beforeCreate() {
+      const store = useAppStore();
       // auth.onAuthStateChanged((user) => {
       onAuthStateChanged(auth, (user) => {
-        this.$authenticated = !!user;
+        // this.$authenticated = !!user;
 
-        if (this.$authenticated) {
-          this.$store.dispatch('fetchPatches');
+        // if (this.$authenticated) {
+        //   this.$store.dispatch('fetchPatches');
+        // }
+        store.authenticated = !!user;
+
+        if (!!user) {
+          this.fetchPatches();
         }
       });
     },
@@ -180,6 +187,7 @@ import { context } from './audio';
         'togglePower',
         'toggleEditMode',
         'clearActive',
+        'fetchPatches',
       ]),
 
         // 'removeModule',

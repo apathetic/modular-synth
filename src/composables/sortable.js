@@ -35,9 +35,9 @@ export function useSortable() {
   const store = createStore();
   const activeModule = computed(() => store.getters['activeModule']);
 
-  function initSorting(modules, container) {
-    items = modules;
+  function initSorting(container, modules) {
     handle = container;
+    items = modules;
     gridlist = new GridList(items);
 
     positionHighlight = handle.querySelector('.position-highlight');
@@ -47,7 +47,7 @@ export function useSortable() {
   };
 
   function resetSorting() {
-    if (items && items.length) {
+    if (items.length) {
       widestItem = Math.max.apply(null, items.map((item) => item.w ));
       tallestItem = Math.max.apply(null, items.map((item) => item.h ));
       // gridlist = new GridList(items);

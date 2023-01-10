@@ -1,8 +1,9 @@
 // import Vue from 'vue';
 import { nextTick } from 'vue';
 import { api, generateKey } from '@/utils/firebase';
+import { validateData } from '@/utils/firebase';
 import { /* _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME,  */ state as DEFAULT } from '@/stores/patch';
-import type { PatchState } from '@/types';
+// import type { PatchState } from '@/types';
 
 
 // -----------------------------------------------
@@ -10,60 +11,44 @@ import type { PatchState } from '@/types';
 // -----------------------------------------------
 
 /**
- * Load a Patch from the Store; patches that have been previously fetched and
- * cached may be loaded directly, else fallback to localStorage.
- * @this  {Store} reference to the pinia store
- * @param  {string} key The key of the patch to load
+ * Loads and instantiates a patch from the Store. This includes setting up
+ * `modules`, `configs`, routing audio, and applying any `parameters`.
+ *
+ * NOTE: we cannot load `modules`, `connections`, and `parameters` all at once.
+ *       Modules must be mounted first so that all AudioNodes are available
+ *       to the `connections`; likewise the `configs` need to be available
+ *       before `parameters` are instantiated.
+ *
+ * @this {Store} reference to the pinia store
+ * @param {string} key The key of the patch to load
  * @return {void}
  */
-export function loadPatch (key?: string) {
-  console.log('exported ppp', this);
-}
-export const loadPatchh = ({ commit, state }, key?: string) => {
-  let patch: PatchState;
+export function loadPatch(key?: string) {
+  this.patchKey = key || this.patchKey; // if key == patchKey can prob return
+  this.configKey = -1; // temp unset this so that it'll trigger a mutation on next tick
 
-  key = key || state.patchKey;     // load a specific patch, or whatever current key is (from localStorage)
+  // load id, name, modules, and configs
+  const patch: PatchState = this.patch;
 
-  if (key && state.patches[key]) {
-    patch = state.patches[key];
-    commit('SET_KEY', key);
-  } else {
-    patch = DEFAULT();
-    // let fromStorage;
-    // const base = { name: localStorage.getItem(_NAME) };
+  console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
 
-    // try {
-      // * fromStorage * / patch = [_ID, _MODULES, _CONNECTIONS, _PARAMETERS].reduce((acc, k) => {
-      //   const value = localStorage.getItem(k);
-      //   if (value) { acc[k] = JSON.parse(value); }
+  // commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
+  // commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
+  // commit('SET_PARAMETERS_KEY', -1); // and temp unset this so that it'll trigger a mutation on next tick
 
-      //   return acc;
-      // }, base);
-    // } catch (err) { /*  */ }
-
-    // patch = Object.assign({}, DEFAULT, fromStorage);
-    // patch = { ...DEFAULT, ...fromStorage };
-  }
-
-  console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name || '(localStorage)');
-
-  // NOTE: we cannot load modules, connections, and parameters all at once.
-  //       Modules must be mounted first, so that all AudioNodes are available
-  //       to the Connections; likewise the Modules' settings need to be
-  //       available before Parameters are instantiated.
-  commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
-  commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
-  commit('SET_PARAMETERS_KEY', -1); // and temp unset this so that it'll trigger a mutation on next tick
+  // patch.connections = []; // first, explicitly destroy all connections
 
   // ensure nodes (+ inlets/outlets) are in the DOM...
   nextTick(() => {
     // ...then load new connections
     console.log('%c Routing audio... ', 'background:#666;color:white;font-weight:bold;');
-    commit('LOAD_CONNECTIONS', patch.connections);
+    // commit('LOAD_CONNECTIONS', patch.connections);
+    // patch.connections = data;
 
     // ...lastly, load parameters
     console.log('%c Setting parameters... ', 'background:#666;color:white;font-weight:bold;');
-    commit('SET_PARAMETERS_KEY', 0);
+    // commit('SET_PARAMETERS_KEY', 0);
+    this.configKey = 0;
   });
 };
 
@@ -143,15 +128,15 @@ export const removePatch = ({ commit, state }, key) => {
 
 
 /**
- * Fetch all of the user's patches from the backend.
- * @param  {[type]} commit [description]
- * @return {[type]}        [description]
+ * Fetch all of the user's patches from the API
  */
-export const fetchPatches = ({ commit }) => {
+// export const fetchPatches = ({ commit }) => {
+export function fetchPatches() {
   api.load('/patch')
     .then((patches) => {
       console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
-      commit('SET_PATCHES', patches);
+      // commit('SET_PATCHES', patches);
+      this.patches = validateData(patches); // patches;
     })
     .catch(() => {
       console.log('Not signed in.');
@@ -172,27 +157,50 @@ export const toggleEditMode = ({ commit }) => {
   commit('TOGGLE_EDIT');
 };
 
+// better name: MODULES ...?  WEBAUDIO_NODES?
+export function addToRegistry({ id, node }) { this.registry[id] = node; }
+export function removeFromRegistry (id) { delete this.registry[id]; }
 
-// -----------------------------------------------
-//  UI
-// -----------------------------------------------
 
-export const setActive = ({ commit }, id) => {
-  commit('SET_ACTIVE', id);
-};
+// export const setActive = ({ commit }, id) => {
+//   commit('SET_ACTIVE', id);
+// };
 
-export const clearActive = ({ commit }) => {
-  // commit('CLEAR_ACTIVE');
-};
+// export const clearActive = ({ commit }) => {
+//   commit('CLEAR_ACTIVE');
+// };
 
-// TODO ----------------- move to VUE BUS ? or within App.vue only ...?
-// $emit event ... only connecting.vue needs this...
-export const setFocus = ({ commit }, id) => {
-  commit('SET_FOCUS', id);
-};
+// export const setFocus = ({ commit }, id) => {
+//   commit('SET_FOCUS', id);
+// };
 
-export const clearFocus = ({ commit }) => {
-  commit('CLEAR_FOCUS');
-};
+// export const clearFocus = ({ commit }) => {
+//   commit('CLEAR_FOCUS');
+// };
 // ---------------------------------------
 
+/**
+ * @this Store The vue (pinia) store instance.
+ */
+export function setActive(id) { this.active = id; }
+export function clearActive() { this.active = undefined; }
+export function setFocus(id) { this.focused = id; }
+export function clearFocus() { this.focused = undefined; }
+
+
+
+
+// -----------------------------------------------
+//  PATCH
+// -----------------------------------------------
+
+/**
+ * @this Store The vue (pinia) store instance.
+ */
+export function updateGridPosition({ id, x, y }) {
+  // const module = state.modules.find((m) => m.id === data.id);
+  const module = this.getModule(id);
+
+  module.x = x;
+  module.y = y;
+};
