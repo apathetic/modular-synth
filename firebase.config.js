@@ -3,16 +3,6 @@ export default {
   authDomain: "malformed-synth.firebaseapp.com",
   databaseURL: "https://malformed-synth.firebaseio.com",
   projectId: "malformed-synth",
-  storageBucket: "malformed-synth.appspot.com"
+  storageBucket: "malformed-synth.appspot.com",
+  appId: "1:893642604788:web:5d9b67bdbb975390b29ea1",
 };
-
-// const firebaseConfig = {
-//   apiKey: "AIzaSyBcxE9ynMPhVDdTWVywMAPgx8Tq242FWvE",
-//   authDomain: "malformed-synth.firebaseapp.com",
-//   databaseURL: "https://malformed-synth.firebaseio.com",
-//   projectId: "malformed-synth",
-//   storageBucket: "malformed-synth.appspot.com",
-//   messagingSenderId: "893642604788",
-//   appId: "1:893642604788:web:02e690809871e2e1b29ea1",
-//   measurementId: "G-E4BEY2MQHD"
-// };

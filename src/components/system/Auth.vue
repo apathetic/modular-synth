@@ -1,35 +1,56 @@
 <template>
   <div class="auth">
 
-    <button v-if="$root.authenticated" @click="signOut" title="sign out" class="ring active"></button>
-    <button v-else                     @click="signIn"  title="sign in"  class="ring"></button>
+    <button v-if="session" @click="signOut" title="sign out" class="ring active"></button>
+    <button v-else         @click="signIn"  title="sign in"  class="ring"></button>
 
+    <Modal :visible="showModal">
+      <Login />
+    </Modal>
   </div>
 </template>
 
 <script>
-// import { auth, provider } from '@/stores/firebase';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-const provider = new GoogleAuthProvider();
-const auth = getAuth();
+  // import { auth, provider } from '@/stores/firebase';
+  // import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+  // const provider = new GoogleAuthProvider();
+  // const auth = getAuth();
 
-export default {
-  methods: {
-    signIn() {
-      // const auth = getAuth();
-      signInWithPopup(auth, provider).catch((err) => {
-        if (err.code === 'auth/web-storage-unsupported') {
-          window.alert(err.message);
-        }
-      });
+  import Login from './Login.vue';
+  import Modal from './Modal.vue';
+  import { useAppStore } from '@/stores/app';
+  import { mapState } from 'pinia';
+
+
+  export default {
+    components: { Modal, Login },
+    data() {
+      return {
+        showModal: false
+      }
     },
+    computed: {
+      ...mapState(useAppStore, [
+        'session'
+      ])
+    },
+    methods: {
+      signIn() {
+        // const auth = getAuth();
+        // signInWithPopup(auth, provider).catch((err) => {
+        //   if (err.code === 'auth/web-storage-unsupported') {
+        //     window.alert(err.message);
+        //   }
+        // });
+        this.showModal = true;
+      },
 
-    signOut() {
-      // const auth = getAuth();
-      auth.signOut();
+      signOut() {
+        // const auth = getAuth();
+        auth.signOut();
+      }
     }
-  }
-};
+  };
 
 </script>
 

@@ -1,9 +1,13 @@
-// import Vue from 'vue';
 import { nextTick } from 'vue';
-import { api, generateKey } from '@/utils/firebase';
-import { validateData } from '@/utils/firebase';
-import { /* _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME,  */ state as DEFAULT } from '@/stores/patch';
+import { v4 as uuid } from 'uuid';
+// import { fetch, create, save, delete, validateData } from '@/utils/supabase';
+import { fetch, create, save, validateData } from '@/utils/supabase';
+
+// import { api, generateKey } from '@/utils/firebase';
+// import { validateData } from '@/utils/firebase';
+// import { /* _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME,  */ state as DEFAULT } from '@/stores/patch';
 // import type { PatchState } from '@/types';
+import { patch } from './';
 
 
 // -----------------------------------------------
@@ -90,23 +94,18 @@ export const savePatch = ({ commit, state }, data) => {
 
 /**
  * Insert a new, blank patch into the workspace.
- * @param {[type]} commit [description]
- * @param {[type]} state  [description]
+ *
+ * @this Store The Vue (pinia) store instance.
  */
-export const addPatch = ({ commit, state }) => {
-  const key = generateKey();
+export const addPatch = () => {
+  const id = uuid(); // generateKey();
+  const blank = patch();
 
-  // Create new patch in Database
-  api.create(key, DEFAULT);
-
-  // Create new patch in localStorage
-  commit('SAVE_PATCH', {
-    key,
-    patch: DEFAULT
-  });
+  // create({ id, ...blank }); // push to db...?
+  state.patches[id] = blank;
 
   // Update App keys
-  state.patchKey = key;
+  state.patchKey = id;
   state.parameterKey = 0;
 };
 
@@ -130,17 +129,24 @@ export const removePatch = ({ commit, state }, key) => {
 /**
  * Fetch all of the user's patches from the API
  */
-// export const fetchPatches = ({ commit }) => {
-export function fetchPatches() {
-  api.load('/patch')
-    .then((patches) => {
-      console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
-      // commit('SET_PATCHES', patches);
-      this.patches = validateData(patches); // patches;
-    })
-    .catch(() => {
-      console.log('Not signed in.');
-    });
+export async function fetchPatches() {
+  // api.load('/patches')
+  //   .then((patches) => {
+  //     console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
+  //     // commit('SET_PATCHES', patches);
+  //     this.patches = validateData(patches); // patches;
+  //   })
+  //   .catch(() => {
+  //     console.log('Not signed in.');
+  //   });
+  try {
+    const patches = await fetch();
+    console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
+    this.patches = validateData(patches);
+  } catch (err) {
+    console.log('Not signed in.', err);
+  };
+
 };
 
 
@@ -149,35 +155,13 @@ export function fetchPatches() {
 //  APP
 // -----------------------------------------------
 
-export const togglePower = ({ commit }) => {
-  commit('TOGGLE_POWER');
-};
+export function togglePowerMode() { this.power = !this.power; }
+export function toggleEditMode() { this.editing = !this.editing; }
 
-export const toggleEditMode = ({ commit }) => {
-  commit('TOGGLE_EDIT');
-};
-
-// better name: MODULES ...?  WEBAUDIO_NODES?
+// better name: MODULES? MODULEREGISTRY ...?  WEBAUDIO_NODES?
 export function addToRegistry({ id, node }) { this.registry[id] = node; }
 export function removeFromRegistry (id) { delete this.registry[id]; }
 
-
-// export const setActive = ({ commit }, id) => {
-//   commit('SET_ACTIVE', id);
-// };
-
-// export const clearActive = ({ commit }) => {
-//   commit('CLEAR_ACTIVE');
-// };
-
-// export const setFocus = ({ commit }, id) => {
-//   commit('SET_FOCUS', id);
-// };
-
-// export const clearFocus = ({ commit }) => {
-//   commit('CLEAR_FOCUS');
-// };
-// ---------------------------------------
 
 /**
  * @this Store The vue (pinia) store instance.
@@ -203,4 +187,23 @@ export function updateGridPosition({ id, x, y }) {
 
   module.x = x;
   module.y = y;
-};
+}
+
+export function addModule(data) {
+  const type = data.type;
+  const pos = data.coords || [0, 0];
+  const size = moduleSize[type] || [1, 1];
+
+  state.id++;
+  // TODO: state.modules[state.id] = {... } ?
+  state.modules.push({
+    id: state.id,
+    type: type,
+    x: pos[0],    // for dragging X position
+    y: pos[1],    // for dragging Y position
+    col: 0,       // for rack X position
+    row: 0,       // for rack Y position
+    w: size[0],   // for rack width
+    h: size[1]    // for rack height
+  });
+}

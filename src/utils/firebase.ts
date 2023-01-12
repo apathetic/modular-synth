@@ -1,20 +1,17 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 
 import firebaseConfig from '../../firebase.config.js';
 // import type { API } from '@/types/firebase';
 
 
 const app = initializeApp(firebaseConfig);
-const database = getFirestore(app);
+const db = getFirestore(app);
+const auth = getAuth(app);
+// const user = auth.currentUser;
 
-export const auth = getAuth();
-const user = auth.currentUser;
-
-
-
+export { auth };
 
 /**
  * Generate a UUID to be used as a key.
@@ -74,18 +71,20 @@ export const api = {
   async load (path) {
 
     // const auth = getAuth();
-    // const user = auth.currentUser;
+    const user = auth.currentUser;
+
+    console.log('xxx', user, auth)
 
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
 
-      const querySnapshot = await getDocs(collection(database, path));
+      const querySnapshot = await getDocs(collection(db, path));
       querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${doc.data()}`);
       });
 
-      // const getSnapshot = database.ref(path).once('value');
+      // const getSnapshot = db.ref(path).once('value');
       // getSnapshot
       //   .then((response) => {
       //     resolve(response.val());
@@ -98,14 +97,14 @@ export const api = {
   },
 
   /**
-   * Create a new Object in the database.
+   * Create a new Object in the db.
    * NOTE: destructive operation, will overwrite if anything happens to be at this path.
    * @return {Promise} A Firebase Promise, actually.
    */
   create(key, data) {
-    // return database.ref('patch/' + key).set(data);
+    // return db.ref('patch/' + key).set(data);
     return new Promise((resolve, reject) => {
-      database.ref('patch/' + key)
+      db.ref('patch/' + key)
         .set(data)
         .then(resolve)
         .catch(reject);
@@ -113,11 +112,11 @@ export const api = {
   },
 
   /**
-   * Save / update an exiting Object in the database.
+   * Save / update an exiting Object in the db.
    * @return {Promise} A Firebase Promise, actually.
    */
   save(path, data) {
-    return database.ref(path).update(data);
+    return db.ref(path).update(data);
   },
 
   /**
@@ -127,7 +126,7 @@ export const api = {
    * @return {Promise} With the new key reference.
    */
   add(path, data) {
-    const items = database.ref(path);   // ie. patch, or patch/juno/parameterSets
+    const items = db.ref(path);   // ie. patch, or patch/juno/parameterSets
 
     return new Promise((resolve, reject) => {
       items.push(data)
@@ -147,7 +146,7 @@ export const api = {
       if (path === '/' || !path) {
         resolve();
       } else {
-        const item = database.ref(path);
+        const item = db.ref(path);
         item.remove().then(resolve).catch(reject);
       }
     });

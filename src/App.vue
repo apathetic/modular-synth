@@ -1,10 +1,11 @@
 <template>
   <main>
-    <patch-manager></patch-manager>
+    <header>
+      <patch-manager></patch-manager>
+      <!-- <auth /> -->
+    </header>
 
-    <!-- <section :class="editing ? 'edit-mode': 'play-mode'"  @click.left="clearActive"> -->
-      <section>
-
+    <section :class="editing ? 'edit-mode': 'play-mode'"  @click.left="clearActive">
       <Synth
         :modules="[] /* modules */"
         :connections="[] /*connections */"
@@ -55,7 +56,7 @@
   // import { mapGetters, mapActions } from 'vuex';
   import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores/app';
-  import { usePatchStore } from '@/stores/patch';
+  // import { usePatchStore } from '@/stores/patch';
 
   // import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
@@ -64,8 +65,9 @@
   import patchManager from './components/system/PatchManager.vue';
   import contextMenu from './components/system/ContextMenu.vue';
 
-import { auth } from '@/utils/firebase';
-import { onAuthStateChanged } from "firebase/auth";
+  import { auth } from '@/utils/supabase';
+// import { onAuthStateChanged } from "firebase/auth";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { context } from './audio';
 
 
@@ -98,25 +100,27 @@ import { onAuthStateChanged } from "firebase/auth";
       //   'bounds',
       //   'connections'
       // ])
-      editing() { return 3; },
+      // editing() { return 3; },
 
       ...mapState(useAppStore, [
           'power',
           'activeModule',
           'authenticated',
-          'editing'
+          'editing',
+          'patch'
       ]),
-      ...mapState(usePatchStore, [
-        // 'modules',
-        'bounds',
-        'connections'
-      ]),
+      // ...mapState(usePatchStore, [
+      //   // 'modules',
+      //   'bounds',
+      //   'connections'
+      // ]),
 
-      // TODO find a better way to accommodate MasterOut:
-      ...mapState(usePatchStore, {
-        'modules': (state) => state.modules.filter((m) => m.id !== 0)
-      })
-
+      // // TODO find a better way to accommodate MasterOut:
+      // ...mapState(usePatchStore, {
+      //   'modules': (state) => state.modules.filter((m) => m.id !== 0)
+      // })
+      connections() { return this.patch.connections },
+      modules() { return this.patch.modules }
     },
 
     data() {
@@ -125,20 +129,28 @@ import { onAuthStateChanged } from "firebase/auth";
         // authenticated: false
       };
     },
+
     beforeCreate() {
       const store = useAppStore();
-      // auth.onAuthStateChanged((user) => {
-      onAuthStateChanged(auth, (user) => {
-        // this.$authenticated = !!user;
+      // const auth = getAuth();
 
-        // if (this.$authenticated) {
-        //   this.$store.dispatch('fetchPatches');
-        // }
+      // onAuthStateChanged(auth, (user) => {
+      //   store.authenticated = !!user;
+      //   if (!!user) {
+      //     this.fetchPatches();
+      //   }
+      // });
+      auth.getSession().then(({ data }) => {
+        // session.value = data.session
+        const { session } = data;
+        const { user } = session;
+        console.log(session, user);
         store.authenticated = !!user;
+      })
 
-        if (!!user) {
+      auth.onAuthStateChange((_, _session) => {
+        // session.value = _session
           this.fetchPatches();
-        }
       });
     },
     created() {

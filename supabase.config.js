@@ -1,0 +1,2 @@
+export const URL = 'https://qaemuczmgdltshalzptl.supabase.co';
+export const PUBLIC_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhZW11Y3ptZ2RsdHNoYWx6cHRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzM0OTE0ODcsImV4cCI6MTk4OTA2NzQ4N30.jJzjRly6atjwagzgQleV0bEBygHSSq1OCxZO82V5DrA';

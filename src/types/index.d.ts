@@ -1,8 +1,8 @@
 
-export interface RootState {
-  app: AppState;
-  patch: PatchState;
-}
+// export interface RootState {
+//   app: AppState;
+//   patch: PatchState;
+// }
 
 
 export interface AppState {
@@ -24,7 +24,14 @@ export interface AppState {
   canvasOffset: number;
 }
 
-type PatchKey = string; // uuid/firebaseKey/...
+
+// interface Store {
+//   AppState,
+//   AppGetters,
+//   AppActions
+// }
+
+type PatchKey = string; // uuid/etc/...
 
 export interface Patch {
   id: PatchKey;

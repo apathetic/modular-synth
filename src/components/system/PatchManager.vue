@@ -1,5 +1,5 @@
 <template>
-  <header
+  <div
     xxxx-v-contextmenu:file
     class="patch-manager pad"
     :class="{
@@ -44,7 +44,7 @@
     <auth></auth>
     <!-- <sign-in></sign-in> -->
 
-  </header>
+  </div>
 </template>
 
 <script>
@@ -68,16 +68,15 @@ export default defineComponent({
     const store = useAppStore();
     const { resetSorting } = useSortable();
 
-    const patchRef = ref(null);
-    const configRef = ref(null);
-
+    const authenticated = computed(() => store.authenticated);
     const editing = computed(() => store.editing);
     const patch = computed(() => store.patch);
     const patches = computed(() => store.patches);
     const configs = computed(() => store.configs);
     const currentPatchKey = ref(store.patchKey); // initialize w/ store value
     const currentConfigKey = ref(store.configKey);
-
+    const patchRef = ref(null);
+    const configRef = ref(null);
 
     const currentPatchName = computed({
       get() { return store.patch?.name },
@@ -163,7 +162,7 @@ export default defineComponent({
     // },
 
     return {
-      // ...toRefs(state),
+      authenticated,
       editing,
       save,
 

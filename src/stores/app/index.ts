@@ -26,6 +26,7 @@ const state = () => <AppState>{
   patchKey: 0,
   configKey: 0,
 
+  id: 0, // keeps track of modules, augmented when new module is added. could use uuid maybe
   registry: [], //  {},
 
   // patch: {
@@ -44,22 +45,10 @@ const state = () => <AppState>{
 };
 
 
-// interface Store {
-//   AppState,
-//   AppGetters,
-//   AppActions
-// }
+
 
 export const useAppStore = defineStore('app', {
   state,
   getters,
-  // mutations,
-
-  // actions
-
   actions: { ...actions }
-
-  // actions: {
-  //   loadPatch() { actions.loadPatch(); }
-  // }
 });

@@ -92,6 +92,13 @@ export default defineComponent({
     });
 
     watch(modules, (mod, old) => {
+      // this.$nextTick(function() {
+      //   const item = this.modules.slice(-1)[0]; // get last (newest) item
+      //   this.gridList.items = this.modules;
+      //   this.gridList.moveItemToPosition(item, [0, 0]);
+      // });
+
+      // resetSorting();
       initSorting(grid.value, mod);
     });
 

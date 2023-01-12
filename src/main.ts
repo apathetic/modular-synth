@@ -34,4 +34,4 @@ app.provide('context', context);
 
 
 
-app.mount('main');
+app.mount('body');

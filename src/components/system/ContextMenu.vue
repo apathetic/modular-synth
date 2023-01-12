@@ -36,7 +36,8 @@
 
 
 
-  import { usePatchStore } from '@/stores/patch';
+  // import { usePatchStore } from '@/stores/patch';
+  import { useAppStore } from '@/stores/app';
 
 
 
@@ -84,6 +85,7 @@
       const grid = document.querySelector('#modules');
 
       document.body.addEventListener('contextmenu', (e) => {
+        return;
         e.preventDefault();
 
         // if (header === e.target || header.contains(e.target)) {
@@ -105,7 +107,7 @@
 
     methods: {
       newModule(type) {
-        const patchStore = usePatchStore();
+        const store = useAppStore();
         const offset = document.querySelector('header').offsetHeight;
         const [x, y] = this.coords;
 
@@ -114,12 +116,12 @@
         //   coords: [this.coords[0], this.coords[1] - offset]
         // });
 
-        patchStore.addModule({
+        store.addModule({
           type,
           coords: [x, y - offset]
         });
 
-        this.$bus.$emit(EVENT.MODULE_ADD);
+        // this.$bus.$emit(EVENT.MODULE_ADD);
       }
     }
   };
