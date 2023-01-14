@@ -1,13 +1,7 @@
 
-// export interface RootState {
-//   app: AppState;
-//   patch: PatchState;
-// }
-
-
 export interface AppState {
   power: boolean;
-  editing: boolean;
+  isEditing: boolean;
   focused: any;      // "hovered": for Module Info, Connections
   active: number;    // "clicked": for dragging, deleting.  ...activeModule?
 
@@ -19,6 +13,8 @@ export interface AppState {
   // references to all audio nodes in the current patch.
   // Nodes/Modules are kinda conflated / they share the same `this` instance ... :(
   registry: {[value: number]: Node};
+
+  session: any;
 
   // UI: STUFFS
   canvasOffset: number;
@@ -104,6 +100,7 @@ export interface Inlet {
   label?: string;
   desc?: string;
 }
+
 export interface Outlet {
   data?: () => void;
   audio?: AudioNode;

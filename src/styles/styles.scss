@@ -104,16 +104,6 @@ button {
   }
 }
 
-.button {
-  background-color: #54bfff;
-  // margin-bottom: 1em;
-  padding: 0.5em 1em;
-
-  &:hover {
-    background-color: #349fdf;
-  }
-}
-
 .ring {
   border: .2em solid var(--color-grey);
   border-radius: 50%;

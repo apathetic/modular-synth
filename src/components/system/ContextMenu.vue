@@ -81,11 +81,12 @@
     },
 
     mounted() {
+      const store = useAppStore();
       const header = document.querySelector('header');
       const grid = document.querySelector('#modules');
 
       document.body.addEventListener('contextmenu', (e) => {
-        return;
+        // return;
         e.preventDefault();
 
         // if (header === e.target || header.contains(e.target)) {
@@ -99,7 +100,7 @@
           return false;
         }
 
-        if (this.$store.getters.editing) {
+        if (store.isEditing) {
           this.coords = [e.pageX, e.pageY];
         }
       });

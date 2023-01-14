@@ -18,7 +18,7 @@ export const patch = () => <PatchState>{
 
 const state = () => <AppState>{
   power: false,
-  editing: false,
+  isEditing: false,
   focused: undefined,
   active: 0,
 
@@ -40,7 +40,8 @@ const state = () => <AppState>{
   //   }]
   // },
 
-  authenticated: false,
+  // authenticated: false,
+  session: undefined,
   canvasOffset: 0,    // UI stuffs
 };
 

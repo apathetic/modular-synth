@@ -27,10 +27,10 @@
 
 <script>
   // import { mapGetters, mapActions } from 'vuex';
-// import { inject } from 'vue'
+  // import { inject } from 'vue'
 
-import { mapState, mapActions } from 'pinia';
-import { useAppStore } from '@/stores/app';
+  import { mapState, mapActions } from 'pinia';
+  import { useAppStore } from '@/stores/app';
   import { EVENT } from '../../events';
   import VU from '../UI/VU';
 

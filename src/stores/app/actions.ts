@@ -2,11 +2,13 @@ import { nextTick } from 'vue';
 import { v4 as uuid } from 'uuid';
 // import { fetch, create, save, delete, validateData } from '@/utils/supabase';
 import { fetch, create, save, validateData } from '@/utils/supabase';
+import { moduleSize } from '@/constants';
 
 // import { api, generateKey } from '@/utils/firebase';
 // import { validateData } from '@/utils/firebase';
 // import { /* _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME,  */ state as DEFAULT } from '@/stores/patch';
 // import type { PatchState } from '@/types';
+import type { Patch } from '@/types';
 import { patch } from './';
 
 
@@ -142,7 +144,7 @@ export async function fetchPatches() {
   try {
     const patches = await fetch();
     console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
-    this.patches = validateData(patches);
+    // this.patches = validateData(patches);
   } catch (err) {
     console.log('Not signed in.', err);
   };
@@ -155,8 +157,8 @@ export async function fetchPatches() {
 //  APP
 // -----------------------------------------------
 
-export function togglePowerMode() { this.power = !this.power; }
-export function toggleEditMode() { this.editing = !this.editing; }
+export function togglePower() { this.power = !this.power; }
+export function toggleMode() { this.isEditing = !this.isEditing; }
 
 // better name: MODULES? MODULEREGISTRY ...?  WEBAUDIO_NODES?
 export function addToRegistry({ id, node }) { this.registry[id] = node; }
@@ -189,15 +191,23 @@ export function updateGridPosition({ id, x, y }) {
   module.y = y;
 }
 
+/**
+ * @this
+ */
 export function addModule(data) {
+  const patch = this.patch as Patch;
   const type = data.type;
   const pos = data.coords || [0, 0];
   const size = moduleSize[type] || [1, 1];
 
-  state.id++;
+  if (!patch) {
+    throw Error ('Err... there should be a `patch`');
+  }
+
+  patch.id++; // or patch.modules.length.  or uuid
   // TODO: state.modules[state.id] = {... } ?
-  state.modules.push({
-    id: state.id,
+  patch.modules.push({
+    id: patch.id,
     type: type,
     x: pos[0],    // for dragging X position
     y: pos[1],    // for dragging Y position

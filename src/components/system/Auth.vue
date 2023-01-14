@@ -1,8 +1,8 @@
 <template>
   <div class="auth">
 
-    <button v-if="session" @click="signOut" title="sign out" class="ring active"></button>
-    <button v-else         @click="signIn"  title="sign in"  class="ring"></button>
+    <button v-if="isAuthenticated" @click="signOut" title="sign out" class="ring active"></button>
+    <button v-else                 @click="signIn"  title="sign in"  class="ring"></button>
 
     <Modal :visible="showModal">
       <Login />
@@ -31,7 +31,7 @@
     },
     computed: {
       ...mapState(useAppStore, [
-        'session'
+        'isAuthenticated'
       ])
     },
     methods: {

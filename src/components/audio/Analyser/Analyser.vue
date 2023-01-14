@@ -32,13 +32,13 @@
     computed: {
       // ...mapState(useAppStore, ['power']),
       power() { return this.appStore.power },
-      editing() { return this.appStore.editing }
+      editing() { return this.appStore.isEditing }
     },
 
     // computed: {
     //   ...mapGetters([
     //     'power',
-    //     'editing'
+    //     'isEditing'
     //   ])
     // },
 
@@ -132,7 +132,7 @@
 
       loop() {
         if (this.power) {
-          if (!this.editing && this.ticking) {
+          if (!this.isEditing && this.ticking) {
             this.analyse();
             this.render();
           }

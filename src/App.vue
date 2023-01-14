@@ -5,17 +5,17 @@
       <!-- <auth /> -->
     </header>
 
-    <section :class="editing ? 'edit-mode': 'play-mode'"  @click.left="clearActive">
+    <section :class="isEditing ? 'edit-mode': 'play-mode'"  @click.left="clearActive"> <!-- click-outside="clearActive" -->
       <Synth
-        :modules="[] /* modules */"
+        :modules="modules"
         :connections="[] /*connections */"
       />
 
       <aside id="sidebar">
         <div class="controls pad">
-          <h4>{{ editing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
+          <h4>{{ isEditing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
 
-          <button class="mode" @click="toggleEditMode">
+          <button class="mode" @click="toggleMode">
             <span class="play">play</span>
             <span class="edit">edit</span>
           </button>
@@ -106,8 +106,9 @@
           'power',
           'activeModule',
           'authenticated',
-          'editing',
-          'patch'
+          'isEditing',
+          'patch',
+          // 'modules'
       ]),
       // ...mapState(usePatchStore, [
       //   // 'modules',
@@ -116,11 +117,11 @@
       // ]),
 
       // // TODO find a better way to accommodate MasterOut:
-      // ...mapState(usePatchStore, {
-      //   'modules': (state) => state.modules.filter((m) => m.id !== 0)
-      // })
+      ...mapState(useAppStore, {
+        'modules': (state) => state.modules.filter((m) => m.id !== 0)
+      }),
       connections() { return this.patch.connections },
-      modules() { return this.patch.modules }
+      // modules() { return this.patch.modules }
     },
 
     data() {
@@ -135,7 +136,7 @@
       // const auth = getAuth();
 
       // onAuthStateChanged(auth, (user) => {
-      //   store.authenticated = !!user;
+      //   store.isAuthenticated = !!user;
       //   if (!!user) {
       //     this.fetchPatches();
       //   }
@@ -145,7 +146,8 @@
         const { session } = data;
         const { user } = session;
         console.log(session, user);
-        store.authenticated = !!user;
+        // store.isAuthenticated = !!user; //
+        store.session = session;
       })
 
       auth.onAuthStateChange((_, _session) => {
@@ -164,7 +166,7 @@
             this.$bus.$emit(EVENT.MODULE_REMOVE);
             break;
           case 'Tab':
-            this.toggleEditMode();
+            this.toggleMode();
             e.preventDefault(); // do not tab through <select>, fields, etc
             break;
           case 'Escape':
@@ -197,7 +199,7 @@
     methods: {
       ...mapActions(useAppStore, [
         'togglePower',
-        'toggleEditMode',
+        'toggleMode',
         'clearActive',
         'fetchPatches',
       ]),

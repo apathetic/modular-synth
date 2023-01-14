@@ -42,10 +42,10 @@
 import { defineComponent, reactive, computed, onMounted, ref, watch, provide } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import { useAppStore } from '@/stores/app';
-import { useSortable } from '@/composables';
+import { useDraggable, useSortable } from '@/composables';
 
 // import { context } from '@/audio';
-import { draggable } from '@/mixins/draggable';
+// import { draggable } from '@/mixins/draggable';
 import { EVENT } from '@/events';
 
 import * as Modules from '@/components/';
@@ -56,7 +56,7 @@ import Debugger from '@/components/test/Debugger.vue';
 import Unit from './Unit.vue';
 
 export default defineComponent({
-  name: 'Synth',
+  name: 'RackxSynth',
 
   components: {
     ...Modules,
@@ -78,7 +78,7 @@ export default defineComponent({
     const store = useAppStore();
     const grid = ref(null); // template $ref
 
-    const isEditing = computed(() => store.editing);
+    const isEditing = computed(() => store.isEditing);
     // const bounds = computed(() => store.bounds);
     const width = computed(() => {
       // const canvasWidth = bounds.value + 124 + 40; // .. + module width + 40

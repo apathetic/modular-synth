@@ -16,7 +16,7 @@ import { computed } from 'vue';
 
 import GridList from '@/utils/gridList';
 // import { createStore } from '@/store';
-import { useAppStore as createStore } from '@/stores/app';
+import { useAppStore } from '@/stores/app';
 import { rackWidth, rackHeight } from '@/constants';
 
 
@@ -32,8 +32,8 @@ export function useSortable() {
   let widestItem;
   let tallestItem;
   let previousDragPosition;
-  const store = createStore();
-  const activeModule = computed(() => store.getters['activeModule']);
+  const store = useAppStore();
+  const activeModule = computed(() => store.activeModule);
 
   function initSorting(container, modules) {
     handle = container;
@@ -44,7 +44,7 @@ export function useSortable() {
     positionHighlight.style.display = 'none';
 
     resetSorting();
-  };
+  }
 
   function resetSorting() {
     if (items.length) {
@@ -53,13 +53,13 @@ export function useSortable() {
       // gridlist = new GridList(items);
       applyPositionToItems();
     }
-  };
+  }
 
   function startSorting() {
     // Since dragging actually alters the grid, we need to establish the number
     // of cols (+1 extra) before the drag starts
     maxGridCols = gridlist.grid.length;
-  };
+  }
 
   function whileSorting(coords) {
     const newPosition = snapItemPositionToGrid(coords);
@@ -73,7 +73,7 @@ export function useSortable() {
       applyPositionToItems();
       highlightPositionForItem(activeModule.value);
     }
-  };
+  }
 
   function stopSorting() {
     // this._triggerOnChange()
@@ -82,14 +82,14 @@ export function useSortable() {
     removePositionHighlight();
 
     console.log('%c' + gridlist.toString(), 'font-family:monospace;font-size:10px');
-  };
+  }
 
   // -----------------------------------------------------------------
 
 
   function getItemWidth(item) {
     return item.w * rackWidth;
-  };
+  }
 
   function getItemHeight(item) {
     return item.h * rackHeight;
@@ -171,4 +171,4 @@ export function useSortable() {
     stopSorting,
     resetSorting,
   }
-};
+}

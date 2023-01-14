@@ -65,11 +65,12 @@
     },
 
     created() {
-      this.$bus.$on(EVENT.MIDI_NOTEON, this.noteOn);
-      this.$bus.$on(EVENT.MIDI_NOTEOFF, this.noteOff);
-      this.$bus.$on(EVENT.MIDI_CONTROLLER, this.controller);
-      this.$bus.$on(EVENT.MIDI_PITCH, this.pitchWheel);
-      this.$bus.$on(EVENT.MIDI_POLY, this.polyPressure);
+      console.warn('YOU STILL NEED T DO HIS');
+      // this.$bus.$on(EVENT.MIDI_NOTEON, this.noteOn);
+      // this.$bus.$on(EVENT.MIDI_NOTEOFF, this.noteOff);
+      // this.$bus.$on(EVENT.MIDI_CONTROLLER, this.controller);
+      // this.$bus.$on(EVENT.MIDI_PITCH, this.pitchWheel);
+      // this.$bus.$on(EVENT.MIDI_POLY, this.polyPressure);
 
       this.outlets[0].data = 'freq';      // "string" of the property to connect
       this.outlets[1].data = 'velocity';  // for now. should be "gate" or "trigger"...

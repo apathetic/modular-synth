@@ -6,7 +6,7 @@
  */
 
 import { computed, ref, reactive, toRefs } from 'vue';
-// import { createStore } from '@/store';
+import { useAppStore } from '@/stores/app';
 import { EVENT } from '@/events';
 import { useSortable } from './sortable';
 
@@ -20,8 +20,8 @@ const dragObj = {
 
 export function useDraggable(module) {
   const { startSorting, whileSorting, stopSorting } = useSortable();
-  const store = {};//createStore();
-  const isEditing = computed(() => store.state.editing);
+  const store = useAppStore();
+  const isEditing = computed(() => store.isEditing);
   const isDragging = ref(false);
   const id = module.id;
   const coords = reactive({
@@ -63,7 +63,7 @@ export function useDraggable(module) {
     coords.x = dragObj.startX + event.clientX - dragObj.cursorStartX;
     coords.y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
-    if (!store.getters.editing) { // !isEditing.value) {
+    if (!store.isEditing) { // !isEditing.value) {
       whileSorting(coords);
     }
   }
@@ -71,7 +71,7 @@ export function useDraggable(module) {
   function stopDragging(event) {
     isDragging.value = false;
 
-    if (!store.getters.editing) { // !isEditing.value) {
+    if (!store.isEditing) { // !isEditing.value) {
       // restore the x,y coordinates -- we don't want the module
       // to have moved around when we switch out of play mode
       const previous = store.getters['activeModule'];
@@ -100,4 +100,4 @@ export function useDraggable(module) {
     whileDragging,
     stopDragging
   }
-};
+}
