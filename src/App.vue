@@ -144,9 +144,8 @@
       auth.getSession().then(({ data }) => {
         // session.value = data.session
         const { session } = data;
-        const { user } = session;
-        console.log(session, user);
-        // store.isAuthenticated = !!user; //
+        // const { user } = session;
+
         store.session = session;
       })
 

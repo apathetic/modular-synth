@@ -71,8 +71,10 @@ export default defineComponent({
     connections: Array,
   },
 
-  setup({ modules, connections }) {
+  setup(props) {
     console.log('setting up rack');
+
+    const { modules, connections } = props;
 
     const { initSorting } = useSortable();
     const store = useAppStore();
@@ -88,9 +90,10 @@ export default defineComponent({
     // provide('context', context);
 
     onMounted(() => {
-      initSorting(grid.value, modules);
+      initSorting(grid.value, props.modules);
     });
 
+    // watchEffect(() =>
     watch(modules, (mod, old) => {
       // this.$nextTick(function() {
       //   const item = this.modules.slice(-1)[0]; // get last (newest) item

@@ -1,19 +1,27 @@
 <template>
-  <ul class="dropdown"
-      :class="active ? 'active' : ''"
-      @mousedown.stop="open">
-    <li v-for="(option, index) in options"
-        @mouseup="select(index)"
-        :class="index == selected ? 'active' : ''">
+  <ul
+    class="dropdown"
+    :class="active ? 'active' : ''"
+    @mousedown.stop="open"
+  >
+    <li
+      v-for="(option, index) in options"
+      :class="index == selected ? 'active' : ''"
+      :key="index"
+      @mouseup="select(index)"
+    >
       {{ option }}
-     </li>
+    </li>
   </ul>
 </template>
 
 
 <script>
+  import { watchEffect } from 'vue';
+  import { useAppStore } from '@/stores/app';
   // import { parameter } from '../../mixins/parameter';
   import { EVENT } from '@/events';
+
 
   export default {
     name: 'ui-dropdown',
@@ -39,17 +47,33 @@
     },
 
     created() {
+      const store = useAppStore();
+      // const { parameters } = storeToRefs(store);
+
       this.id = this.$parent.id + '-' + this.param;
       this.$emit('value', this.options[0]); // update parent w/ value
-      this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
+
+      // this.$bus.$on(EVENT.PARAMETERS_LOAD, this.syncValue);
+      watchEffect(() => {
+        // const value = parameters[this.id] || this.options[0];
+        const value = store.parameters[this.id] || this.options[0];
+
+        this.$emit('value', value);
+        this.selected = this.options.indexOf(value);
+
+        console.log('%c[parameter] %s %s set to %s', 'color: orange', this.param, this.type, value);
+      });
+
 
       // TODO integrate w/ parameter.js
       console.log('%c[parameter] Creating %s Dropdown', 'color: lightblue', this.param);
     },
 
-    destroyed() {
-      this.$store.commit('REMOVE_PARAMETER', this.id);
-      this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
+    unmounted() {
+      // this.$store.commit('REMOVE_PARAMETER', this.id);
+      // this.$bus.$off(EVENT.PARAMETERS_LOAD, this.syncValue);
+      const store = useAppStore();
+      store.removeParameter(this.id);
 
       console.log('%c[parameter] Destroying %s %s', 'color: grey', this.type, this.id);
     },
@@ -78,7 +102,7 @@
       },
 
       // TODO duplication w/ mixins/Parameter.js
-      fetchValue() {
+      syncValue() {
         const value = this.$store.getters.parameters[this.id] || this.options[0];
 
         this.$emit('value', value);

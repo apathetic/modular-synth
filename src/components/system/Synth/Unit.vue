@@ -2,25 +2,33 @@
 <template>
   <div
     class="module"
+    ref="el"
     :class="[width, tall, isDragging ? 'dragging' : '']"
     :style="position"
-    @mousedown.stop="startDragging"
+    @mousedown.stop="(e) => drag(e, $refs.el)"
   >
-    <slot></slot>
+
+    <!-- <div class="module-interface"> -->
+      <slot></slot>
+    <!-- </div> -->
+
+    <!-- <div class="module-connections"> -->
+      <!-- <slot #inlets></slot> -->
+      <!-- <slot #outlets></slot> -->
+    <!-- </div> -->
   </div>
 </template>
 
 <script>
+  import { defineComponent, computed, ref, reactive, onMounted } from 'vue';
   import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores/app';
   import { useDraggable } from '@/composables';
   // import { context } from '@/audio';
   import { rackWidth, rackHeight, moduleSize } from '@/constants';
-  // import { draggable } from '@/mixins/draggable';
 
-  export default {
-    // name: 'Module' ...?
-    // mixins: [ draggable ],
+  export default defineComponent({
+
     props: {
       module: {
         type: Object, // as Module
@@ -28,87 +36,78 @@
       }
     },
 
-    data() {
-      return {
-        id: this.module.id, // NOTE: this is the ID used by the Connector to route audio
-        // x: 0,
-        // y: 0,
-        x: this.module.x,
-        y: this.module.y,
-        isDragging: false
-      };
-    },
+    setup (props, { slots, emit }) {
+      // const { isEditing } = useAppStore();
+      const store = useAppStore();
+      const { coords, startDragging, isDragging } = useDraggable(props.module);
 
-    computed: {
-      ...mapState(useAppStore, {
-        // compute: (state) => state.isEditing || this.isDragging
-        compute(state) { state.isEditing || this.isDragging }
-      }),
-      position() {
-        // const compute = this.$store.getters.editing || this.isDragging;
-        const { x, y, module } = this;
-        console.log(x, y, module);
-        return {
-          left: (this.compute) ? this.x + 'px' : this.module.col * rackWidth + 'px',
-          top: (this.compute) ? this.y + 'px' : this.module.row * rackHeight + 'px'
+      const el = ref(undefined); // hopefully this'll be to the DOM node
+      // const id = ref(props.module.id); // this is the ID used by the Connector to route audio
+      const x = ref(props.module.x);
+      const y = ref(props.module.y);
+
+      // const isEditing = computed(() => store.isEditing);
+      // const isDragging = computed(() => draggable.isDragging);
+      // const coords = computed(() => draggable.coords);
+      const showDrag = computed(() => store.isEditing || isDragging);
+      const position = computed(() => {
+        console.log(coords, props.module);
+
+        return (showDrag.value) ? {
+          left: coords.x + 'px',
+          top: coords.y + 'px'
+        } : {
+          left: props.module.col * rackWidth + 'px',
+          top: props.module.row * rackHeight + 'px'
         };
-      },
+      });
 
-      width() {
-        // return `_${moduleSize[this.module.type][0]}U`;
-        return `_U`;
-      },
-      tall() {
-        // if (!this.module?.type) return '';
-        console.log(this.module?.type, moduleSize);
-        return moduleSize[this.module.type][2] ? 'module--tall' : '';
-        // return '';
-      }
-    },
+      // doenst need 2 b reactive:
+      // const width() {
+      //   return `_${moduleSize[this.module.type][0]}U`;
+      // }
+      // tall() {
+      //   return moduleSize[this.module.type][2] ? 'module--tall' : '';
 
-    methods: {
-      ...mapActions(useDraggable, [
-        'startDragging',
-      ]),
-      ...mapActions(useAppStore, [
-        'addToRegistry',
-      ])
-    },
+      const width = `_${moduleSize[props.module.type][0]}U`;
+      const tall = moduleSize[props.module.type][2] ? 'module--tall' : '';
 
-    created() {
-      // this.id = this.module.id; // NOTE: this is the ID used by the Connector to route audio
-      // this.x = this.module.x;
-      // this.y = this.module.y;
+      function drag(e) { startDragging(e, el.value); }
 
-      console.warn('dont forget to active this');
-      // this.$store.commit('ADD_TO_REGISTRY', {
-      //   id: this.id,
-      //   node: this.$children[0], // this.$slots.default
-      // });
 
-      console.log('%c[component] Creating %s', 'color: green', this.module.type);
-    },
-
-    mounted() {
 
       // or, maybe better: add node to this.node...?
       // note that modules are already tracked... but they're JSON
       // we want to track the INSTANTIATED web audio nodes.
       // [TODO] see ToneJS or something...
 
+      console.warn('dont forget to active this');
       // this.$store.commit('ADD_TO_REGISTRY', {
       //   id: this.id,
       //   node: this.$children[0], // this.$slots.default
       // });
-      this.addToRegistry({
-        id: this.id,
-        node: this.$slots.default // this.$children[0], //
+      store.addToRegistry({
+        id: props.module.id,
+        node: slots.default // this.$children[0], //
       });
-    },
 
-    unmounted() {
-      console.log('Destroying %s ', this.module.type);
-      this.$store.commit('REMOVE_FROM_REGISTRY', this.id);
+      console.log('%c[component] Creating %s', 'color: green', props.module.type);
+
+
+      function onUnmounted() {
+        console.log('Destroying %s ', this.module.type);
+        this.$store.commit('REMOVE_FROM_REGISTRY', this.id);
+      }
+
+      return {
+        el,
+        width,
+        tall,
+        isDragging,
+        position,
+        drag,
+        showDrag
+      };
     }
-  };
+  });
 </script>

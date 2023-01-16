@@ -16,6 +16,7 @@ import { cellWidth } from '../../constants';
 import { EVENT } from '../../events';
 
 import { useConnection } from '@/composables';
+  import { useAppStore } from '@/stores/app';
 
 
 export default {
@@ -47,13 +48,17 @@ export default {
     // });
 
     const { activeConnector } = useConnection(); // current connector
-    watch(activeConnector, ({ port, id }/* , old */) => {
+    const store = useAppStore();
+
+
+    watch(activeConnector, (connector /* , old */) => {
       if (!connector) {
         this.active = false;
         return;
       }
 
-      this.from = store.module(id);
+      const { port, id } = connector;
+      this.from = store.getModule(id); // need x,y of this module
       this.port = port;
       this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
       this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
@@ -73,7 +78,7 @@ export default {
      * @return {Void}
      */
     drag(event) {
-      this.cursorX = event.clientX + this.$store.state.app.canvasOffset;
+      this.cursorX = event.clientX +  0;// this.$store.state.app.canvasOffset;
       this.cursorY = event.clientY - 48;  // the header height
 
       event.stopPropagation();

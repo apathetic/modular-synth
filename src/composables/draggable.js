@@ -5,7 +5,7 @@
  * @type {Object}
  */
 
-import { computed, ref, reactive, toRefs } from 'vue';
+import { computed, ref, reactive } from 'vue';
 import { useAppStore } from '@/stores/app';
 import { EVENT } from '@/events';
 import { useSortable } from './sortable';
@@ -26,11 +26,11 @@ export function useDraggable(module) {
   const id = module.id;
   const coords = reactive({
     x: module.x,
-    y: module.y
+    y: module.y,
   });
 
-  function startDragging(event) {
-    const element = this.$el; // refers to the calling fn // event.target;
+  function startDragging(event, element) {
+    // const element = this.$el; // refers to the calling fn // event.target;
     // const BCR = element.getBoundingClientRect();
     const startX = element.offsetLeft;  // Calculate explicity because could be in play mode, in which...
     const startY = element.offsetTop;   // case x,y would not pertain to the actual element coords
@@ -68,13 +68,14 @@ export function useDraggable(module) {
     }
   }
 
-  function stopDragging(event) {
+  function stopDragging() {
     isDragging.value = false;
 
     if (!store.isEditing) { // !isEditing.value) {
       // restore the x,y coordinates -- we don't want the module
       // to have moved around when we switch out of play mode
-      const previous = store.getters['activeModule'];
+      // const previous = store.getters['activeModule'];
+      const previous = store.activeModule;
 
       coords.x = previous.x;
       coords.y = previous.y;
@@ -82,7 +83,9 @@ export function useDraggable(module) {
       // otherwise, we only want to update the store with
       // the new coordinates if we are in edit mode:
       stopSorting();
-      store.commit('UPDATE_GRID_POSITION', {
+
+      // store.commit('UPDATE_GRID_POSITION', {
+      store.updateGridPosition({
         id: id,
         x: coords.x,
         y: coords.y

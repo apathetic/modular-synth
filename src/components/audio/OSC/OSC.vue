@@ -14,8 +14,8 @@
     </div>
 
     <div class="module-connections">
-      <Inlets  :ports="inlets"></Inlets>
-      <Outlets :ports="outlets"></Outlets>
+      <Inlets  :ports="inlets"  :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@
 
   export default {
     name: 'OSC',
+    inject: [ 'context' ],
 
     // components: {
     //   Knob,

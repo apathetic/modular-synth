@@ -99,6 +99,7 @@
       const load = () => {
         store.loadPatch();
         nextTick(() => {
+          // console.log('%c Setting parameters ', 'background:#666;color:white;font-weight:bold;');
           // this.$bus.$emit(EVENT.APP_SORT);
           resetSorting();
         });

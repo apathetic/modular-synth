@@ -12,7 +12,8 @@
 
 
 <script>
-import { EVENT } from '../../events';
+import { EVENT } from '@/events';
+import { useEventBus } from '@/composables';
 
 export default {
   data() {
@@ -25,10 +26,9 @@ export default {
 
   created() {
     if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess({
-        sysex: false
-      }).then(
-        (midi) => {
+      navigator
+        .requestMIDIAccess({ sysex: false })
+        .then((midi) => {
           this.midi = midi;
           midi.onstatechange = this.onStateChange;
           midi.inputs.forEach((port) => {
@@ -87,26 +87,27 @@ export default {
       this.midiIn.onmidimessage = this.onMIDIMessage;
     },
 
-    onMIDIMessage(event) {
-      const cmd = event.data[0] >> 4;
-      const channel = event.data[0] & 0xf;
-      const note = event.data[1];
-      const velocity = event.data[2];
+    onMIDIMessage({ data }) {
+      const cmd = data[0] >> 4;
+      const channel = data[0] & 0xf;
+      const note = data[1];
+      const velocity = data[2];
+      const bus = useEventBus('midi');
 
       if (channel === 9) { return; }
 
       if (cmd === 8 || (cmd === 9 && velocity === 0)) { // with MIDI, note on with velocity zero is the same as note off
-        this.$bus.$emit(EVENT.MIDI_NOTEOFF, note);
+        bus.emit(EVENT.MIDI_NOTEOFF, note);
       } else if (cmd === 9) {
-        this.$bus.$emit(EVENT.MIDI_NOTEON, note, velocity); // / 127.0);
+        bus.emit(EVENT.MIDI_NOTEON, note, velocity); // / 127.0);
       } else if (cmd === 11) {
-        this.$bus.$emit(EVENT.MIDI_CONTROLLER, note, velocity); // / 127.0);
+        bus.emit(EVENT.MIDI_CONTROLLER, note, velocity); // / 127.0);
       } else if (cmd === 14) {
-        this.$bus.$emit(EVENT.MIDI_PITCH, ((velocity * 128.0 + note) - 8192) / 8192.0);
+        bus.emit(EVENT.MIDI_PITCH, ((velocity * 128.0 + note) - 8192) / 8192.0);
       } else if (cmd === 10) {  // poly aftertouch
-        this.$bus.$emit(EVENT.MIDI_POLY, note, velocity); // / 127.0);
+        bus.emit(EVENT.MIDI_POLY, note, velocity); // / 127.0);
       } else {
-        console.log(event.data[0] + ' ' + event.data[1] + ' ' + event.data[2]);
+        console.log('[MIDI] did not respond to:' + data[0] + ' ' + data[1] + ' ' + data[2]);
       }
     }
   }

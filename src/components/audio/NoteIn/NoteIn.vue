@@ -15,13 +15,14 @@
     </div>
 
     <div class="module-connections">
-      <Outlets :ports="outlets"></Outlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
     </div>
   </div>
 </template>
 
 <script>
   import { EVENT } from '@/events';
+  import { useEventBus } from '@/composables';
 
   const noteNames = [];
   const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -66,6 +67,13 @@
 
     created() {
       console.warn('YOU STILL NEED T DO HIS');
+
+      const bus = useEventBus('midi');
+
+      const unsubscribe = bus.on((event, ...payload) => {
+        console.log(`news: ${event}`, payload);
+      });
+
       // this.$bus.$on(EVENT.MIDI_NOTEON, this.noteOn);
       // this.$bus.$on(EVENT.MIDI_NOTEOFF, this.noteOff);
       // this.$bus.$on(EVENT.MIDI_CONTROLLER, this.controller);

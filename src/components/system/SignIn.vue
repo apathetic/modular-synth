@@ -20,7 +20,7 @@
 
     <button
       @click="showModal = true"
-      :class="[{'active': $root.authenticated}, 'ring', 'active']"
+      :class="[{'active': $root.isAuthenticated}, 'ring', 'active']"
     >
     </button>
 

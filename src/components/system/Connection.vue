@@ -50,8 +50,8 @@ THOUGHTS:
 
 <script>
   // import { mapGetters } from 'vuex';
-import { mapState } from 'pinia';
-import { useAppStore } from '@/stores/app';
+  import { mapState } from 'pinia';
+  import { useAppStore } from '@/stores/app';
   import { cellWidth } from '@/constants';
   import { Parameter } from '@/audio';
 
@@ -134,7 +134,7 @@ import { useAppStore } from '@/stores/app';
       this.route();
     },
 
-    destroyed() {
+    unmounted() {
       this.route(false);
       this.unwatch && this.unwatch();
       console.log('removed', this.id);

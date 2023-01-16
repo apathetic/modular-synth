@@ -185,11 +185,21 @@ export function clearFocus() { this.focused = undefined; }
  */
 export function updateGridPosition({ id, x, y }) {
   // const module = state.modules.find((m) => m.id === data.id);
-  const module = this.getModule(id);
 
-  module.x = x;
-  module.y = y;
+  // const module = this.getModule(id);
+  // module.x = x;
+  // module.y = y;
+
+  this.activeModule.x = x;
+  this.activeModule.y = y;
 }
+
+export const UPDATE_RACK_POSITION = (state, data) => {
+  const module = state.modules.find((m) => m.id === data.id);
+
+  module.col = data.col;
+  module.row = data.row;
+};
 
 /**
  * @this
@@ -217,3 +227,15 @@ export function addModule(data) {
     h: size[1]    // for rack height
   });
 }
+
+
+
+
+export function removeParameter (id) {
+  this.configs.forEach(set => {
+    if (set.parameters[id]) {
+      delete set.parameters[id];
+    }
+  });
+};
+
