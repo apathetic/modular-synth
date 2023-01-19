@@ -1,26 +1,25 @@
 <template>
-  <main>
+  <main @click.left="clearActive"> <!-- click-outside="clearActive" -->
     <header>
       <patch-manager></patch-manager>
       <!-- <auth /> -->
     </header>
 
-    <section :class="isEditing ? 'edit-mode': 'play-mode'"  @click.left="clearActive"> <!-- click-outside="clearActive" -->
+    <section :class="isEditing ? 'edit-mode': 'play-mode'">
       <Synth
         :modules="modules"
-        :connections="[] /*connections */"
+        :connections="connections"
       />
 
       <aside id="sidebar">
         <div class="controls pad">
           <h4>{{ isEditing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
-
           <button class="mode" @click="toggleMode">
             <span class="play">play</span>
             <span class="edit">edit</span>
           </button>
 
-          <p v-if="false /*activeModule*/">
+          <p v-if="activeModule">
             <strong>Current Module</strong><br>
             {{ activeModule.type }} (id: {{ activeModule.id }})<br>
             x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
@@ -53,35 +52,21 @@
 </template>
 
 <script type="ts">
-  // import { mapGetters, mapActions } from 'vuex';
   import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores/app';
-  // import { usePatchStore } from '@/stores/patch';
+  import { auth } from '@/utils/supabase';
+  import { log } from '@/utils/logger';
 
-  // import { sortable } from './mixins/sortable';
   import { EVENT } from './events';
   import masterOut from './components/system/MasterOut.vue';
   import midi from './components/system/Midi.vue';
   import patchManager from './components/system/PatchManager.vue';
   import contextMenu from './components/system/ContextMenu.vue';
-
-  import { auth } from '@/utils/supabase';
-// import { onAuthStateChanged } from "firebase/auth";
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { context } from './audio';
-
-
-  // import connecting from './components/system/Connecting.vue';
-  // import connection from './components/system/Connection.vue';
-
-
-
   import Synth from './components/system/Synth/';
+
 
   export default {
     name: 'App',
-
-    // mixins: [sortable],
 
     components: {
       Synth,
@@ -92,35 +77,22 @@
     },
 
     computed: {
-      // ...mapGetters([
-      //   'power',
-      //   'editing',
-      //   'activeModule',
-      //   'modules',
-      //   'bounds',
-      //   'connections'
-      // ])
-      // editing() { return 3; },
-
       ...mapState(useAppStore, [
           'power',
           'activeModule',
-          'authenticated',
+          // 'authenticated',
           'isEditing',
           'patch',
+          'connections'
           // 'modules'
       ]),
-      // ...mapState(usePatchStore, [
-      //   // 'modules',
-      //   'bounds',
-      //   'connections'
-      // ]),
+
 
       // // TODO find a better way to accommodate MasterOut:
       ...mapState(useAppStore, {
         'modules': (state) => state.modules.filter((m) => m.id !== 0)
       }),
-      connections() { return this.patch.connections },
+      // connections() { return this.patch.connections },
       // modules() { return this.patch.modules }
     },
 
@@ -154,22 +126,30 @@
           this.fetchPatches();
       });
     },
+
     created() {
-      console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold');
+      // console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold');
+      log({ type:'system', action:'loading...' });
 
       window.addEventListener(EVENT.KEY_DOWN, (e) => {
         switch (e.key) {
           case 'Delete':
           case 'Backspace':
             this.removeModule();
-            this.$bus.$emit(EVENT.MODULE_REMOVE);
+            // this.$bus.$emit(EVENT.MODULE_REMOVE);
             break;
           case 'Tab':
             this.toggleMode();
             e.preventDefault(); // do not tab through <select>, fields, etc
             break;
           case 'Escape':
+
             // this.togglePower();
+
+            // store.dragging = false
+            // store.active = undefined
+            // activeConnector = undefined;
+
             break;
           case ' ':
           case 'Space':
@@ -201,9 +181,9 @@
         'toggleMode',
         'clearActive',
         'fetchPatches',
+        'removeModule',
       ]),
 
-        // 'removeModule',
     }
   };
 </script>

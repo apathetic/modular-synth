@@ -90,6 +90,7 @@ export default {
      * @return {Void}
      */
     dragEnd(event) {
+      console.log('event', event);
       const target = event.toElement || event.relatedTarget || event.target || false;
       const port = target.getAttribute('data-port');
 

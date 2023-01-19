@@ -1,7 +1,8 @@
 import { nextTick } from 'vue';
 import { v4 as uuid } from 'uuid';
-// import { fetch, create, save, delete, validateData } from '@/utils/supabase';
+import { log } from '@/utils/logger';
 import { fetch, create, save, validateData } from '@/utils/supabase';
+// import { fetch, create, save, delete, validateData } from '@/utils/supabase';
 import { moduleSize } from '@/constants';
 
 // import { api, generateKey } from '@/utils/firebase';
@@ -36,7 +37,8 @@ export function loadPatch(key?: string) {
   // load id, name, modules, and configs
   const patch: PatchState = this.patch;
 
-  console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
+  // console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
+  log({ type:'patch', action:'loading...', data:patch.name });
 
   // commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
   // commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
@@ -194,8 +196,8 @@ export function updateGridPosition({ id, x, y }) {
   this.activeModule.y = y;
 }
 
-export const UPDATE_RACK_POSITION = (state, data) => {
-  const module = state.modules.find((m) => m.id === data.id);
+export function updateRackPosition(data) {
+  const module = this.modules.find((m) => m.id === data.id);
 
   module.col = data.col;
   module.row = data.row;
@@ -228,6 +230,32 @@ export function addModule(data) {
   });
 }
 
+/**
+ * Removes (deletes) the currently _active_ module.
+ * @this
+ */
+export function removeModule() {
+  let { active, focused, modules, connections } = this;
+
+  // only delete active/focused modules
+  if (active === focused) {
+    modules = modules.filter((m) => m.id !== active);
+    // this.patches[this.patchKey].modules = modules;
+
+    try {
+      this.patch.modules = modules;
+      this.modules = modules;
+    } catch (e) { console.log('why', e) }
+
+    connections.forEach((connection) => {
+      if (connection.to.id === active || connection.from.id === active) {
+        connections = connections.filter((c) => c.id !== connection.id);
+      }
+    });
+
+    // Note: KNOB / SLIDERS will remove themselves, yay!
+  }
+};
 
 
 

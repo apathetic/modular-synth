@@ -13,10 +13,9 @@
       v-for="module in modules"
       :module="module"
       :key="module.id"
-      @XXXmousedown.stop="startDragging()"
-      @mousedown.native="setActive(module.id)"
-      @mouseover.native="setFocus(module.id)"
-      @mouseout.native="clearFocus()"
+      @mousedown.stop.prevent="() => setActive(module.id)"
+      @mouseover.stop="setFocus(module.id)"
+      @mouseout.stop="clearFocus()"
     >
       <component
         :is="module.type"
@@ -31,103 +30,105 @@
         :to="connection.to"
         :from="connection.from"
         :key="connection.id"
-        @mousedown.native="setActive(connection.id)">
+        @mousedown="setActive(connection.id)">
       </connection>
     </svg>
 
   </div>
 </template>
 
+
 <script>
-import { defineComponent, reactive, computed, onMounted, ref, watch, provide } from 'vue';
-import { mapState, mapActions } from 'pinia';
-import { useAppStore } from '@/stores/app';
-import { useDraggable, useSortable } from '@/composables';
+  import { defineComponent, ref, onMounted, watch } from 'vue';
+  import { useAppStore } from '@/stores/app';
+  import { useSortable } from '@/composables';
+  import * as Modules from '@/components/';
+  import Connecting from '@/components/system/Connecting.vue';
+  import Connection from '@/components/system/Connection.vue';
+  import Debugger from '@/components/test/Debugger.vue';
+  import Unit from './Unit.vue';
 
-// import { context } from '@/audio';
-// import { draggable } from '@/mixins/draggable';
-import { EVENT } from '@/events';
+  export default defineComponent({
+    name: 'Rack',
 
-import * as Modules from '@/components/';
-import Connecting from '@/components/system/Connecting.vue';
-import Connection from '@/components/system/Connection.vue';
-import Debugger from '@/components/test/Debugger.vue';
+    components: {
+      ...Modules,
+      Unit,
+      Connecting,
+      Connection,
+      Debugger,
+    },
 
-import Unit from './Unit.vue';
+    props: {
+      modules: Array,
+      connections: Array,
+    },
 
-export default defineComponent({
-  name: 'RackxSynth',
+    setup(props) {
+      console.log('%c ◌ Rack: setting up... ', 'background:black;color:white;font-weight:bold');
 
-  components: {
-    ...Modules,
-    Unit,
-    Connecting,
-    Connection,
-    Debugger,
-  },
+      // const { modules, connections } = props;
 
-  props: {
-    modules: Array,
-    connections: Array,
-  },
+      const { initSorting, resetItems, resetItem } = useSortable();
+      const store = useAppStore();
+      const grid = ref(null); // template $ref
 
-  setup(props) {
-    console.log('setting up rack');
-
-    const { modules, connections } = props;
-
-    const { initSorting } = useSortable();
-    const store = useAppStore();
-    const grid = ref(null); // template $ref
-
-    const isEditing = computed(() => store.isEditing);
-    // const bounds = computed(() => store.bounds);
-    const width = computed(() => {
-      // const canvasWidth = bounds.value + 124 + 40; // .. + module width + 40
-      // return `width: ${ isEditing ? canvasWidth + 'px' : 'auto' }`;
-    });
-
-    // provide('context', context);
-
-    onMounted(() => {
-      initSorting(grid.value, props.modules);
-    });
-
-    // watchEffect(() =>
-    watch(modules, (mod, old) => {
-      // this.$nextTick(function() {
-      //   const item = this.modules.slice(-1)[0]; // get last (newest) item
-      //   this.gridList.items = this.modules;
-      //   this.gridList.moveItemToPosition(item, [0, 0]);
+      // const isEditing = computed(() => store.isEditing);
+      // const bounds = computed(() => store.bounds);
+      // const width = computed(() => {
+      //   const canvasWidth = bounds.value + 124 + 40; // .. + module width + 40
+      //   return `width: ${ isEditing ? canvasWidth + 'px' : 'auto' }`;
       // });
 
-      // resetSorting();
-      initSorting(grid.value, mod);
-    });
+      // provide('context', context);
 
-    // const active = computed(() => store.active)
-    function setActive(id) { store.active = id; }
-    function clearActive() { store.active = undefined; }
-    function setFocus(id) { store.focused = id; }
-    function clearFocus() { store.focused = undefined; }
-    function onScroll(e) {
-      if (editing) {
-        // store.scrollOffset = e.target.scrollLeft
+
+      onMounted(() => {
+        initSorting(grid.value, props.modules);
+      });
+
+      watch(() => props.modules, (newList, oldList) => {
+
+        // this.$nextTick(function() {
+        //   this.gridList.items = this.modules;
+        resetItems(newList);
+
+        if (newList.length > oldList.length) {
+          let item = newList.filter((o) => oldList.indexOf(o) === -1);
+        //   const item = this.modules.slice(-1)[0]; // get last (newest) item
+
+          resetItem(item);
+          console.log('added', item);
+        //   this.gridList.moveItemToPosition(item, [0, 0]);
+
+        } else {
+          console.log('removed');
+          // this.gridList._pullItemsToLeft();
+        }
+
+      });
+
+      // const active = computed(() => store.active)
+      function setActive(id) { store.active = id; }
+      function clearActive() { store.active = undefined; }
+      function setFocus(id) { store.focused = id; }
+      function clearFocus() { store.focused = undefined; }
+      function onScroll(e) {
+        if (store.editing) {
+          // store.scrollOffset = e.target.scrollLeft
+        }
       }
-    }
 
+      return {
+        grid,
+        onScroll,
+        width: 0,
 
-
-    return {
-      grid,
-      onScroll,
-      width,
-
-      setActive,
-      clearActive,
-      setFocus,
-      clearFocus,
-    }
+        setActive,
+        clearActive,
+        setFocus,
+        clearFocus,
+      }
 
 
     /*
@@ -149,6 +150,8 @@ export default defineComponent({
           this.stopSorting(); // from sortable mixin
         }
       });
+
+
 
       bus.$on(EVENT.APP_SORT, () => {
         this.initializePositions(this.$refs.grid);

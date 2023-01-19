@@ -3,7 +3,7 @@
     xxxx-v-contextmenu:file
     class="patch-manager pad"
     :class="{
-      'active': authenticated,
+      'loaded': authenticated,
       'editing': editing
     }">
 
@@ -49,14 +49,14 @@
 
 <script>
   // import SignIn from './SignIn';
-  import { defineComponent, computed, reactive, watch, ref, unref, nextTick } from 'vue';
+  import { defineComponent, computed, watch, ref, unref, nextTick } from 'vue';
   import { useSortable } from '@/composables';
   import { useAppStore } from '@/stores/app';
 
 
 
   import Auth from './Auth.vue';
-  import { EVENT } from '../../events';
+  // import { EVENT } from '../../events';
 
 
 
@@ -65,6 +65,7 @@
     props: {},
     components: { Auth },
     setup () {
+      console.log('%c ◌ PatchManager: setting up... ', 'background:black;color:white;font-weight:bold');
       const store = useAppStore();
       const { resetSorting } = useSortable();
 
@@ -382,7 +383,7 @@
       }
     }
 
-    &:not(.active) {
+    &:not(.loaded) {
       .dropdowns,
       .save {
         z-index: -1;

@@ -3,7 +3,7 @@
   <div
     class="module"
     ref="el"
-    :class="[width, tall, isDragging ? 'dragging' : '']"
+    :class="[width, tall, { dragging: isDragging }, { active: isActive }]"
     :style="position"
     @mousedown.stop="(e) => drag(e, $refs.el)"
   >
@@ -20,8 +20,8 @@
 </template>
 
 <script>
-  import { defineComponent, computed, ref, reactive, onMounted } from 'vue';
-  import { mapState, mapActions } from 'pinia';
+  import { defineComponent, computed, ref, onMounted } from 'vue';
+  // import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores/app';
   import { useDraggable } from '@/composables';
   // import { context } from '@/audio';
@@ -40,19 +40,20 @@
       // const { isEditing } = useAppStore();
       const store = useAppStore();
       const { coords, startDragging, isDragging } = useDraggable(props.module);
+      // eslint-disable-next-line vue/no-setup-props-destructure
+      const { type, id } = props.module;
 
-      const el = ref(undefined); // hopefully this'll be to the DOM node
+      const el = ref(undefined); // this'll be to the DOM node
       // const id = ref(props.module.id); // this is the ID used by the Connector to route audio
-      const x = ref(props.module.x);
-      const y = ref(props.module.y);
+      // const x = ref(props.module.x);
+      // const y = ref(props.module.y);
 
+      const isActive = computed(() => id == store.active);
       // const isEditing = computed(() => store.isEditing);
       // const isDragging = computed(() => draggable.isDragging);
       // const coords = computed(() => draggable.coords);
       const showDrag = computed(() => store.isEditing || isDragging);
       const position = computed(() => {
-        console.log(coords, props.module);
-
         return (showDrag.value) ? {
           left: coords.x + 'px',
           top: coords.y + 'px'
@@ -69,8 +70,8 @@
       // tall() {
       //   return moduleSize[this.module.type][2] ? 'module--tall' : '';
 
-      const width = `_${moduleSize[props.module.type][0]}U`;
-      const tall = moduleSize[props.module.type][2] ? 'module--tall' : '';
+      const width = `_${moduleSize[type][0]}U`;
+      const tall = moduleSize[type][2] ? 'module--tall' : '';
 
       function drag(e) { startDragging(e, el.value); }
 
@@ -80,14 +81,8 @@
       // note that modules are already tracked... but they're JSON
       // we want to track the INSTANTIATED web audio nodes.
       // [TODO] see ToneJS or something...
-
-      console.warn('dont forget to active this');
-      // this.$store.commit('ADD_TO_REGISTRY', {
-      //   id: this.id,
-      //   node: this.$children[0], // this.$slots.default
-      // });
       store.addToRegistry({
-        id: props.module.id,
+        id: id,
         node: slots.default // this.$children[0], //
       });
 
@@ -104,6 +99,7 @@
         width,
         tall,
         isDragging,
+        isActive,
         position,
         drag,
         showDrag
@@ -111,3 +107,8 @@
     }
   });
 </script>
+
+
+<style>
+
+</style>

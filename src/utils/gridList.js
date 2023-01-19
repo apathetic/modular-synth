@@ -33,7 +33,7 @@ export default class GridList {
    */
   constructor(items, options) {
     this._options = Object.assign(defaults, options);
-    this.items = items;   // TODO these do not have reference to DOM nodes... only the DATA within vue...
+    this.items = items;
     // this._adjustSizeOfItems();
     this.generateGrid();
   }
@@ -63,7 +63,7 @@ export default class GridList {
     for (i = 0; i < widthOfGrid; i++) {
       output += ' ' + this._padNumber(i, ' ');
       border += '---';
-    };
+    }
     output += border;
 
     // Render table contents row by row, as we go on the y axis
@@ -76,7 +76,7 @@ export default class GridList {
         // id = item.id;
         output += item ? this._padNumber(item.id, '0') : '--';
       }
-    };
+    }
     output += '\n';
     return output;
   }
@@ -640,4 +640,4 @@ export default class GridList {
       item.row = position[0];
     }
   }
-};
+}

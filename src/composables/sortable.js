@@ -1,21 +1,5 @@
-/**
- * NOTE: "items" (nee items) are from the App's internal data state.
- * They are synchronized with the vuex store via a getter. But to be
- * clear, we can destructively mess with this data array and not worry
- * too much as the source of truth is still safe within vuex.
- *
- * NOTE: As this is a mixin, several object properties are defined
- * elsewhere but referenced here. The two primary ones are:
- *   this.activeModule
- *   modules
- */
-
-// const initialized = false;
-import { computed } from 'vue';
-// import { computed } from "@vue/composition-api";
-
+// import { computed } from 'vue';
 import GridList from '@/utils/gridList';
-// import { createStore } from '@/store';
 import { useAppStore } from '@/stores/app';
 import { rackWidth, rackHeight } from '@/constants';
 
@@ -23,7 +7,7 @@ import { rackWidth, rackHeight } from '@/constants';
 const LANES = 3;
 
 let handle;
-let items = [];
+// let items = [];
 let gridlist;
 let positionHighlight;
 
@@ -33,26 +17,34 @@ export function useSortable() {
   let tallestItem;
   let previousDragPosition;
   const store = useAppStore();
-  const activeModule = computed(() => store.activeModule);
+  // const activeModule = computed(() => store.activeModule);
 
-  function initSorting(container, modules) {
+  function initSorting(container, items = []/* modules */) {
     handle = container;
-    items = modules;
+    // items = modules;
     gridlist = new GridList(items);
 
     positionHighlight = handle.querySelector('.position-highlight');
     positionHighlight.style.display = 'none';
 
-    resetSorting();
+    resetItems(items);
+  }
+
+  function resetItems(items) {
+    gridlist.items = items;
+    if (items.length) {
+      resetSorting();
+    }
+  }
+
+  function resetItem(item) {
+    gridlist.moveItemToPosition(item, [0, 0]);
   }
 
   function resetSorting() {
-    if (items.length) {
-      widestItem = Math.max.apply(null, items.map((item) => item.w ));
-      tallestItem = Math.max.apply(null, items.map((item) => item.h ));
-      // gridlist = new GridList(items);
-      applyPositionToItems();
-    }
+    widestItem = Math.max.apply(null, gridlist.items.map((item) => item.w ));
+    tallestItem = Math.max.apply(null, gridlist.items.map((item) => item.h ));
+    applyPositionToItems();
   }
 
   function startSorting() {
@@ -67,11 +59,11 @@ export function useSortable() {
     if (dragPositionChanged(newPosition)) {
       previousDragPosition = newPosition;
       gridlist.generateGrid();
-      gridlist.moveItemToPosition(activeModule.value, newPosition);
+      gridlist.moveItemToPosition(store.activeModule, newPosition);
 
       // Visually update item positions and highlight shape
       applyPositionToItems();
-      highlightPositionForItem(activeModule.value);
+      highlightPositionForItem(store.activeModule);
     }
   }
 
@@ -93,13 +85,14 @@ export function useSortable() {
 
   function getItemHeight(item) {
     return item.h * rackHeight;
-  };
+  }
 
   function applyPositionToItems() {
-    items.forEach((item) => {
+    gridlist.items.forEach((item) => {
       // Don't interfere with the position of the dragged items. TODO - is this the case...?
-      if (activeModule.value !== item) {
-        store.commit('UPDATE_RACK_POSITION', {
+      if (store.activeModule !== item) {
+        // store.commit('UPDATE_RACK_POSITION', {
+        store.updateRackPosition({
           id: item.id,
           col: item.col,
           row: item.row
@@ -108,7 +101,7 @@ export function useSortable() {
     });
 
     handle.style.width = (gridlist.grid.length + widestItem) * rackWidth;
-  };
+  }
 
 
   // -----------------------------------------------------------------
@@ -120,7 +113,7 @@ export function useSortable() {
     }
     return newPosition[0] !== previousDragPosition[0] ||
             newPosition[1] !== previousDragPosition[1];
-  };
+  }
 
   function snapItemPositionToGrid(position) {
 
@@ -128,7 +121,7 @@ export function useSortable() {
     //   x: el.offsetLeft,
     //   y: el.offsetTop
     // };
-    const item = activeModule.value;
+    const item = store.activeModule;
     let col = Math.round(position.x / rackWidth);
     let row = Math.round(position.y / rackHeight);
 
@@ -141,7 +134,7 @@ export function useSortable() {
     row = Math.min(row, LANES - item.h);
 
     return [col, row];
-  };
+  }
 
   function highlightPositionForItem(item) {
     positionHighlight.style.width = getItemWidth(item) + 'px';
@@ -149,7 +142,7 @@ export function useSortable() {
     positionHighlight.style.left = item.col * rackWidth + 'px';
     positionHighlight.style.top = item.row * rackHeight + 'px';
     positionHighlight.style.display = 'block';
-  };
+  }
 
   function removePositionHighlight() {
     positionHighlight.style.display = 'none';
@@ -170,5 +163,7 @@ export function useSortable() {
     whileSorting,
     stopSorting,
     resetSorting,
+    resetItems,
+    resetItem,
   }
 }

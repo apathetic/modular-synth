@@ -20,7 +20,7 @@
   import { watchEffect } from 'vue';
   import { useAppStore } from '@/stores/app';
   // import { parameter } from '../../mixins/parameter';
-  import { EVENT } from '@/events';
+  // import { EVENT } from '@/events';
 
 
   export default {
@@ -47,6 +47,9 @@
     },
 
     created() {
+      // TODO integrate w/ parameter.js
+      console.log('%c[parameter] Creating %s Dropdown', 'color: lightblue', this.param);
+
       const store = useAppStore();
       // const { parameters } = storeToRefs(store);
 
@@ -63,10 +66,6 @@
 
         console.log('%c[parameter] %s %s set to %s', 'color: orange', this.param, this.type, value);
       });
-
-
-      // TODO integrate w/ parameter.js
-      console.log('%c[parameter] Creating %s Dropdown', 'color: lightblue', this.param);
     },
 
     unmounted() {
