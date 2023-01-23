@@ -47,18 +47,13 @@
   </div>
 </template>
 
+
 <script>
   // import SignIn from './SignIn';
   import { defineComponent, computed, watch, ref, unref, nextTick } from 'vue';
   import { useSortable } from '@/composables';
   import { useAppStore } from '@/stores/app';
-
-
-
   import Auth from './Auth.vue';
-  // import { EVENT } from '../../events';
-
-
 
 
   export default defineComponent({
@@ -68,13 +63,12 @@
       console.log('%c ◌ PatchManager: setting up... ', 'background:black;color:white;font-weight:bold');
       const store = useAppStore();
       const { resetSorting } = useSortable();
-
       const authenticated = computed(() => store.isAuthenticated);
       const editing = computed(() => store.isEditing);
       const patch = computed(() => store.patch);
       const patches = computed(() => store.patches);
       const configs = computed(() => store.configs);
-      const currentPatchKey = ref(store.patchKey); // initialize w/ store value
+      const currentPatchKey = ref(store.patchKey);
       const currentConfigKey = ref(store.configKey);
       const patchRef = ref(null);
       const configRef = ref(null);
@@ -100,8 +94,6 @@
       const load = () => {
         store.loadPatch();
         nextTick(() => {
-          // console.log('%c Setting parameters ', 'background:#666;color:white;font-weight:bold;');
-          // this.$bus.$emit(EVENT.APP_SORT);
           resetSorting();
         });
       };
@@ -185,175 +177,6 @@
       }
     },
   });
-
-
-
-
-
-
-
-  /*
-    export default {
-      components: {
-        Auth,
-        // SignIn
-      },
-
-      data() {
-        return {
-          patchIndex: 1,
-          paramsIndex: 1
-        };
-      },
-
-      computed: {
-        // currentPatchKey: {
-        //   get() {
-        //     return this.$store.state.app.patchKey;
-        //   },
-        //   set(key) {
-        //     this.$store.commit('SET_KEY', key);
-        //   }
-        // },
-        ...mapState(usestore, {
-          currentPatchKey: (state) => state.patchKey
-        },
-
-
-        currentParamsKey: {
-          get() {
-            return this.$store.getters.parameterKey;
-          },
-          set(key) {
-            this.$store.commit('SET_PARAMETERS_KEY', key);
-          }
-        },
-
-        currentPatchName: {
-          get() {
-            return this.$store.state.patch.name;
-          },
-          set(value) {
-            this.$store.commit('SET_NAME', value);
-          }
-        },
-
-        currentConfigName: {
-          get() {
-            const key = this.$store.getters.parameterKey;
-            return (this.$store.getters.parameterSets[key] &&
-                    this.$store.getters.parameterSets[key].name);
-          },
-          set(value) {
-            this.$store.commit('SET_PARAMETERS_NAME', value);
-          }
-        },
-
-        ...mapState(useAppStore, [
-          'patches',
-          'editing'
-          // 'parameterSets',
-        ])
-      },
-
-      mounted() {
-        this.load();
-
-        // update patchIndex display and selected option in dropdown
-        // NOTE: <select> doesn't seem to be ready at mount
-        // const options = this.$refs.patch.options;
-        // console.log(options.length, Object.keys(this.patches).length);
-        // update the 00 display
-        // update the <select> selectedIndex
-        // Array.prototype.forEach.call(options, (opt, i) => {
-        //   if (opt.value === this.currentPatchKey) {
-        //     this.patchIndex = i;
-        //     this.$refs.patch.selectedIndex = i;
-        //   }
-        // });
-      },
-
-      methods: {
-        save() {
-          this.savePatch();
-        },
-
-        load() {
-          this.loadPatch();
-          this.$nextTick(function() {
-            // console.log('%c Setting parameters ', 'background:#666;color:white;font-weight:bold;');
-            // this.$bus.$emit(EVENT.PARAMETERS_LOAD);
-            this.$bus.$emit(EVENT.APP_SORT);
-
-            // import { initSort } from Grid/sortable';
-            // initSort();
-          });
-        },
-
-        // -----------------
-
-        add() {
-          if (this.patches.length >= 9) { return; }
-          this.addPatch();                             // CREATE a new blank patch...
-          this.loadPatch();                            // ...AND then select it
-
-          // as our new patch is at the end of the list, we can use ".length" as the index
-          this.patchIndex = this.$refs.patch.selectedIndex = Object.keys(this.patches).length;
-        },
-
-        remove() {
-          const confirm = window.confirm('Delete ' + this.currentPatchName + '?');
-
-          if (this.patches.length <= 1 || !confirm) { return; }
-
-          this.removePatch(this.currentPatchKey);
-          this.patchIndex = this.$refs.patch.selectedIndex = 1;
-          this.currentPatchKey = 0;
-        },
-
-        select(e) {
-          this.currentPatchKey = e.target.value;
-          this.patchIndex = e.target.selectedIndex;
-          this.currentParamsKey = 0;                   // always select 1st set when new patch loaded
-          this.load();
-        },
-
-        // -----------------
-
-        addParams() {
-          this.$store.commit('ADD_PARAMETERS');
-          this.currentParamsKey = this.parameterSets.length - 1;
-
-          this.paramsIndex = this.$refs.params.selectedIndex = this.parameterSets.length;
-        },
-
-        removeParams(id) {
-          const confirm = window.confirm('Delete ' + this.currentConfigName + '?');
-
-          if (this.$store.getters.parameterSets.length <= 1 || !confirm) { return; }
-
-          this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
-          this.paramsIndex = this.$refs.params.selectedIndex = 1;
-          this.currentParamsKey = 0;
-        },
-
-        selectParams(e) {
-          this.currentParamsKey = e.target.value;
-          this.paramsIndex = e.target.selectedIndex;
-        },
-
-        // -----------------
-
-        ...mapActions(useAppStore, [
-          'savePatch',
-          'loadPatch',
-          'addPatch',
-          'removePatch'
-        ])
-      }
-    };
-  */
-
 </script>
 
 

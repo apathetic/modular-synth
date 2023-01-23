@@ -2,8 +2,8 @@
 export interface AppState {
   power: boolean;
   isEditing: boolean;
-  focused: any;      // "hovered": for Module Info, Connections
-  active: number;    // "clicked": for dragging, deleting.  ...activeModule?
+  focusedId: number | undefined; // "hovered": for Module Info, Connections
+  activeId: number | undefined;  // "clicked": for dragging, deleting.  ...activeModule?
 
   patches: Patch[];  // all available patches
   patchKey: number;  // key of active patch.  activePatch? currentPatch?

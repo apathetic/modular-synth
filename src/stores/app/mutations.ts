@@ -13,13 +13,10 @@ export const SAVE_PATCH = (state, data) => {
 
 export const REMOVE_PATCH = (state, key) => {
   delete state.patches[key];
-  // Vue.delete(state.patches, key);
-  // state.patches.$remove(key);
-  // state.patches = state.patches.filter(....
 };
 
 export const SET_PATCHES = (state, patches) => {
-  state.patches = validateData(patches); // patches;
+  state.patches = validateData(patches);
 };
 
 export const SET_KEY = (state, key) => {
@@ -52,19 +49,19 @@ export const TOGGLE_EDIT = (state) => {
 //  UI
 // -----------------------------------------------
 // export const SET_ACTIVE = (state, id) => {
-//   state.active = id;
+//   state.activeId = id;
 // };
 
 // export const CLEAR_ACTIVE = (state) => {
-//   state.active = undefined;
+//   state.activeId = undefined;
 // };
 
 // export const SET_FOCUS = (state, id) => {
-//   state.focused = id;
+//   state.focusedId = id;
 // };
 
 // export const CLEAR_FOCUS = (state) => {
-//   state.focused = undefined;
+//   state.focusedId = undefined;
 // };
 
 

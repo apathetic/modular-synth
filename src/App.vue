@@ -1,5 +1,5 @@
 <template>
-  <main @click.left="clearActive"> <!-- click-outside="clearActive" -->
+  <main @mousedown="clearActive">
     <header>
       <patch-manager></patch-manager>
       <!-- <auth /> -->
@@ -51,18 +51,21 @@
   </main>
 </template>
 
+
 <script type="ts">
   import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores/app';
   import { auth } from '@/utils/supabase';
   import { log } from '@/utils/logger';
-
-  import { EVENT } from './events';
-  import masterOut from './components/system/MasterOut.vue';
-  import midi from './components/system/Midi.vue';
-  import patchManager from './components/system/PatchManager.vue';
-  import contextMenu from './components/system/ContextMenu.vue';
   import Synth from './components/system/Synth/';
+  import midi from './components/system/Midi.vue';
+  import masterOut from './components/system/MasterOut.vue';
+  import contextMenu from './components/system/ContextMenu.vue';
+  import patchManager from './components/system/PatchManager.vue';
+
+
+  // import { EVENT } from './events';
+  // import { useConnection, useDraggable } from '@/composables';
 
 
   export default {
@@ -128,10 +131,12 @@
     },
 
     created() {
-      // console.log('%c ◌ Synth: loading... ', 'background:black;color:white;font-weight:bold');
       log({ type:'system', action:'loading...' });
+      // const { store } = useAppStore();
+      // const { resetConnector } = useConnection();
+      // const { stopDragging } = useDraggable();
 
-      window.addEventListener(EVENT.KEY_DOWN, (e) => {
+      window.addEventListener('keydown', (e) => {
         switch (e.key) {
           case 'Delete':
           case 'Backspace':
@@ -139,16 +144,16 @@
             // this.$bus.$emit(EVENT.MODULE_REMOVE);
             break;
           case 'Tab':
-            this.toggleMode();
             e.preventDefault(); // do not tab through <select>, fields, etc
+            this.toggleMode();
             break;
           case 'Escape':
 
             // this.togglePower();
 
-            // store.dragging = false
+            // stopDragging(); /// store.dragging = false // dispatchmouseup
             // store.active = undefined
-            // activeConnector = undefined;
+            // resetConnector(); // activeConnector = undefined;
 
             break;
           case ' ':
@@ -166,7 +171,7 @@
         }
       });
 
-      window.addEventListener(EVENT.KEY_UP, (e) => {
+      window.addEventListener('keyup', (e) => {
         switch (e.key) {
           case 'Shift':
             this.sorting = false;
@@ -184,9 +189,15 @@
         'removeModule',
       ]),
 
+
+      xxx(x) {
+        console.log('this shouldn fire', x);
+        this.clearActive();
+      }
     }
   };
 </script>
+
 
 <style lang="scss">
   @import 'styles/variables.scss';

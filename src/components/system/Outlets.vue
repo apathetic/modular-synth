@@ -1,23 +1,24 @@
 <template>
   <div class="outlets">
-      <!-- @mousedown.stop="parent.$root.$bus.$emit('connection:start', index, parent.id);" -->
-    <span v-for="(outlet, index) in ports"
-      @mousedown.stop="startConnecting(index, id);"
+    <span v-for="(outlet, port) in ports"
+      @mousedown.stop="(e) => startConnecting(id, port)"
       :data-label="outlet.label"
-      :data-port="index"
-      :key="index"
+      :data-port="port"
+      :key="port"
       class="outlet">
     </span>
   </div>
 </template>
 
 <script>
+  import { defineComponent } from 'vue';
   import { useConnection } from '@/composables';
 
-  const { startConnecting } = useConnection();
-
-  export default {
+  export default defineComponent({
     props: { ports: Array, id: Number },
-    methods: { startConnecting }
-  };
+    setup() {
+      const { startConnecting } = useConnection();
+      return { startConnecting };
+    }
+  });
 </script>

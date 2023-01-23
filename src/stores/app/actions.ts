@@ -170,10 +170,10 @@ export function removeFromRegistry (id) { delete this.registry[id]; }
 /**
  * @this Store The vue (pinia) store instance.
  */
-export function setActive(id) { this.active = id; }
-export function clearActive() { this.active = undefined; }
-export function setFocus(id) { this.focused = id; }
-export function clearFocus() { this.focused = undefined; }
+export function setActive(id) { this.activeId = id; }
+export function clearActive() { this.activeId = undefined; }
+export function setFocus(id) { this.focusedId = id; }
+export function clearFocus() { this.focusedId = undefined; }
 
 
 
@@ -235,11 +235,11 @@ export function addModule(data) {
  * @this
  */
 export function removeModule() {
-  let { active, focused, modules, connections } = this;
+  let { activeId, focusedId, modules, connections } = this;
 
-  // only delete active/focused modules
-  if (active === focused) {
-    modules = modules.filter((m) => m.id !== active);
+  // only delete active/focusedId modules
+  if (activeId === focusedId) {
+    modules = modules.filter((m) => m.id !== activeId);
     // this.patches[this.patchKey].modules = modules;
 
     try {
@@ -248,8 +248,9 @@ export function removeModule() {
     } catch (e) { console.log('why', e) }
 
     connections.forEach((connection) => {
-      if (connection.to.id === active || connection.from.id === active) {
-        connections = connections.filter((c) => c.id !== connection.id);
+      if (connection.to.id === activeId || connection.from.id === activeId) {
+        // connections = connections.filter((c) => c.id !== connection.id);
+        removeConnection(connection.id);
       }
     });
 
@@ -258,6 +259,15 @@ export function removeModule() {
 };
 
 
+export function addConnection(data) {
+  this.id++;
+  this.connections.push(data);
+};
+
+export function removeConnection(id) {
+  let { activeId, focusedId, modules, connections } = this;
+  connections = connections.filter((c) => c.id !== id);
+};
 
 export function removeParameter (id) {
   this.configs.forEach(set => {

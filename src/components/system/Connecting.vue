@@ -10,129 +10,87 @@
   </line>
 </template>
 
+
 <script>
-import { watch } from 'vue';
-import { cellWidth } from '../../constants';
-import { EVENT } from '../../events';
-
-import { useConnection } from '@/composables';
+  import { watch } from 'vue';
+  import { useConnection } from '@/composables';
   import { useAppStore } from '@/stores/app';
+  import { cellWidth } from '../../constants';
+  import { EVENT } from '../../events';
 
 
-export default {
-  data() {
-    return {
-      active: false,
-      from: {},
-      port: null,
-      cursorX: false,
-      cursorY: false
-    };
-  },
-
-  /**
-   *
-   */
-  created() {
-
-    // this.$bus.$on('connection:start', (port, id) => {
-    //   this.from = this.$store.getters.module(id);
-    //   this.port = port;
-    //   this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
-    //   this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
-
-    //   document.addEventListener(EVENT.MOUSE_MOVE, this.drag);
-    //   document.addEventListener(EVENT.MOUSE_UP, this.dragEnd);
-
-    //   this.active = true;
-    // });
-
-    const { activeConnector } = useConnection(); // current connector
-    const store = useAppStore();
-
-
-    watch(activeConnector, (connector /* , old */) => {
-      if (!connector) {
-        this.active = false;
-        return;
-      }
-
-      const { port, id } = connector;
-      this.from = store.getModule(id); // need x,y of this module
-      this.port = port;
-      this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
-      this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
-
-      document.addEventListener(EVENT.MOUSE_MOVE, this.drag);
-      document.addEventListener(EVENT.MOUSE_UP, this.dragEnd);
-
-      this.active = true;
-
-    });
-  },
-
-  methods: {
-    /**
-     * Update the connector's position.
-     * @param  {Event} event The mousemove Event.
-     * @return {Void}
-     */
-    drag(event) {
-      this.cursorX = event.clientX +  0;// this.$store.state.app.canvasOffset;
-      this.cursorY = event.clientY - 48;  // the header height
-
-      event.stopPropagation();
+  export default {
+    data() {
+      return {
+        active: false,
+        from: {},
+        port: null,
+        cursorX: false,
+        cursorY: false
+      };
     },
 
-    /**
-     * Finalize the connector's position.
-     * @param  {Event} event: The mousemove Event.
-     * @return {Void}
-     */
-    dragEnd(event) {
-      console.log('event', event);
-      const target = event.toElement || event.relatedTarget || event.target || false;
-      const port = target.getAttribute('data-port');
+    created() {
+      const store = useAppStore();
+      const { activeConnector } = useConnection(); // current connector
 
-      if (target && port) {                          // NOTE: port is a String, so "0" is cool here
-        const focused = this.$store.getters.focused; // ironically, we dont even use the target to fetch the Component
-
-        this.to = this.$store.getters.module(focused);
-
-        if (
-          this.to.id !== this.from.id &&            // if not circular connection
-          this.isUnique()                           // is not a duplicated connection
-        ) {
-          this.$store.commit('ADD_CONNECTION', {
-            to: {
-              id: this.to.id,
-              port: +port // parseInt(port)
-            },
-            from: {
-              id: this.from.id,
-              port: this.port
-            }
-          });
+      watch(activeConnector, (connector /* , old */) => {
+        // if (!connector) {
+        //   console.log('no connectorrrr');
+        // }
+        if (connector.to.id) {
+          this.active = false;
+          // resetConnector() ?
+          return;
         }
-      }
 
-      document.removeEventListener('mousemove', this.drag);
-      document.removeEventListener('mouseup', this.dragEnd);
+        const { port, id } = connector.from;
 
-      this.active = false;
-      this.cursorX = false;
-      this.cursorY = false;
+        this.from = store.getModule(id); // need x,y of this module (so connector stays linked to port)
+        this.port = port;
+        this.dragStart();
+      });
     },
 
-    /**
-     * Checks if a connection already exists between the start and end nodes.
-     */
-    isUnique() {
-      return true; // TODO
+    methods: {
+      dragStart() {
+        this.cursorX = this.x = this.from.x + cellWidth + 3;  // line ends at cursor, which is initially the same point
+        this.cursorY = this.y = this.from.y + (this.port * 20) + 27;
+        this.active = true;
+
+        document.addEventListener(EVENT.MOUSE_MOVE, this.drag);
+        document.addEventListener(EVENT.MOUSE_UP, this.dragEnd);
+      },
+
+      /**
+      * Update the connector's position.
+      * @param  {Event} event The mousemove Event.
+      * @return {Void}
+      */
+      drag(event) {
+        this.cursorX = event.clientX +  0;// this.$store.state.app.canvasOffset;
+        this.cursorY = event.clientY - 48;  // the header height
+
+        event.stopPropagation();
+      },
+
+      /**
+      * Finalize the connector's position.
+      * @param  {Event} event: The mousemove Event.
+      * @return {Void}
+      */
+      dragEnd(event) {
+        document.removeEventListener('mousemove', this.drag);
+        document.removeEventListener('mouseup', this.dragEnd);
+
+        this.active = false;
+        this.cursorX = false;
+        this.cursorY = false;
+      }
     }
-  }
-};
+  };
 </script>
+
 
 <style lang="scss">
   .dotted {

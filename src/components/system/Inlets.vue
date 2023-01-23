@@ -1,20 +1,25 @@
 <template>
   <div class="inlets">
-    <span v-for="(inlet, index) in ports"
-      @mouseup.stop="stopConnecting(index, id);"
+    <span v-for="(inlet, port) in ports"
+      @mouseup="() => stopConnecting(id, port)"
       :data-label="inlet.label"
-      :data-port="index"
-      :key="index"
+      :data-port="port"
+      :key="port"
       class="inlet">
     </span>
   </div>
 </template>
 
+
 <script>
-  export default {
-    props: { ports: Array },
-    methods: {
-      stopConnecting(port, id) { console.log('stop', port, id) }
+  import { defineComponent } from 'vue';
+  import { useConnection } from '@/composables';
+
+  export default defineComponent({
+    props: { ports: Array, id: Number },
+    setup() {
+      const { stopConnecting } = useConnection();
+      return { stopConnecting }
     }
-  };
+  });
 </script>

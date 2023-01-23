@@ -20,22 +20,13 @@
   </div>
 </template>
 
+
 <script>
-  // NOW REGISTERED GLOBALLLYYYY???
-  // import Knob from './UI/Knob';
-  // import Slider from './UI/Slider';
-  // import Dropdown from './UI/Dropdown';
   import { Parameter } from '@/audio';
 
   export default {
     name: 'OSC',
     inject: [ 'context' ],
-
-    // components: {
-    //   Knob,
-    //   Slider,
-    //   Dropdown
-    // },
     props: {
       /**
        * Used as a reference by `Connection` to connect modules
@@ -198,6 +189,7 @@
     }
   };
 </script>
+
 
 <style lang="scss">
   .oscillator {

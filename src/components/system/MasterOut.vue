@@ -19,16 +19,13 @@
     </div>
 
     <div class="module-connections">
-      <Inlets :ports="inlets"></Inlets>
+      <Inlets :ports="inlets" :id="0"></Inlets>
     </div>
   </div>
 </template>
 
 
 <script>
-  // import { mapGetters, mapActions } from 'vuex';
-  // import { inject } from 'vue'
-
   import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores/app';
   import { EVENT } from '../../events';
@@ -40,7 +37,8 @@
     components: { VU },
     computed: {
       ...mapState(useAppStore, [
-        'power'
+        'power',
+        'modules'
       ])
     },
 
@@ -84,11 +82,11 @@
     },
 
     mounted() {
-      this.modules = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
+      this.modulesRef = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
       this.determinePosition();
 
       window.addEventListener(EVENT.RESIZE, this.determinePosition);
-      this.modules.addEventListener(EVENT.SCROLL, this.determinePosition);
+      this.modulesRef.addEventListener(EVENT.SCROLL, this.determinePosition);
 
       this.addToRegistry({
         id: 0,
@@ -107,23 +105,20 @@
       },
 
       determinePosition(e) {
-        const x = this.modules.scrollLeft +               // scroll offset +
+        const x = this.modulesRef.scrollLeft +               // scroll offset +
                   this.$el.getBoundingClientRect().left;  // viewport offset
         const y = this.$el.offsetTop;                     // relative to parent
 
         this.x = x;
         this.y = y;
 
-        this.updateGridPosition({
-          id: 0,
-          x: x,
-          y: y
-        });
+        // updateGridPosition:
+        this.modules[0].x = x;
+        this.modules[0].y = y;
       },
 
       // store actions, bound as local methods:
       ...mapActions(useAppStore, [
-        'updateGridPosition',
         'addToRegistry',
         'setFocus',
         'clearFocus'

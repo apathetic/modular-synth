@@ -19,8 +19,9 @@ export const patch = () => <PatchState>{
 const state = () => <AppState>{
   power: false,
   isEditing: false,
-  focused: undefined,
-  active: 0,
+  focusedId: undefined,
+  // active: 0,
+  activeId: 0,
 
   patches: [patch()],
   patchKey: 0,

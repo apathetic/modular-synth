@@ -746,13 +746,13 @@ describe('Kitchen Sink', function(){
         .its('code').should('eq', 0)
     })
 
-    it('cy.focused() - get the DOM element that has focus', function(){
-      // https://on.cypress.io/focused
+    it('cy.focusedId() - get the DOM element that has focus', function(){
+      // https://on.cypress.io/focusedId
       cy.get('.misc-form').find('#name').click()
-      cy.focused().should('have.id', 'name')
+      cy.focusedId().should('have.id', 'name')
 
       cy.get('.misc-form').find('#description').click()
-      cy.focused().should('have.id', 'description')
+      cy.focusedId().should('have.id', 'description')
     })
 
     it('cy.screenshot() - take a screenshot', function(){

@@ -1,10 +1,3 @@
-/**
- * Draggable.
- * This mixin enables dragging of a Component. A position Object is updated in the Component's
- * data, and any/all connections to any inputs/outputs are also updated and redrawn.
- * @type {Object}
- */
-
 import { computed, ref, reactive } from 'vue';
 import { useAppStore } from '@/stores/app';
 import { EVENT } from '@/events';
@@ -18,16 +11,19 @@ const dragObj = {
   startY: null
 };
 
-export function useDraggable(module) {
+
+/**
+ * Provides drag-and-drop capabiities for a Component.
+ * @param {object} coords An alias for the `module`, containing coords and its id
+ * @param {number} coords.x
+ * @param {number} coords.y
+ * @param {number} coords.id
+ */
+export function useDraggable(coords) {
   const { startSorting, whileSorting, stopSorting } = useSortable();
   const store = useAppStore();
   const isEditing = computed(() => store.isEditing);
   const isDragging = ref(false);
-  const id = module.id;
-  const coords = reactive({
-    x: module.x,
-    y: module.y,
-  });
 
   function startDragging(event, element) {
     // const element = this.$el; // refers to the calling fn // event.target;
@@ -48,7 +44,7 @@ export function useDraggable(module) {
     coords.x = startX;
     coords.y = startY;
 
-    if (!isEditing.value) {
+    if (!store.isEditing) { // !isEditing.value) {
       startSorting();
     }
 
@@ -63,7 +59,7 @@ export function useDraggable(module) {
     coords.x = dragObj.startX + event.clientX - dragObj.cursorStartX;
     coords.y = dragObj.startY + event.clientY - dragObj.cursorStartY;
 
-    if (!store.isEditing) { // !isEditing.value) {
+    if (!store.isEditing) {
       whileSorting(coords);
     }
   }
@@ -83,13 +79,7 @@ export function useDraggable(module) {
       // otherwise, we only want to update the store with
       // the new coordinates if we are in edit mode:
       stopSorting();
-
-      // store.commit('UPDATE_GRID_POSITION', {
-      store.updateGridPosition({
-        id: id,
-        x: coords.x,
-        y: coords.y
-      });
+      store.updateGridPosition(coords); // x, y, id
     }
 
     document.removeEventListener(EVENT.MOUSE_MOVE, whileDragging);
