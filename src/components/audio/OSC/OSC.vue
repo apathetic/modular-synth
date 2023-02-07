@@ -25,12 +25,9 @@
   import { Parameter } from '@/audio';
 
   export default {
-    name: 'OSC',
+    name: 'Osc',
     inject: [ 'context' ],
     props: {
-      /**
-       * Used as a reference by `Connection` to connect modules
-       */
       id: {
         default: undefined,
         required: true
@@ -39,7 +36,6 @@
 
     data() {
       return {
-        // name: 'OSC',
         freq: 440,
         mod: 0,
         PW: 0,
@@ -103,14 +99,12 @@
       this.osc_.start();
     },
 
-
     destroyed() {
       this.pulse_.destroy();
       this.osc_.stop();
       this.osc_.disconnect(); // this is done in Connection
       this.modDepth_.disconnect();
     },
-
 
     methods: {
       /**

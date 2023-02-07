@@ -35,11 +35,8 @@
       const { activeConnector } = useConnection(); // current connector
 
       watch(activeConnector, (connector /* , old */) => {
-        // if (!connector) {
-        //   console.log('no connectorrrr');
-        // }
         if (connector.to.id) {
-          this.active = false;
+          this.active = false; // set to false once the connection is made
           // resetConnector() ?
           return;
         }

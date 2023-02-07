@@ -19,26 +19,35 @@ const activeConnector = reactive(emptyConnector());
  *
  */
 export function useConnection() {
-	const store = useAppStore();
+  const store = useAppStore();
 
   function startConnecting(id, port) {
     // const instance = getCurrentInstance(); // gets the current component so we dont need to even pass port, id
-    resetConnector(); // needed to trigger the `watch` on the activeConnector (in instances where user drags from same port multiple times but doesn't make a connection)
+
+    // needed to trigger the `watch` on the activeConnector (in instances where
+    // user drags from same port multiple times but doesn't make a connection):
+    resetConnector();
+
     activeConnector.from = { id, port };
+		activeConnector.id = store.id;
+		store.id++;
   }
 
   function stopConnecting(id, port) {
-    console.log('stop', id, port);
-		activeConnector.to = { id, port };
+    activeConnector.to = { id, port };
 
-		// if this.to.id !== this.from.id &&            // if not circular connection
-		//    this.isUnique()                           // is not a duplicated connection
-		store.addConnection(activeConnector);
+    // if this.to.id !== this.from.id &&      // if not circular connection
+    //    this.isUnique()                     // is not a duplicated connection
+
+		// else we'd be replacing the same connector in place, as we have this
+		// consistent reference to it. Note that we _deep_ clone `to` and `from`,
+		// as they are Proxy objects
+		const connector = Object.assign({}, activeConnector);
+
+		store.addConnection(connector);
   }
 
   function resetConnector() {
-    // activeConnector.port = undefined;
-    // activeConnector.id = undefined;
     Object.assign(activeConnector, emptyConnector());
   }
 

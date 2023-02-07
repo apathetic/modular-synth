@@ -260,7 +260,6 @@ export function removeModule() {
 
 
 export function addConnection(data) {
-  this.id++;
   this.connections.push(data);
 };
 

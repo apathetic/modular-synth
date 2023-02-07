@@ -12,8 +12,8 @@
     </div>
 
     <div class="module-connections">
-      <Inlets :ports="inlets"></Inlets>
-      <Outlets :ports="outlets"></Outlets>
+      <Inlets  :ports="inlets"  :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
     </div>
   </div>
 </template>
@@ -21,28 +21,33 @@
 
 <script>
   import { signal } from '@/audio';
-  // import Knob from '@/components/UI/Knob';
 
   export default {
-    // components: { Knob },
+    name: 'Env',
+    inject: [ 'context' ],
     props: {
-      id: null
+      id: {
+        default: undefined,
+        required: true
+      }
     },
 
     data() {
       return {
-        name: 'Env',
-
         A: 0.1,
         D: 0.1,
         S: 0.6,
         R: 0.1,
 
         inlets: [
-          { label: 'vel',
-            desc: 'Acts as a trigger for the envelope' },
-          { label: 'mod',
-            desc: '???' }
+          {
+            label: 'vel',
+            desc: 'Acts as a trigger for the envelope'
+          },
+          {
+            label: 'mod',
+            desc: '???'
+          }
         ],
 
         outlets: [
@@ -106,6 +111,7 @@
     }
   };
 </script>
+
 
 <style lang="scss">
   .env {

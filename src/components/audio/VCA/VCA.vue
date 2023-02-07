@@ -9,21 +9,23 @@
     </div>
 
     <div class="module-connections">
-      <Inlets :ports="inlets"></Inlets>
-      <Outlets :ports="outlets"></Outlets>
+      <Inlets  :ports="inlets"  :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
     </div>
   </div>
 </template>
 
+
 <script>
   export default {
+    name: 'VCA',
+    inject: [ 'context' ],
     props: {
       id: null
     },
 
     data() {
       return {
-        name: 'VCA',
         inlets: [
           {
             label: 'signal'
@@ -61,6 +63,7 @@
     }
   };
 </script>
+
 
 <style lang="scss">
   .vca {
