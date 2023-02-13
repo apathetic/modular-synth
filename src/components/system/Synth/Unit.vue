@@ -89,7 +89,6 @@
       onMounted(() => {
         // `modules` are already tracked... but they're JSON.
         // We want to track all INSTANTIATED web audio nodes
-        console.log('%c[component] Creating %s', 'color: green', type);
         store.addToRegistry({ id, node: node.value, coords });
       });
 
@@ -97,6 +96,8 @@
         console.log('Destroying %s ', type);
         store.removeFromRegistry(id);
       });
+
+      console.log('%c[component] Creating %s', 'color: green', type);
 
       return {
         el,

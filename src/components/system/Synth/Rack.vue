@@ -78,11 +78,11 @@
           // const item = this.modules.slice(-1)[0]; // get last (newest) item
           const item = newList.filter((o) => oldList.indexOf(o) === -1);
           resetItem(item);
-          console.log('added', item);
+          // console.log('added', item);
 
         } else {
           // this.gridList._pullItemsToLeft();
-          console.log('removed');
+          // console.log('removed');
         }
       });
 

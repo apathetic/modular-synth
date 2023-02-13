@@ -105,10 +105,16 @@ export const ADD_PARAMETERS = (state) => {
 
   state.parameterSets.push(copy);
 };
+
+
+/**
+ * Removes this entire set of parameters from the patch.
+ */
 //                  PARAMETER_SET
 export const REMOVE_PARAMETERS = (state, key) => {
   state.parameterSets.splice(key, 1); // let's try mutating the array directly
 };
+
 
 //               PARAMETER_SET_NAME
 export const SET_PARAMETERS_NAME = (state, name) => {
@@ -133,6 +139,11 @@ export const REGISTER_PARAMETER = (state, id) => {
   }
 };
 
+/**
+ * Removes this parameter from the set.
+ * Errrr we should only remove it from the current set.
+ * For example, when its parent was deleted.
+ */
 export const REMOVE_PARAMETER = (state, id) => {
   state.parameterSets.forEach(set => {
     if (set.parameters[id]) {

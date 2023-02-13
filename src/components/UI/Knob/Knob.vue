@@ -15,17 +15,20 @@ is a "freq" parameter in the parent Component.
 
 <template>
   <svg class="knob" @mousedown.stop.prevent="start">
-    <path ref="track" class="track" fill="none" stroke-width="8" d=""></path>
-    <path ref="display" class="display" fill="none" stroke-width="8" :d="arc"></path>
+    <path :d="track" class="track" fill="none" stroke-width="8"></path>
+    <path :d="arc" class="display" fill="none" stroke-width="8"></path>
     <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
-    <text x="24" y="28">{{ value.toFixed(decimals) }}</text>
+    <text x="24" y="28">{{ mapped.toFixed(decimals) }}</text>
     <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
 
 
 <script>
-  import { parameter } from '@/mixins/parameter';
+  import { defineComponent, computed, watchEffect, ref, onMounted } from 'vue';
+  import { getCurrentInstance } from 'vue';
+  // import { parameter } from '@/mixins/parameter';
+  import { useParameter } from '@/composables';
 
   const SIZE = 20;
   const X = 24; // half the css knob radius
@@ -51,72 +54,108 @@ is a "freq" parameter in the parent Component.
     ].join(' ');
   }
 
-  export default {
-    name: 'ui-knob',
 
-    mixins: [parameter],
-
+  export default defineComponent({
+    name: 'Knob',
+    // mixins: [parameter],
     props: {
       default: Number,
-      decimals: 0
+
+      decimals: 0,
+      precision: 0,
+
+      min: 0,
+      max: 1,
+
+      param: { // ie. name
+        type: String,
+        required: true
+      },
+      mode: {
+        type: String,
+        default: 'linear'
+      },
     },
 
-    data() {
-      return {
-        type: 'Knob'
-        // _temp: 0 // used to check if value was changed externally (ie via $store)
-      };
-    },
+    emits: ['value'],
 
-    computed: {
-      /**
-       * Helper function for the path attribute d in the svg display.
-       * @return {string} The new path attribute.
-       */
-      arc() {
+    setup (props, { emit }) {
+      const { param, min, max, mode } = props;
+      const instance = getCurrentInstance(); // gets the current component so we dont need to even pass port, id
+      const parentId = instance.parent.ctx.id;
+      const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
+      const type = 'knob';
+
+      const track = ref('');
+      const arc = ref('');
+
+
+
+      const value = 2345;
+      const { start, mapped, normalized } = useParameter({ id, param, min, max, mode });
+      console.log(id, min, max, normalized.value, mapped.value);
+
+
+
+
+      /*
+      watchEffect(() => {
+        emit(mapped.value);
+      });
+
+      */
+      watchEffect(() => {
         // 30 -> 330. Dials start 30deg in and end 30deg before 360.
-        const rotationValue = this.internalValue * 300 + 30;
+        const rotationValue = normalized.value * 300 + 30;
+        arc.value = describeArc(X, Y, SIZE, 30, rotationValue);
+      });
 
-        return describeArc(X, Y, SIZE, 30, rotationValue);
+      onMounted(() => {
+        // normalized.value = extractValue(mapped.value);
+        track.value = describeArc(X, Y, SIZE, 30, 330); // draw track
+      });
+
+
+      return {
+        param,
+        track,
+        arc,
+        start, value, mapped,
       }
 
-      // /**
-      //  * Getter and setter functions for the value in the vuex $store.
-      //  */
-      // value: {
-      //   get() {
-      //     return this.$store.getters.parameters[this.id] || this.default || 0;
-      //   },
-
-      //   set(value) {
-      //     this._temp = value;
-      //     this.$emit('value', value); // update parent w/ value
-      //     this.$store.commit('SET_PARAMETER', {
-      //       id: this.id,
-      //       value: value
-      //     });
+      // data() {
+      //   return {
+      //     type: 'Knob'
+      //   };
+      // },
+      // computed: {
+      //   arc: { ...
+      //   value: {
+      //     get() {
+      //       return this.$store.getters.parameters[this.id] || this.default || 0;
+      //     },
+      //     set(value) {
+      //       this._temp = value;
+      //       this.$emit('value', value); // update parent w/ value
+      //       this.$store.commit('SET_PARAMETER', {
+      //         id: this.id,
+      //         value: value
+      //       });
+      //     }
       //   }
-      // }
-    },
+      // },
+      // watch: {
+      //   value: function(value) {
+      //     if (!this._temp || value !== this._temp) {            // value was changed externally ie. via $store
+      //       this.$store.commit('REGISTER_PARAMETER', this.id);  // if parameterSet didnt contain this param, register it
+      //       normalized.value = this.computeValue(value, true);
+      //       console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, value);
+      //     }
+      //   }
+      // },
 
-    // watch: {
-    //   value: function(value) {
-    //     if (!this._temp || value !== this._temp) {            // value was changed externally ie. via $store
-    //       this.$store.commit('REGISTER_PARAMETER', this.id);  // if parameterSet didnt contain this param, register it
-    //       this.internalValue = this.computeValue(value, true);
-    //       console.log('%c[parameter] %s Knob set to %f', 'color: orange', this.param, value);
-    //     }
-    //   }
-    // },
-
-    mounted() {
-      this.internalValue = this.computeValue(this.value, true);
-      this.$refs.track.setAttribute('d', describeArc(X, Y, SIZE, 30, 330)); // draw track
-
-      // inner track ie. visualize "actual" value, from varying inputs, etc :
-      // this.$refs.computed.setAttribute('d', describeArc(x, y, SIZE - 4, 30, 330));
     }
-  };
+  });
 </script>
 
 

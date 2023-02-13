@@ -20,6 +20,7 @@
   </div>
 </template>
 
+
 <script>
   import { EVENT } from '@/events';
   import { useEventBus } from '@/composables';

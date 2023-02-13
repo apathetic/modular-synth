@@ -56,7 +56,7 @@ export function config (state): Config | undefined {
 
 export function parameters (state): Parameter[] {
   // return this.config.parameters || [];
-  return this.config?.parameters || [];
+  return this.config?.parameters;
 }
 
 

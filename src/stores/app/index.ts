@@ -12,7 +12,7 @@ export const patch = () => <PatchState>{
   connections: [],
   configs: [{
     name: '<blank>',
-    parameters: []
+    parameters: {}
   }]
 };
 

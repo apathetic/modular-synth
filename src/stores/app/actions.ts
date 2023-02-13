@@ -268,11 +268,16 @@ export function removeConnection(id) {
   connections = connections.filter((c) => c.id !== id);
 };
 
+// export const REMOVE_CONFIG = (state, key) => {
+//   state.configs.splice(key, 1); // let's try mutating the array directly
+// };
+
 export function removeParameter (id) {
-  this.configs.forEach(set => {
-    if (set.parameters[id]) {
-      delete set.parameters[id];
-    }
-  });
+  // this.configs.forEach(set => {
+  //   if (set.parameters[id]) {
+  //     delete set.parameters[id];
+  //   }
+  // });
+  delete this.config.parameters[id];
 };
 
