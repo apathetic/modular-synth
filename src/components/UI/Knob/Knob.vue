@@ -18,7 +18,7 @@ is a "freq" parameter in the parent Component.
     <path :d="track" class="track" fill="none" stroke-width="8"></path>
     <path :d="arc" class="display" fill="none" stroke-width="8"></path>
     <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
-    <text x="24" y="28">{{ mapped.toFixed(decimals) }}</text>
+    <text x="24" y="28">{{ mapped.toFixed(precision) }}</text>
     <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
@@ -60,13 +60,9 @@ is a "freq" parameter in the parent Component.
     // mixins: [parameter],
     props: {
       default: Number,
-
-      decimals: 0,
       precision: 0,
-
       min: 0,
       max: 1,
-
       param: { // ie. name
         type: String,
         required: true
@@ -77,33 +73,25 @@ is a "freq" parameter in the parent Component.
       },
     },
 
-    emits: ['value'],
+    emits: 'value',
 
     setup (props, { emit }) {
       const { param, min, max, mode } = props;
-      const instance = getCurrentInstance(); // gets the current component so we dont need to even pass port, id
+
+      const instance = getCurrentInstance(); // gets the current component and its application context
       const parentId = instance.parent.ctx.id;
       const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
       const type = 'knob';
 
+      const { start, mapped, normalized } = useParameter({ id, param, min, max, mode });
       const track = ref('');
       const arc = ref('');
 
 
-
-      const value = 2345;
-      const { start, mapped, normalized } = useParameter({ id, param, min, max, mode });
-      console.log(id, min, max, normalized.value, mapped.value);
-
-
-
-
-      /*
       watchEffect(() => {
-        emit(mapped.value);
+        emit('value', mapped.value);
       });
 
-      */
       watchEffect(() => {
         // 30 -> 330. Dials start 30deg in and end 30deg before 360.
         const rotationValue = normalized.value * 300 + 30;
@@ -120,7 +108,7 @@ is a "freq" parameter in the parent Component.
         param,
         track,
         arc,
-        start, value, mapped,
+        start, mapped,
       }
 
       // data() {

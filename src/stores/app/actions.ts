@@ -183,27 +183,6 @@ export function clearFocus() { this.focusedId = undefined; }
 // -----------------------------------------------
 
 /**
- * @this Store The vue (pinia) store instance.
- */
-export function updateGridPosition({ id, x, y }) {
-  // const module = state.modules.find((m) => m.id === data.id);
-
-  // const module = this.getModule(id);
-  // module.x = x;
-  // module.y = y;
-
-  this.activeModule.x = x;
-  this.activeModule.y = y;
-}
-
-export function updateRackPosition(data) {
-  const module = this.modules.find((m) => m.id === data.id);
-
-  module.col = data.col;
-  module.row = data.row;
-};
-
-/**
  * @this
  */
 export function addModule(data) {
@@ -272,6 +251,25 @@ export function removeConnection(id) {
 //   state.configs.splice(key, 1); // let's try mutating the array directly
 // };
 
+
+export function setParameter (data) {
+  if (this.parameters) {
+    this.parameters[data.id] = data.value;
+  }
+};
+
+export function REGISTER_PARAMETER (state, id) {
+  const key = state.parameterKey;
+  const set = state.parameterSets[key];
+
+  if (set && !set.parameters[id]) {
+    set.parameters[id] = 0;
+    console.log(id, ' registered');
+  } else {
+    console.log(id, ' was already present');
+  }
+};
+
 export function removeParameter (id) {
   // this.configs.forEach(set => {
   //   if (set.parameters[id]) {
@@ -281,3 +279,29 @@ export function removeParameter (id) {
   delete this.config.parameters[id];
 };
 
+
+
+// -----------------------------------------------
+//  UI
+// -----------------------------------------------
+
+/**
+ * @this Store The vue (pinia) store instance.
+ */
+export function updateGridPosition({ id, x, y }) {
+  // const module = state.modules.find((m) => m.id === data.id);
+
+  // const module = this.getModule(id);
+  // module.x = x;
+  // module.y = y;
+
+  this.activeModule.x = x;
+  this.activeModule.y = y;
+}
+
+export function updateRackPosition(data) {
+  const module = this.modules.find((m) => m.id === data.id);
+
+  module.col = data.col;
+  module.row = data.row;
+};

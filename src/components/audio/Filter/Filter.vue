@@ -16,7 +16,7 @@
         param="Q"
         :min="0"
         :max="1"
-        :decimals="2"
+        :precision="2"
         @value="Q = $event">
       </knob>
       <select class="select" @mousedown.stop v-model="type">

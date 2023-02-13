@@ -50,15 +50,6 @@ export function useParameter(props) {
   window.addEventListener(EVENT.MOUSE_UP, mouseup);
   window.addEventListener(EVENT.MOUSE_MOVE, mousemove);
 
-  onUnmounted(() => {
-    // this.$store.commit('REMOVE_PARAMETER', this.id);
-		store.removeParameter(id);
-    // // this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
-    window.removeEventListener(EVENT.MOUSE_UP, mouseup);
-    window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
-
-    console.log('%c[parameter] Destroying %s %s', 'color: grey', id, type);
-  });
 
   /**
    * Set up calculations for updating new knob values.
@@ -77,24 +68,18 @@ export function useParameter(props) {
    */
   function update(e) {
     const delta = (startY - e.clientY) / 100.0; // drag distance, 1/100th pixels
-    const val = Math.min(1, Math.max(0, startValue + delta));
+    const value = Math.min(1, Math.max(0, startValue + delta));
 
-    if (normalized.value === val) return;
+    if (normalized.value === value) return;
 
-    normalized.value = val;
-    mapped.value = computeValue(val);
-
-    // this.$store.commit('SET_PARAMETER', {
-    //   id: this.id,
-    //   value: this.value
-    // });
-
-		///// setParameter(id, value); // or watch. or computed.
+    normalized.value = value;
+    mapped.value = computeValue(value);
+		store.setParameter({ id, value }); // or watch. or computed.
   }
 
   /**
    * Maps the normalized value to the desired range.
-	 * Linear or exponential.
+   * Linear or exponential.
    * @param {number} n The value to map.
    */
   function computeValue(n) {
@@ -106,7 +91,7 @@ export function useParameter(props) {
 
   /**
    * Normalizes the actual value to between 0 and 1.
-	 * This performs the opposite function as above.
+   * This performs the opposite function as above.
    * @param {number} n The value to normalize
    */
   function extractValue(n) {
@@ -117,6 +102,17 @@ export function useParameter(props) {
   }
 
 
+
+
+  onUnmounted(() => {
+    // this.$store.commit('REMOVE_PARAMETER', this.id);
+		store.removeParameter(id);
+    // // this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
+    window.removeEventListener(EVENT.MOUSE_UP, mouseup);
+    window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
+
+    console.log('%c[parameter] Destroying %s %s', 'color: grey', id, type);
+  });
 
 
   // // this.$store.commit('REGISTER_PARAMETER', this.id);

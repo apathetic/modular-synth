@@ -17,7 +17,7 @@
         mode="log"
         :min="min"
         :max="max"
-        :decimals="1"
+        :precision="1"
         @value="freq = $event">
       </knob>
 
@@ -26,7 +26,7 @@
         param="offset"
         :min="-1"
         :max="1"
-        :decimals="1"
+        :precision="1"
         @value="offset = $event">
       </knob>
 
