@@ -74,7 +74,7 @@ export function useParameter(props) {
 
     normalized.value = value;
     mapped.value = computeValue(value);
-		store.setParameter({ id, value }); // or watch. or computed.
+		store.setParameter({ id, value: mapped.value }); // or watch. or computed.
   }
 
   /**

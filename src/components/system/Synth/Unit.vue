@@ -14,6 +14,7 @@
         :is="module.type"
         :id="module.id"
       />
+
     <!-- </div> -->
 
     <!-- <div class="module-connections"> -->
@@ -49,10 +50,7 @@
     },
 
     setup (props) {
-      // const module = ref(props.module);
-      // const id = ref(props.module.id); // this is the ID used by the Connector to route audio
-      // const x = ref(props.module.x);
-      // const y = ref(props.module.y);
+
       // eslint-disable-next-line vue/no-setup-props-destructure
       const { type, id } = props.module;
       const { coords, startDragging, isDragging } = useDraggable(props.module);
@@ -62,33 +60,33 @@
       const node = ref(null); // this'll be a ref to the instantiated audio node
 
       const isActive = computed(() => id == store.activeId);
-      const position = computed(() => (store.isEditing || isDragging) ? {
-        left: coords.x + 'px',
-        top: coords.y + 'px'
-      } : {
-        left: props.module.col * rackWidth + 'px',
-        top: props.module.row * rackHeight + 'px'
-      });
+      const position = computed(() => store.isEditing || isDragging.value ?
+        {
+          left: coords.x + 'px',
+          top: coords.y + 'px'
+        } : {
+          left: props.module.col * rackWidth + 'px',
+          top: props.module.row * rackHeight + 'px'
+        }
+      );
 
       // doenst need 2 b reactive:
       const width = `_${moduleSize[type][0]}U`;
       const tall = moduleSize[type][2] ? 'module--tall' : '';
 
-      watch(() => store.isEditing || isDragging, (after, before) => {
-        console.log(unref(after), unref(before));
-        console.log(unref(position));
-        console.log(rackHeight, rackWidth);
-        console.log(props.module.row, props.module.col);
-      });
+      // watch(() => store.isEditing || isDragging, (after, before) => {
+      //   ...state change...
+      // });
 
       // watch(node, (newValue) => {
-      //   console.log('deep', newValue);
+      //   ...state change...
       // }, { deep: true });
 
 
       onMounted(() => {
         // `modules` are already tracked... but they're JSON.
         // We want to track all INSTANTIATED web audio nodes
+        // This is possible only after the module has rendered
         store.addToRegistry({ id, node: node.value, coords });
       });
 
