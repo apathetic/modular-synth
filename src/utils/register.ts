@@ -1,5 +1,3 @@
-// import Vue /* , { Component, ComponentOptions, VNodeDirective, DirectiveOptions } */ from 'vue';
-import { register } from 'register-service-worker';
 import inlets from '@/components/system/Inlets.vue';
 import outlets from '@/components/system/Outlets.vue';
 
@@ -37,27 +35,11 @@ export function registerComponents(app) {
  * Registers ye olde service worker
  */
 export function registerServiceWorker() {
-  if (process.env.NODE_ENV === 'production') {
-    /* tslint:disable:no-console */
-    register(`${process.env.BASE_URL}service-worker.js`, {
-      ready() {
-        console.log(
-          'App is being served from cache by a service worker.\n' +
-          'For more details, visit https://goo.gl/AFskqB',
-        );
-      },
-      cached() {
-        console.log('Content has been cached for offline use.');
-      },
-      updated() {
-        console.log('New content is available; please refresh.');
-      },
-      offline() {
-        console.log('No internet connection found. App is running in offline mode.');
-      },
-      error(error) {
-        console.error('Error during service worker registration:', error);
-      },
-    });
-  }
+  // if (process.env.NODE_ENV === 'production') {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  // }
 }

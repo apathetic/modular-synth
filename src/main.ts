@@ -5,10 +5,8 @@ import App from './App.vue';
 // import CompositionAPI from '@vue/composition-api';
 // import { auth } from './stores/firebase';
 import { context } from '@/audio';
-
 import { createStore } from '@/stores';
 import { registerComponents, registerServiceWorker } from '@/utils/register';
-
 import '@/styles/styles.scss';
 
 
@@ -25,13 +23,4 @@ registerServiceWorker();
 
 // TODO inject at a module level...?
 app.provide('context', context);
-// AudioContext Mixin: all Components will have access to AudioContext
-// Vue.mixin({
-//   data() {
-//     return { context };
-//   }
-// });
-
-
-
 app.mount('body');

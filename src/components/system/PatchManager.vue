@@ -223,20 +223,6 @@
         left: var(--gap);
       }
     }
-
-/*
-    &:not(.editing) {
-      input {
-        pointer-events: none;
-      }
-
-      .select {
-        &:hover {
-          color: var(--color-highlight);
-        }
-      }
-    }
-    */
   }
 
 

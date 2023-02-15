@@ -168,7 +168,7 @@ button {
   }
 
   .on {
-    border-color: rgba(var(--color-green), 0.5); // #383;
+    border-color: var(--color-green);
 
     svg {
       fill: var(--color-green);
