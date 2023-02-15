@@ -4,11 +4,15 @@
     <button v-if="isAuthenticated" @click="signOut" title="sign out" class="ring active"></button>
     <button v-else                 @click="signIn"  title="sign in"  class="ring"></button>
 
-    <Modal :visible="showModal">
+    <Modal v-model:isOpen="showModal">
+      <Signin />
+      or
+      <br /><br />
       <Login />
     </Modal>
   </div>
 </template>
+
 
 <script>
   // import { auth, provider } from '@/stores/firebase';
@@ -17,13 +21,14 @@
   // const auth = getAuth();
 
   import Login from './Login.vue';
-  import Modal from './Modal.vue';
+  import Signin from './SignIn.vue';
+  import Modal from '../Modal.vue';
   import { useAppStore } from '@/stores/app';
   import { mapState } from 'pinia';
 
 
   export default {
-    components: { Modal, Login },
+    components: { Modal, Login, Signin },
     data() {
       return {
         showModal: false
@@ -53,6 +58,7 @@
   };
 
 </script>
+
 
 <style lang="scss">
   .auth {

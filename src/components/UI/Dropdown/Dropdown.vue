@@ -24,7 +24,7 @@
 
 
   export default {
-    name: 'ui-dropdown',
+    name: 'dropdown',
     // mixins: [parameter],
 
     props: {

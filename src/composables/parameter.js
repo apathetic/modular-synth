@@ -20,7 +20,8 @@ export function useParameter(props) {
   let startY = null;
 
 	console.log('TODO add watch eager (or whatever itscalled)');
-  watch(store.parameterKey, () => { // fetchValue
+  // watch(store.parameterKey, () => { // fetchValue
+  watch(() => store.parameterKey, () => { // fetchValue
     /**
      * Update values when the `parameterKey` changes.
      * Fetches the value from the store (if it exists) or uses the default value.

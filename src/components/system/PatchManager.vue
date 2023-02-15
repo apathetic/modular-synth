@@ -53,7 +53,7 @@
   import { defineComponent, computed, watch, ref, unref, nextTick } from 'vue';
   import { useSortable } from '@/composables';
   import { useAppStore } from '@/stores/app';
-  import Auth from './Auth.vue';
+  import Auth from './Auth';
 
 
   export default defineComponent({
@@ -224,6 +224,7 @@
       }
     }
 
+/*
     &:not(.editing) {
       input {
         pointer-events: none;
@@ -235,10 +236,24 @@
         }
       }
     }
+    */
   }
 
 
   .dropdowns {
+
+    :not(.editing) & {
+      input {
+        pointer-events: none;
+      }
+
+      .select {
+        &:hover {
+          color: var(--color-highlight);
+        }
+      }
+    }
+
 
     .select {
       color: #fff;

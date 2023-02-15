@@ -73,7 +73,7 @@ is a "freq" parameter in the parent Component.
       },
     },
 
-    emits: 'value',
+    emits: ['value'],
 
     setup (props, { emit }) {
       const { param, min, max, mode } = props;

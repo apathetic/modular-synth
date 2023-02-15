@@ -1,10 +1,10 @@
 <template>
   <transition name="fx--fade">
     <div
-        :class="[{'is-visible': visible}, 'modal']"
-        @click="close"
+      :class="[{'is-visible': isOpen}, 'modal']"
+      @click.stop="close"
     >
-      <button class="modal__close" @click="close"></button>
+      <!-- <button class="modal__close" @click.stop="close"></button> -->
       <div class="modal__content" @click.stop>
         <slot></slot>
       </div>
@@ -12,22 +12,34 @@
   </transition>
 </template>
 
+
 <script>
-  export default {
-    model: {
-      prop: 'visible',
-      event: 'visible'
-    },
+  import { defineComponent, ref } from 'vue';
+  export default defineComponent({
     props: {
-      visible: false,
+      isOpen: Boolean,
     },
-    methods: {
-      close() {
-        this.$emit('visible', false);
+    emits: ['update:isOpen'],
+    setup (props, { emit }) {
+
+      function close() {
+        emit('update:isOpen', false);
+      }
+
+      // could do: watch(props.isOpen, () => addEventListener...)
+      document.addEventListener('keydown', (e) => {
+        if (props.isOpen && e.key === 'Escape') {
+          close();
+        }
+      });
+
+      return {
+        close
       }
     }
-  };
+  });
 </script>
+
 
 <style lang="scss">
   $duration: 0.2s;
@@ -54,6 +66,7 @@
       border-radius: 4px;
       background: #fff;
 
+      color: var(--color-grey-dark);
       padding: 20px;
 
       transform: translateY(-30px) scale(1.1);
