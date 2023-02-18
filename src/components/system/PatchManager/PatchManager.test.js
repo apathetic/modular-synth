@@ -1,27 +1,26 @@
-// import { shallow, createLocalVue } from 'vue-test-utils';
-import PatchManager from '@/components/system/PatchManager.vue';
-import mountVue from 'cypress-vue-unit-test';
-import { extensions } from '../../support/extensions';
+import PatchManager from '@/components/system/PatchManager';
 
 
 describe('PatchManager.vue', () => {
-  // let patchManager;
 
-  beforeEach(mountVue(PatchManager, {
-    extensions
-  }));
+  // beforeEach(mountVue(PatchManager, {
+  //   extensions
+  // }));
 
-  context('Authenticated', () => {
+  it('Authenticates', () => {
     it('if not logged in, cannot interact with patch dropdown', () => {});
     it('if not logged in, cannot interact with parameter set dropdown', () => {});
   });
 
-  context('Patches', () => {
+  it('Patches', () => {
     it('loads a default patch', () => {
-      // const patchmanager = shallow(PatchManager, {
-      //   propsData: {}
-      // });
-      let patchmanager = Cypress.vue;
+      cy.mount(PatchManager, {
+        props: {
+          username: 'Test User',
+          onLogout: cy.spy().as('onLogout'),
+        },
+      });
+      cy.contains('Welcome Test User!');
 
       // ...
     });

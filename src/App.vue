@@ -61,7 +61,7 @@
   import midi from './components/system/Midi.vue';
   import masterOut from './components/system/MasterOut.vue';
   import contextMenu from './components/system/ContextMenu.vue';
-  import patchManager from './components/system/PatchManager.vue';
+  import patchManager from './components/system/PatchManager';
 
 
   // import { EVENT } from './events';

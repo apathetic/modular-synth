@@ -2,7 +2,7 @@ export default function(payload) {
 
 
   navigator.serviceWorker.ready.then((registry) => {
-  	console.log('sw activ')
+    console.log('sw activ')
     registry.active.postMessage({
       broadcast: payload
     });

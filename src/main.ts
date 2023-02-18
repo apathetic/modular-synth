@@ -14,7 +14,7 @@ const app = createApp(App);
 
 createStore(app);
 registerComponents(app);
-registerServiceWorker();
+// registerServiceWorker();
 
 // const store = createStore();
 // const router = createRouter();

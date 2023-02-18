@@ -12,7 +12,7 @@ const putInCache = async (request, response) => {
 self.addEventListener('activate', (event) => {
 	console.log('we is activen an sw');
 	event.waitUntil(self.clients.claim()); // Become available to all pages
-  event.waitUntil(enableNavigationPreload());
+  // event.waitUntil(enableNavigationPreload());
 });
 
 self.addEventListener('install', (event) => {
@@ -31,7 +31,6 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-
 self.addEventListener('sync', function (event) {
   if (event.tag == 'myFirstSync') {
     event.waitUntil(doSomeStuff());
@@ -40,8 +39,8 @@ self.addEventListener('sync', function (event) {
 
 
 addEventListener('message', async ({ data, source }) => {
+	console.log('SW', data);
   if ('broadcast' in data ) {
-		console.log('SW', data);
 
     const allClients = await clients.matchAll();
     for (const client of allClients) {

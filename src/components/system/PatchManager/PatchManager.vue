@@ -53,8 +53,7 @@
   import { defineComponent, computed, watch, ref, unref, nextTick } from 'vue';
   import { useSortable } from '@/composables';
   import { useAppStore } from '@/stores/app';
-  import Auth from './Auth';
-
+  import Auth from '../Auth';
 
   export default defineComponent({
     props: {},
@@ -181,7 +180,7 @@
 
 
 <style lang="scss">
-  @import '../../styles/variables.scss';
+  @import '@/styles/variables.scss';
 
   .patch-manager {
     display: flex;
