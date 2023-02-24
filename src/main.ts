@@ -1,12 +1,9 @@
 import { createApp } from 'vue';
-import App from './App.vue';
-// import store from './stores';
-// import router from './router';
-// import CompositionAPI from '@vue/composition-api';
-// import { auth } from './stores/firebase';
 import { context } from '@/audio';
 import { createStore } from '@/stores';
 import { registerComponents, registerServiceWorker } from '@/utils/register';
+
+import App from './App.vue';
 import '@/styles/styles.scss';
 
 

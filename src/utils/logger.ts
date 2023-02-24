@@ -1,6 +1,6 @@
 
 
-export function log({ type, action, data }) {
+export function log({ type, action, data = '' }) {
 
 	switch (type) {
 		case 'error':
@@ -11,17 +11,16 @@ export function log({ type, action, data }) {
       break;
 
     case 'patch': // grey background
-      console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', data);
+      console.log('%c Patch: %s %s ', 'background:#666;color:white;font-weight:bold;', action, data);
       break;
 
-		case 'created':
     case 'component':
       // green text
-      console.log('%c[component] Creating %s', 'color: green', props.module.type);
+      console.log('%c[component] %s %s', 'color: green', action, data);
       break;
     case 'params':
 		case 'destroy':
-			console.log('Destroying %s ', this.module.type);
+			console.log('Destroying %s ', data);
 
     default:
       break;

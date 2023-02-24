@@ -20,15 +20,7 @@ export interface AppState {
   canvasOffset: number;
 }
 
-
-// interface Store {
-//   AppState,
-//   AppGetters,
-//   AppActions
-// }
-
 type PatchKey = string; // uuid/etc/...
-
 export interface Patch {
   id: PatchKey;
   name: string;
@@ -36,7 +28,6 @@ export interface Patch {
   connections: Connection[];
   configs: Config[];
 }
-
 
 export interface Connection {
   id: number;
@@ -78,18 +69,13 @@ export interface Node {
   };
 }
 
-
 export interface Config {
   name: string;
-  parameters: Parameter[];
+  parameters: Parameters;
 }
 
-
-
 export type parameterLabel = `${Module.id}-${string}`;
-
-export interface Parameter {
-  // [key: string]: string | number;
+export interface Parameters {
   [parameterLabel]: string | number;
 }
 

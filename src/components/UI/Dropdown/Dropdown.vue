@@ -17,10 +17,12 @@
 
 
 <script>
-  import { watchEffect } from 'vue';
+  import { watchEffect, getCurrentInstance } from 'vue';
   import { useAppStore } from '@/stores/app';
   // import { parameter } from '../../mixins/parameter';
   // import { EVENT } from '@/events';
+
+  // import { useParameter } from '@/composables';
 
 
   export default {
@@ -53,7 +55,12 @@
       const store = useAppStore();
       // const { parameters } = storeToRefs(store);
 
-      this.id = this.$parent.id + '-' + this.param;
+      // this.id = this.$parent.id + '-' + this.param;
+      const instance = getCurrentInstance(); // gets the current component and its application context
+      const parentId = instance.parent.ctx.id;
+      const id = this.id = `${parentId}-${this.param}`; // ie 11-detune or 11-freq or 5-mod
+
+
       this.$emit('value', this.options[0]); // update parent w/ value
 
       // this.$bus.$on(EVENT.PARAMETERS_LOAD, this.syncValue);

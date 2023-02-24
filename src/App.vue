@@ -1,8 +1,16 @@
 <template>
   <main @mousedown="clearActive">
-    <header>
+    <header id="header" :class="[{'loaded': isAuthenticated}, 'pad']">
+      <button class="save" @click="savePatch">
+        <svg viewBox="0 0 100 100">
+          <path fill="currentColor" d="M88.236,43.25c-0.309-14.487-12.151-26.134-26.707-26.134c-9.603,0-18.016,5.06-22.729,12.66   c-1.733-0.51-3.573-0.785-5.473-0.785c-8.27,0-15.322,5.194-18.072,12.501C7.702,43.557,2.151,50.469,2.151,58.678   c0,9.816,7.973,17.811,17.811,17.811h14.331l0.008-5.942H19.954c-6.556,0-11.867-5.329-11.867-11.87   c0-6.557,5.324-11.876,11.867-11.876v-0.003h0.082c0.74-6.68,6.407-11.875,13.282-11.875c3.138,0,6.022,1.086,8.304,2.896   c2.584-8.548,10.513-14.769,19.901-14.769c11.477,0,20.778,9.302,20.778,20.782c0,1.113-0.087,2.211-0.251,3.281   c5.249,1.224,9.159,5.947,9.159,11.564c0,6.557-5.321,11.87-11.858,11.87H65.004l-0.011,5.942h14.339   c9.84,0,17.815-7.976,17.819-17.811C97.152,52.095,93.568,46.328,88.236,43.25z"/>
+          <path fill="currentColor" d="M62.223,60.091l-5.743-5.942l-6.29-6.508c-0.293-0.295-0.788-0.286-1.065-0.009l-6.299,6.517l-5.744,5.942   l-2.283,2.362c-0.139,0.139-0.219,0.35-0.219,0.578c0,0.119,0.021,0.235,0.061,0.336c0.115,0.297,0.383,0.48,0.699,0.48h8.641   l0.013,18.368c0,0.552,0.448,1,1,1h9.335c0.552,0,1-0.448,1-1V63.848h8.64c0.31,0,0.582-0.187,0.693-0.479   c0.124-0.319,0.058-0.699-0.166-0.928L62.223,60.091z"/>
+        </svg>
+      </button>
+
       <patch-manager></patch-manager>
-      <!-- <auth /> -->
+
+      <Auth />
     </header>
 
     <section :class="isEditing ? 'edit-mode': 'play-mode'">
@@ -57,11 +65,12 @@
   import { useAppStore } from '@/stores/app';
   import { auth } from '@/utils/supabase';
   import { log } from '@/utils/logger';
-  import Synth from './components/system/Synth/';
-  import midi from './components/system/Midi.vue';
-  import masterOut from './components/system/MasterOut.vue';
-  import contextMenu from './components/system/ContextMenu.vue';
-  import patchManager from './components/system/PatchManager';
+  import midi from '@/components/system/Midi.vue';
+  import Synth from '@/components/system/Synth/';
+  import Auth from '@/components/system/Auth'; // signIn
+  import masterOut from '@/components/system/MasterOut.vue';
+  import patchManager from '@/components/system/PatchManager';
+  import contextMenu from '@/components/system/ContextMenu.vue';
 
 
   // import { EVENT } from './events';
@@ -73,6 +82,7 @@
 
     components: {
       Synth,
+      Auth,
       masterOut,
       midi,
       contextMenu,
@@ -83,7 +93,7 @@
       ...mapState(useAppStore, [
           'power',
           'activeModule',
-          // 'authenticated',
+          'isAuthenticated',
           'isEditing',
           'patch',
           'connections'
@@ -187,8 +197,8 @@
         'clearActive',
         'fetchPatches',
         'removeModule',
+        'savePatch'
       ]),
-
 
       xxx(x) {
         console.log('this shouldn fire', x);
@@ -201,8 +211,32 @@
 
 <style lang="scss">
   @import 'styles/variables.scss';
-  /* @import 'styles/styles.scss'; */
   @import 'styles/module.scss';
+
+  #header {
+    display: flex;
+
+    .save {
+      align-self: center;
+      padding: 2px 8px;
+
+      &:hover {
+        color: #349fdf;
+      }
+
+      svg {
+        display: block;
+        height: 2em;
+      }
+    }
+
+    &:not(.loaded) {
+      .dropdowns,
+      .save {
+        z-index: -1;
+      }
+    }
+  }
 
   #modules {
     display:inline-block;

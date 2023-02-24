@@ -106,16 +106,6 @@
         setFocus,
         clearFocus,
       }
-
-    /*
-      bus.$on(EVENT.MODULE_REMOVE, () => {
-        this.$nextTick(() => {
-          this.gridList.items = this.modules;
-          this.gridList._pullItemsToLeft();
-        });
-      });
-    */
-
   },
 
 

@@ -12,7 +12,7 @@ describe('PatchManager.vue', () => {
     it('if not logged in, cannot interact with parameter set dropdown', () => {});
   });
 
-  it('Patches', () => {
+  context('Patches: ', () => {
     it('loads a default patch', () => {
       cy.mount(PatchManager, {
         props: {

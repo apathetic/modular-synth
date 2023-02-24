@@ -10,7 +10,7 @@ import { moduleSize } from '@/constants';
 // import { /* _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME,  */ state as DEFAULT } from '@/stores/patch';
 // import type { PatchState } from '@/types';
 import type { Patch } from '@/types';
-import { patch } from './';
+import { blank } from './';
 
 
 // -----------------------------------------------
@@ -37,8 +37,7 @@ export function loadPatch(key?: string) {
   // load id, name, modules, and configs
   const patch: PatchState = this.patch;
 
-  // console.log('%c Loading patch: %s ', 'background:#666;color:white;font-weight:bold;', patch.name);
-  log({ type:'patch', action:'loading...', data:patch.name });
+  log({ type:'patch', action:'loading...', data: patch.name });
 
   // commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
   // commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
@@ -49,12 +48,12 @@ export function loadPatch(key?: string) {
   // ensure nodes (+ inlets/outlets) are in the DOM...
   nextTick(() => {
     // ...then load new connections
-    console.log('%c Routing audio... ', 'background:#666;color:white;font-weight:bold;');
+    log({ type:'patch', action:'routing audio...' });
     // commit('LOAD_CONNECTIONS', patch.connections);
     // patch.connections = data;
 
     // ...lastly, load parameters
-    console.log('%c Setting parameters... ', 'background:#666;color:white;font-weight:bold;');
+    log({ type:'patch', action:'setting parameters...' });
     // commit('SET_PARAMETERS_KEY', 0);
     this.configKey = 0;
   });
@@ -98,19 +97,14 @@ export const savePatch = ({ commit, state }, data) => {
 
 /**
  * Insert a new, blank patch into the workspace.
- *
  * @this Store The Vue (pinia) store instance.
  */
-export const addPatch = () => {
+export function addPatch () {
   const id = uuid(); // generateKey();
-  const blank = patch();
 
-  // create({ id, ...blank }); // push to db...?
-  state.patches[id] = blank;
-
-  // Update App keys
-  state.patchKey = id;
-  state.parameterKey = 0;
+  this.patches[id] = blank();
+  this.patchKey = id;
+  this.parameterKey = 0;
 };
 
 
@@ -250,6 +244,28 @@ export function removeConnection(id) {
 // export const REMOVE_CONFIG = (state, key) => {
 //   state.configs.splice(key, 1); // let's try mutating the array directly
 // };
+
+// -----------------------------------------------
+//  PARAMETERS
+// -----------------------------------------------
+// export const ADD_PARAMETERS = (state) => {
+export function addConfig() {
+  this.configKey = this.configs.push({
+    name: '<empty>',
+    parameters: Object.assign({}, this.config?.parameters)
+  }) - 1; // select new config by default (push returns array length)
+};
+
+// config
+export const REMOVE_PARAMETERS = (state, key) => {
+  state.parameterSets.splice(key, 1); // let's try mutating the array directly
+};
+
+export const SET_PARAMETERS_NAME = (state, name) => {
+  const key = state.parameterKey;
+
+  state.parameterSets[key].name = name;
+};
 
 
 export function setParameter (data) {
