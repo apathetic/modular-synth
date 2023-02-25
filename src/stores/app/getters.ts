@@ -1,9 +1,4 @@
-// import { usePatchStore } from '@/stores/patch'
-import type {
-  AppState, Patch, Config,
-  Connection,
-  Parameter, Module, Node } from '@/types';
-
+import type { AppState, Patch, Config, Connection, Parameters, Module, Node } from '@/types';
 
 
 // -----------------------------------------------
@@ -18,7 +13,9 @@ import type {
 
 // THERE MUST ALWAYS BE A PATCH.
 export function patch (state: AppState): Patch | undefined {
-  return state.patches[state.patchId];
+  const p = state.patches[state.patchId];
+  if (!p) { throw new Error('Error: there is no patch'); }
+  return p;
   // return state.patches.find((p) => p.id === state.patchKey);
 }
 
@@ -49,16 +46,15 @@ export function connections (state): Connection[] {
 }
 
 export function configs (state): Config[] {
-  return this.patch?.configs || [];
+  return this.patch.configs;
 }
 
 export function config (state): Config | undefined {
   return this.configs[this.configId];
 }
 
-export function parameters (state): Parameter[] {
-  // return this.config.parameters || [];
-  return this.config?.parameters;
+export function parameters (state): Parameters {
+  return this.config.parameters;
 }
 
 

@@ -16,7 +16,6 @@
     </div>
 
     <div class="params select">
-      <!-- <span>0{{ configRef ? configRef.selectedIndex : '0' }}</span> -->
       <span>0{{currentConfigId}}</span>
       <button class="math add" @click="addConfig">+</button>
       <button class="math remove" @click="removeConfig">-</button>

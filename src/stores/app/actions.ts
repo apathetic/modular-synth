@@ -7,8 +7,6 @@ import { moduleSize } from '@/constants';
 
 // import { api, generateKey } from '@/utils/firebase';
 // import { validateData } from '@/utils/firebase';
-// import { /* _ID, _MODULES, _CONNECTIONS, _PARAMETERS, _NAME,  */ state as DEFAULT } from '@/stores/patch';
-// import type { PatchState } from '@/types';
 import type { Patch } from '@/types';
 import { blank } from './';
 
@@ -27,18 +25,18 @@ import { blank } from './';
  *       before `parameters` are instantiated.
  *
  * @this {Store} reference to the pinia store
- * @param {string} key The key of the patch to load
+ * @param {number} id The key of the patch to load
  * @return {void}
  */
 export function loadPatch(id?: number) {
   // if id == patchId can return
   this.patchId = id || this.patchId;
-  this.configId = -1; // temp unset this so that it'll trigger a mutation on next tick ...???
+  // this.configId = -1; // temp unset this so that it'll trigger a mutation on next tick ...???
 
   // load id, name, modules, and configs
-  const patch: Patch = this.patch;
+  // const patch: Patch = this.patch;
 
-  log({ type:'patch', action:'loading...', data:patch.name });
+  log({ type:'patch', action:'loading...', data:this.patch.name });
 
   // commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
   // commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
@@ -55,7 +53,6 @@ export function loadPatch(id?: number) {
 
     // ...lastly, load parameters
     log({ type:'patch', action:'setting parameters...' });
-    // commit('SET_PARAMETERS_KEY', 0);
     this.configId = 0;
   });
 };
@@ -252,27 +249,27 @@ export function removeConnection(id) {
 // -----------------------------------------------
 //  PARAMETERS
 // -----------------------------------------------
-// export const ADD_PARAMETERS = (state) => {
+
+/**
+ * Adds an new, empty parameter configuration object.
+ */
 export function addConfig() {
-  this.configKey = this.configs.push({
+  const config = {
     name: '<empty>',
     parameters: Object.assign({}, this.config?.parameters)
-  }) - 1; // select new config by default (push returns array length)
+  };
+  this.configId = this.configs.push(config) - 1; // select new config by default (push returns array length)
 }
 
-// config
-// export const REMOVE_PARAMETERS = (state, key) => {
+
+/**
+ * Remove a set of parameters.
+ * @param id The configuration to remove
+ */
 export function removeConfig(id) {
   this.configs.splice(id, 1);
   this.configId = 0;
 }
-
-export const SET_PARAMETERS_NAME = (state, name) => {
-  const key = state.parameterKey;
-
-  state.parameterSets[key].name = name;
-};
-
 
 export function setParameter (data) {
   if (this.parameters) {

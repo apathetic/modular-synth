@@ -17,22 +17,17 @@
 
 
 <script>
-  import { watchEffect, getCurrentInstance } from 'vue';
+  import { defineComponent, ref, watchEffect, getCurrentInstance, onUnmounted } from 'vue';
   import { useAppStore } from '@/stores/app';
-  // import { parameter } from '../../mixins/parameter';
-  // import { EVENT } from '@/events';
-
   // import { useParameter } from '@/composables';
 
-
-  export default {
-    name: 'dropdown',
-    // mixins: [parameter],
+  export default defineComponent({
+    name: 'Dropdown',
 
     props: {
       param: {
         type: String,
-        required: false
+        required: true
       },
       options: {
         type: Array,
@@ -40,85 +35,67 @@
       }
     },
 
-    data() {
-      return {
-        active: false,
-        selected: 1,
-        type: 'Dropdown'
-      };
-    },
+    emits: ['value'],
 
-    created() {
-      // TODO integrate w/ parameter.js
-      console.log('%c[parameter] Creating %s Dropdown', 'color: lightblue', this.param);
-
+    setup(props, { emit }) {
+      const { param, options } = props;
+      const active = ref(false);
+      const selected = ref(1);
+      const type = 'Dropdown';
       const store = useAppStore();
       // const { parameters } = storeToRefs(store);
 
-      // this.id = this.$parent.id + '-' + this.param;
+      // TODO integrate w/ parameter.js
+      console.log('%c[parameter] Creating %s Dropdown', 'color: lightblue', param);
+
       const instance = getCurrentInstance(); // gets the current component and its application context
       const parentId = instance.parent.ctx.id;
-      const id = this.id = `${parentId}-${this.param}`; // ie 11-detune or 11-freq or 5-mod
+      const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
 
+      emit('value', options[0]); // update parent w/ value
 
-      this.$emit('value', this.options[0]); // update parent w/ value
-
-      // this.$bus.$on(EVENT.PARAMETERS_LOAD, this.syncValue);
       watchEffect(() => {
-        // const value = parameters[this.id] || this.options[0];
-        const value = store.parameters[this.id] || this.options[0];
+        const value = store.parameters[id] || options[0];
 
-        this.$emit('value', value);
-        this.selected = this.options.indexOf(value);
+        emit('value', value);
+        selected.value = options.indexOf(value);
 
-        console.log('%c[parameter] %s %s set to %s', 'color: orange', this.param, this.type, value);
+        console.log('%c[parameter] %s %s set to %s', 'color: orange', param, type, value);
       });
-    },
 
-    unmounted() {
-      // this.$store.commit('REMOVE_PARAMETER', this.id);
-      // this.$bus.$off(EVENT.PARAMETERS_LOAD, this.syncValue);
-      const store = useAppStore();
-      store.removeParameter(this.id);
+      onUnmounted(() => {
+        store.removeParameter(id);
+        console.log('%c[parameter] Destroying %s %s', 'color: grey', type, id);
+      });
 
-      console.log('%c[parameter] Destroying %s %s', 'color: grey', this.type, this.id);
-    },
+      function open() {
+        active.value = true;
 
-    methods: {
-      open() {
-        this.active = true;
-
-        this.dismiss = () => {
-          this.active = false;
-          window.removeEventListener('mouseup', this.dismiss);
+        const dismiss = () => {
+          active.value = false;
+          window.removeEventListener('mouseup', dismiss);
         };
 
-        window.addEventListener('mouseup', this.dismiss);
-      },
+        window.addEventListener('mouseup', dismiss);
+      }
 
-      select(index) {
-        const value = this.options[index];
+      function select(index) {
+        const value = options[index];
 
-        this.selected = index;
-        this.$emit('value', value); // update parent w/ value
-        this.$store.commit('SET_PARAMETER', {
-          id: this.id,
-          value: value
-        });
-      },
+        // selected = index;
+        // emit('value', value);
+        store.setParameter({ id, value });
+      }
 
-      // TODO duplication w/ mixins/Parameter.js
-      syncValue() {
-        const value = this.$store.getters.parameters[this.id] || this.options[0];
-
-        this.$emit('value', value);
-        this.selected = this.options.indexOf(value);
-
-        console.log('%c[parameter] %s %s set to %s', 'color: orange', this.param, this.type, value);
+      return {
+        open,
+        select,
+        selected,
+        active,
+        options,
       }
     }
-
-  };
+  });
 </script>
 
 

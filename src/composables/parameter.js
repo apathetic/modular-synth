@@ -112,7 +112,7 @@ export function useParameter(props) {
     window.removeEventListener(EVENT.MOUSE_UP, mouseup);
     window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
 
-    console.log('%c[parameter] Destroying %s %s', 'color: grey', id, type);
+    console.log('%c[parameter] Destroying %s %s', 'color: grey', id, param);
   });
 
 
