@@ -16,12 +16,14 @@ import type {
  * [] or {}, but one that doesn't live on `patch` or in the state.
  */
 
+// THERE MUST ALWAYS BE A PATCH.
 export function patch (state: AppState): Patch | undefined {
-  return state.patches[state.patchKey];
+  return state.patches[state.patchId];
+  // return state.patches.find((p) => p.id === state.patchKey);
 }
 
 export function modules (state): Module[] | undefined {
-  return this.patch?.modules;
+  return this.patch.modules;
 }
 
 // export const module = (state) => {
@@ -51,7 +53,7 @@ export function configs (state): Config[] {
 }
 
 export function config (state): Config | undefined {
-  return this.configs[state.configKey];
+  return this.configs[this.configId];
 }
 
 export function parameters (state): Parameter[] {
@@ -75,9 +77,9 @@ export function isAuthenticated (state): Boolean {
 
 
 
-export function parametersName (state: PatchState) {
-  return this.config?.name || '';
-}
+// export function parametersName (state: PatchState) {
+//   return this.config?.name || '';
+// }
 
 export const node = (state: AppState) => (id: number): Node => state.registry[id];
 export const getNode = (state: AppState) => (id: number): Node => state.registry[id];

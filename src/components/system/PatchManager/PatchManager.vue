@@ -5,23 +5,24 @@
   >
 
     <div class="patch select">
-      <span>0{{ patchRef ? patchRef.selectedIndex : '0' }}</span>
+      <span>0{{currentPatchId}}</span>
       <button class="math add" @click="addPatch">+</button>
       <button class="math remove" @click="removePatch">-</button>
-      <select v-model="currentPatchKey" ref="patchRef">
+      <select v-model="currentPatchId" ref="patchRef">
         <option value="" disabled selected>&lt;select patch&gt;</option>
-        <option v-for="(patch, key) in patches" :value="key">{{ patch.name }}</option>
+        <option v-for="(patch, id) in patches" :key="patch.id" :value="id">{{ patch.name }}</option>
       </select>
       <input type="text" v-model="currentPatchName">
     </div>
 
     <div class="params select">
-      <span>0{{ configRef ? configRef.selectedIndex : '0' }}</span>
+      <!-- <span>0{{ configRef ? configRef.selectedIndex : '0' }}</span> -->
+      <span>0{{currentConfigId}}</span>
       <button class="math add" @click="addConfig">+</button>
       <button class="math remove" @click="removeConfig">-</button>
-      <select v-model="currentConfigKey" ref="configRef">
+      <select v-model="currentConfigId" ref="configRef">
         <option value="" disabled selected>&lt;select configs&gt;</option>
-        <option v-for="(config, key) in configs" :value="key">{{ config.name }}</option>
+        <option v-for="(config, id) in configs" :key="config.id" :value="id">{{ config.name }}</option>
       </select>
       <input type="text" v-model="currentConfigName">
     </div>
@@ -39,14 +40,15 @@
   export default defineComponent({
     setup () {
       console.log('%c ◌ PatchManager: setting up... ', 'background:black;color:white;font-weight:bold');
-      const store = useAppStore();
       const { resetSorting } = useSortable();
+      const store = useAppStore();
+
       const editing = computed(() => store.isEditing);
-      const patch = computed(() => store.patch);
       const patches = computed(() => store.patches);
       const configs = computed(() => store.configs);
-      const currentPatchKey = ref(store.patchKey);
-      const currentConfigKey = ref(store.configKey);
+
+      const currentPatchId = ref(store.patchId);
+      const currentConfigId = ref(store.configId);
       const patchRef = ref(null);
       const configRef = ref(null);
 
@@ -60,21 +62,19 @@
         set(value) { store.config.name = value; }
       });
 
-      watch(currentPatchKey, (key, old) => {
-        store.patchKey = key;
-        store.configKey = 0; // select 1st set when new patch loaded
+      watch(currentPatchId, (id, old) => {
+        store.patchId = id;
+        store.configId = 0; // select 1st set when new patch loaded
         load();
       });
 
-      watch(currentConfigKey, (key, old) => {
-        store.configKey = key;
+      watch(currentConfigId, (id, old) => {
+        store.configId = id;
       });
 
       function load() {
         store.loadPatch();
-        nextTick(() => {
-          resetSorting();
-        });
+        nextTick(resetSorting);
       }
 
       function addPatch() {
@@ -87,9 +87,7 @@
         const confirm = window.confirm('Delete ' + currentPatchName + '?');
 
         if (patches.value.length <= 1 || !confirm) { return; }
-
         store.removePatch(currentPatchKey);
-        store.patchKey = patches[0].id;
       }
 
       function addConfig() {
@@ -97,12 +95,10 @@
       };
 
       function removeConfig(id) {
-        // const confirm = window.confirm('Delete ' + this.currentConfigName + '?');
-        // if (this.$store.getters.parameterSets.length <= 1 || !confirm) { return; }
+        const confirm = window.confirm('Delete ' + currentConfigName + '?');
 
-        // this.$store.commit('REMOVE_PARAMETERS', this.currentParamsKey);
-        // this.paramsIndex = this.$refs.params.selectedIndex = 1;
-        // this.currentParamsKey = 0;
+        if (configs.value.length <= 1 || !confirm) { return; }
+        store.removeConfig(currentConfigId);
       };
 
 
@@ -113,20 +109,19 @@
         editing,
         // editing: store.isEditing,
 
-        currentPatchKey,
-        currentConfigKey,
-        currentPatchName,
-        currentConfigName,
-
-        patchRef,
         patches,
+        patchRef,
         addPatch,
         removePatch,
+        currentPatchId,
+        currentPatchName,
 
-        configRef,
         configs,
+        configRef,
         addConfig,
         removeConfig,
+        currentConfigId,
+        currentConfigName,
       }
     },
   });

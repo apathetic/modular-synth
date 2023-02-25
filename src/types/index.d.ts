@@ -1,3 +1,4 @@
+type PatchKey = uuid; // string
 
 export interface AppState {
   power: boolean;
@@ -5,9 +6,9 @@ export interface AppState {
   focusedId: number | undefined; // "hovered": for Module Info, Connections
   activeId: number | undefined;  // "clicked": for dragging, deleting.  ...activeModule?
 
-  patches: Patch[];  // all available patches
-  patchKey: number;  // key of active patch.  activePatch? currentPatch?
-  configKey: number; // key of active params. activeconfig?
+  patches: Patch[]; // all available patches
+  patchId: number;  // active patch id
+  configId: number; // active config id
 
   // nodes..?
   // references to all audio nodes in the current patch.
@@ -20,7 +21,6 @@ export interface AppState {
   canvasOffset: number;
 }
 
-type PatchKey = string; // uuid/etc/...
 export interface Patch {
   id: PatchKey;
   name: string;

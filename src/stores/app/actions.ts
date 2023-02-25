@@ -30,14 +30,15 @@ import { blank } from './';
  * @param {string} key The key of the patch to load
  * @return {void}
  */
-export function loadPatch(key?: string) {
-  this.patchKey = key || this.patchKey; // if key == patchKey can prob return
-  this.configKey = -1; // temp unset this so that it'll trigger a mutation on next tick
+export function loadPatch(id?: number) {
+  // if id == patchId can return
+  this.patchId = id || this.patchId;
+  this.configId = -1; // temp unset this so that it'll trigger a mutation on next tick ...???
 
   // load id, name, modules, and configs
-  const patch: PatchState = this.patch;
+  const patch: Patch = this.patch;
 
-  log({ type:'patch', action:'loading...', data: patch.name });
+  log({ type:'patch', action:'loading...', data:patch.name });
 
   // commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
   // commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
@@ -55,7 +56,7 @@ export function loadPatch(key?: string) {
     // ...lastly, load parameters
     log({ type:'patch', action:'setting parameters...' });
     // commit('SET_PARAMETERS_KEY', 0);
-    this.configKey = 0;
+    this.configId = 0;
   });
 };
 
@@ -101,10 +102,10 @@ export const savePatch = ({ commit, state }, data) => {
  */
 export function addPatch () {
   const id = uuid(); // generateKey();
+  const patch = Object.assign(blank(), { id });
 
-  this.patches[id] = blank();
-  this.patchKey = id;
-  this.parameterKey = 0;
+  this.patchId = this.patches.push(patch) - 1;
+  this.configId = 0;
 };
 
 
@@ -114,12 +115,16 @@ export function addPatch () {
  * @param {[type]} state  [description]
  */
 export const removePatch = ({ commit, state }, key) => {
+  if (state.patches.length === 1) {
+    alert('no');
+    return;
+  }
+
   api.remove('patch/' + key);
   commit('REMOVE_PATCH', key);
 
-  // Update App keys
-  state.patchKey = Object.keys(state.patches)[0];   // choose first key (oldest)
-  state.parameterKey = 0;
+  state.patchId = 0; // Object.keys(state.patches)[0];   // choose first key (oldest)
+  state.configId = 0;
   loadPatch({ commit, state });
 };
 
@@ -229,17 +234,16 @@ export function removeModule() {
 
     // Note: KNOB / SLIDERS will remove themselves, yay!
   }
-};
-
+}
 
 export function addConnection(data) {
   this.connections.push(data);
-};
+}
 
 export function removeConnection(id) {
   let { activeId, focusedId, modules, connections } = this;
   connections = connections.filter((c) => c.id !== id);
-};
+}
 
 // export const REMOVE_CONFIG = (state, key) => {
 //   state.configs.splice(key, 1); // let's try mutating the array directly
@@ -254,12 +258,14 @@ export function addConfig() {
     name: '<empty>',
     parameters: Object.assign({}, this.config?.parameters)
   }) - 1; // select new config by default (push returns array length)
-};
+}
 
 // config
-export const REMOVE_PARAMETERS = (state, key) => {
-  state.parameterSets.splice(key, 1); // let's try mutating the array directly
-};
+// export const REMOVE_PARAMETERS = (state, key) => {
+export function removeConfig(id) {
+  this.configs.splice(id, 1);
+  this.configId = 0;
+}
 
 export const SET_PARAMETERS_NAME = (state, name) => {
   const key = state.parameterKey;

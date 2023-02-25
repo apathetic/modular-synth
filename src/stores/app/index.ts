@@ -21,11 +21,8 @@ const state = () => <AppState>{
   activeId: 0,
 
   patches: [blank()],
-
-  // move to patchManager: ?
-  patchKey: 0,
-  configKey: 0,
-  // ----------------------
+  patchId: 0,
+  configId: 0,
 
   id: 0, // keeps track of modules, augmented when new module is added. could use uuid maybe
   registry: [], //  {},
