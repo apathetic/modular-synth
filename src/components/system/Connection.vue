@@ -68,6 +68,7 @@ THOUGHTS:
       const { id, to, from } = props;  // props dont need to be reactive in this component
       const store = useAppStore();
       const stroke = ref('white');
+      let unwatch;
 
       const src = {
         node: store.getNode(from.id),
@@ -120,8 +121,9 @@ THOUGHTS:
 
 
 
-            src.node.$watch(outlet.data, interpolator.set);
             // this.$watch(outlet.data, interpolator.set);
+            // const unwatch = watch(action, interpolator);
+            unwatch = src.node.$watch(outlet.data, interpolator.set);
 
 
 
@@ -142,7 +144,7 @@ THOUGHTS:
 
               // this.unwatch = this.source.node.$watch(action, update);
               // const unwatch = watch(action, update);
-              const unwatch = src.node.$watch(action, update); // watch the [action] prop on the node
+              unwatch = src.node.$watch(action, update); // watch the [action] prop on the node
 
 
               stroke.value = '#999';
@@ -184,7 +186,8 @@ THOUGHTS:
 
       onUnmounted(() => {
         route(false);
-        this.unwatch && this.unwatch();
+        // this.unwatch && this.unwatch();
+        unwatch && unwatch();
         console.log('removed', id);
       })
 

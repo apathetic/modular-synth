@@ -20,15 +20,14 @@ export function useParameter(props) {
   let startY = null;
 
 	console.log('TODO add watch eager (or whatever itscalled)');
-  // watch(store.parameterKey, () => { // fetchValue
-  watch(() => store.parameterKey, () => { // fetchValue
+  watch(() => store.configId, () => { // fetchValue
     /**
      * Update values when the `parameterKey` changes.
      * Fetches the value from the store (if it exists) or uses the default value.
      * NOTE: this is only necessary when the parameterSet does *not* contain values for
      * all parameters.
      */
-    mapped.value = store.parameters[id] || this.default || 0;
+    mapped.value = store.parameters[id] || props.default || 0;
     normalized.value = extractValue(mapped.value);
     console.log('%c[parameter] %s %s set to %f', 'color: orange', id, param, mapped.value);
   });

@@ -25,7 +25,7 @@
   import { Parameter } from '@/audio';
 
   export default {
-    name: 'Osc',
+    // name: 'Osc',
     inject: [ 'context' ],
     props: {
       id: {
@@ -36,6 +36,8 @@
 
     data() {
       return {
+        name: 'OSC',
+
         freq: 440,
         mod: 0,
         PW: 0,

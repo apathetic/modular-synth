@@ -2,13 +2,11 @@ import { nextTick } from 'vue';
 import { v4 as uuid } from 'uuid';
 import { log } from '@/utils/logger';
 import { fetch, create, save, validateData } from '@/utils/supabase';
-// import { fetch, create, save, delete, validateData } from '@/utils/supabase';
+import { useSortable } from '@/composables';
 import { moduleSize } from '@/constants';
-
-// import { api, generateKey } from '@/utils/firebase';
-// import { validateData } from '@/utils/firebase';
-import type { Patch } from '@/types';
 import { blank } from './';
+
+import type { Patch } from '@/types';
 
 
 // -----------------------------------------------
@@ -29,31 +27,51 @@ import { blank } from './';
  * @return {void}
  */
 export function loadPatch(id?: number) {
-  // if id == patchId can return
-  this.patchId = id || this.patchId;
-  // this.configId = -1; // temp unset this so that it'll trigger a mutation on next tick ...???
+  const { resetSorting } = useSortable();
 
-  // load id, name, modules, and configs
-  // const patch: Patch = this.patch;
+  if (id === this.patchId) return;
+  id = id ?? this.patchId;
 
-  log({ type:'patch', action:'loading...', data:this.patch.name });
+  log({ type:'patch', action:'loading ', data:this.patch.name });
+  const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
+  const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
+  this.patches[id].connections = [];                // temporarily zero it out
+  this.patches[id].configs = [{ parameters: {}}];   // temporarily zero it out
 
+  this.patchId = id;                                // trigger loading a new patch
+  this.configId = 0; // select 1st set when new patch loaded
+
+
+  // working IDEA OLD
   // commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
   // commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
   // commit('SET_PARAMETERS_KEY', -1); // and temp unset this so that it'll trigger a mutation on next tick
 
   // patch.connections = []; // first, explicitly destroy all connections
 
-  // ensure nodes (+ inlets/outlets) are in the DOM...
+
+
+  // ensure nodes (+ inlets/outlets) are in the DOM
+  // before proceeding with routing, applying params
   nextTick(() => {
+
+
     // ...then load new connections
     log({ type:'patch', action:'routing audio...' });
-    // commit('LOAD_CONNECTIONS', patch.connections);
-    // patch.connections = data;
+    this.patch.connections = connections;
 
     // ...lastly, load parameters
     log({ type:'patch', action:'setting parameters...' });
-    this.configId = 0;
+    this.patch.configs = configs;
+
+    // ...
+    log({ type:'patch', action:'resetting grid...' });
+    resetSorting();
+
+
+    // deterime MasterOut's position
+    // actually... NOT NECESSARY if we blow away ALL MODULES each
+    // time we load a patch
   });
 };
 
@@ -98,10 +116,11 @@ export const savePatch = ({ commit, state }, data) => {
  * @this Store The Vue (pinia) store instance.
  */
 export function addPatch () {
-  const id = uuid(); // generateKey();
-  const patch = Object.assign(blank(), { id });
+  // const id = uuid(); // generateKey();
+  // const patch = Object.assign(blank(), { id });
+  // this.patchId = this.patches.push(patch) - 1;
 
-  this.patchId = this.patches.push(patch) - 1;
+  this.patchId = this.patches.push(blank()) - 1;
   this.configId = 0;
 };
 
@@ -239,7 +258,7 @@ export function addConnection(data) {
 
 export function removeConnection(id) {
   let { activeId, focusedId, modules, connections } = this;
-  connections = connections.filter((c) => c.id !== id);
+  this.connections = connections.filter((c) => c.id !== id);
 }
 
 // export const REMOVE_CONFIG = (state, key) => {

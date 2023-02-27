@@ -32,14 +32,12 @@
 
 <script>
   import { defineComponent, computed, watch, ref, nextTick } from 'vue';
-  import { useSortable } from '@/composables';
   import { useAppStore } from '@/stores/app';
   // import Select from './Select.vue';
 
   export default defineComponent({
     setup () {
       console.log('%c ◌ PatchManager: setting up... ', 'background:black;color:white;font-weight:bold');
-      const { resetSorting } = useSortable();
       const store = useAppStore();
 
       const editing = computed(() => store.isEditing);
@@ -61,25 +59,16 @@
         set(value) { store.config.name = value; }
       });
 
-      watch(currentPatchId, (id, old) => {
-        store.patchId = id;
-        store.configId = 0; // select 1st set when new patch loaded
-        load();
-      });
+      watch(currentPatchId, (id) => store.loadPatch(id));
 
-      watch(currentConfigId, (id, old) => {
-        store.configId = id;
-      });
+      watch(currentConfigId, (id) => store.configId = id);
 
-      function load() {
-        store.loadPatch();
-        nextTick(resetSorting);
-      }
 
       function addPatch() {
         // if (patches.length >= 9) { return; }
         store.addPatch();    // CREATE a new blank patch...
-        store.loadPatch();   // ...and then select it
+        store.loadPatch();   // ...and then load it...
+        // currentPatchId = xxpatches.lengthx// ...and finally select it.
       }
 
       function removePatch() {
@@ -101,7 +90,7 @@
       };
 
 
-      load();
+      store.loadPatch();
 
 
       return {

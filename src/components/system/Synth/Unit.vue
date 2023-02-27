@@ -8,6 +8,10 @@
     @mousedown.stop="(e) => startDragging(e, el)"
   >
 
+    <!-- @mouseover.stop="setFocus(module.id)"
+    @mouseout.stop="clearFocus()" -->
+
+
     <!-- <div class="module-interface"> -->
       <component
         ref="node"
@@ -95,6 +99,10 @@
         store.removeFromRegistry(id);
       });
 
+      // function setFocus(id) { store.focusedId = id; }
+      // function clearFocus() { store.focusedId = undefined; }
+
+
       console.log('%c[component] Creating %s', 'color: green', type);
 
       return {
@@ -106,6 +114,8 @@
         isDragging,
         isActive,
         position,
+
+        // setFocus, clearFocus
       };
     }
   });
