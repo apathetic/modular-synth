@@ -40,14 +40,14 @@
       console.log('%c ◌ PatchManager: setting up... ', 'background:black;color:white;font-weight:bold');
       const store = useAppStore();
 
-      const editing = computed(() => store.isEditing);
-      const patches = computed(() => store.patches);
-      const configs = computed(() => store.configs);
-
       const currentPatchId = ref(store.patchId);
       const currentConfigId = ref(store.configId);
       const patchRef = ref(null);
       const configRef = ref(null);
+
+      const editing = computed(() => store.isEditing);
+      const patches = computed(() => store.patches);
+      const configs = computed(() => store.configs);
 
       const currentPatchName = computed({
         get() { return store.patch?.name },
@@ -59,7 +59,7 @@
         set(value) { store.config.name = value; }
       });
 
-      watch(currentPatchId, (id) => store.loadPatch(id));
+      watch(currentPatchId, (id) => { store.loadPatch(id); currentConfigId.value = 0 });
 
       watch(currentConfigId, (id) => store.configId = id);
 
@@ -67,8 +67,7 @@
       function addPatch() {
         // if (patches.length >= 9) { return; }
         store.addPatch();    // CREATE a new blank patch...
-        store.loadPatch();   // ...and then load it...
-        // currentPatchId = xxpatches.lengthx// ...and finally select it.
+        currentPatchId.value = patches.value.length - 1; // ...and load it (via watch) and select it.
       }
 
       function removePatch() {
@@ -80,6 +79,7 @@
 
       function addConfig() {
         store.addConfig();
+        currentConfigId.value = configs.value.length - 1; // load it (via watch) and select it.
       };
 
       function removeConfig(id) {
@@ -95,7 +95,6 @@
 
       return {
         editing,
-        // editing: store.isEditing,
 
         patches,
         patchRef,

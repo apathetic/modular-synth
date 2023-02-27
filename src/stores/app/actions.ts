@@ -30,48 +30,32 @@ export function loadPatch(id?: number) {
   const { resetSorting } = useSortable();
 
   if (id === this.patchId) return;
-  id = id ?? this.patchId;
+  id = id ?? this.patchId as number;
 
   log({ type:'patch', action:'loading ', data:this.patch.name });
+
   const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
   const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
   this.patches[id].connections = [];                // temporarily zero it out
   this.patches[id].configs = [{ parameters: {}}];   // temporarily zero it out
 
   this.patchId = id;                                // trigger loading a new patch
-  this.configId = 0; // select 1st set when new patch loaded
+  this.configId = 0;                                // select 1st set when new patch loaded
 
-
-  // working IDEA OLD
-  // commit('LOAD_PATCH', patch);      // loads: id, name, modules, and parameterSets. NO connections / parameterKey
-  // commit('LOAD_CONNECTIONS', []);   // first, explicitly destroy all connections
-  // commit('SET_PARAMETERS_KEY', -1); // and temp unset this so that it'll trigger a mutation on next tick
-
-  // patch.connections = []; // first, explicitly destroy all connections
-
-
-
-  // ensure nodes (+ inlets/outlets) are in the DOM
-  // before proceeding with routing, applying params
+  // ensure AudioNodes have been instantiated before proceeding with routing
+  // ensure parameter components have mounted before applying param config
   nextTick(() => {
-
-
-    // ...then load new connections
-    log({ type:'patch', action:'routing audio...' });
+    // wire new connections
+    // log({ type:'patch', action:'routing audio...' });
     this.patch.connections = connections;
 
-    // ...lastly, load parameters
-    log({ type:'patch', action:'setting parameters...' });
+    // apply parameters
+    // log({ type:'patch', action:'setting parameters...' });
     this.patch.configs = configs;
 
-    // ...
-    log({ type:'patch', action:'resetting grid...' });
+    // do some UI bootstrapping
+    // log({ type:'patch', action:'resetting grid...' });
     resetSorting();
-
-
-    // deterime MasterOut's position
-    // actually... NOT NECESSARY if we blow away ALL MODULES each
-    // time we load a patch
   });
 };
 
@@ -116,10 +100,6 @@ export const savePatch = ({ commit, state }, data) => {
  * @this Store The Vue (pinia) store instance.
  */
 export function addPatch () {
-  // const id = uuid(); // generateKey();
-  // const patch = Object.assign(blank(), { id });
-  // this.patchId = this.patches.push(patch) - 1;
-
   this.patchId = this.patches.push(blank()) - 1;
   this.configId = 0;
 };

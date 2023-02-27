@@ -13,6 +13,12 @@ describe('PatchManager.vue', () => {
   });
 
   context('Patches: ', () => {
+    it('can load a patch', () => {
+      let patchmanager = Cypress.vue; // the ref to the component (which was set up in "mountVue")
+
+      // ...
+    });
+
     it('loads a default patch', () => {
       cy.mount(PatchManager, {
         props: {
@@ -25,37 +31,28 @@ describe('PatchManager.vue', () => {
       // ...
     });
 
-    it('can load a patch', () => {
-      let patchmanager = Cypress.vue; // the ref to the component (which was set up in "mountVue")
+    it('connections are connected upon loading a patch', () => {});
 
-      // ...
-    });
+    it('parameters are applied upon loading a patch', () => {});
 
-    it('can save a patch', () => {
-      let patchmanager = Cypress.vue;
-
-      // ...
-    });
-
-    it('when in edit mode, can add a new patch', () => {
+    it('in edit mode, can add a new patch', () => {
 
     });
 
-    it('when in edit mode, can remove a patch', () => {
+    it('in edit mode, can remove a patch', () => {
 
     });
 
-    it('when in edit mode, can edit the patch name', () => {
+    it('in edit mode, can edit the patch name', () => {
 
     });
   });
 
   context('Parameters', () => {
-    it('in play mode, can select a new parameter set', () => {});
-    it('in play mode, can save parameters', () => {});
-    it('in edit mode, can add a new parameter set', () => { });
-    it('in edit mode, can remove a parameter set', () => { });
-    it('in edit mode, can edit the parameter set name', () => { });
+    it('can load a parameter config', () => {});
+    it('in edit mode, can add a new parameter config', () => { });
+    it('in edit mode, can remove a parameter config', () => { });
+    it('in edit mode, can edit the parameter config name', () => { });
   });
 
   context('UI', () => {
