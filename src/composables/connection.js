@@ -40,7 +40,7 @@ export function useConnection() {
     //    this.isUnique()                     // is not a duplicated connection
 
 		// else we'd be replacing the same connector in place, as we have this
-		// consistent reference to it. Note that we _deep_ clone `to` and `from`,
+		// consistent reference to it. Note that we "deep" clone `to` and `from`,
 		// as they are Proxy objects
 		const connector = Object.assign({}, activeConnector);
 

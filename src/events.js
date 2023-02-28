@@ -10,9 +10,6 @@ export const EVENT = {
   // CONNECTIONS
   CONNECTION_START: 'connection:start',
 
-  // PARAMETERS
-  PARAMETERS_LOAD: 'parameters:load',
-
   // DRAG
   DRAG_START: 'drag:start',
   DRAG_ACTIVE: 'drag:active',
@@ -20,10 +17,6 @@ export const EVENT = {
 
   // SORT
   APP_SORT: 'app:sort',
-
-  // MODULES
-  MODULE_ADD: 'module:add',
-  MODULE_REMOVE: 'module:remove',
 
   // NATIVE
   MOUSE_MOVE: 'mousemove',

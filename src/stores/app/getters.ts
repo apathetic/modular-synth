@@ -7,16 +7,15 @@ import type { AppState, Patch, Config, Connection, Parameters, Module, Node } fr
 
 /**
  * note to future self: avoid returning safe "default" values, here
- * ie. " ..|| {}" or  " .. || []".  Here, you'd have a ref to an empty
+ * ie. " ..|| {}" or  " .. || []".  Here, you'd have a ref to an empty (anon)
  * [] or {}, but one that doesn't live on `patch` or in the state.
  */
 
 // THERE MUST ALWAYS BE A PATCH.
 export function patch (state: AppState): Patch | undefined {
   const p = state.patches[state.patchId];
-  if (!p) { throw new Error('Error: there is no patch'); }
+  if (!p) { throw new Error('fatal: there is no patch'); }
   return p;
-  // return state.patches.find((p) => p.id === state.patchKey);
 }
 
 export function modules (state): Module[] | undefined {
@@ -42,7 +41,7 @@ export function getModule (state): Function {
 }
 
 export function connections (state): Connection[] {
-  return this.patch?.connections || [];
+  return this.patch.connections;
 }
 
 export function configs (state): Config[] {

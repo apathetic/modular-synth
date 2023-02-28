@@ -103,17 +103,11 @@
         const offset = document.querySelector('header').offsetHeight;
         const [x, y] = this.coords;
 
-        // this.$store.dispatch('addModule', {
-        //   type,
-        //   coords: [this.coords[0], this.coords[1] - offset]
-        // });
-
         store.addModule({
           type,
-          coords: [x, y - offset]
+          x,
+          y: y - offset
         });
-
-        // this.$bus.$emit(EVENT.MODULE_ADD);
       }
     }
   };

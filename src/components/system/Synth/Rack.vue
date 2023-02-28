@@ -5,6 +5,7 @@
     @scroll="onScroll"
     XXXXv-contextmenu:modules
   >
+
     <div class="position-highlight">
       <div class="inner"></div>
     </div>
@@ -13,7 +14,7 @@
       v-for="module in modules"
       :module="module"
       :key="module.id"
-      @mousedown.stop="() => setActive(module.id)"
+      @mousedown.stop="setActive(module.id)"
       @mouseover.stop="setFocus(module.id)"
       @mouseout.stop="clearFocus()"
     />
@@ -34,7 +35,7 @@
 
 
 <script>
-  import { defineComponent, ref, onMounted, watch } from 'vue';
+  import { defineComponent, ref, computed, watch, onMounted } from 'vue';
   import { useAppStore } from '@/stores/app';
   import { useSortable } from '@/composables';
   import Connecting from '@/components/system/Connecting.vue';
@@ -62,10 +63,18 @@
 
       console.log('%c ◌ Rack: setting up... ', 'background:black;color:white;font-weight:bold');
 
-      // const width = computed(() => {
-      //   const canvasWidth = store.bounds + 124 + 40; // .. + module width + 40
-      //   return `width: ${ store.isEditing ? canvasWidth + 'px' : 'auto' }`;
-      // });
+
+      /*
+      const width = computed(() => {
+        // const canvasWidth = store.bounds + 124 + 40; // .. + module width + 40
+        // return `width: ${ store.isEditing ? canvasWidth + 'px' : 'auto' }`;
+        return `width: ${
+          !grid.value ? 'auto' :
+          !store.isEditing ? 'auto' :
+          `${grid.value.scrollWidth + 164}px`
+        }`;
+      });
+      */
 
       onMounted(() => {
         initSorting(grid.value, props.modules);
@@ -76,7 +85,7 @@
 
         if (newList.length > oldList.length) {
           // const item = this.modules.slice(-1)[0]; // get last (newest) item
-          const item = newList.filter((o) => oldList.indexOf(o) === -1);
+          const item = newList.filter((i) => oldList.indexOf(i) === -1);
           resetItem(item);
           // console.log('added', item);
 
@@ -92,14 +101,14 @@
       function clearFocus() { store.focusedId = undefined; }
       function onScroll(e) {
         if (store.editing) {
-          // store.scrollOffset = e.target.scrollLeft
+          // store.scrollWidth = e.target.scrollLeft
         }
       }
 
       return {
         grid,
         onScroll,
-        width: 0,
+        width: 'auto',
 
         setActive,
         clearActive,

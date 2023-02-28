@@ -30,7 +30,7 @@
 
 
 <script>
-  import { defineComponent, computed, ref, watch, unref, onMounted, onUnmounted } from 'vue';
+  import { defineComponent, computed, ref, watch, onMounted, onUnmounted, onErrorCaptured } from 'vue';
   import * as Modules from '@/components/';
   import Debugger from '@/components/test/Debugger.vue';
   import { rackWidth, rackHeight, moduleSize } from '@/constants';
@@ -99,8 +99,9 @@
         store.removeFromRegistry(id);
       });
 
-      // function setFocus(id) { store.focusedId = id; }
-      // function clearFocus() { store.focusedId = undefined; }
+      onErrorCaptured((e) => {
+        console.log('is this an error boundary?', e);
+      });
 
 
       console.log('%c[component] Creating %s', 'color: green', type);

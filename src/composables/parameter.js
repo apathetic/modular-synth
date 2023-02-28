@@ -103,11 +103,11 @@ export function useParameter(props) {
 
 
 
-
+  // this called when the component is explicity removed
+  // and also when it's just cleaned up due to patch change
   onUnmounted(() => {
     // this.$store.commit('REMOVE_PARAMETER', this.id);
 		store.removeParameter(id);
-    // // this.$bus.$off(EVENT.PARAMETERS_LOAD, this.fetchValue);
     window.removeEventListener(EVENT.MOUSE_UP, mouseup);
     window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
 
@@ -116,8 +116,6 @@ export function useParameter(props) {
 
 
   // // this.$store.commit('REGISTER_PARAMETER', this.id);
-
-  //  // this.$bus.$on(EVENT.PARAMETERS_LOAD, this.fetchValue);
 
   console.log('%c[parameter] Creating %s %s', 'color: lightblue', param); // , type);
 

@@ -25,11 +25,11 @@ const state = () => <AppState>{
   patchId: 0,  // id of the active patch
   configId: 0, // id of the active parameter configuration
 
-  registry: [], //  {},
+  registry: {},
 
-  // authenticated: false,
   session: undefined,
-  canvasOffset: 0,    // UI stuffs
+  // authenticated: false,
+  // canvasOffset: 0,    // UI stuffs
 };
 
 

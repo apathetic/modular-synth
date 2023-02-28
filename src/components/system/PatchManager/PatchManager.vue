@@ -6,24 +6,31 @@
 
     <div class="patch select">
       <span>0{{currentPatchId}}</span>
-      <button class="math add" @click="addPatch">+</button>
-      <button class="math remove" @click="removePatch">-</button>
+
       <select v-model="currentPatchId" ref="patchRef">
         <option value="" disabled selected>&lt;select patch&gt;</option>
         <option v-for="(patch, id) in patches" :key="patch.id" :value="id">{{ patch.name }}</option>
       </select>
+
       <input type="text" v-model="currentPatchName">
+
+      <button class="add" @click="addPatch">+</button>
+      <button class="remove" @click="removePatch">-</button>
     </div>
+
 
     <div class="params select">
       <span>0{{currentConfigId}}</span>
-      <button class="math add" @click="addConfig">+</button>
-      <button class="math remove" @click="removeConfig">-</button>
+
       <select v-model="currentConfigId" ref="configRef">
         <option value="" disabled selected>&lt;select configs&gt;</option>
         <option v-for="(config, id) in configs" :key="config.id" :value="id">{{ config.name }}</option>
       </select>
+
       <input type="text" v-model="currentConfigName">
+
+      <button class="add" @click="addConfig">+</button>
+      <button class="remove" @click="removeConfig">-</button>
     </div>
 
   </div>
@@ -61,7 +68,7 @@
 
       watch(currentPatchId, (id) => { store.loadPatch(id); currentConfigId.value = 0 });
 
-      watch(currentConfigId, (id) => store.configId = id);
+      watch(currentConfigId, (id) => { store.configId = id });
 
 
       function addPatch() {
@@ -124,13 +131,12 @@
     justify-content: center;
 
     &.editing {
-      .math {
+      button {
         transform: scale(1);
         opacity: 1;
       }
 
       input {
-        left: var(--gap);
         pointer-events: all;
       }
 
@@ -138,23 +144,12 @@
         &:hover {
           color: inherit;
         }
+
+        &::after {
+          opacity: 0;
+        }
       }
-
     }
-
-    // :not(.editing) & {
-    //   input {
-    //     pointer-events: none;
-    //   }
-
-    //   .select {
-    //     &:hover {
-    //       color: var(--color-highlight);
-    //     }
-    //   }
-    // }
-
-
 
     .select {
       color: #fff;
@@ -169,38 +164,35 @@
       &::after {
         content: '▿';  // ▽
         position: absolute;
-        right: 7px;
+        right: 8px;
         top: 0;
+        opacity: 1;
         pointer-events: none;
+        transition: all var(--transition-time-slow);
       }
     }
 
-    .math {
-      display: block;
-
+    button {
       border-radius: 50%;
       background: var(--color-grey-medium);
       border: 1px solid rgba(black, 0.1);
-
+      cursor: pointer;
+      display: block;
       font-size: 1em;
       font-family: inherit;
-
-      position: absolute;
-      left: 2px;
       height: 1.2em;
-      width: 1.2em;
-
-      cursor: pointer;
       line-height: 0;
-      z-index: 1;
-
       opacity: 0;
+      position: absolute;
+      right: 2px;
       transform: scale(0);
       transition: all var(--transition-time-slow);
+      width: 1.2em;
+      z-index: 1;
 
       &.add {
         top: -4px;
-        }
+      }
 
       &.remove {
         bottom: -4px;
@@ -240,16 +232,14 @@
     }
 
     span {
-      // font: 3.2em/0.65em 'Inconsolata';
-      // font: 3.2em / 0.6em 'Dosis';
       font: 3em / 0.7em 'Anton';
+      height: 100%;
       letter-spacing: 0.05em;
+      opacity: 0.25;
+      overflow: hidden;
       position: absolute;
       right: var(--gap);
-      opacity: 0.25;
       text-shadow: 1px 1px 2px #000;
-      overflow: hidden;
-      height: 100%;
     }
   }
 </style>

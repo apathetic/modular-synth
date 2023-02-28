@@ -6,7 +6,7 @@ import { useSortable } from '@/composables';
 import { moduleSize } from '@/constants';
 import { blank } from './';
 
-import type { Patch } from '@/types';
+import type { Patch, Module, Connection } from '@/types';
 
 
 // -----------------------------------------------
@@ -28,33 +28,28 @@ import type { Patch } from '@/types';
  */
 export function loadPatch(id?: number) {
   const { resetSorting } = useSortable();
+  // const { patches, patch, patchId } = this;
 
   if (id === this.patchId) return;
   id = id ?? this.patchId as number;
 
-  log({ type:'patch', action:'loading ', data:this.patch.name });
 
   const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
   const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
   this.patches[id].connections = [];                // temporarily zero it out
   this.patches[id].configs = [{ parameters: {}}];   // temporarily zero it out
 
+  log({ type:'patch', action:'tearing down', data: this.patch.name });
   this.patchId = id;                                // trigger loading a new patch
   this.configId = 0;                                // select 1st set when new patch loaded
+  log({ type:'patch', action:'loading ', data: this.patch.name });
+
 
   // ensure AudioNodes have been instantiated before proceeding with routing
   // ensure parameter components have mounted before applying param config
   nextTick(() => {
-    // wire new connections
-    // log({ type:'patch', action:'routing audio...' });
     this.patch.connections = connections;
-
-    // apply parameters
-    // log({ type:'patch', action:'setting parameters...' });
     this.patch.configs = configs;
-
-    // do some UI bootstrapping
-    // log({ type:'patch', action:'resetting grid...' });
     resetSorting();
   });
 };
@@ -121,7 +116,7 @@ export const removePatch = ({ commit, state }, key) => {
 
   state.patchId = 0; // Object.keys(state.patches)[0];   // choose first key (oldest)
   state.configId = 0;
-  loadPatch({ commit, state });
+  loadPatch();
 };
 
 
@@ -178,30 +173,29 @@ export function clearFocus() { this.focusedId = undefined; }
 // -----------------------------------------------
 
 /**
+ * Adds a new module to the patch.
  * @this
+ * @param {Object} data A partial serialized Module object
+ * @param {string} data.type
+ * @param {number} data.x
+ * @param {number} data.y
  */
-export function addModule(data) {
+export function addModule(data: Partial<Module>) {
+  const { type, x, y } = data;
   const patch = this.patch as Patch;
-  const type = data.type;
-  const pos = data.coords || [0, 0];
   const size = moduleSize[type] || [1, 1];
 
-  if (!patch) {
-    throw Error ('Err... there should be a `patch`');
-  }
-
-  patch.id++; // or patch.modules.length.  or uuid
-  // TODO: state.modules[state.id] = {... } ?
+  patch.id++;     // or uuid
   patch.modules.push({
     id: patch.id,
     type: type,
-    x: pos[0],    // for dragging X position
-    y: pos[1],    // for dragging Y position
+    x: x || 0,    // for dragging X position
+    y: y || 0,    // for dragging Y position
     col: 0,       // for rack X position
     row: 0,       // for rack Y position
     w: size[0],   // for rack width
     h: size[1]    // for rack height
-  });
+  } as Module);
 }
 
 /**
@@ -232,40 +226,48 @@ export function removeModule() {
   }
 }
 
-export function addConnection(data) {
+/**
+ * Adds a new connection between two modules, in the patch.
+ * @this
+ * @param {Connection} data The serialized connection object
+ */
+export function addConnection(data: Connection) {
   this.connections.push(data);
 }
 
+/**
+ * Removes (deletes) a connection by its id.
+ * @this
+ */
 export function removeConnection(id) {
-  let { activeId, focusedId, modules, connections } = this;
-  this.connections = connections.filter((c) => c.id !== id);
+  const { patch, connections } = this;
+  patch.connections = connections.filter((c) => c.id !== id);
 }
 
-// export const REMOVE_CONFIG = (state, key) => {
-//   state.configs.splice(key, 1); // let's try mutating the array directly
-// };
 
 // -----------------------------------------------
 //  PARAMETERS
 // -----------------------------------------------
 
 /**
- * Adds an new, empty parameter configuration object.
+ * Adds an new, empty parameter-configuration object.
+ * @this
  */
 export function addConfig() {
   const config = {
     name: '<empty>',
     parameters: Object.assign({}, this.config?.parameters)
   };
+
   this.configId = this.configs.push(config) - 1; // select new config by default (push returns array length)
 }
 
 
 /**
  * Remove a set of parameters.
- * @param id The configuration to remove
+ * @param {number} id The configuration to remove
  */
-export function removeConfig(id) {
+export function removeConfig(id: number) {
   this.configs.splice(id, 1);
   this.configId = 0;
 }
