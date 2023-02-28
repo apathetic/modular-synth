@@ -47,8 +47,8 @@
       console.log('%c ◌ PatchManager: setting up... ', 'background:black;color:white;font-weight:bold');
       const store = useAppStore();
 
-      const currentPatchId = ref(store.patchId);
-      const currentConfigId = ref(store.configId);
+      // const currentPatchId = ref(store.patchId);
+      // const currentConfigId = ref(store.configId);
       const patchRef = ref(null);
       const configRef = ref(null);
 
@@ -66,9 +66,18 @@
         set(value) { store.config.name = value; }
       });
 
-      watch(currentPatchId, (id) => { store.loadPatch(id); currentConfigId.value = 0 });
+      const currentConfigId = computed({
+        get() { return store.configId; },
+        set(id) { store.configId = id }
+      });
+      // watch(currentConfigId, (id) => { store.configId = id });
 
-      watch(currentConfigId, (id) => { store.configId = id });
+      const currentPatchId = computed({
+        get() { return store.patchId; },
+        set(id) { store.loadPatch(id); currentConfigId.value = 0 }
+      });
+      // watch(currentPatchId, (id) => { store.loadPatch(id); currentConfigId.value = 0 });
+
 
 
       function addPatch() {
@@ -78,10 +87,10 @@
       }
 
       function removePatch() {
-        const confirm = window.confirm('Delete ' + currentPatchName + '?');
+        const confirm = window.confirm('Delete ' + currentPatchName.value + '?');
 
         if (patches.value.length <= 1 || !confirm) { return; }
-        store.removePatch(currentPatchKey);
+        store.removePatch(currentPatchId.value);
       }
 
       function addConfig() {
@@ -90,10 +99,10 @@
       };
 
       function removeConfig(id) {
-        const confirm = window.confirm('Delete ' + currentConfigName + '?');
+        const confirm = window.confirm('Delete ' + currentConfigName.value + '?');
 
         if (configs.value.length <= 1 || !confirm) { return; }
-        store.removeConfig(currentConfigId);
+        store.removeConfig(currentConfigId.value);
       };
 
 

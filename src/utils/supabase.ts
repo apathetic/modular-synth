@@ -58,7 +58,7 @@ export const create = async (data) => {
   return true;
 };
 
-export const save = async ({  id, ...data }) => {
+export const save = async ({ id, ...data }) => {
   const { error } = await supabase
     .from('patches')
     .update(data)
@@ -66,14 +66,14 @@ export const save = async ({  id, ...data }) => {
     .eq('id', id);
 };
 
-/*
-export const delete = async ({ id }) => {
+/* */
+export const remove = async (id) => {
   const { error } = await supabase
     .from('patches')
     .delete()
     .eq('id', id);
 };
-*/
+/**/
 
 // ie sync all patches
 export const update = async (data) => {

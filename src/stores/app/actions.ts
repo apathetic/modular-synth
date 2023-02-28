@@ -1,7 +1,7 @@
 import { nextTick } from 'vue';
 import { v4 as uuid } from 'uuid';
 import { log } from '@/utils/logger';
-import { fetch, create, save, validateData } from '@/utils/supabase';
+import { fetch, create, save, remove, validateData } from '@/utils/supabase';
 import { useSortable } from '@/composables';
 import { moduleSize } from '@/constants';
 import { blank } from './';
@@ -23,7 +23,7 @@ import type { Patch, Module, Connection } from '@/types';
  *       before `parameters` are instantiated.
  *
  * @this {Store} reference to the pinia store
- * @param {number} id The key of the patch to load
+ * @param {number} id The id of the patch to load
  * @return {void}
  */
 export function loadPatch(id?: number) {
@@ -102,21 +102,22 @@ export function addPatch () {
 
 /**
  * Remove a patch.
- * @param {[type]} commit [description]
- * @param {[type]} state  [description]
+ * @this {Store} reference to the pinia store
+ * @param {number} id The id of the patch to load
  */
-export const removePatch = ({ commit, state }, key) => {
-  if (state.patches.length === 1) {
+export function removePatch (id?: number) {
+  if (this.patches.length === 1) {
     alert('no');
     return;
   }
 
-  api.remove('patch/' + key);
-  commit('REMOVE_PATCH', key);
+  log({ type:'patch', action:'deleting', data: this.patch.name });
 
-  state.patchId = 0; // Object.keys(state.patches)[0];   // choose first key (oldest)
-  state.configId = 0;
-  loadPatch();
+  // remove(this.patch._uuid);
+
+  this.patches.splice(id, 1);
+  this.patchId = 0;
+  this.loadPatch(); // loadPatch(0)
 };
 
 
