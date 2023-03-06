@@ -38,8 +38,8 @@
   import { defineComponent, ref, computed, watch, onMounted } from 'vue';
   import { useAppStore } from '@/stores/app';
   import { useSortable } from '@/composables';
-  import Connecting from '@/components/system/Connecting.vue';
-  import Connection from '@/components/system/Connection.vue';
+  import Connecting from './Connecting.vue';
+  import Connection from './Connection.vue';
   import Unit from './Unit.vue';
 
   export default defineComponent({

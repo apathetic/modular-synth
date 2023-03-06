@@ -36,7 +36,8 @@ describe('PatchManager.vue', () => {
     it('parameters are applied upon loading a patch', () => {});
 
     it('in edit mode, can add a new patch', () => {
-
+      // increments id
+      // no duplicate ids
     });
 
     it('in edit mode, can remove a patch', () => {

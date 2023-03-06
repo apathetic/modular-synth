@@ -15,8 +15,8 @@
   import { watch } from 'vue';
   import { useConnection } from '@/composables';
   import { useAppStore } from '@/stores/app';
-  import { cellWidth } from '../../constants';
-  import { EVENT } from '../../events';
+  import { cellWidth } from '@/constants';
+  import { EVENT } from '@/events';
 
 
   export default {
