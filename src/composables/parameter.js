@@ -20,24 +20,11 @@ export function useParameter(props) {
   let startValue = 0;
   let startY = null;
 
-  const str = id + ' ' + type;
+  const str = `${type} (${id})`;
+  log({ type:'parameter', action:'creating', data: str });
 
-  // log({ type:'parameter', action:'creating', data:type });
-  console.log('%c[parameter] Creating %s', 'color: lightblue', str);
+
   store.setParameter({ id, value: mapped.value });
-
-  watchEffect(() => {
-    const value = store.parameters[id];
-
-    if (value !== undefined) {
-      mapped.value = value;
-      normalized.value = extractValue(value);
-      console.log('%c[parameter] setting %s to %f', 'color: orange', str, value);
-    } else {
-      // (parent) component is about to be destroyed
-      console.log('%c[parameter] going away...', 'color: red');
-    }
-  });
 
 
   // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App, or: just add / remove dynamically as needed?
@@ -57,6 +44,28 @@ export function useParameter(props) {
 
   window.addEventListener(EVENT.MOUSE_UP, mouseup);
   window.addEventListener(EVENT.MOUSE_MOVE, mousemove);
+
+
+  onUnmounted(() => {
+    // this called when the component is explicity removed
+    // and also when it's just cleaned up due to patch change
+		store.removeParameter(id);
+    window.removeEventListener(EVENT.MOUSE_UP, mouseup);
+    window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
+
+    log({ type:'params', action:'destroying', data:str });
+  });
+
+
+  watchEffect(() => {
+    const value = store.parameters[id];
+
+    if (value !== undefined) {
+      mapped.value = value;
+      normalized.value = extractValue(value);
+      log({ type:'parameter', action:`${str} set to`, data:value });
+    }
+  });
 
 
   /**
@@ -107,20 +116,6 @@ export function useParameter(props) {
       : (n - min) / range
     );
   }
-
-
-
-  // this called when the component is explicity removed
-  // and also when it's just cleaned up due to patch change
-  onUnmounted(() => {
-		store.removeParameter(id);
-    window.removeEventListener(EVENT.MOUSE_UP, mouseup);
-    window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
-
-    // console.log('%c[parameter] Destroying %s %s', 'color: grey', id, type);
-    log({ type:'parameter', action:'destroying', data:str });
-  });
-
 
   return {
     start,

@@ -18,7 +18,6 @@
 
 <script>
   export default {
-    name: 'VCA',
     inject: [ 'context' ],
     props: {
       id: null
@@ -26,6 +25,7 @@
 
     data() {
       return {
+        name: 'VCA',
         inlets: [
           {
             label: 'signal'

@@ -23,7 +23,6 @@
   import { signal } from '@/audio';
 
   export default {
-    name: 'Env',
     inject: [ 'context' ],
     props: {
       id: {
@@ -34,6 +33,8 @@
 
     data() {
       return {
+        name: 'Env',
+
         A: 0.1,
         D: 0.1,
         S: 0.6,

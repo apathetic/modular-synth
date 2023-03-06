@@ -27,27 +27,25 @@ import type { Patch, Module, Connection } from '@/types';
  */
 export function loadPatch(id?: number) {
   const { resetSorting } = useSortable();
-  // const { patches, patch, patchId } = this;
+  const store = this;
 
-  if (id === this.patchId) return;
-  id = id ?? this.patchId as number;
+  if (id === store.patchId) return;
+  id = id ?? store.patchId as number;
 
+  const connections = store.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
+  const configs = store.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
+  store.patches[id].connections = [];                // temporarily zero it out
+  store.patches[id].configs = [{ parameters: {}}];   // temporarily zero it out
 
-  const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
-  const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
-  this.patches[id].connections = [];                // temporarily zero it out
-  this.patches[id].configs = [{ parameters: {}}];   // temporarily zero it out
-
-  this.patchId = id;                                // trigger loading a new patch
-  this.configId = 0;                                // select 1st set when new patch loaded
-  log({ type:'patch', action:'loading ', data: this.patch.name });
-
+  store.patchId = id;                                // trigger loading a new patch
+  store.configId = 0;                                // select 1st set when new patch loaded
+  log({ type:'patch', action:'loading ', data: store.patch.name });
 
   // ensure AudioNodes have been instantiated before proceeding with routing
-  // ensure parameter components have mounted before applying param config
+  // ensure components w/ parameters have mounted before applying parameter configs
   nextTick(() => {
-    this.patch.connections = connections;
-    this.patch.configs = configs;
+    store.patch.connections = connections;
+    store.patch.configs = configs;
     resetSorting();
   });
 };

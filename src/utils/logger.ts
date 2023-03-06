@@ -14,9 +14,12 @@ export function log({ type, action, data = '' }) {
       console.log('%c Patch: %s %s ', 'background:#666;color:white;font-weight:bold;', action, data);
       break;
 
-    case 'component':
-      // green text
+    case 'component': // green text
       console.log('%c[component] %s %s', 'color: green', action, data);
+      break;
+
+    case 'parameter':
+      console.log('%c[parameter] %s %s', 'color: lightblue', action, data);
       break;
 
     case 'params':

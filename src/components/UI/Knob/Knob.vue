@@ -26,7 +26,6 @@ is a "freq" parameter in the parent Component.
 <script>
   import { defineComponent, computed, watchEffect, ref, onMounted } from 'vue';
   import { getCurrentInstance } from 'vue';
-  // import { parameter } from '@/mixins/parameter';
   import { useParameter } from '@/composables';
 
   const SIZE = 20;
@@ -76,7 +75,6 @@ is a "freq" parameter in the parent Component.
 
     setup (props, { emit }) {
       const { param, min, max, mode } = props;
-
       const instance = getCurrentInstance(); // gets the current component and its application context
       const parentId = instance.parent.ctx.id;
       const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
@@ -86,11 +84,12 @@ is a "freq" parameter in the parent Component.
       const track = ref('');
       const arc = ref('');
 
-
+      // for the component
       watchEffect(() => {
         emit('value', mapped.value);
       });
 
+      // for the UI
       watchEffect(() => {
         // 30 -> 330. Dials start 30deg in and end 30deg before 360.
         const rotationValue = normalized.value * 300 + 30;

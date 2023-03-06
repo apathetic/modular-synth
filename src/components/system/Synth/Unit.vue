@@ -54,7 +54,6 @@
     },
 
     setup (props) {
-
       // eslint-disable-next-line vue/no-setup-props-destructure
       const { type, id } = props.module;
       const { coords, startDragging, isDragging } = useDraggable(props.module);
@@ -87,7 +86,8 @@
       });
 
       onBeforeUnmount(() => {
-        console.log('Destroying %s ', type);
+        // console.log('Destroying %s ', type);
+        log({ type:'params', action:'destroying', data:type });
         store.removeFromRegistry(id);
       });
 

@@ -13,7 +13,7 @@
     <Unit
       v-for="module in modules"
       :module="module"
-      :key="module.id"
+      :key="module.type/* type here is okay? to reuse component if already init'd */"
       @mousedown.stop="setActive(module.id)"
       @mouseover.stop="setFocus(module.id)"
       @mouseout.stop="clearFocus()"

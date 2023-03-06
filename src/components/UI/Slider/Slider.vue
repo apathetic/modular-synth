@@ -1,30 +1,57 @@
 <template>
   <div class="slider" @mousedown.stop.prevent="start">
-    <div class="fill" :style="bottom"></div>
+    <div class="fill" :style="amount"></div>
     <!-- {{ value }} -->
   </div>
 </template>
 
 
 <script>
-  import { parameter } from '@/mixins/parameter';
+  import { defineComponent, computed, ref, watchEffect } from 'vue';
+  import { getCurrentInstance } from 'vue';
+  import { useParameter } from '@/composables';
 
-  export default {
-    name: 'ui-slider',
+  export default defineComponent({
+    name: 'Slider',
 
-    mixins: [parameter],
-
-    data() {
-      return {
-        step: 1,
-        type: 'Slider'
-      };
+    props: {
+      min: 0,
+      max: 1,
+      param: { // ie. name
+        type: String,
+        required: true
+      },
     },
 
-    computed: {
-      bottom() { return 'bottom:' + this.internalValue * 100 + '%'; }
+    emits: ['value'],
+
+    setup (props, { emit }) {
+      const { param, min, max } = props;
+      const instance = getCurrentInstance(); // gets the current component and its application context
+      const parentId = instance.parent.ctx.id;
+      const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
+      const type = 'slider';
+
+      const { start, mapped, normalized } = useParameter({ id, type, min, max });
+      const amount = ref('');
+
+      // for the component
+      watchEffect(() => {
+        emit('value', mapped.value);
+      });
+
+      // for the UI
+      watchEffect(() => {
+        amount.value = 'bottom:' + normalized.value * 100 + '%';
+      });
+
+      return {
+        start,
+        amount
+      }
+
     }
-  };
+  });
 </script>
 
 
