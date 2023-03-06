@@ -17,8 +17,7 @@ is a "freq" parameter in the parent Component.
   <svg class="knob" @mousedown.stop.prevent="start">
     <path :d="track" class="track" fill="none" stroke-width="8"></path>
     <path :d="arc" class="display" fill="none" stroke-width="8"></path>
-    <!-- <path ref="computed" fill="none" stroke="#ebba00" stroke-width="3" d=""></path> -->
-    <text x="24" y="28">{{ mapped.toFixed(precision) }}</text>
+    <text x="24" y="28">{{ parseFloat(mapped).toFixed(precision) }}</text>
     <text x="24" y="54">{{ param }}</text>
   </svg>
 </template>
@@ -57,7 +56,7 @@ is a "freq" parameter in the parent Component.
 
   export default defineComponent({
     name: 'Knob',
-    // mixins: [parameter],
+
     props: {
       default: Number,
       precision: 0,
@@ -83,7 +82,7 @@ is a "freq" parameter in the parent Component.
       const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
       const type = 'knob';
 
-      const { start, mapped, normalized } = useParameter({ id, param, min, max, mode });
+      const { start, mapped, normalized } = useParameter({ id, type, min, max, mode });
       const track = ref('');
       const arc = ref('');
 
@@ -99,7 +98,6 @@ is a "freq" parameter in the parent Component.
       });
 
       onMounted(() => {
-        // normalized.value = extractValue(mapped.value);
         track.value = describeArc(X, Y, SIZE, 30, 330); // draw track
       });
 

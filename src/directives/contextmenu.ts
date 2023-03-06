@@ -1,4 +1,4 @@
-import { DirectiveOptions } from 'vue';
+import type { Directive } from 'vue';
 
 
 /**
@@ -19,4 +19,4 @@ export default {
     //   vnode keys: ${Object.keys(vnode).join(', ')}
     // `);
   }
-} as DirectiveOptions;
+} as Directive;

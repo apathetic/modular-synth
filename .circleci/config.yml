@@ -7,10 +7,8 @@ version: 2
 jobs:
   build:
     docker:
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: circleci/node:9.2
+      # https://hub.docker.com/r/cimg/node
+      - image: cimg/node:18.4
 
     working_directory: ~/synth
 
@@ -20,7 +18,6 @@ jobs:
       - attach_workspace:
           at: ~/synth
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-synth-{{ checksum "package.json" }}
@@ -34,15 +31,13 @@ jobs:
             - node_modules
           key: v1-synth-{{ checksum "package.json" }}
 
-      # Build!
       - run: npm run build
 
-      # ** SUPER IMPORTANT **   keeps the /dist/ folder around for other steps
       - persist_to_workspace:
+        # keep the /dist/ folder around for other steps
           root: .
           paths: dist
 
-      # Tests!
       # - run: npm test
 
   deploy:

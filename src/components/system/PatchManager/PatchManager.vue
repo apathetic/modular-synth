@@ -46,12 +46,8 @@
     setup () {
       console.log('%c ◌ PatchManager: setting up... ', 'background:black;color:white;font-weight:bold');
       const store = useAppStore();
-
-      // const currentPatchId = ref(store.patchId);
-      // const currentConfigId = ref(store.configId);
       const patchRef = ref(null);
       const configRef = ref(null);
-
       const editing = computed(() => store.isEditing);
       const patches = computed(() => store.patches);
       const configs = computed(() => store.configs);
@@ -70,14 +66,11 @@
         get() { return store.configId; },
         set(id) { store.configId = id }
       });
-      // watch(currentConfigId, (id) => { store.configId = id });
 
       const currentPatchId = computed({
         get() { return store.patchId; },
         set(id) { store.loadPatch(id); currentConfigId.value = 0 }
       });
-      // watch(currentPatchId, (id) => { store.loadPatch(id); currentConfigId.value = 0 });
-
 
 
       function addPatch() {
@@ -142,6 +135,7 @@
     &.editing {
       button {
         transform: scale(1);
+        transition-delay: var(--transition-time);
         opacity: 1;
       }
 
@@ -156,6 +150,7 @@
 
         &::after {
           opacity: 0;
+          transition-delay: 0s;
         }
       }
     }
@@ -177,7 +172,8 @@
         top: 0;
         opacity: 1;
         pointer-events: none;
-        transition: all var(--transition-time-slow);
+        transition: opacity var(--transition-time-slow);
+        transition-delay: var(--transition-time);
       }
     }
 

@@ -30,13 +30,13 @@
 
 
 <script>
-  import { defineComponent, computed, ref, watch, onMounted, onUnmounted, onErrorCaptured } from 'vue';
+  import { defineComponent, computed, ref, watch, onMounted, onBeforeUnmount, onErrorCaptured } from 'vue';
+  import { rackWidth, rackHeight, moduleSize } from '@/constants';
+  import { useDraggable } from '@/composables';
+  import { useAppStore } from '@/stores/app';
+  import { log } from '@/utils/logger';
   import * as Modules from '@/components/';
   import Debugger from '@/components/test/Debugger.vue';
-  import { rackWidth, rackHeight, moduleSize } from '@/constants';
-  import { useAppStore } from '@/stores/app';
-  import { useDraggable } from '@/composables';
-  // import { context } from '@/audio';
 
   export default defineComponent({
     name: 'Unit',
@@ -61,7 +61,7 @@
       const store = useAppStore();
 
       const el = ref(undefined); // this'll be a ref to the DOM node
-      const node = ref(null); // this'll be a ref to the instantiated audio node
+      const node = ref(null);    // this'll be a ref to the instantiated audio node
 
       const isActive = computed(() => id == store.activeId);
       const position = computed(() => store.isEditing || isDragging.value ?
@@ -78,14 +78,6 @@
       const width = `_${moduleSize[type][0]}U`;
       const tall = moduleSize[type][2] ? 'module--tall' : '';
 
-      // watch(() => store.isEditing || isDragging, (after, before) => {
-      //   ...state change...
-      // });
-
-      // watch(node, (newValue) => {
-      //   ...state change...
-      // }, { deep: true });
-
 
       onMounted(() => {
         // `modules` are already tracked... but they're JSON.
@@ -94,7 +86,7 @@
         store.addToRegistry({ id, node: node.value, coords });
       });
 
-      onUnmounted(() => {
+      onBeforeUnmount(() => {
         console.log('Destroying %s ', type);
         store.removeFromRegistry(id);
       });
@@ -104,7 +96,8 @@
       });
 
 
-      console.log('%c[component] Creating %s', 'color: green', type);
+      log({ type:'component', action:'creating', data:type });
+
 
       return {
         el,

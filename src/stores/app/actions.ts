@@ -24,7 +24,6 @@ import type { Patch, Module, Connection } from '@/types';
  *
  * @this {Store} reference to the pinia store
  * @param {number} id The id of the patch to load
- * @return {void}
  */
 export function loadPatch(id?: number) {
   const { resetSorting } = useSortable();
@@ -39,7 +38,6 @@ export function loadPatch(id?: number) {
   this.patches[id].connections = [];                // temporarily zero it out
   this.patches[id].configs = [{ parameters: {}}];   // temporarily zero it out
 
-  log({ type:'patch', action:'tearing down', data: this.patch.name });
   this.patchId = id;                                // trigger loading a new patch
   this.configId = 0;                                // select 1st set when new patch loaded
   log({ type:'patch', action:'loading ', data: this.patch.name });
@@ -105,7 +103,7 @@ export function addPatch () {
  * @this {Store} reference to the pinia store
  * @param {number} id The id of the patch to load
  */
-export function removePatch (id?: number) {
+export function removePatch(id?: number) {
   if (this.patches.length === 1) {
     alert('no');
     return;
@@ -269,6 +267,7 @@ export function addConfig() {
  * @param {number} id The configuration to remove
  */
 export function removeConfig(id: number) {
+console.log('remoeing', id);
   this.configs.splice(id, 1);
   this.configId = 0;
 }
@@ -279,17 +278,17 @@ export function setParameter (data) {
   }
 };
 
-export function REGISTER_PARAMETER (state, id) {
-  const key = state.parameterKey;
-  const set = state.parameterSets[key];
+// export function REGISTER_PARAMETER (state, id) {
+//   const key = state.parameterKey;
+//   const set = state.parameterSets[key];
 
-  if (set && !set.parameters[id]) {
-    set.parameters[id] = 0;
-    console.log(id, ' registered');
-  } else {
-    console.log(id, ' was already present');
-  }
-};
+//   if (set && !set.parameters[id]) {
+//     set.parameters[id] = 0;
+//     console.log(id, ' registered');
+//   } else {
+//     console.log(id, ' was already present');
+//   }
+// };
 
 export function removeParameter (id) {
   // this.configs.forEach(set => {

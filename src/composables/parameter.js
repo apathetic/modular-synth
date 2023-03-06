@@ -1,11 +1,12 @@
-import { watch, ref, onUnmounted } from 'vue';
-import { useAppStore } from '@/stores/app';
+import { watch, watchEffect, ref, onUnmounted } from 'vue';
 import { mapState } from 'pinia';
+import { useAppStore } from '@/stores/app';
+import { log } from '@/utils/logger';
 import { EVENT } from '../events';
 
 
 export function useParameter(props) {
-  const { id, param, min, max, mode } = Object.assign({
+  const { id, type, min, max, mode } = Object.assign({
     mode: 'linear',
 		min: 0,
 		max: 1
@@ -13,24 +14,31 @@ export function useParameter(props) {
 
   const store = useAppStore();
   const normalized = ref(0); // 0 -> 1 internally
-  const mapped = ref(0);
+  const mapped = ref(props.default || min);
   const range = max - min;
   let active = false;
   let startValue = 0;
   let startY = null;
 
-	console.log('TODO add watch eager (or whatever itscalled)');
-  watch(() => store.configId, () => { // fetchValue
-    /**
-     * Update values when the `parameterKey` changes.
-     * Fetches the value from the store (if it exists) or uses the default value.
-     * NOTE: this is only necessary when the parameterSet does *not* contain values for
-     * all parameters.
-     */
-    mapped.value = store.parameters[id] || props.default || 0;
-    normalized.value = extractValue(mapped.value);
-    console.log('%c[parameter] %s %s set to %f', 'color: orange', id, param, mapped.value);
+  const str = id + ' ' + type;
+
+  // log({ type:'parameter', action:'creating', data:type });
+  console.log('%c[parameter] Creating %s', 'color: lightblue', str);
+  store.setParameter({ id, value: mapped.value });
+
+  watchEffect(() => {
+    const value = store.parameters[id];
+
+    if (value !== undefined) {
+      mapped.value = value;
+      normalized.value = extractValue(value);
+      console.log('%c[parameter] setting %s to %f', 'color: orange', str, value);
+    } else {
+      // (parent) component is about to be destroyed
+      console.log('%c[parameter] going away...', 'color: red');
+    }
   });
+
 
   // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App, or: just add / remove dynamically as needed?
   const mouseup = (e) => {
@@ -53,7 +61,7 @@ export function useParameter(props) {
 
   /**
    * Set up calculations for updating new knob values.
-   * @param {Event} e The mouse down Event.
+   * @param {MouseEvent} e The mouse down Event.
    */
   function start(e) {
     window.mouseDown = true;
@@ -64,7 +72,7 @@ export function useParameter(props) {
 
   /**
    * Updates new knob values on mouse move.
-   * @param {Event} e The mouse move Event.
+   * @param {MouseEvent} e The mouse move Event.
    */
   function update(e) {
     const delta = (startY - e.clientY) / 100.0; // drag distance, 1/100th pixels
@@ -73,8 +81,7 @@ export function useParameter(props) {
     if (normalized.value === value) return;
 
     normalized.value = value;
-    mapped.value = computeValue(value);
-		store.setParameter({ id, value: mapped.value }); // or watch. or computed.
+    store.setParameter({ id, value: computeValue(value) });
   }
 
   /**
@@ -106,18 +113,13 @@ export function useParameter(props) {
   // this called when the component is explicity removed
   // and also when it's just cleaned up due to patch change
   onUnmounted(() => {
-    // this.$store.commit('REMOVE_PARAMETER', this.id);
 		store.removeParameter(id);
     window.removeEventListener(EVENT.MOUSE_UP, mouseup);
     window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
 
-    console.log('%c[parameter] Destroying %s %s', 'color: grey', id, param);
+    // console.log('%c[parameter] Destroying %s %s', 'color: grey', id, type);
+    log({ type:'parameter', action:'destroying', data:str });
   });
-
-
-  // // this.$store.commit('REGISTER_PARAMETER', this.id);
-
-  console.log('%c[parameter] Creating %s %s', 'color: lightblue', param); // , type);
 
 
   return {

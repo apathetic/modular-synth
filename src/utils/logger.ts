@@ -18,11 +18,14 @@ export function log({ type, action, data = '' }) {
       // green text
       console.log('%c[component] %s %s', 'color: green', action, data);
       break;
+
     case 'params':
 		case 'destroy':
-			console.log('Destroying %s ', data);
+			// console.log('Destroying %s ', data);
+      // console.log('%c[parameter] Destroying %s %s', 'color: grey', type);
 
     default:
+      console.log('%c[%s] %s %s', 'color: grey', type, action, data);
       break;
 	}
 }

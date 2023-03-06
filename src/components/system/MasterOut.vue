@@ -28,6 +28,7 @@
 <script>
   import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores/app';
+  import { log } from '@/utils/logger';
   import { EVENT } from '../../events';
   import VU from '../UI/VU';
 
@@ -77,8 +78,7 @@
         (on) ? this.start() : this.stop();
       });
 
-
-      console.log('Creating MasterOut');
+      log({ type:'component', action:'creating', data:'MasterOut' });
     },
 
     mounted() {

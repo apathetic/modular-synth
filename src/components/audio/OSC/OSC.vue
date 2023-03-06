@@ -7,10 +7,10 @@
     <div class="module-interface">
       <p>OSC</p>
       <Dropdown param="type"   @value="type = $event" :options="types"></Dropdown>
-      <Slider   param="mod"    @value="mod = $event"    min="0"    max="100"></Slider>
-      <Knob     param="freq"   @value="freq = $event"   min="100"  max="12000" default="440" mode="log"></Knob>
-      <Knob     param="PW"     @value="PW = $event"     min="0"    max="6.28"  precision="2"></Knob>
-      <Knob     param="detune" @value="detune = $event" min="-500" max="500"></Knob>
+      <Slider   param="mod"    @value="mod = $event"    :min="0"    :max="100"></Slider>
+      <Knob     param="freq"   @value="freq = $event"   :min="100"  :max="12000" :default="440" mode="log"></Knob>
+      <Knob     param="PW"     @value="PW = $event"     :min="0"    :max="6.28"  :precision="2"></Knob>
+      <Knob     param="detune" @value="detune = $event" :min="-500" :max="500"></Knob>
     </div>
 
     <div class="module-connections">
