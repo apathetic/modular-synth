@@ -57,7 +57,7 @@
     },
 
     setup(props) {
-      const { initSorting, resetItems, resetItem } = useSortable();
+      const { initSorting, resetSorting, resetItems, resetItem } = useSortable();
       const store = useAppStore();
       const grid = ref(null); // template $ref
 
@@ -94,6 +94,12 @@
           // console.log('removed');
         }
       });
+
+      // watch([store.patchId, store.configId], () => {
+      watch(() => [store.patchId, store.configId], () => {
+        resetSorting();
+      });
+
 
       function setActive(id) { store.activeId = id; }
       function clearActive() { store.activeId = undefined; }

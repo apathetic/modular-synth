@@ -13,10 +13,6 @@ createStore(app);
 registerComponents(app);
 // registerServiceWorker();
 
-// const store = createStore();
-// const router = createRouter();
-
-
 
 // TODO inject at a module level...?
 app.provide('context', context);

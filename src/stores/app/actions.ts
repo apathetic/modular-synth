@@ -1,8 +1,8 @@
 import { nextTick } from 'vue';
-import { v4 as uuid } from 'uuid';
+// import { v4 as uuid } from 'uuid';
 import { log } from '@/utils/logger';
 import { fetch, create, save, remove, validateData } from '@/utils/supabase';
-import { useSortable } from '@/composables';
+// import { useSortable } from '@/composables';
 import { moduleSize } from '@/constants';
 import { blank } from './';
 
@@ -26,7 +26,7 @@ import type { Patch, Module, Connection } from '@/types';
  * @param {number} id The id of the patch to load
  */
 export function loadPatch(id?: number) {
-  const { resetSorting } = useSortable();
+  // const { resetSorting } = useSortable();
   const store = this;
 
   if (id === store.patchId) return;
@@ -46,7 +46,7 @@ export function loadPatch(id?: number) {
   nextTick(() => {
     store.patch.connections = connections;
     store.patch.configs = configs;
-    resetSorting();
+    // resetSorting();
   });
 };
 
@@ -93,6 +93,10 @@ export const savePatch = ({ commit, state }, data) => {
 export function addPatch () {
   this.patchId = this.patches.push(blank()) - 1;
   this.configId = 0;
+
+  // for tests
+  // increments id
+  // no duplicate ids
 };
 
 
