@@ -2,7 +2,6 @@ import { nextTick } from 'vue';
 // import { v4 as uuid } from 'uuid';
 import { log } from '@/utils/logger';
 import { fetch, create, save, remove, validateData } from '@/utils/supabase';
-// import { useSortable } from '@/composables';
 import { moduleSize } from '@/constants';
 import { blank } from './';
 
@@ -50,7 +49,6 @@ export function loadPatch(id?: number) {
   });
 };
 
-
 /**
  * Save the current working patch into the backend database, and persist it
  * into localStorage as well.
@@ -60,13 +58,13 @@ export function loadPatch(id?: number) {
  * @return {void}
  */
 export const savePatch = ({ commit, state }, data) => {
-  const key = state.patchKey;
+  const key = state.patchId;
   const patch = {
     id: state.id,
     name: state.name,
     modules: state.modules,
     connections: state.connections,
-    parameterSets: state.parameterSets
+    configs: state.configs
   };
 
   // Update patch in Database
@@ -78,13 +76,8 @@ export const savePatch = ({ commit, state }, data) => {
       console.log(err);
     });
 
-  // Update patch in localStorage
-  commit('SAVE_PATCH', {
-    key,
-    patch
-  });
+  state.patches[key] = patch;
 };
-
 
 /**
  * Insert a new, blank patch into the workspace.
@@ -98,7 +91,6 @@ export function addPatch () {
   // increments id
   // no duplicate ids
 };
-
 
 /**
  * Remove a patch.
@@ -119,7 +111,6 @@ export function removePatch(id?: number) {
   this.patchId = 0;
   this.loadPatch(); // loadPatch(0)
 };
-
 
 /**
  * Fetch all of the user's patches from the API
@@ -145,27 +136,62 @@ export async function fetchPatches() {
 };
 
 
+export const SET_PATCHES = (state, patches) => {
+  state.patches = validateData(patches);
+};
+
 
 // -----------------------------------------------
 //  APP
 // -----------------------------------------------
 
+/**
+ * @this Store The vue (pinia) store instance.
+ */
 export function togglePower() { this.power = !this.power; }
 export function toggleMode() { this.isEditing = !this.isEditing; }
+export function setActive(id) { this.activeId = id; }
+export function clearActive() { this.activeId = undefined; }
+export function setFocus(id) { this.focusedId = id; }
+export function clearFocus() { this.focusedId = undefined; }
+
+
 
 // better name: MODULES? MODULEREGISTRY ...?  WEBAUDIO_NODES?
 export function addToRegistry({ id, node }) { this.registry[id] = node; }
 export function removeFromRegistry (id) { delete this.registry[id]; }
 
 
+
+// -----------------------------------------------
+//  UI
+// -----------------------------------------------
+
 /**
  * @this Store The vue (pinia) store instance.
  */
-export function setActive(id) { this.activeId = id; }
-export function clearActive() { this.activeId = undefined; }
-export function setFocus(id) { this.focusedId = id; }
-export function clearFocus() { this.focusedId = undefined; }
+export function updateGridPosition({ id, x, y }) {
+  // const module = state.modules.find((m) => m.id === data.id);
 
+  // const module = this.getModule(id);
+  // module.x = x;
+  // module.y = y;
+
+  this.activeModule.x = x;
+  this.activeModule.y = y;
+}
+
+export function updateRackPosition(data) {
+  const module = this.modules.find((m) => m.id === data.id);
+
+  module.col = data.col;
+  module.row = data.row;
+};
+
+
+export const UPDATE_SCROLL_OFFSET = (state, data) => {
+  state.canvasOffset = data;
+};
 
 
 
@@ -263,13 +289,12 @@ export function addConfig() {
   this.configId = this.configs.push(config) - 1; // select new config by default (push returns array length)
 }
 
-
 /**
  * Remove a set of parameters.
  * @param {number} id The configuration to remove
  */
 export function removeConfig(id: number) {
-console.log('remoeing', id);
+  console.log('remoeing', id);
   this.configs.splice(id, 1);
   this.configId = 0;
 }
@@ -280,50 +305,9 @@ export function setParameter (data) {
   }
 };
 
-// export function REGISTER_PARAMETER (state, id) {
-//   const key = state.parameterKey;
-//   const set = state.parameterSets[key];
-
-//   if (set && !set.parameters[id]) {
-//     set.parameters[id] = 0;
-//     console.log(id, ' registered');
-//   } else {
-//     console.log(id, ' was already present');
-//   }
-// };
-
 export function removeParameter (id) {
-  // this.configs.forEach(set => {
-  //   if (set.parameters[id]) {
-  //     delete set.parameters[id];
-  //   }
-  // });
-  delete this.config.parameters[id];
+  this.configs.forEach((config) => {
+    delete config.parameters[id];
+  });
 };
 
-
-
-// -----------------------------------------------
-//  UI
-// -----------------------------------------------
-
-/**
- * @this Store The vue (pinia) store instance.
- */
-export function updateGridPosition({ id, x, y }) {
-  // const module = state.modules.find((m) => m.id === data.id);
-
-  // const module = this.getModule(id);
-  // module.x = x;
-  // module.y = y;
-
-  this.activeModule.x = x;
-  this.activeModule.y = y;
-}
-
-export function updateRackPosition(data) {
-  const module = this.modules.find((m) => m.id === data.id);
-
-  module.col = data.col;
-  module.row = data.row;
-};
