@@ -1,41 +1,48 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "strict": true,
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "downlevelIteration": true,
-
+    // "target": "es5",
+    // "module": "esnext",
+    // "strict": true,
+    // "importHelpers": true,
+    // "moduleResolution": "node",
+    // "allowSyntheticDefaultImports": true,
+    // "sourceMap": true,
+    // "downlevelIteration": true,
 
     "noImplicitAny": false, // CHANGE TO TRUE TO ENABLE TYPECHECKING
+    // "types": ["node"],
 
+    "composite": true,
+    "baseUrl": ".",
 
-    "types": ["node"],
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": [
-      "es2015",
-      // "es2015.promise"
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    // "lib": [
+    //   "es2015",
+    //   // "es2015.promise"
+    //   "dom",
+    //   "dom.iterable",
+    //   "scripthost"
+    // ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "cypress.d.ts",
-    "cypress/**/*.ts"
+  //   "src/**/*.ts",
+  //   "src/**/*.vue",
+  //   "tests/**/*.ts",
+  //   "cypress.d.ts",
+  //   "cypress/**/*.ts"
+    "tests/component/index.*",
+    "tests/component/commands.ts",
+    "env.d.ts", "src/**/*", "src/**/*.vue"
+
+  // ],
+  // "include": [
   ],
   "exclude": [
     "src/**/__tests__/*",
+    "tests/OLD",
     "node_modules"
   ]
 }

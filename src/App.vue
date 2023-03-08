@@ -61,7 +61,8 @@
 
 
 <script type="ts">
-  import { mapState, mapActions } from 'pinia';
+  import { defineComponent, ref, computed } from 'vue';
+  // import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores/app';
   import { auth } from '@/utils/supabase';
   import { log } from '@/utils/logger';
@@ -72,12 +73,7 @@
   import patchManager from '@/components/system/PatchManager';
   import contextMenu from '@/components/system/ContextMenu.vue';
 
-
-  // import { EVENT } from './events';
-  // import { useConnection, useDraggable } from '@/composables';
-
-
-  export default {
+  export default defineComponent({
     name: 'App',
 
     components: {
@@ -89,36 +85,23 @@
       patchManager
     },
 
-    computed: {
-      ...mapState(useAppStore, [
-          'power',
-          'activeModule',
-          'isAuthenticated',
-          'isEditing',
-          'patch',
-          'connections'
-          // 'modules'
-      ]),
-
-
-      // // TODO find a better way to accommodate MasterOut:
-      ...mapState(useAppStore, {
-        'modules': (state) => state.modules.filter((m) => m.id !== 0)
-      }),
-      // connections() { return this.patch.connections },
-      // modules() { return this.patch.modules }
-    },
-
-    data() {
-      return {
-        sorting: false,
-        // authenticated: false
-      };
-    },
-
-    beforeCreate() {
+    setup() {
       const store = useAppStore();
-      // const auth = getAuth();
+      const power = computed(() => store.power);
+      const activeModule = computed(() => store.activeModule);
+      const isAuthenticated = computed(() => store.isAuthenticated);
+      const isEditing = computed(() => store.isEditing);
+      const patch = computed(() => store.patch);
+      const connections = computed(() => store.connections);
+      const modules = computed(() => store.modules.filter((m) => m.id !== 0));
+
+      // const sorting = ref(false);
+
+      log({ type:'system', action:'loading...' });
+      // maybe we want these for a "reset everything" escape hatch:
+      // const { resetConnector } = useConnection();
+      // const { stopDragging } = useDraggable();
+
 
       // onAuthStateChanged(auth, (user) => {
       //   store.isAuthenticated = !!user;
@@ -127,40 +110,31 @@
       //   }
       // });
       auth.getSession().then(({ data }) => {
-        // session.value = data.session
         const { session } = data;
         // const { user } = session;
-
         store.session = session;
       })
 
       auth.onAuthStateChange((_, _session) => {
         // session.value = _session
-          this.fetchPatches();
+        this.fetchPatches();
       });
-    },
 
-    created() {
-      log({ type:'system', action:'loading...' });
-      // const { store } = useAppStore();
-      // const { resetConnector } = useConnection();
-      // const { stopDragging } = useDraggable();
 
       window.addEventListener('keydown', (e) => {
         switch (e.key) {
           case 'Delete':
           case 'Backspace':
-            this.removeModule();
-            // this.$bus.$emit(EVENT.MODULE_REMOVE);
+            removeModule();
             break;
           case 'Tab':
             e.preventDefault(); // do not tab through <select>, fields, etc
-            this.toggleMode();
+            toggleMode();
             break;
           case 'Escape':
 
             // this.togglePower();
-
+            //  - OR -
             // stopDragging(); /// store.dragging = false // dispatchmouseup
             // store.active = undefined
             // resetConnector(); // activeConnector = undefined;
@@ -171,10 +145,10 @@
             // this.togglePlay();  // one day, if i plug in a timeline
             break;
           case 'Shift':
-            // WE only want to rearrange the module-rack if shift is held;
+            // WE only want to rearrange the module-rack if shift is held (...?)
             // otherwise, we probably want to play the module
             // this.toggleSorting;
-            this.sorting = true;
+            sorting.value = true;
             break;
           default:
             // console.log(e.code);
@@ -184,28 +158,121 @@
       window.addEventListener('keyup', (e) => {
         switch (e.key) {
           case 'Shift':
-            this.sorting = false;
+            sorting.value = false;
             break;
         }
       });
-    },
 
-    methods: {
-      ...mapActions(useAppStore, [
-        'togglePower',
-        'toggleMode',
-        'clearActive',
-        'fetchPatches',
-        'removeModule',
-        'savePatch'
-      ]),
 
-      xxx(x) {
-        console.log('this shouldn fire', x);
-        this.clearActive();
-      }
+      function togglePower () { store.togglePower(); }
+      function toggleMode () { store.toggleMode(); }
+      function clearActive () { store.clearActive(); }
+      function fetchPatches () { store.fetchPatches(); }
+      function removeModule () { store.removeModule(); }
+      function savePatch () { store.savePatch(); }
+
+
+      return {
+        power,
+        activeModule,
+        isAuthenticated,
+        isEditing,
+        patch,
+        connections,
+        modules,
+        togglePower,
+        toggleMode,
+        clearActive,
+        fetchPatches,
+        removeModule,
+        savePatch,
+      };
+
+      // return {
+      //   power: computed(() => store.power),
+      //   patch: computed(() => store.patch),
+      //   modules: computed(() => store.modules.filter((m) => m.id !== 0)),
+      //   isEditing: computed(() => store.isEditing),
+      //   connections: computed(() => store.connections),
+      //   activeModule: computed(() => store.activeModule),
+      //   isAuthenticated: computed(() => store.isAuthenticated),
+
+      //   togglePower: store.togglePower,
+      //   toggleMode: store.toggleMode,
+      //   clearActive: store.clearActive,
+      //   fetchPatches: store.fetchPatches,
+      //   removeModule: store.removeModule,
+      //   savePatch: store.savePatch,
+      // };
+
     }
-  };
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // computed: {
+    //   ...mapState(useAppStore, [
+    //       'power',
+    //       'activeModule',
+    //       'isAuthenticated',
+    //       'isEditing',
+    //       'patch',
+    //       'connections'
+    //       // 'modules'
+    //   ]),
+
+
+      // // TODO find a better way to accommodate MasterOut:
+      // ...mapState(useAppStore, {
+      //   'modules': (state) => state.modules.filter((m) => m.id !== 0)
+      // }),
+      // // connections() { return this.patch.connections },
+      // modules() { return this.patch.modules }
+    // },
+
+    // data() {
+    //   return {
+    //     sorting: false,
+    //     // authenticated: false
+    //   };
+    // },
+
+    // beforeCreate() {
+    //   const store = useAppStore();
+    //   // const auth = getAuth();
+
+    //   // onAuthStateChanged(auth, (user) => {
+    //   //   store.isAuthenticated = !!user;
+    //   //   if (!!user) {
+    //   //     this.fetchPatches();
+    //   //   }
+    //   // });
+    //   auth.getSession().then(({ data }) => {
+    //     // session.value = data.session
+    //     const { session } = data;
+    //     // const { user } = session;
+
+    //     store.session = session;
+    //   })
+
+    //   auth.onAuthStateChange((_, _session) => {
+    //     // session.value = _session
+    //       this.fetchPatches();
+    //   });
+    // },
+
 </script>
 
 
