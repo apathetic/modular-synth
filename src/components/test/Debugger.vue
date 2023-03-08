@@ -110,7 +110,7 @@
       console.log('%c[component] Creating Debugger', 'color: blue');
     },
 
-    destroyed() {
+    unmounted() {
       this.processor.disconnect();
     },
 

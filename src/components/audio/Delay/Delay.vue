@@ -113,7 +113,7 @@
       this.$watch('cutoff', this.setCutoff);
     },
 
-    destroyed() {
+    unmounted() {
       // this.inlets[0].disconnect();
       // this.outlets[0].disconnect();
       // this.activateNode.disconnect();

@@ -44,7 +44,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
       });
     },
 
-    destroyed() {
+    unmounted() {
       // clean up METER // TODO
     },
 

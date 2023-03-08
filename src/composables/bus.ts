@@ -20,7 +20,7 @@ export type EventBusListener<T = unknown, P = any> = (event: T, payload?: P) => 
 export type EventBusEvents<T, P = any> = EventBusListener<T, P>[];
 export type EventBusIdentifier<T = unknown> = EventBusKey<T> | string | number;
 
-export interface EventBusKey<T> extends Symbol { };
+export interface EventBusKey<T> extends Symbol { }
 
 export interface UseEventBusReturn<T, P> {
   /**
@@ -74,5 +74,5 @@ export function useEventBus<T = unknown, P = any>(key: EventBusIdentifier<T>): U
   }
 
   return { on, off, emit }
-};
+}
 

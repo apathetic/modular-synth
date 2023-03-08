@@ -101,7 +101,7 @@
       this.osc_.start();
     },
 
-    destroyed() {
+    unmounted() {
       this.pulse_.destroy();
       this.osc_.stop();
       this.osc_.disconnect(); // this is done in Connection

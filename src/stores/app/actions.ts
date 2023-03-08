@@ -47,7 +47,7 @@ export function loadPatch(id?: number) {
     store.patch.configs = configs;
     // resetSorting();
   });
-};
+}
 
 /**
  * Save the current working patch into the backend database, and persist it
@@ -90,7 +90,7 @@ export function addPatch () {
   // for tests
   // increments id
   // no duplicate ids
-};
+}
 
 /**
  * Remove a patch.
@@ -110,7 +110,7 @@ export function removePatch(id?: number) {
   this.patches.splice(id, 1);
   this.patchId = 0;
   this.loadPatch(); // loadPatch(0)
-};
+}
 
 /**
  * Fetch all of the user's patches from the API
@@ -131,9 +131,9 @@ export async function fetchPatches() {
     // this.patches = validateData(patches);
   } catch (err) {
     console.log('Not signed in.', err);
-  };
+  }
 
-};
+}
 
 
 export const SET_PATCHES = (state, patches) => {
@@ -186,7 +186,7 @@ export function updateRackPosition(data) {
 
   module.col = data.col;
   module.row = data.row;
-};
+}
 
 
 export const UPDATE_SCROLL_OFFSET = (state, data) => {
@@ -303,11 +303,11 @@ export function setParameter (data) {
   if (this.parameters) {
     this.parameters[data.id] = data.value;
   }
-};
+}
 
 export function removeParameter (id) {
   this.configs.forEach((config) => {
     delete config.parameters[id];
   });
-};
+}
 

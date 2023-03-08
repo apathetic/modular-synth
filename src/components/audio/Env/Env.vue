@@ -68,7 +68,7 @@
       signal(1).connect(this.adsr);
     },
 
-    destroyed() {
+    unmounted() {
       signal(1).disconnect(this.adsr);
       this.adsr.disconnect(); // this is done in Connection
 

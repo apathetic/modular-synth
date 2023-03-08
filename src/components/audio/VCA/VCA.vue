@@ -58,7 +58,7 @@
       this.outlets[0].audio = vca;
     },
 
-    destroyed() {
+    unmounted() {
       // this.inlets[0].audio.disconnect(); // this is done in Connection
     }
   };

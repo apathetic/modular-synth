@@ -154,7 +154,7 @@
       window.addEventListener(EVENT.KEY_UP, this.keyup);
     },
 
-    destroyed() {
+    unmounted() {
       this.$bus.$off(EVENT.MIDI_NOTEON, this.noteOn);
       this.$bus.$off(EVENT.MIDI_NOTEOFF, this.noteOff);
       this.$bus.$off(EVENT.MIDI_CONTROLLER, this.controller);
