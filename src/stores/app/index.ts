@@ -3,9 +3,18 @@ import * as getters from './getters';
 import * as actions from './actions';
 import type { AppState, Patch } from '@/types';
 
+
+const uuid = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0
+    const v = c == 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 export const blank = () => <Patch>{
-  // _id: uuid(),
-  id: 0, // keeps track of modules, augmented when new module is added. could use uuid maybe
+  id: uuid(),
+  i: 0, // keeps track of modules, augmented when new module is added. could use uuid maybe
   name: '<blank>',
   modules: [{ type: 'MasterOut', id: 0, x: 0, y: 0 }],
   connections: [],

@@ -5,7 +5,6 @@ import { URL, PUBLIC_KEY } from '../../supabase.config.js';
 const supabase = createClient(URL, PUBLIC_KEY);
 
 
-
   // session from beforeCreate in App
   // async function getProfile() {
   //   try {
@@ -40,7 +39,10 @@ const login = async ({ email, password }) => {};
 const isLoggedIn = () => {};
 
 
-
+/**
+ * Fetches patches from the matrix
+ * @returns {} The user's patches
+ */
 export const fetch = async () => {
   const { data, error } = await supabase
     .from('patches')

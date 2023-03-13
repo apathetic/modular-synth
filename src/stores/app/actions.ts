@@ -50,33 +50,20 @@ export function loadPatch(id?: number) {
 }
 
 /**
- * Save the current working patch into the backend database, and persist it
- * into localStorage as well.
- * @param  {[type]} commit [description]
- * @param  {PatchState} state The current state of the Patch
- * @param  {Object} data Patch and parameter names, other patch data  [TODO] this doesnt currently get used.
- * @return {void}
+ * Save the current working patch into the backend database
+ // Maybe persist it into localstorage too?
+ * @this {Store} reference to the pinia store
  */
-export const savePatch = ({ commit, state }, data) => {
-  const key = state.patchId;
-  const patch = {
-    id: state.id,
-    name: state.name,
-    modules: state.modules,
-    connections: state.connections,
-    configs: state.configs
-  };
+export const savePatch = () => {
+  const patch = this.patch;
 
-  // Update patch in Database
-  api.save('patch/' + key, patch)
+  save({ id: this.patch.uuid, data: patch })
     .then(() => {
       console.log('saved: ', patch.name);
     })
     .catch((err) => {
       console.log(err);
     });
-
-  state.patches[key] = patch;
 };
 
 /**
@@ -212,9 +199,9 @@ export function addModule(data: Partial<Module>) {
   const patch = this.patch as Patch;
   const size = moduleSize[type] || [1, 1];
 
-  patch.id++;     // or uuid
+  patch.i++;     // or uuid
   patch.modules.push({
-    id: patch.id,
+    id: patch.i,
     type: type,
     x: x || 0,    // for dragging X position
     y: y || 0,    // for dragging Y position

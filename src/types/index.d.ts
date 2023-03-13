@@ -1,3 +1,5 @@
+import type { Session } from "@supabase/supabase-js";
+
 type PatchKey = uuid; // string
 
 export interface AppState {
@@ -15,14 +17,19 @@ export interface AppState {
   // Nodes/Modules are kinda conflated / they share the same `this` instance ... :(
   registry: {[value: number]: Node};
 
-  session: any;
+  session: Session | undefined; // any;
 
   // UI: STUFFS
-  canvasOffset: number;
+  canvasOffset?: number;
+}
+
+export interface UserState {
+  session: Session;
 }
 
 export interface Patch {
-  id: PatchKey;
+  id: string;
+  i: PatchKey;
   name: string;
   modules: Module[];
   connections: Connection[];

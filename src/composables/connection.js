@@ -29,8 +29,8 @@ export function useConnection() {
     resetConnector();
 
     activeConnector.from = { id, port };
-		activeConnector.id = store.patch.id;
-		store.patch.id++;
+		activeConnector.id = store.patch.i;
+		store.patch.i++;
   }
 
   function stopConnecting(id, port) {
