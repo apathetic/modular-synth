@@ -13,14 +13,14 @@
     </div>
 
     <div class="module-connections">
-      <Inlets :ports="inlets"></Inlets>
-      <Outlets :ports="outlets"></Outlets>
+      <Inlets  :ports="inlets"  :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
     </div>
   </div>
 </template>
 
 <script>
-  // import Knob from './UI/Knob';
+  import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
 
   const params = {
     delay: {
@@ -50,91 +50,99 @@
     }
   };
 
-  export default {
-    // components: { Knob },
+  export default defineComponent({
     props: {
       id: null
     },
+    setup (props, { expose }) {
+      const context = inject('context');
+      const input = context.createGain();
+      const output = context.createGain();
+      const dryNode = context.createGain();
+      const wetNode = context.createGain();
+      const filter = context.createBiquadFilter();
+      const delayNode = context.createDelay(5);
+      const feedbackNode = context.createGain();
 
-    data() {
+      const inlets = [
+        {
+          label: 'in',
+          desc: 'Signal input',
+          audio: input
+        },
+        {
+          label: 'mod',
+          desc: 'Modulation input for delay time',
+          audio: null
+        }
+      ];
+      const outlets = [
+        {
+          label: 'out-1',
+          audio: output
+        }
+        // { label: 'out-2' }
+      ];
+
+      const dry = ref(params.dry.default);
+      const wet = ref(params.wet.default);
+      const feedback = ref(params.feedback.default);
+      const delay = ref(params.delay.default);
+      const cutoff = ref(params.filter.default);
+
+      dryNode.gain.value = dry.value;
+      wetNode.gain.value = wet.value;
+      feedbackNode.gain.value = feedback.value;
+      delayNode.delayTime.value = delay.value / 1000.0;
+      filter.frequency.value = cutoff.value;
+      filter.type = 'lowpass';
+
+      input.connect(delayNode);
+      input.connect(dryNode);
+      delayNode.connect(filter);
+      filter.connect(feedbackNode);
+      feedbackNode.connect(delayNode);
+      feedbackNode.connect(wetNode);
+      wetNode.connect(output);
+      dryNode.connect(output);
+
+      watch(wet, (v) => wetNode.gain.value = v);
+      watch(dry, (v) => dryNode.gain.value = v);
+      watch(feedback, (v) => feedbackNode.gain.value = v);
+      watch(delay, (v) => delayNode.delayTime.value = v / 1000.0);
+      watch(cutoff, (v) => filter.frequency.value = v);
+
+      onUnmounted(() => {
+        // input = null;
+        // output = null;
+        // dryNode = null;
+        // wetNode = null;
+        // filter = null;
+        // delayNode = null;
+        // feedbackNode = null;
+      });
+
+      // AUDIO
+      expose({
+        inlets,
+        outlets
+      });
+
+      // UI
       return {
-        name: 'Delay',
-        // delay: params.delay.default,
-        // wet: params.wet.default,
-        // dry: params.dry.default,
-        // feedback: params.feedback.default,
-        // cutoff: params.cutoff.default,
-        params: params,
+        dry,
+        wet,
+        feedback,
+        delay,
+        cutoff,
 
-        inlets: [
-          { label: 'in',
-            desc: 'Signal input' },
-          { label: 'mod',
-            desc: 'Modulation input for delay time' }
-        ],
-        outlets: [
-          { label: 'out-1' }
-          // { label: 'out-2' }
-        ]
-      };
-    },
-
-    created() {
-      this.inlets[0].audio = this.input = this.context.createGain();
-      this.inlets[1].audio = this.context.createGain();  // input is -1 : 1
-      this.outlets[0].audio = this.output = this.context.createGain();
-
-      this.dryNode = this.context.createGain();
-      this.wetNode = this.context.createGain();
-      this.filter = this.context.createBiquadFilter();
-      this.delayNode = this.context.createDelay(5);
-      this.feedbackNode = this.context.createGain();
-
-      this.dryNode.gain.value = params.dry.default;
-      this.wetNode.gain.value = params.wet.default;
-      this.feedbackNode.gain.value = params.feedback.default;
-      this.delayNode.delayTime.value = params.delay.default / 1000.0;
-      this.filter.frequency.value = params.filter.default;
-      this.filter.type = 'lowpass';
-
-      this.input.connect(this.delayNode);
-      this.input.connect(this.dryNode);
-      this.delayNode.connect(this.filter);
-      this.filter.connect(this.feedbackNode);
-      this.feedbackNode.connect(this.delayNode);
-      this.feedbackNode.connect(this.wetNode);
-      this.wetNode.connect(this.output);
-      this.dryNode.connect(this.output);
-
-      // this.$watch('delay', this.setFreq);
-      this.$watch('wet', this.setWet);
-      this.$watch('dry', this.setDry);
-      this.$watch('feedback', this.setFeedback);
-      this.$watch('cutoff', this.setCutoff);
-    },
-
-    unmounted() {
-      // this.inlets[0].disconnect();
-      // this.outlets[0].disconnect();
-      // this.activateNode.disconnect();
-      this.delayNode.disconnect();
-      this.filter.disconnect();
-      this.feedbackNode.disconnect();
-      this.wetNode.disconnect();
-      this.dryNode.disconnect();
-    },
-
-    methods: {
-      setDelay(d) {
-        // this.osc.frequency.value = f;
-      },
-      setWet(w) { /**/ },
-      setDry(d) { /**/ },
-      setFeedback(f) { /**/ },
-      setCutoff(c) { /**/ }
+        inlets,
+        outlets
+      }
     }
-  };
+  });
 </script>
+
 
 <style lang="scss">
   $grey: #a8a8a8;

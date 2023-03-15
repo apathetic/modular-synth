@@ -5,86 +5,95 @@
     </div>
 
     <div class="module-interface">
-      <knob param="resonance" @value="resonance = $event" :min="0" :max="100"></knob>
-      <knob param="cutoff"    @value="cutoff = $event"    :min="40" :max="16000" scale="log"></knob>
+      <Dropdown param="type"   @value="type = $event"     :options="types"></Dropdown>
+      <Knob param="resonance" @value="resonance = $event" :min="0" :max="100"></Knob>
+      <Knob param="cutoff"    @value="cutoff = $event"    :min="40" :max="16000" scale="log"></Knob>
     </div>
 
     <div class="module-connections">
-      <Inlets :ports="inlets"></Inlets>
-      <Outlets :ports="outlets"></Outlets>
+      <Inlets :ports="inlets" :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
     </div>
   </div>
 </template>
 
 <script>
-  // import Knob from '@/components/UI/Knob';
+  import { defineComponent, inject, ref, watch } from 'vue';
 
-  export default {
-    // components: { Knob },
+  export default defineComponent({
     props: {
-      id: null
-    },
-
-    data() {
-      return {
-        name: 'Comb',
-
-        freq: 440,
-        types: ['lowpass', 'hipass', 'bandpass', 'notch'],
-        Q: 1,
-
-        inlets: [
-          {
-            label: 'input'
-            // audio: null
-          }, {
-            label: 'input'
-            // audio: null
-          }
-        ],
-
-        outlets: [
-          {
-            label: 'output-1'
-            // audio: null
-          }, {
-            label: 'output-2'
-            // audio: null
-          }
-        ]
-      };
-    },
-
-    created() {
-      this.filter = this.context.createBiquadFilter();
-      this.filter.type = this.types[0];
-      this.filter.frequency.value = this.freq;
-      this.filter.Q.value = this.Q;
-
-      // connect input to our filter
-      this.inlets[0].audio = this.filter;
-      this.outlets[0].audio = this.filter;
-
-      // this.$watch('type', this.setReverb);
-      // this.$watch('freq', this.setDecay);
-      // this.$watch('Q', this.setDecay);
-    },
-
-    // destroyed() {
-    //   this.filter.disconnect();// this is done in Connection
-    // },
-
-    methods: {
-      setFreq(f) {
-        this.filter.frequency.value = f;
-      },
-
-      setType(t) {
-        this.filter.type = this.types[t] || 'lowpass';
+      id: {
+        default: undefined,
+        required: true
       }
+    },
+    setup (props, { expose }) {
+      const context = inject('context');
+
+      const types = ['lowpass', 'hipass', 'bandpass', 'notch'];
+      const type = ref(types[0]);
+      const freq = ref(440);
+      const Q = ref(1);
+      const resonance = ref(1);
+      const cutoff = ref(8000);
+
+      const filter = context.createBiquadFilter();
+      filter.type = type.value;
+      filter.frequency.value = freq.value;
+      filter.Q.value = Q.value;
+
+      const inlets = [
+        {
+          label: 'filter',
+          audio: filter
+        }, {
+          label: 'xxxx',
+          // audio: null
+        }
+      ];
+
+      const outlets = [
+        {
+          label: 'output-1',
+          audio: filter
+        }, {
+          label: 'output-2',
+          audio: null
+        }
+      ];
+
+
+      watch(type, setType);
+      // $watch('freq', setDecay);
+      // $watch('Q', setDecay);
+
+      // destroyed() {
+      //   filter.disconnect();// this is done in Connection
+      // },
+
+      function setFreq(f) {
+        filter.frequency.value = f;
+      }
+
+      function setType(t) {
+        filter.type = types[t] || 'lowpass';
+      }
+
+      expose({ inlets, outlets, setFreq, setType });
+
+      return {
+        resonance,
+        cutoff,
+        type,
+        types,
+        inlets,
+        outlets
+      }
+
     }
-  };
+  });
 </script>
+
 
 <style lang="scss">
   $grey: #a8a8a8;

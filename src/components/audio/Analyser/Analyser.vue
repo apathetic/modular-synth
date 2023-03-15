@@ -20,13 +20,13 @@
   import { useAppStore } from '@/stores/app';
 
   export default defineComponent({
-  props: {
-    id: {
-      default: undefined,
-      required: true
-    }
-  },
-  setup (props, { expose }) {
+    props: {
+      id: {
+        default: undefined,
+        required: true
+      }
+    },
+    setup (props, { expose }) {
       // const name = 'Analyser';
       const type = 'FFT';
       const context = inject('context');
@@ -38,16 +38,12 @@
       analyser.maxDecibels = -20; // max value to represent; any freq bins with amplitude above this will be 255
       analyser.minDecibels = -90; // min value to represent; any freq bins with amplitude below this will be 0
 
-      // const power = computed(() => store.power);
-      // const editing = computed(() => store.isEditing);
-      // inlets[0].audio = analyzer
-      // const inlets = reactive([
-      const inlets = ref([
+      const inlets = [
         {
           label: 'input',
           audio: analyser
         }
-      ]);
+      ];
 
       //           = new Float32Array(analyser.frequencyBinCount);
       let buffer = new Uint8Array(analyser.frequencyBinCount);
@@ -146,10 +142,7 @@
 
 
 <style lang="scss">
-  // @import 'styles/variables.scss';
-
   .analyser {
-    // overflow: hidden;
 
     .module-interface {
       padding: 14px 1px 1px;
@@ -162,11 +155,5 @@
       // opacity: 0;
       transition: opacity var(--transition-time)
     }
-
-    // &.analysing {
-    //   canvas {
-    //     opacity: 1;
-    //   }
-    // }
   };
 </style>
