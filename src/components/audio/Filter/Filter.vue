@@ -5,109 +5,97 @@
     </div>
 
     <div class="module-interface">
-      <knob
-        param="freq"
-        mode="log"
-        :min="100"
-        :max="12000"
-        @value="freq = $event">
-      </knob>
-      <knob
-        param="Q"
-        :min="0"
-        :max="1"
-        :precision="2"
-        @value="Q = $event">
-      </knob>
+      <Knob param="freq" @value="freq = $event" :min="100" :max="12000" mode="log"></Knob>
+      <Knob param="Q"    @value="Q = $event"    :min="0"   :max="1" :precision="2"></Knob>
       <select class="select" @mousedown.stop v-model="type">
         <option v-for="type in types" :value="type">{{ type }}</option>
       </select>
+
+      // <Dropdown param="type"   @value="type = $event"     :options="types"></Dropdown>
+
     </div>
 
     <div class="module-connections">
-      <Inlets :ports="inlets"></Inlets>
-      <Outlets :ports="outlets"></Outlets>
+      <Inlets  :ports="inlets"  :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
     </div>
   </div>
 </template>
 
 <script>
+  import { defineComponent, inject, ref, watch, onMounted, onUnmounted } from 'vue';
+  // import { useAppStore } from '@/stores/app';
   import { Parameter } from '@/audio';
-  import Knob from '@/components/UI/Knob';
 
-  export default {
-    name: '~filter',
-    // components: { Knob },
+  export default defineComponent({
     props: {
       id: null
     },
 
-    data() {
+    setup (props, { expose }) {
+      const context = inject('context');
+      const types = ['allpass', 'bandpass', 'highpass', 'lowpass', 'peaking'];
+      const type = ref(types[0]);
+      const freq = ref(440);
+      const Q = ref(1);
+
+      const filter = context.createBiquadFilter();
+      filter.type = type.value;
+      filter.frequency.value = freq.value;
+      filter.Q.value = Q.value;
+
+      const mod = new Parameter(500); // range: 0 - 500 cents (interval of a 5th)
+      mod.output.connect(filter.detune);    // filter tremolo
+
+      const inlets = [
+        {
+          label: 'input',
+          desc: 'signal to filter',
+          audio: filter
+        },
+        {
+          label: 'freq',
+          desc: 'filter frequency',
+          data: (f) => filter.frequency.value = f
+        },
+        {
+          label: 'mod',
+          audio: mod.input
+        }
+      ];
+
+      const outlets = [
+        {
+          label: 'output',
+          desc: 'Audio output',
+          audio: filter
+        }
+      ];
+
+      watch(freq, (f) => filter.frequency.value = f);
+      watch(Q, (q) => filter.Q.value = q);
+      // $watch('type', (t) => filter.type = t || 'lowpass');
+
+
+      // AUDIO
+      expose({
+        inlets,
+        outlets
+      });
+
+      // UI
       return {
-        // name: 'Filter',
-
-        freq: 440,
-        mod: 21,
-        Q: 1,
-        type: 'allpass',
-        types: ['allpass', 'bandpass', 'highpass', 'lowpass', 'peaking'],
-
-        inlets: [
-          { label: 'input',
-            desc: 'The signal to filter' },
-          { label: 'freq',
-            desc: 'The filter frequency' },
-          { label: 'mod' }
-        ],
-
-        outlets: [
-          {
-            label: 'output',
-            desc: 'Audio output' }
-        ]
-      };
-    },
-
-    created() {
-      // Filter
-      this.filter = this.context.createBiquadFilter();
-      this.filter.type = this.types[0];
-      this.filter.frequency.value = this.freq;
-      this.filter.Q.value = this.Q; // this.Q_;
-
-      // Mod
-      this.mod_ = new Parameter(this.mod * 500);    // range: 0-500, interval of a 5th
-      this.mod_.output.connect(this.filter.detune); // filter tremolo
-
-      // Inlets
-      this.inlets[0].audio = this.filter;
-      this.inlets[1].data = this.setFreq;
-      this.inlets[2].audio = this.mod_.input;
-
-      // Outlets
-      this.outlets[0].audio = this.filter;
-
-      // Map k-Params
-      this.$watch('freq', this.setFreq);
-      this.$watch('Q', this.setQ);
-      this.$watch('type', this.setType);
-    },
-
-    methods: {
-      setFreq(f) {
-        this.filter.frequency.value = f;
-      },
-
-      setQ(q) {
-        this.filter.Q.value = q;
-      },
-
-      setType(t) {
-        this.filter.type = t || 'lowpass';
+        inlets,
+        outlets,
+        freq,
+        Q,
+        type,
+        types
       }
     }
-  };
+  });
 </script>
+
 
 <style lang="scss">
   $grey: #a8a8a8;
