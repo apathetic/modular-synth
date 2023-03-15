@@ -32,7 +32,7 @@
 
     created() {
       const store = useAppStore();
-      const { activeConnector } = useConnection(); // current connector
+      const { activeConnector, resetConnector } = useConnection(); // current connector
 
       watch(activeConnector, (connector /* , old */) => {
         if (connector.to.id) {
@@ -60,10 +60,10 @@
       },
 
       /**
-      * Update the connector's position.
-      * @param  {Event} event The mousemove Event.
-      * @return {Void}
-      */
+       * Update the connector's position.
+       * @param  {Event} event The mousemove Event.
+       * @return {Void}
+       */
       drag(event) {
         this.cursorX = event.clientX +  0;// this.$store.state.app.canvasOffset;
         this.cursorY = event.clientY - 48;  // the header height
@@ -72,17 +72,18 @@
       },
 
       /**
-      * Finalize the connector's position.
-      * @param  {Event} event: The mousemove Event.
-      * @return {Void}
-      */
-      dragEnd(event) {
+       * Finalize the connector's position.
+       * @param  {Event} event: The mousemove Event.
+       * @return {Void}
+       */
+      dragEnd() {
         document.removeEventListener('mousemove', this.drag);
         document.removeEventListener('mouseup', this.dragEnd);
 
         this.active = false;
         this.cursorX = false;
         this.cursorY = false;
+        // resetConnector();
       }
     }
   };

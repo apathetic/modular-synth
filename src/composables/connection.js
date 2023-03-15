@@ -34,6 +34,11 @@ export function useConnection() {
   }
 
   function stopConnecting(id, port) {
+    if (!activeConnector.from.id) {
+      // eg. an errant click on the inlet
+      return;
+    }
+
     activeConnector.to = { id, port };
 
     // if this.to.id !== this.from.id &&      // if not circular connection

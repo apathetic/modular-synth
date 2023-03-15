@@ -5,145 +5,142 @@
     </div>
 
     <div class="module-interface">
-      <canvas ref="visualization"></canvas>
+      <canvas ref="canvas"></canvas>
     </div>
 
     <div class="module-connections">
-      <Inlets :ports="inlets"></Inlets>
+      <Inlets :ports="inlets" :id="id"></Inlets>
     </div>
   </div>
 </template>
 
 
 <script>
-  // import { mapGetters } from 'vuex';
+  import { defineComponent, inject, ref, watch, onMounted, onUnmounted } from 'vue';
   import { useAppStore } from '@/stores/app';
 
-  export default {
-    props: {
-      id: null
-    },
+  export default defineComponent({
+  props: {
+    id: {
+      default: undefined,
+      required: true
+    }
+  },
+  setup (props, { expose }) {
+      // const name = 'Analyser';
+      const type = 'FFT';
+      const context = inject('context');
+      const store = useAppStore();
+      const canvas = ref();
 
-    setup() {
-      const appStore = useAppStore();
-      return { appStore };
-    },
+      const analyser = context.createAnalyser();
+      analyser.fftSize = 256; // 512;
+      analyser.maxDecibels = -20; // max value to represent; any freq bins with amplitude above this will be 255
+      analyser.minDecibels = -90; // min value to represent; any freq bins with amplitude below this will be 0
 
-    computed: {
-      // ...mapState(useAppStore, ['power']),
-      power() { return this.appStore.power },
-      editing() { return this.appStore.isEditing }
-    },
+      // const power = computed(() => store.power);
+      // const editing = computed(() => store.isEditing);
+      // inlets[0].audio = analyzer
+      // const inlets = reactive([
+      const inlets = ref([
+        {
+          label: 'input',
+          audio: analyser
+        }
+      ]);
 
-    // computed: {
-    //   ...mapGetters([
-    //     'power',
-    //     'isEditing'
-    //   ])
-    // },
+      //           = new Float32Array(analyser.frequencyBinCount);
+      let buffer = new Uint8Array(analyser.frequencyBinCount);
+      let ticking = true;
 
-    data() {
-      return {
-        name: 'Analyser',
-        inlets: [
-          { label: 'input' }
-        ]
-      };
-    },
+      let visualizer;
+      let canvasWidth = 0;
+      let canvasHeight = 0;
 
-    created() {
-      this.analyser = this.inlets[0].audio = this.context.createAnalyser();
-      this.analyser.fftSize = 256; // 512;
-      this.analyser.maxDecibels = -20; // max value to represent; any freq bins with amplitude above this will be 255
-      this.analyser.minDecibels = -90; // min value to represent; any freq bins with amplitude below this will be 0
-
-      // this._buffer = new Float32Array(this.analyser.frequencyBinCount);
-      this._buffer = new Uint8Array(this.analyser.frequencyBinCount);
-      this._type = 'FFT';
-      this.ticking = true;
-
-      this.$watch('power', (on) => {
-        if (on) {
-          this.loop();
+      watch(() => store.power, (isOn) => {
+        if (isOn) {
+          loop();
         } else {
           // set buffer to 0 and update display
-          // this._buffer.forEach(sample => sample = 0);
-          this.visualizer.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+          // buffer.forEach(sample => sample = 0);
+          visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
         }
       });
-    },
 
-    unmounted() {
-      // this.analyser.disconnect();// this is done in Connection
+      onUnmounted(() => {
+        buffer = null; //  ... Float32Array destroy ...??
+      });
 
-      this._buffer = null; //  ... Float32Array destroy ...??
-    },
+      onMounted(() => {
+        visualizer = canvas.value.getContext('2d');
+        canvasWidth = visualizer.canvas.width;
+        canvasHeight = visualizer.canvas.height;
+      });
 
-    mounted() {
-      this.visualizer = this.$refs.visualization.getContext('2d');
-      this.canvasWidth = this.visualizer.canvas.width;
-      this.canvasHeight = this.visualizer.canvas.height;
-    },
 
-    methods: {
-      analyse() {
-        if (this._type === 'FFT') {
-          // this.analyser.getFloatFrequencyData(this._buffer);
-          this.analyser.getByteFrequencyData(this._buffer);
+      function analyse() {
+        if (type === 'FFT') {
+          //      .getFloatFrequencyData(buffer);
+          analyser.getByteFrequencyData(buffer);
         } else {
-          this.analyser.getFloatTimeDomainData(this._buffer);
+          analyser.getFloatTimeDomainData(buffer);
         }
-      },
+      }
 
-      render() {
-        if (this._type === 'FFT') {
-          const values = this._buffer;
-          const h = this.canvasHeight;
-          const w = this.canvasWidth;
-          const barWidth = w / values.length;
+      function render() {
+        if (type === 'FFT') {
+          const values = buffer;
+          const barWidth = canvasWidth / values.length;
           let x = 0;
 
-          this.visualizer.clearRect(0, 0, w, h);
+          visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
 
           for (const val of values) {
-            this.visualizer.fillStyle = `rgba(0,222,0, ${val / 255})`;  // 0 -> 255 when getByteData
-            this.visualizer.fillRect(x, h - val / 2, barWidth, val / 2);
-            // this.visualizer.fillRect(x, canvasHeight - val, barWidth, val);
+            visualizer.fillStyle = `rgba(0,222,0, ${val / 255})`;  // 0 -> 255 when getByteData
+            visualizer.fillRect(x, canvasHeight - val / 2, barWidth, val / 2);
+            //        .fillRect(x, canvasHeight - val, barWidth, val);
 
             x += barWidth + 1;
           }
         } else {
-        //   waveContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        //   var values = waveform.analyse();
-        //   waveContext.beginPath();
-        //   waveContext.lineJoin = "round";
-        //   waveContext.lineWidth = 6;
-        //   waveContext.strokeStyle = waveformGradient;
-        //   waveContext.moveTo(0, (values[0] / 255) * canvasHeight);
-        //   for (var i = 1, len = values.length; i < len; i++){
-        //     var val = values[i] / 255;
-        //     var x = canvasWidth * (i / len);
-        //     var y = val * canvasHeight;
-        //     waveContext.lineTo(x, y);
-        //   }
-        // waveContext.stroke();
-        }
-      },
-
-      loop() {
-        if (this.power) {
-          if (!this.isEditing && this.ticking) {
-            this.analyse();
-            this.render();
-          }
-
-          this.ticking = !this.ticking;
-
-          window.requestAnimationFrame(this.loop);  // .bind(this)
+          //   waveContext.clearRect(0, 0, canvasWidth, canvasHeight);
+          //   var values = waveform.analyse();
+          //   waveContext.beginPath();
+          //   waveContext.lineJoin = "round";
+          //   waveContext.lineWidth = 6;
+          //   waveContext.strokeStyle = waveformGradient;
+          //   waveContext.moveTo(0, (values[0] / 255) * canvasHeight);
+          //   for (var i = 1, len = values.length; i < len; i++){
+          //     var val = values[i] / 255;
+          //     var x = canvasWidth * (i / len);
+          //     var y = val * canvasHeight;
+          //     waveContext.lineTo(x, y);
+          //   }
+          // waveContext.stroke();
         }
       }
+
+      function loop() {
+        if (store.power) {
+          if (!store.isEditing && ticking) {
+            analyse();
+            render();
+          }
+
+          ticking = !ticking;
+
+          window.requestAnimationFrame(loop);  // .bind(this)
+        }
+      }
+
+      expose({ inlets });
+
+      return {
+        canvas,
+        inlets
+      }
     }
-  };
+  });
 
 </script>
 
@@ -152,7 +149,7 @@
   // @import 'styles/variables.scss';
 
   .analyser {
-    overflow: hidden;
+    // overflow: hidden;
 
     .module-interface {
       padding: 14px 1px 1px;
