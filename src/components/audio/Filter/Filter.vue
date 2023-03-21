@@ -23,8 +23,7 @@
 </template>
 
 <script>
-  import { defineComponent, inject, ref, watch, onMounted, onUnmounted } from 'vue';
-  // import { useAppStore } from '@/stores/app';
+  import { defineComponent, inject, ref, watch } from 'vue';
   import { Parameter } from '@/audio';
 
   export default defineComponent({

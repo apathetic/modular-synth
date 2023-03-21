@@ -3,16 +3,17 @@ import * as getters from './getters';
 import * as actions from './actions';
 import type { AppState, Patch } from '@/types';
 
+const patches = JSON.parse(localStorage.getItem('patches') || 'null');
 
 const uuid = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0
     const v = c == 'x' ? r : (r & 0x3) | 0x8
     return v.toString(16)
-  })
-}
+  });
+};
 
-export const blank = () => <Patch>{
+const blank = () => <Patch>{
   id: uuid(),
   i: 0, // keeps track of modules, augmented when new module is added. could use uuid maybe
   name: '<blank>',
@@ -30,7 +31,7 @@ const state = () => <AppState>{
   focusedId: undefined,
   activeId: 0,
 
-  patches: [blank()],
+  patches: patches || [blank()],
   patchId: 0,  // id of the active patch
   configId: 0, // id of the active parameter configuration
 
@@ -41,10 +42,15 @@ const state = () => <AppState>{
   // canvasOffset: 0,    // UI stuffs
 };
 
-
-export const useAppStore = defineStore('app', {
+const useAppStore = defineStore('app', {
   state,
   getters,
-  actions: { ...actions },
-  // actions
+  actions: { ...actions }, // actions
 });
+
+
+
+export {
+  blank,
+  useAppStore
+};
