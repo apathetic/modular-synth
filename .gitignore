@@ -4,6 +4,7 @@
 
 /tests/videos/*
 /tests/screenshots/*
+/tests/OLD
 /.cache/
 
 # local env files

@@ -1,10 +1,12 @@
+import { watch, type App } from 'vue';
 import { createPinia } from 'pinia';
-import { watch } from 'vue';
+import { useAppStore } from './app';
+import type { AppState } from '@/types';
 
 
-const debounce = (fn, delay) => {
-  let timeoutId;
-  return (...args) => {
+const debounce = (fn: Function, delay: number) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return (...args: any[]) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       fn(...args);
@@ -20,11 +22,14 @@ const persistState = debounce((state) => {
 }, 2000);
 
 
-export { useAppStore } from './app';
-export function createStore(app) {
+const createStore = (app) => {
   const pinia = createPinia();
 
   watch(pinia.state, persistState, { deep: true });
-
   app.use(pinia);
 }
+
+export {
+  createStore,
+  useAppStore
+};

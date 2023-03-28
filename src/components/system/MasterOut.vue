@@ -104,7 +104,7 @@
         this.out2.gain.linearRampToValueAtTime(g, this.context.currentTime + 0.1);
       },
 
-      determinePosition(e) {
+      determinePosition() {
         const x = this.modulesRef.scrollLeft +               // scroll offset +
                   this.$el.getBoundingClientRect().left;  // viewport offset
         const y = this.$el.offsetTop;                     // relative to parent

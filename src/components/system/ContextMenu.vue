@@ -30,7 +30,6 @@
 
 
 <script lang="ts">
-  import { EVENT } from '@/events';
   import * as Modules from '@/components';
   import { useAppStore } from '@/stores/app';
 

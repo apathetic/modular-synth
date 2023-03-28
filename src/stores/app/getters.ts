@@ -18,19 +18,19 @@ export function patch (state: AppState): Patch | undefined {
   return p;
 }
 
-export function modules (state): Module[] | undefined {
+export function modules (this: any): Module[] | undefined {
   return this.patch.modules;
 }
 
 // export const module = (state) => {
 export function activeModule (state): Module | undefined {
-  return this.modules.find((module) => module.id === state.activeId);
+  return state.modules.find((module) => module.id === state.activeId);
 }
 export function active (state): Module | undefined {
-  return this.modules.find((module) => module.id === state.activeId);
+  return state.modules.find((module) => module.id === state.activeId);
 }
 export function focused (state): Module | undefined {
-  return this.modules.find((module) => module.id === state.focusedId);
+  return state.modules.find((module) => module.id === state.focusedId);
 }
 
 
