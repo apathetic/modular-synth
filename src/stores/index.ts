@@ -1,7 +1,7 @@
 import { watch, type App } from 'vue';
 import { createPinia } from 'pinia';
 import { useAppStore } from './app';
-import type { AppState } from '@/types';
+import type { App as Application } from 'vue';
 
 
 const debounce = (fn: Function, delay: number) => {
@@ -22,12 +22,13 @@ const persistState = debounce((state) => {
 }, 2000);
 
 
-const createStore = (app) => {
+const createStore = (app: Application) => {
   const pinia = createPinia();
 
   watch(pinia.state, persistState, { deep: true });
   app.use(pinia);
-}
+};
+
 
 export {
   createStore,

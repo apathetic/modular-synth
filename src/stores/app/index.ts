@@ -45,6 +45,7 @@ const state = () => <AppState>{
 const useAppStore = defineStore('app', {
   state,
   getters,
+  // actions,
   actions: { ...actions }, // actions
 });
 

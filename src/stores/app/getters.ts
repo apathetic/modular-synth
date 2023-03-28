@@ -18,12 +18,12 @@ export function patch (state: AppState): Patch | undefined {
   return p;
 }
 
-export function modules (this: any): Module[] | undefined {
-  return this.patch.modules;
+export function modules (state: any): Module[] | undefined {
+  return state.patch.modules;
 }
 
 // export const module = (state) => {
-export function activeModule (state): Module | undefined {
+export function activeModule (state: any): Module | undefined {
   return state.modules.find((module) => module.id === state.activeId);
 }
 export function active (state): Module | undefined {
@@ -36,24 +36,24 @@ export function focused (state): Module | undefined {
 
 export function getModule (state): Function {
   return (id: number): Module | undefined => (
-    state.patch?.modules.find((m) => m.id === id)
+    state.patch?.modules.find((m: Module) => m.id === id)
   );
 }
 
 export function connections (state): Connection[] {
-  return this.patch.connections;
+  return state.patch.connections;
 }
 
 export function configs (state): Config[] {
-  return this.patch.configs;
+  return state.patch.configs;
 }
 
 export function config (state): Config | undefined {
-  return this.configs[this.configId];
+  return state.configs[state.configId];
 }
 
 export function parameters (state): Parameters {
-  return this.config.parameters;
+  return state.config.parameters;
 }
 
 
@@ -71,15 +71,9 @@ export function isAuthenticated (state): Boolean {
 
 
 
-
-// export function parametersName (state: PatchState) {
-//   return this.config?.name || '';
-// }
-
 export const node = (state: AppState) => (id: number): Node => state.registry[id];
 export const getNode = (state: AppState) => (id: number): Node => state.registry[id];
-// export const node = (state: AppState) => this.modules[id].node;
 
 export function bounds (state) {
-  return this.modules.reduce((max, module) => Math.max(max, module.x), 0);
+  return state.modules.reduce((max, module) => Math.max(max, module.x), 0);
 }

@@ -7,12 +7,9 @@
     <div class="module-interface">
       <Knob param="freq" @value="freq = $event" :min="100" :max="12000" mode="log"></Knob>
       <Knob param="Q"    @value="Q = $event"    :min="0"   :max="1" :precision="2"></Knob>
-      <select class="select" @mousedown.stop v-model="type">
-        <option v-for="type in types" :value="type">{{ type }}</option>
-      </select>
+      <Dropdown param="type" @value="type = $event" :options="types"></Dropdown>
 
-      // <Dropdown param="type"   @value="type = $event"     :options="types"></Dropdown>
-
+      <canvas ref="canvas"></canvas>
     </div>
 
     <div class="module-connections">

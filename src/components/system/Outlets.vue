@@ -14,9 +14,13 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { useConnection } from '@/composables';
+  import type { Outlet } from '@/types';
 
   export default defineComponent({
-    props: { ports: Array, id: Number },
+    props: {
+      ports: Array<Outlet>,
+      id: Number
+    },
     setup() {
       const { startConnecting } = useConnection();
       return { startConnecting };

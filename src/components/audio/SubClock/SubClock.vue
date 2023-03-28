@@ -1,16 +1,18 @@
-<template></template>
+<template>
+  <div>subclock</div>
+</template>
+
 
 <script lang="ts">
-  import Knob from './UI/Knob';
-  import Slider from './UI/Slider';
+  import { defineComponent } from 'vue';
 
-  export default {
-    components: { Dropdown, Knob, Slider },
+  export default defineComponent({
     props: {
       id: null
     }
-  };
+  });
 </script>
+
 
 <style lang="scss">
 </style>
