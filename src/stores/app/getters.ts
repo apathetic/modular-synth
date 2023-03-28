@@ -12,13 +12,14 @@ import type { AppState, Patch, Config, Connection, Parameters, Module, Node } fr
  */
 
 // THERE MUST ALWAYS BE A PATCH.
-export function patch (state: AppState): Patch | undefined {
+export function patch (state: AppState): Patch {
   const p = state.patches[state.patchId];
   if (!p) { throw new Error('fatal: there is no patch'); }
   return p;
 }
 
-export function modules (state: any): Module[] | undefined {
+// THERE WILL ALWAYS BE AT LEAST ONE MODULE: masterout
+export function modules (state: any): Module[] {
   return state.patch.modules;
 }
 

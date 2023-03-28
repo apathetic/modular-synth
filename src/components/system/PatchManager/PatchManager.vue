@@ -91,7 +91,7 @@
         currentConfigId.value = configs.value.length - 1; // load it (via watch) and select it.
       }
 
-      function removeConfig(id) {
+      function removeConfig() {
         const confirm = window.confirm('Delete ' + currentConfigName.value + '?');
 
         if (configs.value.length <= 1 || !confirm) { return; }

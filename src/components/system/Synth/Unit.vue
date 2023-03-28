@@ -30,7 +30,7 @@
 
 
 <script lang="ts">
-  import { defineComponent, computed, ref, watch, onMounted, onBeforeUnmount, onErrorCaptured } from 'vue';
+  import { defineComponent, computed, ref, onMounted, onBeforeUnmount, onErrorCaptured } from 'vue';
   import { rackWidth, rackHeight, moduleSize } from '@/constants';
   import { useDraggable } from '@/composables';
   import { useAppStore } from '@/stores/app';
@@ -82,7 +82,7 @@
         // `modules` are already tracked... but they're JSON.
         // We want to track all INSTANTIATED web audio nodes
         // This is possible only after the module has rendered
-        store.addToRegistry({ id, node: node.value, coords });
+        store.addToRegistry({ id, node: node.value });
       });
 
       onBeforeUnmount(() => {
