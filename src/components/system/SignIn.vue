@@ -27,7 +27,8 @@
   </div>
 </template>
 
-<script>
+
+<script lang="ts">
 import Modal from './Modal';
 import { auth } from '@/utils/firebase';
 

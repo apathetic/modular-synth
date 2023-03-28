@@ -21,7 +21,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { EVENT } from '@/events';
   import { useEventBus } from '@/composables';
   import xx from './worker';

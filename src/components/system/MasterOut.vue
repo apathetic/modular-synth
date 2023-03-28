@@ -25,7 +25,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { mapState, mapActions } from 'pinia';
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';

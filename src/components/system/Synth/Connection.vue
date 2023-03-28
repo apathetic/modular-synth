@@ -49,7 +49,7 @@ THOUGHTS:
 </template>
 
 
-<script>
+<script lang="ts">
   import { defineComponent, computed, ref, toRefs, watch, onUnmounted } from 'vue';
   // import { mapState } from 'pinia';
   import { useAppStore } from '@/stores/app';

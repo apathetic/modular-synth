@@ -34,7 +34,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { defineComponent, ref, computed, watch, onMounted } from 'vue';
   import { useAppStore } from '@/stores/app';
   import { useSortable } from '@/composables';

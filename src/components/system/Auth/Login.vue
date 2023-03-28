@@ -1,26 +1,37 @@
-<script setup>
-  import { ref } from 'vue'
+<script lang="ts">
+  import { defineComponent, ref } from 'vue';
   import { auth } from '@/utils/supabase';
 
-  const loading = ref(false)
-  const email = ref('')
+  export default defineComponent({
+    name: 'Login',
+    setup() {
+      const loading = ref(false)
+      const email = ref('')
 
-  const handleLogin = async () => {
-    try {
-      loading.value = true
-      const { error } = await auth.signInWithOtp({
-        email: email.value,
-      })
-      if (error) throw error
-      alert('Check your email for the login link!')
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message)
-      }
-    } finally {
-      loading.value = false
+      const handleLogin = async () => {
+        try {
+          loading.value = true
+          const { error } = await auth.signInWithOtp({
+            email: email.value,
+          })
+          if (error) throw error
+          alert('Check your email for the login link!')
+        } catch (error) {
+          if (error instanceof Error) {
+            alert(error.message)
+          }
+        } finally {
+          loading.value = false
+        }
+      };
+
+      return {
+        loading,
+        email,
+        handleLogin
+      };
     }
-  }
+  });
 </script>
 
 

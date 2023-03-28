@@ -9,7 +9,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 </template>
 
 
-<script>
+<script lang="ts">
   // import { mapGetters } from 'vuex';
   import { mapState } from 'pinia';
   import { useAppStore } from '@/stores/app';

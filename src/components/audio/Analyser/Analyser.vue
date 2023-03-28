@@ -15,7 +15,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { defineComponent, inject, ref, watch, onMounted, onUnmounted } from 'vue';
   import { useAppStore } from '@/stores/app';
 
@@ -57,8 +57,6 @@
         if (isOn) {
           loop();
         } else {
-          // set buffer to 0 and update display
-          // buffer.forEach(sample => sample = 0);
           visualizer.clearRect(0, 0, canvasWidth, canvasHeight);
         }
       });
@@ -125,7 +123,7 @@
 
           ticking = !ticking;
 
-          window.requestAnimationFrame(loop);  // .bind(this)
+          window.requestAnimationFrame(loop);
         }
       }
 

@@ -9,7 +9,9 @@
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
-    "test": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --component'",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.json --composite false",
+    "test:e2e": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --component'",
     "test:unit": "vitest --environment jsdom --root src/",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },

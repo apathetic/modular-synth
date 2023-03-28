@@ -10,7 +10,8 @@
   </div>
 </template>
 
-<script>
+
+<script lang="ts">
   import { defineComponent } from 'vue';
   import { useConnection } from '@/composables';
 

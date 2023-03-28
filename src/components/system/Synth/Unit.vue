@@ -29,7 +29,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { defineComponent, computed, ref, watch, onMounted, onBeforeUnmount, onErrorCaptured } from 'vue';
   import { rackWidth, rackHeight, moduleSize } from '@/constants';
   import { useDraggable } from '@/composables';

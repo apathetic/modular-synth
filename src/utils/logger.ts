@@ -1,6 +1,11 @@
+interface LogProps {
+  type: string;
+  action: string;
+  data?: any;
+}
 
 
-export function log({ type, action, data = '' }) {
+export function log({ type, action, data = '' }: LogProps) {
 
 	switch (type) {
 		case 'error':

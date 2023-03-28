@@ -11,7 +11,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { watch } from 'vue';
   import { useConnection } from '@/composables';
   import { useAppStore } from '@/stores/app';

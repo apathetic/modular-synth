@@ -1,6 +1,6 @@
 <template></template>
 
-<script>
+<script lang="ts">
   import Knob from './UI/Knob';
   import Slider from './UI/Slider';
 

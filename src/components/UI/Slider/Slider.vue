@@ -6,7 +6,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { defineComponent, computed, ref, watchEffect } from 'vue';
   import { getCurrentInstance } from 'vue';
   import { useParameter } from '@/composables';

@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import { ref } from 'vue';
   // import { supabase } from '../supabase';
   import { auth } from '@/utils/supabase';

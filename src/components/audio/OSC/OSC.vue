@@ -21,7 +21,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { Parameter } from '@/audio';
 
   export default {

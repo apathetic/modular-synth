@@ -17,7 +17,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   // import Knob from './UI/Knob';
 
   export default {

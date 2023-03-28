@@ -23,8 +23,8 @@ is a "freq" parameter in the parent Component.
 </template>
 
 
-<script>
-  import { defineComponent, computed, watchEffect, ref, onMounted } from 'vue';
+<script lang="ts">
+  import { defineComponent, watchEffect, ref, onMounted } from 'vue';
   import { getCurrentInstance } from 'vue';
   import { useParameter } from '@/composables';
 

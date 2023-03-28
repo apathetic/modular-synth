@@ -13,8 +13,8 @@
 </template>
 
 
-<script>
-  import { defineComponent, ref } from 'vue';
+<script lang="ts">
+  import { defineComponent } from 'vue';
   export default defineComponent({
     props: {
       isOpen: Boolean,

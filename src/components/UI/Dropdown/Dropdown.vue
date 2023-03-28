@@ -16,7 +16,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { defineComponent, ref, watchEffect, getCurrentInstance, onUnmounted } from 'vue';
   import { useAppStore } from '@/stores/app';
   // import { useParameter } from '@/composables';
@@ -103,6 +103,7 @@
   .dropdown {
     list-style: none;
     width: 7em;
+    z-index: 100;
 
     &:not(.active) li {
       display: none;

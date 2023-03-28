@@ -22,8 +22,9 @@
   </div>
 </template>
 
-<script>
-  import { defineComponent, inject, ref, watch } from 'vue';
+
+<script lang="ts">
+  import { defineComponent, inject, ref, watch, onMounted, onUnmounted } from 'vue';
   import { Parameter } from '@/audio';
 
   export default defineComponent({

@@ -60,7 +60,7 @@
 </template>
 
 
-<script type="ts">
+<script lang="ts">
   import { defineComponent, ref, computed } from 'vue';
   import { useAppStore } from '@/stores/app';
   import { auth } from '@/utils/supabase';
@@ -71,6 +71,7 @@
   import masterOut from '@/components/system/MasterOut.vue';
   import patchManager from '@/components/system/PatchManager';
   import contextMenu from '@/components/system/ContextMenu.vue';
+  import type { Module } from '@/types';
 
   export default defineComponent({
     name: 'App',
@@ -157,7 +158,7 @@
       return {
         power: computed(() => store.power),
         patch: computed(() => store.patch),
-        modules: computed(() => store.modules.filter((m) => m.id !== 0)),
+        modules: computed(() => store.modules.filter((m: Module) => m.id !== 0)),
         isEditing: computed(() => store.isEditing),
         connections: computed(() => store.connections),
         activeModule: computed(() => store.activeModule),

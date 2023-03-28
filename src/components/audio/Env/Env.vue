@@ -19,7 +19,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
   import { signal } from '@/audio';
 
   export default {
