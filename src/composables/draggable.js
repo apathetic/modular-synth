@@ -22,7 +22,6 @@ const dragObj = {
 export function useDraggable(coords) {
   const { startSorting, whileSorting, stopSorting } = useSortable();
   const store = useAppStore();
-  const isEditing = computed(() => store.isEditing);
   const isDragging = ref(false);
 
   function startDragging(event, element) {
