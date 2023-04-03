@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";

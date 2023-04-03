@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { moduleSize } from '../../constants';
 
 // -----------------------------------------------

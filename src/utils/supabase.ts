@@ -1,6 +1,8 @@
 // import { supabase } from './supabase'
 import { createClient } from '@supabase/supabase-js'
+import { blank } from '@/stores/app';
 import { URL, PUBLIC_KEY } from '../../supabase.config.js';
+import type { Patch } from '@/types';
 
 const supabase = createClient(URL, PUBLIC_KEY);
 
@@ -51,7 +53,7 @@ export const fetch = async () => {
   return data;
 };
 
-export const create = async (data) => {
+export const create = async (data: Patch) => {
   const { error } = await supabase
     .from('patches')
     .insert(data);
@@ -60,7 +62,7 @@ export const create = async (data) => {
   return true;
 };
 
-export const save = async ({ id, ...data }) => {
+export const save = async ({ id, ...data }: Patch) => {
   const { error } = await supabase
     .from('patches')
     .update(data)
@@ -69,7 +71,7 @@ export const save = async ({ id, ...data }) => {
 };
 
 /* */
-export const remove = async (id) => {
+export const remove = async (id: string) => {
   const { error } = await supabase
     .from('patches')
     .delete()
@@ -78,7 +80,7 @@ export const remove = async (id) => {
 /**/
 
 // ie sync all patches
-export const update = async (data) => {
+export const update = async (data: Patch) => {
   const { error } = await supabase
     .from('patches')
     .upsert(data);
@@ -95,10 +97,12 @@ export const update = async (data) => {
  * is important because everywhere else in the App we assume that
  * these fields are present -- and Firebase does _not_ store empty
  * values / arrays, etc. All data checks happen only here.
- * @param  {Object} patches The Object of the user's patches.
- * @return {Object) The patches Object, with any data-corrections made.
+ * @param  {Patch[]} patches The Object of the user's patches.
+ * @return {Patch[]) The patches Object, with any data-corrections made.
  */
-export function validateData(patches) {
+export function validateData(patches: Patch[]) {
+  const DEFAULT = blank();
+
   for (const key in patches) {
     if (!patches.hasOwnProperty(key)) { continue; }
 
@@ -111,19 +115,19 @@ export function validateData(patches) {
 
     if (patch.id === undefined) {
       console.warn('Patch "%s" missing id. Fixing...', patch.name);
-      patch.id = DEFAULT.id;
+      patch.id = DEFAULT.id; // note: should autogenerate a UUID, here
     }
 
-    if (!patch.parameterSets) {
-      console.warn('Patch "%s" missing parameterSets. Fixing...', patch.name);
-      patch.parameterSets = DEFAULT.parameterSets;
+    if (!patch.configs) {
+      console.warn('Patch "%s" missing configs. Fixing...', patch.name);
+      patch.configs = DEFAULT.configs;
     }
 
-    patch.parameterSets.forEach((set) => {
+    patch.configs.forEach((set) => {
       set.name = set.name || '<missing>';
       if (!set.parameters) {
         console.warn('Patch "%s" missing parameters in "%s". Fixing...', patch.name, set.name);
-        set.parameters = DEFAULT.parameterSets[0].parameters;
+        set.parameters = DEFAULT.configs[0].parameters;
       }
     });
 
