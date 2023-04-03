@@ -9,7 +9,7 @@
       <Knob param="wet"      @value="wet = $event"      :min="0"  :max="1"   :precision="2"></Knob>
       <Knob param="dry"      @value="dry = $event"      :min="0"  :max="1"   :precision="2"></Knob>
       <Knob param="feedback" @value="feedback = $event" :min="0"  :max="0.9" :precision="2"></Knob>
-      <Knob param="cut"      @value="cut = $event"      :min="20" :max="20000"></Knob>
+      <Knob param="cut"      @value="cutoff = $event"   :min="20" :max="20000"></Knob>
     </div>
 
     <div class="module-connections">

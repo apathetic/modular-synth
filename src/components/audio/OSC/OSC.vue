@@ -22,11 +22,12 @@
 
 
 <script lang="ts">
+  import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
   import { Parameter } from '@/audio';
 
-  export default {
-    // name: 'Osc',
-    inject: [ 'context' ],
+  export default defineComponent({
+    name: 'OSC',
+    // inject: [ 'context' ],
     props: {
       id: {
         default: undefined,
@@ -34,134 +35,130 @@
       }
     },
 
-    data() {
-      return {
-        name: 'OSC',
+    setup (props, { expose }) {
+      const context: AudioContext = inject('context');
+      const types: OscillatorType[] = ['sine', 'sawtooth', 'triangle', 'square']; // ==> 'pulse' instead
+      const type = ref(types[0]);
 
-        freq: 440,
-        mod: 0,
-        PW: 0,
-        phase: 0,
-        detune: 0,
-        type: 'sine',
-        types: ['sine', 'sawtooth', 'triangle', 'square'], // ==> 'pulse' instead
+      const freq = ref(440);
+      const mod = ref(0);
+      const PW = ref(0);
+      const phase = ref(0);
+      const detune = ref(0);
 
-        inlets: [
-          { label: 'freq',
-            desc: 'The frequency of the Oscillator. [a-rate / k-rate]'
-          },
-          { label: 'mod',
-            desc: 'Modulation input, ie. LFO or similar. Depth is controlled via the slider'
-          },
-          { label: 'detune',
-            desc: 'Detune the oscillator frequency, similar to bend'
-          },
-          { label: 'pulse',
-            desc: 'Pulse width modulation. [0 - 1]'
-          }
-        ],
-
-        outlets: [
-          { label: 'output',
-            desc: 'Audio output' }
-        ]
-      };
-    },
-
-    created() {
       // Oscillator
-      this.osc_ = this.context.createOscillator();
-      this.osc_.frequency.value = this.freq;
-      this.osc_.type = this.type;
+      const osc = context.createOscillator();
+      osc.frequency.value = freq.value;
+      osc.type = type.value;
 
       // Modulation depth
-      // this.modDepth_ = new Parameter(0);
-      this.modDepth_ = this.context.createGain();
-      this.modDepth_.gain.value = 0;
-      this.modDepth_.connect(this.osc_.detune);      // input connects to audioParam (freq) "mod"
+      // modDepth = new Parameter(0);
+      const modDepth = context.createGain();
+      modDepth.gain.value = 0;
+      modDepth.connect(osc.detune);      // input connects to audioParam (freq) "mod"
 
       // Pulse width
-      this.pulse_ = new Parameter(0);
+      const pulse = new Parameter(0);
 
-      // Inlets
-      this.inlets[0].data = this.setFreq;             // NOTE: if the input is a k-rate control, we connect it here...
-      this.inlets[1].audio = this.modDepth_;
-      this.inlets[2].data = this.setDetune;
-      this.inlets[3].audio = this.pulse_.input;
 
-      // Outlets
-      this.outlets[0].audio = this.osc_;
+      const inlets = [
+        {
+          label: 'freq',
+          desc: 'The frequency of the Oscillator. [a-rate / k-rate]',
+          data: setFreq,
+        },
+        {
+          label: 'mod',
+          desc: 'Modulation input, ie. LFO or similar. Depth is controlled via the slider',
+          audio: modDepth,
+        },
+        {
+          label: 'detune',
+          desc: 'Detune the oscillator frequency, similar to bend',
+          data: setDetune,
+        },
+        {
+          label: 'pulse',
+          desc: 'Pulse width modulation. [0 - 1]',
+          audio: pulse.input,
+        }
+      ];
+
+      const outlets = [
+        {
+          label: 'output',
+          desc: 'Audio output',
+          audio: osc,
+        }
+      ];
 
       // Map k-Params
-      this.$watch('freq', this.setFreq);
-      this.$watch('type', this.setType);
-      this.$watch('PW', this.setPulse);
-      this.$watch('mod', this.setDepth);
+      watch(freq, setFreq);
+      watch(type, setType);
+      watch(PW, setPulse);
+      watch(mod, setDepth);
 
-      this.osc_.start();
-    },
+      osc.start();
 
-    unmounted() {
-      this.pulse_.destroy();
-      this.osc_.stop();
-      this.osc_.disconnect(); // this is done in Connection
-      this.modDepth_.disconnect();
-    },
+      onUnmounted(() => {
+        pulse.destroy();
+        osc.stop();
+        // osc.disconnect(); // this is done in Connection
+        modDepth.disconnect();
+      });
 
-    methods: {
+
       /**
        * k-rate control of the Oscillator frequency.
        * TODO: this should set a `base` modification frequency, around which an
        * A-rate parameter may apply modulations.
-       * @param  {Float} f frequency
+       * @param {number} f frequency
        */
-      setFreq(f) {
+      function setFreq(f: number) {
         if (f < 1) { return; } // no DC
-        // this.osc_.cancelScheduledValues();
+        // osc.cancelScheduledValues();
 
-        this.osc_.frequency.exponentialRampToValueAtTime(f, this.context.currentTime + 0.01); // 10ms
-        this.freq = f; // updates knob display
-      },
+        osc.frequency.exponentialRampToValueAtTime(f, context.currentTime + 0.01); // 10ms
+        freq.value = f; // updates knob display
+      }
 
       /**
        * Update wave type
-       * @param  {String} t One of the pre-defined oscillator wave types
+       * @param {OscillatorType} t One of the pre-defined oscillator wave types
        */
-      setType(t) {
-        this.osc_.type = t;
-      },
+      function setType(t: OscillatorType) {
+        osc.type = t;
+      }
 
       /**
        * Update Modulation depth. Range is from 0 to 500 cents.
-       * @param {Float} d Depth, between 0 and 100.
+       * @param {number} d Depth, between 0 and 100.
        */
-      setDepth(d) {
-        const currentFreq = this.osc_.frequency.value;
+      function setDepth(d: number) {
+        const currentFreq = osc.frequency.value;
         const cents = d * 5; // 0 -> 500 cents
-        const freq = currentFreq * Math.pow(2, cents / 1200);
+        // const freq = currentFreq * Math.pow(2, cents / 1200);
         // const depth = currentFreq * d / 100.0;
 
-        this.modDepth_.gain.value = d; // freq - currentFreq;
-      },
+        modDepth.gain.value = d; // freq - currentFreq;
+      }
 
       /**
        * Update Oscillator detune
-       * @param  {Float} d Detune, between 0 and 1.
+       * @param {number} d Detune, between 0 and 1.
        */
-      setDetune(d) {
-        console.log(d);
-        const currentFreq = this.osc_.frequency.value;
+      function setDetune(d: number) {
+        const currentFreq = osc.frequency.value;
         const freq = currentFreq * Math.pow(2, d);
-
-      },
+      }
 
       /**
        * Update Oscillator Pulse width
-       * @param  {Float} p  Pulse, between 0 and 1.
+       * @param {float} p  Pulse, between 0 and 1.
        */
-      setPulse(p) {
-        this.pulse_.input = this.PW = p;
-      },
+      function setPulse(p: number) {
+        pulse.input = PW.value = p;
+      }
 
       /**
        * The phase of the oscillator in degrees.
@@ -170,20 +167,39 @@
        * @example
        * osc.phase = 180; //flips the phase of the oscillator
        */
-      getPhase() {
-        return this._phase * (180 / Math.PI);
-      },
+      function getPhase() {
+        return phase.value * (180 / Math.PI);
+      }
 
       /**
        *
        */
-      setPhase(phase) {
-        this._phase = phase * Math.PI / 180;
+      function setPhase(phase) {
+        phase.value = phase.value * Math.PI / 180;
         // reset the type
-        this.type = this._type;
+        // type.value = ....
       }
+
+
+      // AUDIO
+      expose({
+        inlets,
+        outlets
+      });
+
+      // UI
+      return {
+        inlets,
+        outlets,
+        type,
+        types,
+        mod,
+        freq,
+        PW,
+        detune,
+      };
     }
-  };
+  });
 </script>
 
 

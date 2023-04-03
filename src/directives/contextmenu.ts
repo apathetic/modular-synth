@@ -8,7 +8,7 @@ import type { Directive } from 'vue';
 export default {
   name: 'contextmenu', // used when registering. Will become `v-contextmenu` in practice
 
-  inserted(el) {
+  inserted(el: HTMLElement) {
     el.focus();
   },
 
