@@ -23,10 +23,22 @@ const constants: Constants = {};  // memoize this shizz??
 
 /**
  * Generate a constant stream of 1's (or given value) at the audio-rate.
- * @param value The value, between 0 and 1, to generate.
- * @type {object}
+ * @param value The value to generate.
+ * @returns {ConstantSourceNode}
  */
 export function signal(value: number = 1) {
+  const source = context.createConstantSource();
+
+  const setValue = (value: number) => source.offset.value = value;
+  setValue(value);
+
+  return source;
+  // return {
+  //   input: setValue,
+  //   output: source,
+  // }
+
+
   if (constants[value]) {
     return constants[value];
   } else {
@@ -47,7 +59,6 @@ export function signal(value: number = 1) {
     constants[value] = waveform;
 
     return waveform;
-    // return context.createConstantSource(value);  // one day
   }
 }
 

@@ -1,6 +1,6 @@
 import type { Session } from "@supabase/supabase-js";
 
-type PatchKey = uuid; // string
+type PatchKey = string; // uuid; // string
 
 export interface AppState {
   power: boolean;
@@ -81,10 +81,9 @@ export interface Config {
   parameters: Parameters;
 }
 
-export type parameterLabel = `${Module.id}-${string}`;
-export interface Parameters {
-  [parameterLabel]: string | number;
-}
+export type parameterLabel = `${Module['id']}-${string}`;
+export type Parameters = Record<parameterLabel, string|number>;
+
 
 export interface Inlet {
   // data: () => void | audio: AudioNode;
