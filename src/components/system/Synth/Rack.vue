@@ -41,6 +41,8 @@
   import Connecting from './Connecting.vue';
   import Connection from './Connection.vue';
   import Unit from './Unit.vue';
+  import type { Module, Connection as IConnection } from '@/types';
+  import type { PropType } from 'vue'
 
   export default defineComponent({
     name: 'Rack',
@@ -52,8 +54,14 @@
     },
 
     props: {
-      modules: Array,
-      connections: Array,
+      modules: {
+        type: Array as PropType<Module[]>,
+        required: true,
+      },
+      connections: {
+        type: Array as PropType<IConnection[]>,
+        required: true,
+      },
     },
 
     setup(props) {
@@ -101,12 +109,13 @@
       });
 
 
-      function setActive(id) { store.activeId = id; }
-      function clearActive() { store.activeId = undefined; }
-      function setFocus(id) { store.focusedId = id; }
-      function clearFocus() { store.focusedId = undefined; }
-      function onScroll(e) {
+      function setActive(id: number) { store.activeId = id; }
+      function clearActive()         { store.activeId = undefined; }
+      function setFocus(id:number)   { store.focusedId = id; }
+      function clearFocus()          { store.focusedId = undefined; }
+      function onScroll(e: Event) {
         if (store.editing) {
+          console.log(e);
           // store.scrollWidth = e.target.scrollLeft
         }
       }
