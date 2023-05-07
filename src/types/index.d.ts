@@ -48,12 +48,12 @@ export interface Connection {
   };
 }
 
-// Data representing the RACK module (ie. in the PATCH)
+export type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
 export interface Module {
   id: number;
-  type: string;
-  col?: number;
-  row?: number;
+  type: moduleType;
+  col: number;
+  row: number;
   w?: number;
   h?: number;
   x: number;

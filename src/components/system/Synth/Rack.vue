@@ -35,7 +35,7 @@
 
 
 <script lang="ts">
-  import { defineComponent, ref, computed, watch, onMounted } from 'vue';
+  import { defineComponent, ref, watch, onMounted } from 'vue';
   import { useAppStore } from '@/stores/app';
   import { useSortable } from '@/composables';
   import Connecting from './Connecting.vue';

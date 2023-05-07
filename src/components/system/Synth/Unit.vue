@@ -37,6 +37,8 @@
   import { log } from '@/utils/logger';
   import * as Modules from '@/components/';
   import Debugger from '@/components/test/Debugger.vue';
+  import type { Module } from '@/types';
+  import type { PropType } from 'vue'
 
   export default defineComponent({
     name: 'Unit',
@@ -48,9 +50,9 @@
 
     props: {
       module: {
-        type: Object, // as Module
-        required: true
-      }
+        type: Object as PropType<Module>,
+        required: true,
+      },
     },
 
     setup (props) {
@@ -74,8 +76,10 @@
       );
 
       // doenst need 2 b reactive:
-      const width = `_${moduleSize[type][0]}U`;
-      const tall = moduleSize[type][2] ? 'module--tall' : '';
+      // const width = `_${moduleSize[type][0]}U`;
+      // const tall = moduleSize[type][2] ? 'module--tall' : '';
+      const width = `w:${moduleSize[type][0]}U`;
+      const tall = `h:${moduleSize[type][1]}U`;
 
 
       onMounted(() => {

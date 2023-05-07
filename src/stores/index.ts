@@ -15,7 +15,7 @@ const debounce = (fn: Function, delay: number) => {
 };
 
 // persist the whole state to the local storage whenever it changes
-const persistState = debounce((state) => {
+const persistState = debounce((state: any) => {
   // ideally this woul be a watchi inside the appStore
   localStorage.setItem('patches', JSON.stringify(state.app.patches));
 	console.log('saving...');

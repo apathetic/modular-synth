@@ -1,7 +1,7 @@
 @import 'variables.scss';
 
 /* --------------------------------
-   Module
+  Module
 --------------------------------- */
 
 .module {
@@ -16,9 +16,9 @@
   transition-timing-function: ease-in-out;
   z-index: 1;
 
-  &--tall {
-    height: 112px;
-  }
+  // &--tall {
+    height: 112px; // in `edit` mode
+  // }
 
   &:hover {
     filter: brightness(1.2);
@@ -140,10 +140,13 @@
       display: none;
     }
 
-    &._1U { width: calc(var(--rackWidth) * 1); }
-    &._2U { width: calc(var(--rackWidth) * 2); }
-    &._3U { width: calc(var(--rackWidth) * 3); }
-    &._4U { width: calc(var(--rackWidth) * 4); }
-    &._6U { width: calc(var(--rackWidth) * 6); }
+    &.h\:1U { height: calc(var(--rackHeight) * 1); }
+    &.h\:2U { height: calc(var(--rackHeight) * 2); }
+
+    &.w\:1U { width: calc(var(--rackWidth) * 1); }
+    &.w\:2U { width: calc(var(--rackWidth) * 2); }
+    &.w\:3U { width: calc(var(--rackWidth) * 3); }
+    &.w\:4U { width: calc(var(--rackWidth) * 4); }
+    &.w\:6U { width: calc(var(--rackWidth) * 6); }
   }
 }
