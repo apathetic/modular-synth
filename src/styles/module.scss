@@ -35,7 +35,8 @@
   }
 
   &.active {
-    outline: 2px solid green
+    // outline: 2px solid green
+    box-shadow: 0px 0 3px 3px greenyellow;
   }
 
   &-details {

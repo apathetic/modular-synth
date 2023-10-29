@@ -26,7 +26,7 @@
   import { useEventBus } from '@/composables';
   import xx from './worker';
 
-  const noteNames = [];
+  const noteNames: String[] = [];
   const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
   for (let i = 0; i < 127; i++) {
@@ -72,6 +72,7 @@
 
       const bus = useEventBus('midi');
 
+      // call `unsubscribe` to stop listening for events
       const unsubscribe = bus.on((event, ...payload) => {
         console.log(`news: ${event}`, payload);
 
@@ -155,11 +156,18 @@
     },
 
     unmounted() {
-      this.$bus.$off(EVENT.MIDI_NOTEON, this.noteOn);
-      this.$bus.$off(EVENT.MIDI_NOTEOFF, this.noteOff);
-      this.$bus.$off(EVENT.MIDI_CONTROLLER, this.controller);
-      this.$bus.$off(EVENT.MIDI_PITCH, this.pitchWheel);
-      this.$bus.$off(EVENT.MIDI_POLY, this.polyPressure);
+      // this.$bus.$off(EVENT.MIDI_NOTEON, this.noteOn);
+      // this.$bus.$off(EVENT.MIDI_NOTEOFF, this.noteOff);
+      // this.$bus.$off(EVENT.MIDI_CONTROLLER, this.controller);
+      // this.$bus.$off(EVENT.MIDI_PITCH, this.pitchWheel);
+      // this.$bus.$off(EVENT.MIDI_POLY, this.polyPressure);
+
+
+      // for now: (note: NOT NECESSARY after conferting to setup() as things register are automatically remove in setup()
+      const bus = useEventBus('midi');
+      // this clears all listeners. It's fine, we're _only_ doing this for MIDI
+      bus.reset();
+
 
       window.removeEventListener(EVENT.KEY_DOWN, this.keydown);
       window.removeEventListener(EVENT.KEY_UP, this.keyup);
@@ -168,10 +176,10 @@
     methods: {
       /**
        * [noteOn description]
-       * @param  {[type]} note     Midi note.
-       * @param  {[type]} velocity Midi velocity beteen 1 - 127.
+       * @param  {number} note     Midi note.
+       * @param  {number} velocity Midi velocity beteen 1 - 127.
        */
-      noteOn(note, velocity) {
+      noteOn(note:number, velocity:number) {
         this.note = note;
         this.velocity = (velocity / 127.0).toFixed(3);
         this.freq = 440 * (Math.pow(2, ((note - 69) / 12)));
@@ -179,7 +187,7 @@
         xx({ note, velocity });
       },
 
-      noteOff(note) {
+      noteOff(note: number) {
         this.note = note;
 
         if (note === this.active) {
