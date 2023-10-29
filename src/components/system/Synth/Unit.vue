@@ -58,6 +58,7 @@
     setup (props) {
       // eslint-disable-next-line vue/no-setup-props-destructure
       const { type, id } = props.module;
+      // const { type: t, id } = props.module;
       const { coords, startDragging, isDragging } = useDraggable(props.module);
       const store = useAppStore();
 

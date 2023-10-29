@@ -87,7 +87,7 @@ export default {
       this.midiIn.onmidimessage = this.onMIDIMessage;
     },
 
-    onMIDIMessage({ data }) {
+    onMIDIMessage({ data }: any) {
       const cmd = data[0] >> 4;
       const channel = data[0] & 0xf;
       const note = data[1];
@@ -97,15 +97,15 @@ export default {
       if (channel === 9) { return; }
 
       if (cmd === 8 || (cmd === 9 && velocity === 0)) { // with MIDI, note on with velocity zero is the same as note off
-        bus.emit(EVENT.MIDI_NOTEOFF, note);
+        bus.emit(EVENT.MIDI_NOTEOFF, { note });
       } else if (cmd === 9) {
-        bus.emit(EVENT.MIDI_NOTEON, note, velocity); // / 127.0);
+        bus.emit(EVENT.MIDI_NOTEON, { note, velocity }); // / 127.0);
       } else if (cmd === 11) {
-        bus.emit(EVENT.MIDI_CONTROLLER, note, velocity); // / 127.0);
+        bus.emit(EVENT.MIDI_CONTROLLER, { note, velocity }); // / 127.0);
       } else if (cmd === 14) {
-        bus.emit(EVENT.MIDI_PITCH, ((velocity * 128.0 + note) - 8192) / 8192.0);
+        bus.emit(EVENT.MIDI_PITCH, { xxx: ((velocity * 128.0 + note) - 8192) / 8192.0 });
       } else if (cmd === 10) {  // poly aftertouch
-        bus.emit(EVENT.MIDI_POLY, note, velocity); // / 127.0);
+        bus.emit(EVENT.MIDI_POLY, { note, velocity }); // / 127.0);
       } else {
         console.log('[MIDI] did not respond to:' + data[0] + ' ' + data[1] + ' ' + data[2]);
       }
