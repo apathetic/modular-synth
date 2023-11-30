@@ -1,6 +1,6 @@
 // import { supabase } from './supabase'
 import { createClient } from '@supabase/supabase-js'
-import { blank } from '@/stores/app';
+import { state as blank } from '@/stores/patch';
 import { URL, PUBLIC_KEY } from '../../supabase.config.js';
 import type { Patch } from '@/types';
 

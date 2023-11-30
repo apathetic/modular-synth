@@ -1,6 +1,6 @@
 import type { Session } from "@supabase/supabase-js";
 
-type PatchKey = string; // uuid; // string
+type PatchKey = any; // string; // uuid; // string
 
 export interface AppState {
   power: boolean;
@@ -27,7 +27,7 @@ export interface UserState {
   session: Session;
 }
 
-export interface Patch {
+export interface PatchState {
   id: string;
   i: PatchKey;
   name: string;
@@ -35,6 +35,7 @@ export interface Patch {
   connections: Connection[];
   configs: Config[];
 }
+export type Patch = PatchState;
 
 export interface Connection {
   id: number;
@@ -49,7 +50,9 @@ export interface Connection {
 }
 
 export type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
-export interface Module {
+
+interface MasterOut { type: 'MasterOut', id: 0, x: 0, y: 0 }
+interface Unit {
   id: number;
   type: moduleType;
   col: number;
@@ -59,6 +62,7 @@ export interface Module {
   x: number;
   y: number;
 }
+export type Module = Unit | MasterOut;
 
 
 // Node //   Node (object with coords, webaudio inlets/outlets)

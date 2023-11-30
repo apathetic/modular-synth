@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
 import { fetch, create, save, remove, validateData } from '@/utils/supabase';
 import { moduleSize } from '@/constants';
-import { blank } from './';
+import { state as blank } from '@/stores/patch';
 
 import type { Patch, Module, Connection } from '@/types';
 

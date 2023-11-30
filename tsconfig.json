@@ -16,9 +16,6 @@
     "tests/component/index.*",
     "tests/component/commands.ts",
     "env.d.ts"
-
-  // ],
-  // "include": [
   ],
   "exclude": [
     "src/**/__tests__/*",
