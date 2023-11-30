@@ -1,4 +1,4 @@
-import PatchManager from '@/components/system/PatchManager';
+import PatchManager from '@/components/synth/PatchManager';
 import { blank } from '@/stores/app';
 // import * as composables from '@/composables';
 

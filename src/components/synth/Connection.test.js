@@ -1,9 +1,9 @@
-import Connection from './Connection.vue';
-import Connecting from './Connecting.vue';
+import Connection from './Synth/Connection.vue';
+import Connecting from './Synth/Connecting.vue';
 
 
 
-import Unit from '@/components/system/Unit.vue';  // Connection expects the audio node to be wrapped in this guy
+import Unit from '@/components/synth/Unit.vue';  // Connection expects the audio node to be wrapped in this guy
 import Node from '@/components/test/Node.vue';
 
 

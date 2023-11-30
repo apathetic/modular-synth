@@ -22,7 +22,7 @@
 
   import Login from './Login.vue';
   import Signin from './SignIn.vue';
-  import Modal from '../Modal.vue';
+  import Modal from '@/components/UI/Modal.vue';
   import { useAppStore } from '@/stores/app';
   import { mapState } from 'pinia';
 

@@ -36,7 +36,7 @@
   import { useAppStore } from '@/stores/app';
   import { log } from '@/utils/logger';
   import * as Modules from '@/components/';
-  import Debugger from '@/components/test/Debugger.vue';
+  import Debugger from '@/components/modules/Debugger.vue';
   import type { Module } from '@/types';
   import type { PropType } from 'vue'
 

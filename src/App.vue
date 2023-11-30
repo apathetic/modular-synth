@@ -65,12 +65,12 @@
   import { useAppStore } from '@/stores/app';
   import { auth } from '@/utils/supabase';
   import { log } from '@/utils/logger';
-  import midi from '@/components/system/Midi.vue';
-  import Synth from '@/components/system/Synth/';
-  import Auth from '@/components/system/Auth'; // signIn
-  import masterOut from '@/components/system/MasterOut.vue';
-  import patchManager from '@/components/system/PatchManager';
-  import contextMenu from '@/components/system/ContextMenu.vue';
+  import midi from '@/components/synth/Midi.vue';
+  import Synth from '@/components/synth/Rack.vue';
+  import Auth from '@/components/synth/Auth'; // signIn
+  import masterOut from '@/components/synth/MasterOut.vue';
+  import patchManager from '@/components/synth/PatchManager';
+  import contextMenu from '@/components/UI/ContextMenu.vue';
   import type { Module } from '@/types';
 
   export default defineComponent({

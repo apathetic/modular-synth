@@ -8,14 +8,14 @@
     },
   },
   "include": [
-  //   "src/**/*.ts",
-  //   "src/**/*.vue",
+    "src/**/*.ts",
+    "src/**/*.vue",
   //   "tests/**/*.ts",
   //   "cypress.d.ts",
   //   "cypress/**/*.ts"
     "tests/component/index.*",
     "tests/component/commands.ts",
-    "env.d.ts", "src/**/*", "src/**/*.vue"
+    "env.d.ts"
 
   // ],
   // "include": [

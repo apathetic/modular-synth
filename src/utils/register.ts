@@ -1,5 +1,5 @@
-import inlets from '@/components/system/Inlets.vue';
-import outlets from '@/components/system/Outlets.vue';
+import inlets from '@/components/synth/Inlets.vue';
+import outlets from '@/components/synth/Outlets.vue';
 
 import * as UI from '@/components/UI';
 import * as directives from '@/directives';
