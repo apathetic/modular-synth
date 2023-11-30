@@ -20,14 +20,14 @@
     />
 
     <svg id="connections" :style="width">
-      <connecting></connecting>
-      <connection v-for="connection in connections"
+      <Connecting />
+      <Connection v-for="connection in connections"
         :id="connection.id"
         :to="connection.to"
         :from="connection.from"
         :key="connection.id"
         @mousedown="setActive(connection.id)">
-      </connection>
+      </Connection>
     </svg>
 
   </div>
@@ -39,10 +39,9 @@
   import { useAppStore } from '@/stores/app';
   import { useSortable } from '@/composables';
   import Connecting from './Connecting.vue';
-  import Connection from './Connection.vue';
+  import Connect from './Connection.vue';
   import Unit from './Unit.vue';
-  import type { Module, Connection as IConnection } from '@/types';
-  import type { PropType } from 'vue'
+  import type { Module, Connection } from '@/types';
 
   export default defineComponent({
     name: 'Rack',
@@ -50,18 +49,18 @@
     components: {
       Unit,
       Connecting,
-      Connection,
+      Connection: Connect,
     },
 
     props: {
       modules: {
-        type: Array as PropType<Module[]>,
-        required: true,
+        type: Array<Module>,
+        required: true
       },
       connections: {
-        type: Array as PropType<IConnection[]>,
-        required: true,
-      },
+        type: Array<Connection>,
+        required: true
+      }
     },
 
     setup(props) {
@@ -111,11 +110,11 @@
 
       function setActive(id: number) { store.activeId = id; }
       function clearActive()         { store.activeId = undefined; }
-      function setFocus(id:number)   { store.focusedId = id; }
+      function setFocus(id: number)  { store.focusedId = id; }
       function clearFocus()          { store.focusedId = undefined; }
-      function onScroll(e: Event) {
+      function onScroll(e: Event)    {
         if (store.editing) {
-          console.log(e);
+          console.log(e.target);
           // store.scrollWidth = e.target.scrollLeft
         }
       }

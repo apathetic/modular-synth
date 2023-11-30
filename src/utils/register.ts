@@ -5,6 +5,13 @@ import * as UI from '@/components/UI';
 import * as directives from '@/directives';
 
 
+// import type { Component, Directive } from 'vue';
+// type xxx = Promise<Record<string, Component>>;
+// type yyy = Promise<Record<string, Directive>>;
+
+
+
+
 /**
  * Registers all base Vue Components/directives. Anything added to this root Vue
  * instance will be available everywhere as part of the universal bundle.
@@ -28,6 +35,10 @@ export function registerComponents(app) {
     // Vue.directive(directive.name, directive);
     app.directive(directive.name, directive);
   }
+
+  // Object.values(directives).forEach((directive: any) => {
+  //   app.directive(directive.name, directive);
+  // });
 }
 
 
