@@ -22,9 +22,10 @@
 
 
 <script lang="ts">
-  import { EVENT } from '@/events';
-  import { useEventBus } from '@/composables';
-  import xx from './worker';
+  import { defineComponent, computed, ref, onUnmounted } from 'vue';
+  import { useEventBus, useKeyboard } from '@/composables';
+  import sync from './worker';
+  // import rollover from './rollover';
 
   const noteNames: String[] = [];
   const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -37,179 +38,99 @@
     noteNames[i] = key;
   }
 
-  export default {
+  export default defineComponent({
+    name: 'NoteIn',
     props: {
       id: null
     },
 
-    computed: {
-      noteName() {
-        return noteNames[this.note] || '';
-      }
-    },
+    setup (props, { expose }) {
+      const note = ref(0);
+      const freq = ref(440);
+      const velocity = ref(0);
+      const mod = ref(0);
+      const bend = ref(0);
+      const active = ref(0);
+      const noteName = computed(() => noteNames[note.value] || '');
 
-    data() {
-      return {
-        name: 'NoteIn',
-        active: 0,
-        note: 0,
-        freq: 0,
-        velocity: 0,
-        mod: 0,
-        bend: 0,
-        outlets: [
-          { label: 'freq' },
-          // { label: 'gate' },
-          { label: 'vel' },
-          { label: 'bend' },
-          { label: 'mod' }
-        ]
-      };
-    },
 
-    created() {
-      console.warn('YOU STILL NEED T DO HIS');
+      const outlets = [
+        { label: 'freq', data: 'freq' }, // "string" of the property to connect
+        { label: 'vel', data: 'velocity' }, // for now. should be "gate" or "trigger"...
+        { label: 'bend', data: 'bend' },
+        { label: 'mod', data: 'mod' }
+      ];
+
 
       const bus = useEventBus('midi');
+      // const bus = useMidi();
+      // const bus = useOSC();
+      // const sw = useSW();
 
       // call `unsubscribe` to stop listening for events
-      const unsubscribe = bus.on((event, ...payload) => {
+      const unsubscribeMIDI = bus.on((event, ...payload) => {
         console.log(`news: ${event}`, payload);
-
-        // this.$bus.$on(EVENT.MIDI_NOTEON, this.noteOn);
-        // this.$bus.$on(EVENT.MIDI_NOTEOFF, this.noteOff);
-        // this.$bus.$on(EVENT.MIDI_CONTROLLER, this.controller);
-        // this.$bus.$on(EVENT.MIDI_PITCH, this.pitchWheel);
-        // this.$bus.$on(EVENT.MIDI_POLY, this.polyPressure);
       });
 
-      this.outlets[0].data = 'freq';      // "string" of the property to connect
-      this.outlets[1].data = 'velocity';  // for now. should be "gate" or "trigger"...
-      this.outlets[2].data = 'bend';
-      this.outlets[3].data = 'mod';
+      const unsubcribeKeys = useKeyboard({ noteOn, noteOff });
 
 
-      // navigator.serviceWorker.register('service-worker.js', {
-      //   scope: './'
-      // }).then(function(reg) {
-      //   console.log('ServiceWorker registered', reg);
-      // });
-
-      // // ONE WAY COMMUNICATION
-      // if (navigator.serviceWorker.controller) {
-      //   console.log('Sending message to service worker');
-      //   navigator.serviceWorker.controller.postMessage({
-      //     'command': 'oneWayCommunication',
-      //     'message': 'Hi, SW'
-      //   });
-      // }
-
-
-      this.keydown = (e) => {
-        switch (e.code) {
-          case 'KeyA':
-            this.noteOn(63, 127);
-            break;
-          case 'KeyS':
-            this.noteOn(65, 127);
-            break;
-          case 'KeyD':
-            this.noteOn(66, 127);
-            break;
-          case 'KeyF':
-            this.noteOn(68, 127);
-            break;
-          case 'KeyG':
-            this.noteOn(70, 127);
-            break;
-
-          default:
-            break;
-        }
-      };
-
-      this.keyup = (e) => {
-        switch (e.code) {
-          case 'KeyA':
-            this.noteOff(63);
-            break;
-          case 'KeyS':
-            this.noteOff(65);
-            break;
-          case 'KeyD':
-            this.noteOff(66);
-            break;
-          case 'KeyF':
-            this.noteOff(68);
-            break;
-          case 'KeyG':
-            this.noteOff(70);
-            break;
-
-          default:
-            break;
-        }
-      };
-
-      window.addEventListener(EVENT.KEY_DOWN, this.keydown);
-      window.addEventListener(EVENT.KEY_UP, this.keyup);
-    },
-
-    unmounted() {
-      // this.$bus.$off(EVENT.MIDI_NOTEON, this.noteOn);
-      // this.$bus.$off(EVENT.MIDI_NOTEOFF, this.noteOff);
-      // this.$bus.$off(EVENT.MIDI_CONTROLLER, this.controller);
-      // this.$bus.$off(EVENT.MIDI_PITCH, this.pitchWheel);
-      // this.$bus.$off(EVENT.MIDI_POLY, this.polyPressure);
-
-
-      // for now: (note: NOT NECESSARY after conferting to setup() as things register are automatically remove in setup()
-      const bus = useEventBus('midi');
-      // this clears all listeners. It's fine, we're _only_ doing this for MIDI
-      bus.reset();
-
-
-      window.removeEventListener(EVENT.KEY_DOWN, this.keydown);
-      window.removeEventListener(EVENT.KEY_UP, this.keyup);
-    },
-
-    methods: {
       /**
-       * [noteOn description]
-       * @param  {number} note     Midi note.
-       * @param  {number} velocity Midi velocity beteen 1 - 127.
-       */
-      noteOn(note:number, velocity:number) {
-        this.note = note;
-        this.velocity = (velocity / 127.0).toFixed(3);
-        this.freq = 440 * (Math.pow(2, ((note - 69) / 12)));
-        this.active = note;
-        xx({ note, velocity });
-      },
+      * [noteOn description]
+      * @param  {number} note     Midi note.
+      * @param  {number} velocity Midi velocity beteen 1 - 127.
+      */
+      function noteOn(n: number, v: number) {
+        note.value = n;
+        velocity.value = (v / 127.0);
+        freq.value = 440 * (Math.pow(2, ((n - 69) / 12)));
+        active.value = n;
+        sync({ note: n, velocity: v });
+      }
 
-      noteOff(note: number) {
-        this.note = note;
+      function noteOff(n: number) {
+        note.value = n;
 
-        if (note === this.active) {
-          this.active = 0;
-          this.velocity = 0;
-          xx({ note, velocity:0 });
+        if (n === active.value) {
+          active.value = 0;
+          velocity.value = 0;
+          sync({ note: n, velocity:0 });
         }
-      },
+      }
 
-      pitchWheel(bend) {
-        this.bend = +bend.toFixed(3);
-      },
+      function pitchWheel(b: number) {
+        bend.value = +b.toFixed(3);
+      }
 
-      controller(target, val) {
-        this.mod = (val / 127.0).toFixed(3);
-      },
+      function controller(target, val: number) {
+        mod.value = (val / 127.0); //.toFixed(3);
+      }
 
-      // polyPressure(note, pressure) {
+      onUnmounted(() => {
+        unsubscribeMIDI();
+        unsubcribeKeys();
+        // unsubOSC();
+        // unsubSW()
+      });
 
-      // }
+      // DATA / AUDIO
+      expose({
+        outlets
+      });
+
+      // UI
+      return {
+        outlets,
+        noteName,
+        freq,
+        velocity,
+        bend,
+        mod,
+        active
+      };
     }
-  };
+
+  });
 </script>
 
 <style lang="scss">

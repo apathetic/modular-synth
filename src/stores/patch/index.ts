@@ -22,7 +22,6 @@ const uuid = () => {
 export const state = () => <PatchState>{
   id: uuid(),
   i: 0, // keeps track of modules, augmented when new module is added. could use uuid maybe
-//   // parameterKey: 0,
   name: '<blank>',
   modules: [{ type: 'MasterOut', id: 0, x: 0, y: 0 }],
   connections: [],

@@ -2,23 +2,10 @@ import { defineStore } from 'pinia'
 import * as getters from './getters';
 import * as actions from './actions';
 import { state as blank } from '../patch';
-import type { AppState, Patch } from '@/types';
+import type { AppState } from '@/types';
 
 const patches = JSON.parse(localStorage.getItem('patches') || 'null');
 
-
-
-// const blank = () => <Patch>{
-//   id: uuid(),
-//   i: 0, // keeps track of modules, augmented when new module is added. could use uuid maybe
-//   name: '<blank>',
-//   modules: [{ type: 'MasterOut', id: 0, x: 0, y: 0 }],
-//   connections: [],
-//   configs: [{
-//     name: '<blank>',
-//     parameters: {}
-//   }]
-// };
 
 const state = () => <AppState>{
   power: false,
@@ -43,8 +30,3 @@ export const useAppStore = defineStore('app', {
   // actions,
   actions: { ...actions }, // actions
 });
-
-// export {
-//   blank,
-//   useAppStore
-// };

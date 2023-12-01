@@ -15,6 +15,9 @@
 import { EVENT } from '@/events';
 import { useEventBus } from '@/composables';
 
+// TODO: just implement UI, here, using midi composable for the logic
+
+
 export default {
   data() {
     return {

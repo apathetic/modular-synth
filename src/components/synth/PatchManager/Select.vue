@@ -4,7 +4,7 @@
 
     <select v-model="itemId" ref="itemRef">
       <option value="" disabled selected>&lt;select patch&gt;</option>
-      <option v-for="(item, key) in items" :value="key">{{ item.name }}</option>
+      <option v-for="(item, key) in items" :key="item.id" :value="key">{{ item.name }}</option>
     </select>
 
     <input type="text" v-model="itemName">
@@ -12,21 +12,44 @@
     <button class="add" @click="add">+</button>
     <button class="remove" @click="remove">-</button>
   </div>
+    <!-- <Select
+      :items="configs"
+      :itemId="currentConfigId"
+      :itemName="currentConfigName"
+      :add="addConfig"
+      :remove="removeConfig"
+    /> -->
 </template>
 
 
+
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
+  import type { ComputedRef, Ref } from 'vue';
+
+  // interface Props {
+  //   items: any[],
+  //   itemId: ComputedRef,
+  //   itemName: ComputedRef,
+  //   itemRef: Ref,
+  //   add: Function,
+  // }
 
   export default defineComponent({
     props: {
-      items: Array,
-      itemName: VueRef,
+
+  // foo: { type: String, required: true },
+
+      items: { type: Array, required: true },
+      itemId: ComputedRef,
+      itemName: ComputedRef,
+      itemRef: Ref,
       add: Function,
       remove: Function,
     },
-    setup() {
-      const itemRef = ref(null);
+    setup(props) {
+      const { items, itemId, itemName, add, remove } = props.module;
+      // const itemRef = ref(null);
 
       return {
         itemRef,

@@ -1,34 +1,24 @@
 <template>
-  <div
-    xxxx-v-contextmenu:file
-    :class="['patch-manager', {'editing': editing }]"
-  >
+  <div :class="['patch-manager', {'editing': editing }]">
 
     <div class="patch select">
       <span>0{{currentPatchId}}</span>
-
       <select v-model="currentPatchId" ref="patchRef">
         <option value="" disabled selected>&lt;select patch&gt;</option>
         <option v-for="(patch, id) in patches" :key="patch.id" :value="id">{{ patch.name }}</option>
       </select>
-
       <input type="text" v-model="currentPatchName">
-
       <button class="add" @click="addPatch">+</button>
       <button class="remove" @click="removePatch">-</button>
     </div>
 
-
     <div class="params select">
       <span>0{{currentConfigId}}</span>
-
       <select v-model="currentConfigId" ref="configRef">
         <option value="" disabled selected>&lt;select configs&gt;</option>
         <option v-for="(config, id) in configs" :key="config.id" :value="id">{{ config.name }}</option>
       </select>
-
       <input type="text" v-model="currentConfigName">
-
       <button class="add" @click="addConfig">+</button>
       <button class="remove" @click="removeConfig">-</button>
     </div>
@@ -75,8 +65,8 @@
 
       function addPatch() {
         // if (patches.length >= 9) { return; }
-        store.addPatch();    // CREATE a new blank patch...
-        currentPatchId.value = patches.value.length - 1; // ...and load it (via watch) and select it.
+        store.addPatch(); // CREATE a new blank patch and push it into patches
+        currentPatchId.value = patches.value.length - 1; // ...then select it
       }
 
       function removePatch() {
