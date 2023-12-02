@@ -1,7 +1,8 @@
 import { nextTick } from 'vue';
 // import { v4 as uuid } from 'uuid';
 import { log } from '@/utils/logger';
-import { fetch, create, save, remove, validateData } from '@/utils/supabase';
+import { fetch, create, save, remove } from '@/utils/supabase';
+import { validateData } from '@/utils/validatePatch';
 import { moduleSize } from '@/constants';
 import { state as blank } from '@/stores/patch';
 

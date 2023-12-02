@@ -2,7 +2,7 @@ import inlets from '@/components/synth/Inlets.vue';
 import outlets from '@/components/synth/Outlets.vue';
 
 import * as UI from '@/components/UI';
-import * as directives from '@/directives';
+// import * as directives from '@/directives';
 
 
 // import type { Component, Directive } from 'vue';
@@ -30,11 +30,10 @@ export function registerComponents(app) {
   }
 
   // Directives
-  for (const key in directives) {
-    const directive = directives[key];
-    // Vue.directive(directive.name, directive);
-    app.directive(directive.name, directive);
-  }
+  // for (const key in directives) {
+  //   const directive = directives[key];
+  //   app.directive(directive.name, directive);
+  // }
 
   // Object.values(directives).forEach((directive: any) => {
   //   app.directive(directive.name, directive);
