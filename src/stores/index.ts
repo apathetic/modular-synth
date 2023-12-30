@@ -18,6 +18,8 @@ const debounce = (fn: Function, delay: number) => {
 const persistState = debounce((state: any) => {
   // ideally this woul be a watchi inside the appStore
   localStorage.setItem('patches', JSON.stringify(state.app.patches));
+
+  // validatePatch(...); // ?
 	console.log('saving...');
 }, 2000);
 

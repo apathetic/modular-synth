@@ -1,4 +1,11 @@
-import type { AppState, Patch, Config, Connection, Parameters, Module, Node } from '@/types';
+import type {
+  AppState,
+  PatchState,
+  Patch,
+  Config,
+  Connection,
+  Parameters,
+  Module, Node } from '@/types';
 
 
 // -----------------------------------------------
@@ -27,7 +34,7 @@ export function modules (state: any): Module[] {
 export function activeModule (state: any): Module | undefined {
   return state.modules.find((module) => module.id === state.activeId);
 }
-export function active (state): Module | undefined {
+export function active (state: PatchState): Module | undefined {
   return state.modules.find((module) => module.id === state.activeId);
 }
 export function focused (state): Module | undefined {

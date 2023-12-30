@@ -197,12 +197,12 @@
 
       &.add {
         // top: -4px;
-        right: 2.4em;
+        right: 0.2em;
       }
 
       &.remove {
         // bottom: -4px;
-        right: 0.2em;
+        right: 2.4em;
       }
 
       &:hover {

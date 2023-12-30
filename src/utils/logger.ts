@@ -7,6 +7,14 @@ interface LogProps {
 
 export function log({ type, action, data = '' }: LogProps) {
 
+  const style = (
+    action == 'destroying' ? 'color: grey' :
+    action == 'setting' ? 'color: orange' :
+    type == 'parameter' ? 'color: lightblue' :
+    type == 'component' ? 'color: green' :
+    'color: grey'
+  );
+
 	switch (type) {
 		case 'error':
 			break;
@@ -19,21 +27,21 @@ export function log({ type, action, data = '' }: LogProps) {
       console.log('%c Patch: %s %s ', 'background:#666;color:white;font-weight:bold;', action, data);
       break;
 
-    case 'component': // green text
-      console.log('%c[component] %s %s', 'color: green', action, data);
-      break;
+    // case 'component':
+    //   console.log('%c[component] %s %s', style, action, data);
+    //   break;
 
-    case 'parameter':
-      console.log('%c[parameter] %s %s', 'color: lightblue', action, data);
-      break;
+    // case 'parameter':
+    //   console.log('%c[parameter] %s %s', style, action, data);
+    //   break;
 
-    case 'params':
-		case 'destroy':
+    // case 'params':
+		// case 'destroy':
 			// console.log('Destroying %s ', data);
       // console.log('%c[parameter] Destroying %s %s', 'color: grey', type);
 
     default:
-      console.log('%c[%s] %s %s', 'color: grey', type, action, data);
+      console.log('%c[%s] %s %s', style, type, action, data);
       break;
 	}
 }

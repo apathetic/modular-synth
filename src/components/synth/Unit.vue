@@ -92,7 +92,7 @@
 
       onBeforeUnmount(() => {
         // console.log('Destroying %s ', type);
-        log({ type:'params', action:'destroying', data:type });
+        log({ type:'component', action:'destroying', data:type });
         store.removeFromRegistry(id);
       });
 

@@ -22,6 +22,18 @@ const state = () => <AppState>{
   session: undefined,
   // authenticated: false,
   // canvasOffset: 0,    // UI stuffs
+
+  // there are referenced in actions but not defined here
+  // are the supposed to not be reactive, or what??
+  // activeModule ...?
+  // patch ???????????????? { name: sring; uuid: string; } as Patch
+  // modules: [], // ????
+  // connections
+  // config ???? { parameters: .... }
+  // configs
+  // parameters
+  //
+
 };
 
 export const useAppStore = defineStore('app', {

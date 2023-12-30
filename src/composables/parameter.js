@@ -53,7 +53,7 @@ export function useParameter(props) {
     window.removeEventListener(EVENT.MOUSE_UP, mouseup);
     window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
 
-    log({ type:'params', action:'destroying', data:str });
+    log({ type:'parameter', action:'destroying', data:str });
   });
 
 
@@ -63,7 +63,7 @@ export function useParameter(props) {
     if (value !== undefined) {
       mapped.value = value;
       normalized.value = extractValue(value);
-      log({ type:'parameter', action:`${str} set to`, data:value });
+      log({ type:'parameter', action:'setting', data:`${str} to ${value}` });
     }
   });
 
