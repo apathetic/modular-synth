@@ -27,6 +27,9 @@ import type { Patch, Module, Connection } from '@/types';
  */
 export function loadPatch(id?: number) {
   // const { resetSorting } = useSortable();
+
+  // [TODO] fix `this`; or move fns to index.js
+  // eslint-disable-next-line
   const store = this;
 
   if (id === store.patchId) return;
@@ -252,7 +255,7 @@ export function addConnection(data: Connection) {
 
 /**
  * Removes (deletes) a connection by its id.
- * @this
+ * @this {Store} Pinia Store instance.
  */
 export function removeConnection(id) {
   const { patch, connections } = this;

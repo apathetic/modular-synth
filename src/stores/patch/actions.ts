@@ -6,7 +6,6 @@
 // -----------------------------------------------
 
 export const addModule = ({ commit }, data) => {
-  debugger;
   commit('ADD_MODULE', data);
 };
 

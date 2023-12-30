@@ -135,6 +135,3 @@ describe('Connection', () => {
     });
   });
 });
-
-
-});
