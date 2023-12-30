@@ -39,7 +39,7 @@
   import { useAppStore } from '@/stores/app';
   import { useSortable } from '@/composables';
   import Connecting from './Connecting.vue';
-  import Connect from './Connection.vue';
+  import Connect from './Connection';
   import Unit from './Unit.vue';
   import type { Module, Connection } from '@/types';
 

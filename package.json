@@ -11,8 +11,8 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit -p tsconfig.json --composite false",
     "test:e2e": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --component'",
-    "test:unit": "vitest --environment jsdom --root src/",
-    "lint:es": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "test:unit": "vitest --root src/",
+    "lint:es": "pnpx eslint . --ext .vue,.js,.ts,.tsx --fix --ignore-path .gitignore",
     "lint": "oxlint"
   },
   "dependencies": {
@@ -24,11 +24,11 @@
     "vue": "^3.4.3"
   },
   "devDependencies": {
+    "@testing-library/vue": "^8.0.1",
     "@types/jsdom": "^20.0.1",
     "@vitejs/plugin-vue": "^4.6.1",
     "@vue/test-utils": "^2.4.3",
     "@vue/tsconfig": "^0.1.3",
-    "cypress": "12.6.0",
     "eslint-plugin-vue": "^9.19.2",
     "jsdom": "^20.0.3",
     "npm-run-all": "^4.1.5",
@@ -37,7 +37,7 @@
     "start-server-and-test": "^1.15.4",
     "typescript": "^4.9.5",
     "vite": "^4.5.1",
-    "vitest": "^0.25.8",
+    "vitest": "^1.1.0",
     "vue-tsc": "^1.8.27"
   },
   "postcss": {
