@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit -p tsconfig.json --composite false",
     "test:e2e": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --component'",
-    "test:unit": "vitest --root src/",
+    "test:unit": "vitest --globals --environment jsdom --root src/",
     "lint:es": "pnpx eslint . --ext .vue,.js,.ts,.tsx --fix --ignore-path .gitignore",
     "lint": "oxlint"
   },

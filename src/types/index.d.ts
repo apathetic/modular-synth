@@ -23,11 +23,11 @@ export interface AppState {
   canvasOffset?: number;
 }
 
-export interface UserState {
-  session: Session;
-}
+// export interface UserState {
+//   session: Session;
+// }
 
-export interface PatchState {
+export interface Patch {
   id: string;
   i: PatchKey;
   name: string;
@@ -35,7 +35,9 @@ export interface PatchState {
   connections: Connection[];
   configs: Config[];
 }
-export type Patch = PatchState;
+
+// for legacy types:
+export type PatchState = Patch;
 
 export interface Connection {
   id: number;
@@ -51,7 +53,6 @@ export interface Connection {
 
 export type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
 
-interface MasterOut { type: 'MasterOut', id: 0, x: 0, y: 0 }
 interface Unit {
   id: number;
   type: moduleType;
@@ -62,7 +63,15 @@ interface Unit {
   x: number;
   y: number;
 }
-export type Module = Unit | MasterOut;
+
+interface MasterOut extends Unit {
+  type: 'MasterOut',
+  id: 0,
+  x: 0,
+  y: 0;
+}
+
+export type Module = Unit; //| MasterOut;
 
 
 // Node //   Node (object with coords, webaudio inlets/outlets)
@@ -102,4 +111,17 @@ export interface Outlet {
   audio?: AudioNode;
   label?: string;
   desc?: string;
+}
+
+
+export interface MouseCoords {
+  x: number;
+  y: number;
+  // id:
+}
+
+export interface GridCoords {
+  id: number;
+  col: number;
+  row: number;
 }

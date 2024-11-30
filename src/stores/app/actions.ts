@@ -141,6 +141,7 @@ export const SET_PATCHES = (state, patches) => {
  */
 export function togglePower() { this.power = !this.power; }
 export function toggleMode() { this.isEditing = !this.isEditing; }
+
 export function setActive(id) { this.activeId = id; }
 export function clearActive() { this.activeId = undefined; }
 export function setFocus(id) { this.focusedId = id; }
@@ -229,9 +230,15 @@ export function removeModule() {
     // this.patches[this.patchKey].modules = modules;
 
     try {
-      this.patch.modules = modules;
+      // this.patch.modules = modules; // update patch modules
+      // this.modules = modules;       // don't recall what this was... Maybe RACK modules?
+      this.patch.modules = { ...modules };
       this.modules = modules;
-    } catch (e) { console.log('why', e) }
+
+
+    } catch (e) {
+      console.log('why', e)
+    }
 
     connections.forEach((connection) => {
       if (connection.to.id === activeId || connection.from.id === activeId) {
@@ -257,8 +264,9 @@ export function addConnection(data: Connection) {
  * Removes (deletes) a connection by its id.
  * @this {Store} Pinia Store instance.
  */
-export function removeConnection(id) {
-  const { patch, connections } = this;
+export const removeConnection = (id) => {
+  // export function removeConnection(id) {
+  const { patch, connections } = this as any;
   patch.connections = connections.filter((c) => c.id !== id);
 }
 

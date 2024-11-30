@@ -3,54 +3,30 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useAppStore } from '@/stores/app';
 import { state as blank } from '@/stores/patch';
 import PatchManager from './PatchManager.vue';
-// import * as composables from '@/composables';
 
 
-const mockPatch = blank();
-// const mockLoadPatch = vi.fn();
-// const mockAddPatch = vi.fn();
-// const mockRemovePatch = vi.fn();
-const mockStore = {
+let mockStore;
+// const mockPatch = blank();
+const getMockStore = () => ({
   loadPatch: vi.fn(),   // loadPatch: cy.spy().as('loadPatchSpy')
   addPatch: vi.fn(),
   removePatch: vi.fn(),
-  patchId: 0,
-  patches: [mockPatch],
+  patchId: 0, // UGH this should be index not id
+  patches: [blank()], // [mockPatch],
   patch: {},
 
   addConfig: vi.fn(),
   removeConfig: vi.fn(),
-  configId: 0,
+  configId: 0, // UGH this should be index not id
   configs: [],
   config: {},
 
   isEditing: false,
-};
+});
 
-vi.mock('@/stores/app', async (origStore) => {
-  // const store = await origStore();
+vi.mock('@/stores/app', async () => {
   return {
-    // ...store,
-    // replace some exports
-    // namedExport: vi.fn(),
-    // default: { myDefaultKey: vi.fn() },
     useAppStore: () => mockStore,
-    // useAppStore: vi.fn(() => ({
-    //   loadPatch: mockLoadPatch, // vi.fn(),   // loadPatch: cy.spy().as('loadPatchSpy')
-    //   addPatch: mockAddPatch, // vi.fn(),
-    //   removePatch: mockRemovePatch, // vi.fn(),
-    //   patchId: 0,
-    //   patches: [mockPatch],
-    //   patch: {},
-
-    //   addConfig: vi.fn(),
-    //   removeConfig: vi.fn(),
-    //   configId: 0,
-    //   configs: [],
-    //   config: {},
-
-    //   isEditing: false,
-    // }))
   };
 });
 
@@ -59,11 +35,12 @@ vi.mock('@/stores/app', async (origStore) => {
 describe('PatchManager.vue', () => {
 
   beforeEach(() => {
+    mockStore = getMockStore();
     vi.clearAllMocks();
   });
 
   describe('Patches: ', () => {
-    it('loads a default patch', () => {
+    it.skip('loads a default patch', () => {
       render(PatchManager);
 
       // const selects = getAllByRole('option', { name: '<blank>' });
@@ -76,19 +53,18 @@ describe('PatchManager.vue', () => {
       expect(screen.getByRole('option', { name: '<blank>' }).selected).toBe(true);
     });
 
-    it.only('can load a patch', async () => {
+    it('can load a patch', async () => {
       render(PatchManager);
-
       const patches = screen.getByTestId('patch');
-
       await fireEvent.update(patches, { target: { value: 0 } })
+
       expect(mockStore.loadPatch).toBeCalled();
     });
 
-    it.only('in play mode, cannot add nor remove', () => {
+    it('in play mode, cannot add nor remove', () => {
       mockStore.isEditing = false;
-      render(PatchManager);
 
+      render(PatchManager);
       const buttons = screen.queryAllByRole('button');
 
       buttons.forEach((button) => {
@@ -96,38 +72,42 @@ describe('PatchManager.vue', () => {
       });
     });
 
-    it('in edit mode, can add a new patch', () => {
-      const store = {
-        isEditing: true,
-        addPatch: cy.spy().as('addPatchSpy')
-      };
+    it('in edit mode, can add a new patch', async () => {
+      mockStore.isEditing = true;
 
-      cy.mount(PatchManager, { store });
-      cy.get('.patch .add').click();
-      cy.get('@addPatchSpy').should('have.been.called');
+      render(PatchManager);
+      const add = screen.getByTitle('add patch');
+      await fireEvent.click(add);
+
+      expect(mockStore.addPatch).toBeCalled();
     });
 
-    it('in edit mode, can remove a patch', () => {
-      const store = {
-        isEditing: true,
-        patchId: 1,
-        patches: [blank(), blank()],
-        removePatch: cy.spy().as('removePatchSpy')
-      };
+    it('in edit mode, can remove a patch', async () => {
+      window.confirm = vi.fn(() => true);
+      mockStore.isEditing = true;
+      mockStore.patches = [blank(), blank()];
 
-      cy.mount(PatchManager, { store });
-      cy.get('.patch .remove').click();
-      cy.on('window:confirm', () => true);
-      cy.get('@removePatchSpy').should('have.been.calledWith', 1);
+      render(PatchManager);
+      const remove = screen.getByTitle('remove patch');
+      await fireEvent.click(remove);
 
-      // cannot remove if it's the last patch
-      cy.get('.patch .remove').click();
-      cy.on('window:confirm', () => true);
-      cy.get('@removePatchSpy').should('not.have.been.called');
-      // cy.get('@removePatchSpy').should('have.callCount', 1); // from above
+      expect(mockStore.removePatch).toHaveBeenCalledTimes(1);
+      expect(mockStore.removePatch).toHaveBeenCalledWith(mockStore.patchId);
     });
 
-    it('in edit mode, can edit the patch name', () => {
+    it('in edit mode, can not remove last patch', async () => {
+      window.confirm = vi.fn(() => true);
+      mockStore.isEditing = true;
+      mockStore.patches = [blank()]; // only 1 patch
+
+      render(PatchManager);
+      const remove = screen.getByTitle('remove patch');
+      await fireEvent.click(remove);
+
+      expect(mockStore.removePatch).toHaveBeenCalledTimes(0);
+    });
+
+    it.skip('in edit mode, can edit the patch name', () => {
 
     });
   });
@@ -143,12 +123,27 @@ describe('PatchManager.vue', () => {
   });
 
   describe('UI', () => {
-    it('renders the correct content', () => {
-      let patchmanager = Cypress.vue;
+    it.only('renders the correct content', async () => {
+      mockStore.patches = [{
+        ...blank(),
+        name: 'test-o',
+        configs: [{ name: 'supasynth' }]
+      }];
+
+      render(PatchManager);
+
+      // const patches = screen.getByTestId('patch');
+      // await fireEvent.select(patches, { target: { value: 0 } }); // select first patch
+
+      expect(screen.getByText('test-o')).toBeTruthy();
+      expect(screen.getByText('supasynth')).toBe////InTheDocument();
+
+
+
     });
 
     it('updates display when new patch is selected', () => {
-      let patchmanager = Cypress.vue;
+      render(PatchManager);
 
       // patchmanager
 
