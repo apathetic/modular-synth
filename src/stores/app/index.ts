@@ -36,11 +36,17 @@ const patches = JSON.parse(localStorage.getItem('patches') || 'null');
 const state = () => <AppState>{
   power: false,
   isEditing: false,
-  focusedId: undefined,
+  focusedId: undefined, // todo --> hoveredId
   activeId: 0,
-
   patches: patches || [blank()],
-  patchId: 0,  // id of the active patch
+
+  // This is to prevent loading a patch on initial load. If this happens,
+  // computed getters, etc. run once, before the `loadPatch` action is called
+  // (from `PatchManager`).  This, in turn, mounts a bunch of <Connection>`s
+  // that then try to reconcile and connect to (non-existant) audio nodes.
+  patchId: -1, // 0 // id of the active patch
+
+  // todo ==> settingsId ?
   configId: 0, // id of the active parameter configuration
 
   registry: {},
@@ -61,10 +67,12 @@ export const useAppStore = defineStore('app', {
     // -----------------------------------------------
 
     patch(state): Patch {
+      // return !~state.patchId ? blank() : state.patches[state.patchId];
+
       const p = state.patches[state.patchId];
       // THERE MUST ALWAYS BE A PATCH.
-      if (!p) { throw new Error('fatal: there is no patch'); }
-      return p;
+      // if (!p) { throw new Error('fatal: there is no patch'); }
+      return p || blank();
     },
 
     modules(): Module[] {
@@ -146,11 +154,12 @@ export const useAppStore = defineStore('app', {
      * @this {Store} reference to the pinia store
      * @param {number} id The id of the patch to load
      */
-    loadPatch(id?: number) {
+    async loadPatch(id: number) {
       // const { resetSorting } = useSortable();
 
-      if (id === this.patchId) return;
-      id = id ?? this.patchId as number;
+      if (id === this.patchId) { return; }
+      // id = id ?? this.patchId as number;
+
 
       const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
       const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
@@ -163,11 +172,12 @@ export const useAppStore = defineStore('app', {
 
       // ensure AudioNodes have been instantiated before proceeding with routing
       // ensure components w/ parameters have mounted before applying parameter configs
-      nextTick(() => {
-        this.patch.connections = connections;
-        this.patch.configs = configs;
-        // resetSorting();
-      });
+      await nextTick();
+
+      this.patch.connections = connections;
+      this.patch.configs = configs;
+      // resetSorting();
+
     },
 
     /**

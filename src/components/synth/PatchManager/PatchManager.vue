@@ -60,7 +60,7 @@
       }
 
 
-      store.loadPatch();
+      store.loadPatch(0);
 
 
       return {

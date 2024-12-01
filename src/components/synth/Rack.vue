@@ -21,7 +21,8 @@
 
     <svg id="connections" :style="width">
       <Connecting />
-      <Connection v-for="connection in connections"
+      <Connection
+        v-for="connection in connections"
         :id="connection.id"
         :to="connection.to"
         :from="connection.from"
