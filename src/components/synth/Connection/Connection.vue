@@ -55,6 +55,7 @@ THOUGHTS:
   import { useAppStore } from '@/stores/app';
   import { cellWidth } from '@/constants';
   import { Parameter } from '@/audio';
+  import { log } from '@/utils/logger';
 
   export default defineComponent({
     props: {
@@ -85,6 +86,12 @@ THOUGHTS:
         return;
       }
 
+
+          const x = src.module.type;
+          const y = dest.module.type;
+      const str = `${x} ⟹ ${y}`;
+
+
       const x1 = computed(() => src.module.x + cellWidth + 3);
       const y1 = computed(() => src.module.y + (from.port * 20) + 27);
       const x2 = computed(() => dest.module.x - 3);
@@ -109,7 +116,14 @@ THOUGHTS:
             const source = outlet.audio;
             const destination = inlet.audio;
 
-            (connect) ? source.connect(destination) : source.disconnect(destination);
+            if (connect) {
+              source.connect(destination);
+              // console.log('%c[connection] %s', 'color: blue', str);
+              log({ type:'connection', action:'creating', data: str });
+            } else {
+              source.disconnect(destination);
+              log({ type:'connection', action:'destroying', data: str });
+            }
 
           } else if (outlet.data && inlet.audio) {
             // -------------------
@@ -128,6 +142,7 @@ THOUGHTS:
 
 
             interpolator.output.connect(inlet.audio);
+            console.log('%c[connection] %s', 'color: blue', str);
 
             //
           } else if (outlet.data && inlet.data) {
@@ -159,10 +174,6 @@ THOUGHTS:
             this.stroke = 'red';
             logError('Connection: mismatch (' + outType + ' ⟹ ' + destType + ')');
           }
-
-          // success message:
-          console.log('%c[connection] %s ⟹ %s', 'color: green', src.node.name, dest.node.name);
-
         } catch (e) {
           logError(e);
           removeConnection();
@@ -186,9 +197,7 @@ THOUGHTS:
 
       onUnmounted(() => {
         route(false);
-        // this.unwatch && this.unwatch();
         unwatch && unwatch();
-        console.log('removed', id);
       })
 
       route();

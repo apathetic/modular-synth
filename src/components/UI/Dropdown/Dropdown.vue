@@ -20,6 +20,7 @@
   import { defineComponent, ref, watchEffect, getCurrentInstance, onUnmounted } from 'vue';
   import { useAppStore } from '@/stores/app';
   // import { useParameter } from '@/composables';
+  import { log } from '@/utils/logger';
 
   export default defineComponent({
     name: 'Dropdown',
@@ -46,7 +47,9 @@
       // const { parameters } = storeToRefs(store);
 
       // TODO integrate w/ parameter.js
-      console.log('%c[parameter] Creating %s Dropdown', 'color: lightblue', param);
+      // console.log('%c[parameter] Creating %s Dropdown', 'color: teal', param);
+      const str = `${type} (...)`;
+      log({ type:'parameter', action:'creating', data: str });
 
       const instance = getCurrentInstance(); // gets the current component and its application context
       const parentId = instance.parent.ctx.id;
@@ -60,12 +63,14 @@
         emit('value', value);
         selected.value = options.indexOf(value);
 
-        console.log('%c[parameter] %s %s set to %s', 'color: orange', param, type, value);
+        // console.log('%c[parameter] %s %s set to %s', 'color: orange', param, type, value);
+        log({ type:'parameter', action:'setting', data:`${str} to ${value}` });
       });
 
       onUnmounted(() => {
         store.removeParameter(id);
-        console.log('%c[parameter] Destroying %s %s', 'color: grey', type, id);
+        // console.log('%c[parameter] Destroying %s %s', 'color: grey', type, id);
+        log({ type:'parameter', action:'destroying', data:str });
       });
 
       function open() {

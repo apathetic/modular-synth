@@ -37,19 +37,8 @@ export interface Patch {
 }
 
 // for legacy types:
-export type PatchState = Patch;
+// export type PatchState = Patch;
 
-export interface Connection {
-  id: number;
-  from: {
-    id: number;
-    port: number;
-  };
-  to: {
-    id: number;
-    port: number;
-  };
-}
 
 export type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
 
@@ -89,6 +78,23 @@ export interface Node {
   };
 }
 
+
+
+type Node_ = {
+    inlets?: Inlet[];
+    outlets?: Outlet[];
+}
+
+type Module_ = Unit & Node_;
+
+
+
+
+
+
+
+
+// interface Settings ?
 export interface Config {
   name: string;
   parameters: Parameters;
@@ -98,30 +104,48 @@ export type parameterLabel = `${Module['id']}-${string}`;
 export type Parameters = Record<parameterLabel, string|number>;
 
 
-export interface Inlet {
+
+export type Connection = {
+  id: number;
+  from: {
+    id: number;
+    port: number;
+  };
+  to: {
+    id: number;
+    port: number;
+  };
+};
+
+// type port = {
+export type Inlet = {
   // data: () => void | audio: AudioNode;
+  audio?: AudioNode; ///   audioNode: any; // webaudioNOde / elementary node / tone class / etc
+  data?: () => void;
+  label?: string;
+  desc?: string;
+}
+
+export type Outlet = {
   audio?: AudioNode;
   data?: () => void;
   label?: string;
   desc?: string;
 }
 
-export interface Outlet {
-  data?: () => void;
-  audio?: AudioNode;
-  label?: string;
-  desc?: string;
-}
+// export type Inlet = port;
+// export type Outlet = port;
 
 
-export interface MouseCoords {
+
+export type MouseCoords = {
   x: number;
   y: number;
   // id:
-}
+};
 
-export interface GridCoords {
+export type GridCoords = {
   id: number;
   col: number;
   row: number;
-}
+};

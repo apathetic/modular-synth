@@ -27,7 +27,7 @@
 
   export default defineComponent({
     name: 'OSC',
-    // inject: [ 'context' ],
+
     props: {
       id: {
         default: undefined,

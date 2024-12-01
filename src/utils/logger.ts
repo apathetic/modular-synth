@@ -9,9 +9,10 @@ export function log({ type, action, data = '' }: LogProps) {
 
   const style = (
     action == 'destroying' ? 'color: grey' :
-    action == 'setting' ? 'color: orange' :
-    type == 'parameter' ? 'color: lightblue' :
+    // action == 'setting' ? 'color: orange' :
     type == 'component' ? 'color: green' :
+    type == 'parameter' ? 'color: violet' :
+    type == 'connection' ? 'color: blue' :
     'color: grey'
   );
 

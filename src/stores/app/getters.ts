@@ -1,14 +1,14 @@
 import type {
   AppState,
-  PatchState,
-  UserState,
+  // PatchState,
+  // UserState,
   Patch,
   Config,
   Connection,
   Parameters,
   Module, Node } from '@/types';
 
-type State = AppState & PatchState & UserState;
+type State = AppState & Patch//& PatchState & UserState;
 
 // -----------------------------------------------
 //  SYNTH

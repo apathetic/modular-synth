@@ -73,7 +73,7 @@
   import masterOut from '@/components/synth/MasterOut.vue';
   import patchManager from '@/components/synth/PatchManager';
   import contextMenu from '@/components/UI/ContextMenu.vue';
-  import type { Module } from '@/types';
+  // import type { Module } from '@/types';
 
   export default defineComponent({
     name: 'App',

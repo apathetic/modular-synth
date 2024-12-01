@@ -128,6 +128,7 @@ export const useAppStore = defineStore('app', {
     /** deprecated. Use below */
     node: (state: AppState) => (id: number): Node => state.registry[id],
 
+    ///////////
     getNode: (state: AppState) => (id: number): Node => state.registry[id],
 
     bounds(): number {
