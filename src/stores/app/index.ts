@@ -27,11 +27,13 @@ import { moduleSize } from '@/constants';
 
 
 
+  import { usePatchStore } from '@/stores/patch';
 
 
 
 const patches = JSON.parse(localStorage.getItem('patches') || 'null');
 // validateData(patches);
+
 
 const state = () => <AppState>{
   power: false,
@@ -175,9 +177,19 @@ export const useAppStore = defineStore('app', {
       // ensure components w/ parameters have mounted before applying parameter configs
       await nextTick();
 
-      this.patch.connections = connections;
-      this.patch.configs = configs;
+      this.patches[id].connections = connections;
+      this.patches[id].configs = configs;
       // resetSorting();
+
+
+      /// ---
+      const patchStore = usePatchStore();
+      patchStore.$patch({
+        ...this.patches[id]
+      });
+
+
+
 
     },
 
@@ -248,10 +260,7 @@ export const useAppStore = defineStore('app', {
 
     togglePower() { this.power = !this.power; },
     toggleMode() { this.isEditing = !this.isEditing; },
-    setActive(id: number) { this.activeId = id; },
-    clearActive() { this.activeId = undefined; },
-    setFocus(id: number) { this.focusedId = id; },
-    clearFocus() { this.focusedId = undefined; },
+
 
 
 
@@ -261,7 +270,7 @@ export const useAppStore = defineStore('app', {
 
 
     // -----------------------------------------------
-    //  UI
+    //  PATCH
     // -----------------------------------------------
 
     updateGridPosition({ /* id, */ x, y }: MouseCoords) {
@@ -286,16 +295,10 @@ export const useAppStore = defineStore('app', {
       }
     },
 
-
-    // export const UPDATE_SCROLL_OFFSET = (state, data) => {
-    //   state.canvasOffset = data;
-    // };
-
-
-
-    // -----------------------------------------------
-    //  PATCH
-    // -----------------------------------------------
+    setActive(id: number) { this.activeId = id; },
+    clearActive() { this.activeId = undefined; },
+    setFocus(id: number) { this.focusedId = id; },
+    clearFocus() { this.focusedId = undefined; },
 
     /**
      * Adds a new module to the patch.

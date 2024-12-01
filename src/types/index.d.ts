@@ -37,7 +37,11 @@ export interface Patch {
 }
 
 // for legacy types:
-// export type PatchState = Patch;
+export type PatchState = Patch & {
+  activeId?: number;
+  hoveredId?: number;
+  configId: number;
+};
 
 
 export type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';

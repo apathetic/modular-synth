@@ -103,8 +103,7 @@
         }
       });
 
-      // watch([store.patchId, store.configId], () => {
-      watch(() => [store.patchId, store.configId], () => {
+      watch(() => [store.patchId], () => {
         resetSorting();
       });
 
