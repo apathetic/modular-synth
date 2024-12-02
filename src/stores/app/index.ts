@@ -1,11 +1,5 @@
 import { defineStore } from 'pinia'
-// import * as getters from './getters';
-// import * as actions from './actions';
 import { state as blank } from '../patch';
-// import type { AppState } from '@/types';
-
-
-
 import type {
   AppState,
   Patch,
@@ -13,8 +7,10 @@ import type {
   Connection,
   Parameters,
   parameterLabel,
-  MouseCoords, GridCoords,
-  Module, Node } from '@/types';
+  MouseCoords,
+  GridCoords,
+  Module,
+  SynthNode } from '@/types';
 
 
 import { nextTick } from 'vue';
@@ -27,39 +23,32 @@ import { moduleSize } from '@/constants';
 
 
 
-  import { usePatchStore } from '@/stores/patch';
-
-
-
 const patches = JSON.parse(localStorage.getItem('patches') || 'null');
 // validateData(patches);
 
 
-const state = () => <AppState>{
-  power: false,
-  isEditing: false,
-  focusedId: undefined, // todo --> hoveredId
-  activeId: 0,
-  patches: patches || [blank()],
-
-  // This is to prevent loading a patch on initial load. If this happens,
-  // computed getters, etc. run once, before the `loadPatch` action is called
-  // (from `PatchManager`).  This, in turn, mounts a bunch of <Connection>`s
-  // that then try to reconcile and connect to (non-existant) audio nodes.
-  patchId: -1, // 0 // id of the active patch
-
-  // todo ==> settingsId ?
-  configId: 0, // id of the active parameter configuration
-
-  registry: {},
-
-  session: undefined,
-  // authenticated: false,
-  // canvasOffset: 0,    // UI stuffs
-};
-
 export const useAppStore = defineStore('app', {
-  state,
+  state: () => <AppState>{
+    power: false,
+    isEditing: false,
+    hoveredId: undefined,
+    activeId: undefined,
+    patches: patches || [blank()],
+
+    // This is to prevent loading a patch on initial load. If this happens,
+    // computed getters, etc. run once, before the `loadPatch` action is called
+    // (from `PatchManager`).  This, in turn, mounts a bunch of <Connection>`s
+    // that then try to reconcile and connect to (non-existant) audio nodes.
+    patchId: -1, // id of the active patch
+
+    // todo ==> settingsId ?
+    configId: 0, // id of the active parameter configuration
+
+    registry: {},
+
+    session: undefined,
+    // authenticated: false,
+  },
 
   getters: {
 
@@ -82,17 +71,17 @@ export const useAppStore = defineStore('app', {
       return this.patch.modules;
     },
 
-    activeModule(state: AppState): Module | undefined {
+    activeModule(state): Module | undefined {
       return this.modules.find((module) => module.id === state.activeId);
     },
 
     /** deprecated. Use above */
-    active(state: AppState): Module | undefined {
+    active(state): Module | undefined {
       return this.modules.find((module) => module.id === state.activeId);
     },
 
-    focused(state: AppState): Module | undefined {
-      return this.modules.find((module) => module.id === state.focusedId);
+    focused(state): Module | undefined {
+      return this.modules.find((module) => module.id === state.hoveredId);
     },
 
     getModule(): Function {
@@ -122,16 +111,11 @@ export const useAppStore = defineStore('app', {
     //  USER
     // -----------------------------------------------
 
-    isAuthenticated (state: AppState): Boolean {
+    isAuthenticated (state): Boolean {
       return !!state.session;
     },
 
-
-    /** deprecated. Use below */
-    node: (state: AppState) => (id: number): Node => state.registry[id],
-
-    ///////////
-    getNode: (state: AppState) => (id: number): Node => state.registry[id],
+    getNode: (state) => (id: number) => state.registry[id],
 
     bounds(): number {
       return this.modules.reduce((max, module) => Math.max(max, module.x), 0);
@@ -181,16 +165,6 @@ export const useAppStore = defineStore('app', {
       this.patches[id].configs = configs;
       // resetSorting();
 
-
-      /// ---
-      const patchStore = usePatchStore();
-      patchStore.$patch({
-        ...this.patches[id]
-      });
-
-
-
-
     },
 
     /**
@@ -233,11 +207,8 @@ export const useAppStore = defineStore('app', {
       id = id ?? this.patchId as number;
       log({ type:'patch', action:'deleting', data: this.patch.name });
 
-      // remove(this.patch._uuid);
-
       this.patches.splice(id, 1);
-      this.patchId = 0;
-      this.loadPatch(); // loadPatch(0)
+      this.loadPatch(0);
     },
 
     /**
@@ -260,13 +231,6 @@ export const useAppStore = defineStore('app', {
 
     togglePower() { this.power = !this.power; },
     toggleMode() { this.isEditing = !this.isEditing; },
-
-
-
-
-    // better name: MODULES? MODULEREGISTRY ...?  WEBAUDIO_NODES?
-    addToRegistry({ id, node }) { this.registry[id] = node; },
-    removeFromRegistry (id) { delete this.registry[id]; },
 
 
     // -----------------------------------------------
@@ -295,10 +259,12 @@ export const useAppStore = defineStore('app', {
       }
     },
 
+    addToRegistry({ id, node }: { id: number; node: SynthNode }) { this.registry[id] = node; },
+    removeFromRegistry (id: number) { delete this.registry[id]; },
     setActive(id: number) { this.activeId = id; },
     clearActive() { this.activeId = undefined; },
-    setFocus(id: number) { this.focusedId = id; },
-    clearFocus() { this.focusedId = undefined; },
+    setFocus(id: number) { this.hoveredId = id; },
+    clearFocus() { this.hoveredId = undefined; },
 
     /**
      * Adds a new module to the patch.
@@ -329,10 +295,10 @@ export const useAppStore = defineStore('app', {
      * Removes (deletes) the currently _active_ module.
      */
     removeModule() {
-      const { activeId, focusedId, modules, connections } = this;
+      const { activeId, hoveredId, modules, connections } = this;
 
-      // only delete active/focusedId modules
-      if (activeId === focusedId) {
+      // only delete active/hoveredId modules
+      if (activeId === hoveredId) {
         try {
           this.patch.modules = modules.filter((m) => m.id !== activeId);
         } catch (e) {
@@ -365,11 +331,6 @@ export const useAppStore = defineStore('app', {
       const { patch, connections } = this;
       patch.connections = connections.filter((c) => c.id !== id);
     },
-
-
-    // -----------------------------------------------
-    //  PARAMETERS
-    // -----------------------------------------------
 
     /**
      * Adds an new, empty parameter-configuration object.

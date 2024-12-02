@@ -63,13 +63,11 @@
         emit('value', value);
         selected.value = options.indexOf(value);
 
-        // console.log('%c[parameter] %s %s set to %s', 'color: orange', param, type, value);
         log({ type:'parameter', action:'setting', data:`${str} to ${value}` });
       });
 
       onUnmounted(() => {
         store.removeParameter(id);
-        // console.log('%c[parameter] Destroying %s %s', 'color: grey', type, id);
         log({ type:'parameter', action:'destroying', data:str });
       });
 

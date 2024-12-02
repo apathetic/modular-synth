@@ -20,14 +20,16 @@
   import { useAppStore } from '@/stores/app';
 
   export default defineComponent({
+    name: 'Analyser',
+
     props: {
       id: {
         default: undefined,
         required: true
       }
     },
+
     setup (props, { expose }) {
-      // const name = 'Analyser';
       const type = 'FFT';
       const context = inject('context');
       const store = useAppStore();
@@ -74,7 +76,6 @@
 
       function analyse() {
         if (type === 'FFT') {
-          //      .getFloatFrequencyData(buffer);
           analyser.getByteFrequencyData(buffer);
         } else {
           analyser.getFloatTimeDomainData(buffer);
@@ -82,6 +83,9 @@
       }
 
       function render() {
+        visualizer.fillStyle = 'rgb(0 0 0)';
+        visualizer.fillRect(0, 0, canvasWidth, canvasHeight);
+
         if (type === 'FFT') {
           const values = buffer;
           const barWidth = canvasWidth / values.length;
@@ -92,7 +96,6 @@
           for (const val of values) {
             visualizer.fillStyle = `rgba(0,222,0, ${val / 255})`;  // 0 -> 255 when getByteData
             visualizer.fillRect(x, canvasHeight - val / 2, barWidth, val / 2);
-            //        .fillRect(x, canvasHeight - val, barWidth, val);
 
             x += barWidth + 1;
           }
@@ -127,8 +130,12 @@
         }
       }
 
-      expose({ inlets });
+      // AUDIO
+      expose({
+        inlets
+      });
 
+      // UI
       return {
         canvas,
         inlets

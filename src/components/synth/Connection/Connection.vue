@@ -89,7 +89,7 @@ THOUGHTS:
 
           const x = src.module.type;
           const y = dest.module.type;
-      const str = `${x} ⟹ ${y}`;
+      const str = `${x}#${from.port + 1} ⟹ ${y}#${to.port + 1}`;
 
 
       const x1 = computed(() => src.module.x + cellWidth + 3);
@@ -130,10 +130,11 @@ THOUGHTS:
             // DATA -> AUDIO
             // -------------------
 
-            console.log('CONNECTION FROM DAT TO AUDIO ', from.id, to.id);
+            if (connect) {
+              log({ type:'connection', action:'creating', data: str + ' (data => audio)' });
+            }
+
             const interpolator = new Parameter(0);
-
-
 
             // this.$watch(outlet.data, interpolator.set);
             // const unwatch = watch(action, interpolator);
@@ -142,7 +143,6 @@ THOUGHTS:
 
 
             interpolator.output.connect(inlet.audio);
-            console.log('%c[connection] %s', 'color: blue', str);
 
             //
           } else if (outlet.data && inlet.data) {
@@ -186,10 +186,7 @@ THOUGHTS:
 
       function logError(e) {
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
-        console.log(
-          '%c[error] connection: #%s.%d ⟹ #%s.%d', 'color: red',
-          from.id, from.port + 1, to.id, to.port + 1
-        );
+        console.log(`%c[error] connection: ${str}`, 'color: red');
 
         // bail whenever the connection fails.
         removeConnection();

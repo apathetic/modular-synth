@@ -1,52 +1,52 @@
 import type { Session } from "@supabase/supabase-js";
 
-type PatchKey = any; // string; // uuid; // string
+type PatchKey = number; // string; // uuid; // string
 
-export interface AppState {
+export type AppState = {
   power: boolean;
   isEditing: boolean;
-  focusedId: number | undefined; // "hovered": for Module Info, Connections
-  activeId: number | undefined;  // "clicked": for dragging, deleting.  ...activeModule?
+  hoveredId?: number;
+  activeId?: number;
 
   patches: Patch[]; // all available patches
   patchId: number;  // active patch id
-  configId: number; // active config id
+  configId: number; // active parameter config id
 
-  // nodes..?
   // references to all audio nodes in the current patch.
   // Nodes/Modules are kinda conflated / they share the same `this` instance ... :(
-  registry: {[value: number]: Node};
+  registry: {[value: number]: SynthNode};
 
-  session: Session | undefined; // any;
+  session?: Session;
 
   // UI: STUFFS
   canvasOffset?: number;
 }
 
+// for alt PatchStore:
+export type PatchState = Patch & {
+  activeId?: number;
+  hoveredId?: number;
+  configId: number;
+
+  registry: {[value: number]: SynthNode};
+};
+
 // export interface UserState {
 //   session: Session;
 // }
 
-export interface Patch {
+export type Patch = {
   id: string;
   i: PatchKey;
   name: string;
   modules: Module[];
   connections: Connection[];
   configs: Config[];
-}
-
-// for legacy types:
-export type PatchState = Patch & {
-  activeId?: number;
-  hoveredId?: number;
-  configId: number;
 };
-
 
 export type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
 
-interface Unit {
+type RackUnit = {
   id: number;
   type: moduleType;
   col: number;
@@ -55,46 +55,36 @@ interface Unit {
   h?: number;
   x: number;
   y: number;
-}
+};
 
-interface MasterOut extends Unit {
-  type: 'MasterOut',
-  id: 0,
-  x: 0,
-  y: 0;
-}
+// interface MasterOut extends RackUnit {
+//   type: 'MasterOut',
+//   id: 0;
+//   x: 0;
+//   y: 0;
+// }
 
-export type Module = Unit; //| MasterOut;
+// type MasterOut = Pick<RackUnit, 'type'|'id'> {
+//   type: 'MasterOut';
+//   id: 0;
+//   x: 0;
+//   y: 0;
+// };
 
 
-// Node //   Node (object with coords, webaudio inlets/outlets)
+export type Module = RackUnit; //| MasterOut;
+
+// all in one:
+type Module_ = RackUnit & SynthNode;
+
+
 // A reference to the rendered node (ie. in the APP)
 //  * with webaudio inlets/outlets
 //  * also includes coords?
-export interface Node {
-  name: string;
-  // coords: { x: number, y: number };
-  // inlets?: Inlet[];
-  // outlets?: Outlet[];
-  node: {
-    inlets?: Inlet[];
-    outlets?: Outlet[];
-  };
-}
-
-
-
-type Node_ = {
-    inlets?: Inlet[];
-    outlets?: Outlet[];
-}
-
-type Module_ = Unit & Node_;
-
-
-
-
-
+export type SynthNode = {
+  inlets?: Inlet[];
+  outlets?: Outlet[];
+};
 
 
 

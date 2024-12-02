@@ -110,8 +110,8 @@
 
       function setActive(id: number) { store.activeId = id; }
       function clearActive()         { store.activeId = undefined; }
-      function setFocus(id: number)  { store.focusedId = id; }
-      function clearFocus()          { store.focusedId = undefined; }
+      function setFocus(id: number)  { store.hoveredId = id; }
+      function clearFocus()          { store.hoveredId = undefined; }
       function onScroll(e: Event)    {
         if (store.editing) {
           console.log(e.target);

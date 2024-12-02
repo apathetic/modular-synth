@@ -18,73 +18,84 @@
 
 
 <script lang="ts">
+  import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
   // import Knob from './UI/Knob';
 
-  export default {
-    // components: { Knob },
+  export default defineComponent({
+    name: 'Reverb',
+
     props: {
       id: null
     },
 
-    data() {
-      return {
-        name: 'Reverb',
-        seconds: 3,
-        decay: 2,
+    setup (props, { expose }) {
 
-        inlets: [
-          {
-            label: 'input-1'
-          },
-          {
-            label: 'input-2'
-          }
-        ],
+      const context = inject('context');
+      const reverb = context.createConvolver();
+      const seconds = ref(3); // props.seconds
+      const decay = ref(2);   // props/decay
 
-        outlets: [
-          {
-            label: 'output-1'
-          },
-          {
-            label: 'output-2'
-          }
-        ]
-      };
-    },
+      const inlets = [
+        {
+          label: 'input-1',
+          desc: '',
+          audio: reverb,
+        },
+        {
+          label: 'input-2',
+          desc: '',
+          // audio: ...
+        }
+      ];
 
-    created() {
-      const reverb = this.convolver = this.context.createConvolver();
+      const outlets = [
+        {
+          label: 'output-1',
+          desc: '',
+          audio: reverb,
+        },
+        {
+          label: 'output-2'
+        }
+      ];
 
-      // inputs
-      this.inlets[0].audio = reverb;
-      this.outlets[0].audio = reverb;
 
-      this.$watch('seconds', this.setReverb);
-      this.$watch('decay', this.setDecay);
-    },
+      watch(seconds, setReverb);
+      watch(decay, setDecay);
 
-    // destroyed() {
-    //   this.convolver.disconnect();
-    // },
+      onUnmounted(() => reverb.disconnect());
 
-    methods: {
       /**
        * k-rate control of the Reverb
        * @param  {Float} s reverb in seconds
        */
-      setReverb(s) {
-        // this.convolver.reverb.value = s;
-      },
+      function setReverb(s) {
+        reverb.reverb.value = s;
+      }
 
       /**
        * k-rate control of the Reverb decay
        * @param  {Float} d decay in seconds
        */
-      setDecay(d) {
-        // this.convolver.decay.value = d;
+      function setDecay(d) {
+        reverb.decay.value = d;
+      }
+
+      // AUDIO
+      expose({
+        inlets,
+        outlets
+      });
+
+      // UI
+      return {
+        seconds,
+        decay,
+        inlets,
+        outlets
       }
     }
-  };
+  });
 </script>
 
 
