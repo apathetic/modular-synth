@@ -17,51 +17,62 @@
 
 
 <script lang="ts">
-  export default {
-    inject: [ 'context' ],
+  import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
+
+  export default defineComponent({
+    name: 'VCA',
+
     props: {
-      id: null
+      id: {
+        default: undefined,
+        required: true
+      }
     },
 
-    data() {
-      return {
-        name: 'VCA',
-        inlets: [
-          {
-            label: 'signal'
-            // audio: null,
-            // data: null
-          }, {
-            label: 'gain'
-            // audio: null
-          }
-        ],
+    setup (props, { expose }) {
+      const context: AudioContext = inject('context');
+      const vca = context.createGain();
 
-        outlets: [
-          {
-            label: 'output'
-            // audio: null
-          }
-        ]
-      };
-    },
-
-    created() {
-      const vca = this.context.createGain();
-      // IMPORTANT. Set ORIGINAL gain value i.e. "offset"... which is what is ADDED into future signals. I Think...???
-      // If this is not set, than any signal in will... be additive to itself, or ...something
       vca.gain.value = 0;
 
-      this.inlets[0].audio = vca;
-      this.inlets[1].audio = vca.gain;
+      const inlets = [
+        {
+          label: 'signal',
+          audio: vca,
+        },
+        {
+          label: 'gain',
+          desc: 'The signal (gain) that will be used to multiply the input',
+          audio: vca.gain
+        }
+      ];
 
-      this.outlets[0].audio = vca;
-    },
+      const outlets = [
+        {
+          label: 'output',
+          audio: vca
+        }
+      ];
 
-    unmounted() {
-      // this.inlets[0].audio.disconnect(); // this is done in Connection
+
+      onUnmounted(() => {
+        // this.inlets[0].audio.disconnect(); // this is done in Connection
+      });
+
+
+      // AUDIO
+      expose({
+        inlets,
+        outlets
+      });
+
+      // UI
+      return {
+        inlets,
+        outlets
+      };
     }
-  };
+  });
 </script>
 
 
