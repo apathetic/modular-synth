@@ -67,6 +67,11 @@ THOUGHTS:
     setup (props) {
       // eslint-disable-next-line vue/no-setup-props-destructure
       const { id, to, from } = props;  // props dont need to be reactive in this component
+      if (!to || !from) {
+        throw new Error('fatal: no to/from');
+        return;
+      }
+
       const store = useAppStore();
       const stroke = ref('white');
       let unwatch;
@@ -83,7 +88,7 @@ THOUGHTS:
 
       if (!src.node || !dest.node) {
         logError('node not registered');
-        return;
+        return {};
       }
 
 
@@ -186,7 +191,7 @@ THOUGHTS:
 
       function logError(e) {
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
-        console.log(`%c[error] connection: ${str}`, 'color: red');
+        console.log(`%c[error] connection`, 'color: red', JSON.stringify(to), JSON.stringify(from));
 
         // bail whenever the connection fails.
         removeConnection();

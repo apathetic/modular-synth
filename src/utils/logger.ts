@@ -8,6 +8,7 @@ interface LogProps {
 export function log({ type, action, data = '' }: LogProps) {
 
   const style = (
+    action == 'error' ? 'color: red' :
     action == 'destroying' ? 'color: grey' :
     // action == 'setting' ? 'color: orange' :
     type == 'component' ? 'color: green' :

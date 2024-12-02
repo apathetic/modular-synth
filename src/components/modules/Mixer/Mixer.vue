@@ -20,58 +20,75 @@
 
 <script lang="ts">
   // import Knob from './UI/Knob';
+  import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
+  import { Parameter } from '@/audio';
 
-  export default {
-    // components: { Knob },
+  export default defineComponent({
+    name: 'Mixer',
+
     props: {
       id: null
     },
 
-    data() {
-      return {
-        name: 'Mixer',
+    setup (props, { expose }) {
+      const context: AudioContext = inject('context');
+      const gain1 = context.createGain();
+      const gain2 = context.createGain();
+      const gain3 = context.createGain();
+      const gain4 = context.createGain();
+      const output = context.createGain();
 
-        one: 0,
-        two: 0,
-        three: 0,
-        four: 0,
+      const one = ref(0);
+      const two = ref(0);
+      const three = ref(0);
+      const four = ref(0);
 
-        inlets: [
-          { label: 'in-1' },
-          { label: 'in-2' },
-          { label: 'in-3' },
-          { label: 'in 4' }
-        ],
-        outlets: [
-          { label: 'out-1' }
-        ]
-      };
-    },
+      const inlets = [
+        { label: 'in-1', audio: gain1 },
+        { label: 'in-2', audio: gain2 },
+        { label: 'in-3', audio: gain3 },
+        { label: 'in 4', audio: gain4 },
+      ];
 
-    mounted() {
-      // inputs
-      this.inlets[0].audio = this.context.createGain();
-      this.inlets[1].audio = this.context.createGain();
-      this.inlets[2].audio = this.context.createGain();
-      this.inlets[3].audio = this.context.createGain();
+      const outlets = [
+        { label: 'out-1', audio: output }
+      ];
 
-      // outputs
-      this.outlets[0].audio = this.context.createGain();
 
       // connectify
-      this.inlets[0].audio.connect(this.outlets[0].audio);
-      this.inlets[1].audio.connect(this.outlets[0].audio);
-      this.inlets[2].audio.connect(this.outlets[0].audio);
-      this.inlets[3].audio.connect(this.outlets[0].audio);
-    },
+      gain1.connect(output);
+      gain2.connect(output);
+      gain3.connect(output);
+      gain4.connect(output);
 
-    methods: {
-      // update() {
+      watch(one, (v) => gain1.gain.value = v);
+      watch(two, (v) => gain2.gain.value = v);
+      watch(three, (v) => gain3.gain.value = v);
+      watch(four, (v) => gain4.gain.value = v);
+
+      // watch
+      // function update() {
       //   numConnected = 1; // how many active connections
-      //   this.outlets[0].audio.gain.value = 1 / numConnected;
+      //   output.gain.value = 1 / numConnected;
       // }
+
+      // AUDIO
+      expose({
+        inlets,
+        outlets
+      });
+
+      // UI
+      return {
+        inlets,
+        outlets,
+        one,
+        two,
+        three,
+        four,
+      }
     }
-  };
+  });
 </script>
 
 <style lang="scss">
