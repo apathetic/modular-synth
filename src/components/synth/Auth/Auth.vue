@@ -70,6 +70,19 @@
     }
   }
 
+  .ring {
+    border: .2em solid var(--color-grey);
+    border-radius: 50%;
+    height: 2em;
+    width: 2em;
+  }
+
+    .ring.active {
+      border-color: var(--color-green);
+    }
+
+
+
   @keyframes pulse {
     to { box-shadow: 0 0 0.8em 0.2em rgba(var(--color-grey-light), 0.7); }
   }

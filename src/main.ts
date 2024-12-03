@@ -1,9 +1,10 @@
 import { createApp } from 'vue';
 import { context } from '@/audio';
 import { createStore } from '@/stores';
-import { registerComponents, registerServiceWorker } from '@/utils/register';
+import { registerComponents } from '@/utils/register';
 import Synth from './App.vue';
-import '@/styles/styles.scss';
+// import '@/styles/variables.css';
+import '@/styles/styles.css';
 import type { App } from 'vue';
 
 

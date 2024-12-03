@@ -1,59 +1,58 @@
 <template>
-  <main @mousedown="clearActive">
+  <main @mousedown="clearActive" :class="isEditing ? 'edit-mode': 'play-mode'">
     <header id="header" :class="[{'loaded': isAuthenticated}, 'pad']">
-      <button @click="debug">debug</button>
+
+      <button class="mode" @click="toggleMode">
+        <span class="play">play</span>
+        <span class="edit">edit</span>
+      </button>
+
+      <!--
       <button class="save" @click="savePatch">
         <svg viewBox="0 0 100 100">
           <path fill="currentColor" d="M88.236,43.25c-0.309-14.487-12.151-26.134-26.707-26.134c-9.603,0-18.016,5.06-22.729,12.66   c-1.733-0.51-3.573-0.785-5.473-0.785c-8.27,0-15.322,5.194-18.072,12.501C7.702,43.557,2.151,50.469,2.151,58.678   c0,9.816,7.973,17.811,17.811,17.811h14.331l0.008-5.942H19.954c-6.556,0-11.867-5.329-11.867-11.87   c0-6.557,5.324-11.876,11.867-11.876v-0.003h0.082c0.74-6.68,6.407-11.875,13.282-11.875c3.138,0,6.022,1.086,8.304,2.896   c2.584-8.548,10.513-14.769,19.901-14.769c11.477,0,20.778,9.302,20.778,20.782c0,1.113-0.087,2.211-0.251,3.281   c5.249,1.224,9.159,5.947,9.159,11.564c0,6.557-5.321,11.87-11.858,11.87H65.004l-0.011,5.942h14.339   c9.84,0,17.815-7.976,17.819-17.811C97.152,52.095,93.568,46.328,88.236,43.25z"/>
           <path fill="currentColor" d="M62.223,60.091l-5.743-5.942l-6.29-6.508c-0.293-0.295-0.788-0.286-1.065-0.009l-6.299,6.517l-5.744,5.942   l-2.283,2.362c-0.139,0.139-0.219,0.35-0.219,0.578c0,0.119,0.021,0.235,0.061,0.336c0.115,0.297,0.383,0.48,0.699,0.48h8.641   l0.013,18.368c0,0.552,0.448,1,1,1h9.335c0.552,0,1-0.448,1-1V63.848h8.64c0.31,0,0.582-0.187,0.693-0.479   c0.124-0.319,0.058-0.699-0.166-0.928L62.223,60.091z"/>
         </svg>
       </button>
+      -->
 
       <patch-manager></patch-manager>
 
-      <Auth />
+      <!-- <Auth /> -->
+
+      <button
+        class="power"
+        :class="power ? 'on' : 'off'"
+        @click="togglePower"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+          <path d="M28,18c0,6.629-5.375,12-12,12C9.371,30,4,24.629,4,18c0-5.223,3.34-9.652,8-11.301v4.41C9.617,12.496,8,15.047,8,18 c0,4.418,3.582,8,8,8s8-3.582,8-8c0-2.953-1.621-5.504-4-6.891v-4.41C24.656,8.348,28,12.777,28,18z M16,16c1.105,0,2-0.895,2-2V4 c0-1.104-0.895-2-2-2s-2,0.896-2,2v10C14,15.105,14.895,16,16,16z" />
+        </svg>
+      </button>
+
     </header>
 
-    <section :class="isEditing ? 'edit-mode': 'play-mode'">
+    <section>
       <Synth
         :modules="modules"
         :connections="connections"
       />
 
       <aside id="sidebar">
-        <div class="controls pad">
-          <h4>{{ isEditing ? 'EDIT MODE' : 'PERFORMANCE MODE' }}</h4>
-          <button class="mode" @click="toggleMode">
-            <span class="play">play</span>
-            <span class="edit">edit</span>
-          </button>
+        <midi></midi>
 
-          <p v-if="activeModule">
-            <strong>Current Module</strong><br>
-            {{ activeModule.type }} (id: {{ activeModule.id }})<br>
-            x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
-            col, row: {{ activeModule.col }}, {{ activeModule.row }}<br>
-            w, h: {{ activeModule.w }},  {{ activeModule.h }}<br>
-          </p>
+        <p v-if="activeModule">
+          <strong>Current Module</strong><br>
+          {{ activeModule.type }} (id: {{ activeModule.id }})<br>
+          x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
+          col, row: {{ activeModule.col }}, {{ activeModule.row }}<br>
+          w, h: {{ activeModule.w }},  {{ activeModule.h }}<br>
+        </p>
 
-          <midi></midi>
-
-        </div>
+        <button @click="debug">debug</button>
 
         <master-out></master-out>
-
-        <div class="power pad">
-          <button
-            :class="power ? 'on' : 'off'"
-            @click="togglePower">
-
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-              <path d="M28,18c0,6.629-5.375,12-12,12C9.371,30,4,24.629,4,18c0-5.223,3.34-9.652,8-11.301v4.41C9.617,12.496,8,15.047,8,18 c0,4.418,3.582,8,8,8s8-3.582,8-8c0-2.953-1.621-5.504-4-6.891v-4.41C24.656,8.348,28,12.777,28,18z M16,16c1.105,0,2-0.895,2-2V4 c0-1.104-0.895-2-2-2s-2,0.896-2,2v10C14,15.105,14.895,16,16,16z" />
-            </svg>
-          </button>
-        </div>
       </aside>
-
     </section>
 
     <context-menu></context-menu>
@@ -187,6 +186,7 @@
 
   #header {
     display: flex;
+    gap: 1rem;
 
     .save {
       align-self: center;
@@ -256,12 +256,94 @@
   #sidebar {
     background-color: #444;
     display: flex;
+    justify-content: flex-end;
     flex-direction: column;
-    flex-basis: 112px;
-    z-index: 9999;          // as nodes will increment their z-index
+    flex-basis: 60px;
+    transition: all 1s;
+
+    .edit-mode & {
+      flex-basis: 112px;
+    }
   }
 
-  .controls {
+
+
+
+
+
+
+
+
+
+.mode {
+  align-items: center;
+  border: 1px solid #333;
+  box-shadow: inset 0 0.2em 0.6em rgba(0, 0, 0, 0.3);
+  background: var(--color-grey-dark);
+  color: var(--color-inactive);
+  display: flex;
+  width: 8rem; /*100%;*/
+
+  margin: 0;
+  font-size: 1rem;
+
+}
+
+  .mode span {
+    color: var(--inactive);
     flex: 1;
+    z-index: 1;
+  }
+
+  .mode:after {
+    content: '';
+    position: absolute;
+    transition: left var(--transition-time);
+    background-color: #54bfff;
+    border-radius: 0.3em;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  .mode:hover:after {
+    background-color: #349fdf;
+  }
+
+  .edit-mode .mode:after {
+    left: 50%;
+  }
+
+
+.play-mode .play { color: #fff; }
+.edit-mode .edit { color: #fff; }
+
+
+.power {
+  color: var(--color-inactive);
+}
+  .power svg {
+    fill: currentColor;
+    height: 2em;
+    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    top: -1px;
+  }
+
+  .power.on {
+    color: var(--color-green);
+  }
+
+  .power.on::after {
+    content: '';
+    display: block;
+    filter: blur(1px);
+    border: 1px solid currentColor;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    border-radius: 50%;
   }
 </style>

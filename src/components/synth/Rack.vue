@@ -6,7 +6,7 @@
     XXXXv-contextmenu:modules
   >
 
-    <div class="position-highlight">
+    <div class="highlight" id="position-outline">
       <div class="inner"></div>
     </div>
 

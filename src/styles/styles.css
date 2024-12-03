@@ -1,18 +1,18 @@
 
 :root {
   --header-height: 48px;
-  --font-primary: 'Futura', 'Trebuchet MS', Arial, sans-serif;
-  --font-secondary: 'Nunito Sans', sans-serif;
+  --gap: 24px;
 
   --transition-time: 0.2s;
   --transition-time-slow: 0.4s;
 
-  // note: this should match dimensions.js:
+	/* note: this should match constants.js: */
   --rackHeight: 240px;
   --rackWidth: 60px;
   --cellHeight: 90px;
   --cellWidth: 120px;
-  --border-radius: 4px;
+
+	/* -------------------------------------- */
 
   --color-grey: #888;
   --color-grey-dark: #333;
@@ -22,13 +22,23 @@
 
   --color-highlight: #54bfff;
   --color-hover: #349fdf;
+  --color-inactive: #999;
+
+  --border-radius: 4px;
+
+	/* -------------------------------------- */
+
+  --font-primary: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+  --font-secondary: 'Nunito Sans', sans-serif;
+  --duration: 0.2s;
 }
+
 
 /* --------------------------------
   Global
 --------------------------------- */
 
-* {
+*, ::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -51,8 +61,8 @@ html, body {
 main {
   height: 100%;
   color: #fff;
-  // background-color: #222;
-  // background: linear-gradient(to bottom, #2a2a2a 0%, #1a1a1a 100%);
+  /* background-color: #222; */
+  /* background: linear-gradient(to bottom, #2a2a2a 0%, #1a1a1a 100%); */
   font-family: var(--font-primary);
   min-width: 600px;
 }
@@ -112,6 +122,7 @@ h4 {
 --------------------------------- */
 
 button {
+  appearance: none;
   background: none;
   border: none;
   border-radius: 3px;
@@ -119,88 +130,15 @@ button {
   cursor: pointer;
   display: inline-block;
   outline: none;
-
-  &:focus {
-    outline: none; // sorry :(
-  }
 }
 
-.ring {
-  border: .2em solid var(--color-grey);
-  border-radius: 50%;
-  height: 2em;
-  width: 2em;
-
-  &.active {
-    border-color: var(--color-green);
+  button:focus {
+    outline: none;
   }
-}
-
-.mode {
-  border: 1px solid #333;
-  box-shadow: inset 0 0.2em 0.6em rgba(0, 0, 0, 0.3);
-  background: var(--color-grey-dark);
-  margin-bottom: 1em;
-  display: flex;
-  width: 100%;
-
-  span {
-    flex: 1;
-    padding: 0.5em;
-    z-index: 1;
-    color: #999; // inactive
-  }
-
-  &:after {
-    content: '';
-    position: absolute;
-    transition: left var(--transition-time);
-    background-color: #54bfff;
-    border-radius: 0.3em;
-    width: 50%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 0;
-  }
-
-  &:hover:after { background-color: #349fdf; }
-
-  .edit-mode &:after { left: 50%; }
-}
-
-.play-mode .play { color: #fff; }
-.edit-mode .edit { color: #fff; }
-
-.power {
-  text-align: center;
-
-  button {
-    padding: 0 2em;
-    border: 1px solid #222;
-    border-radius: 2em;
-  }
-
-  svg {
-    width: 3.2em;
-    height: 4em;
-    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    filter: drop-shadow(0 0px 1px rgba(153, 229, 163, 0.2));
-  }
-
-  .on {
-    border-color: var(--color-green);
-
-    svg {
-      fill: var(--color-green);
-      filter: drop-shadow(0 0px 4px rgba(153, 229, 163, 0.4));
-    }
-  }
-}
 
 
 /* --------------------------------
-   General
+  General
 --------------------------------- */
 
 .pad {
@@ -216,19 +154,19 @@ button {
   pointer-events: none;
 }
 
-.position-highlight {
+.highlight {
   width: var(--rackWidth);
   height: var(--rackHeight);
   border: 4px dashed grey;
-  // transition: all var(--transition-time)
+  /* // transition: all var(--transition-time) */
   transition: left var(--transition-time), top var(--transition-time);
 }
 
 .dropdown,
 .select {
-  background: rgba(85, 85, 85, 0.85); // $color-grey-medium
+  background: rgba(85, 85, 85, 0.85); /* $color-grey-medium */
   color: #fff;
-  border-bottom: 1px solid #777; // $color-grey;
+  border-bottom: 1px solid #777; /* $color-grey; */
   border-right: 1px solid var(--color-grey-medium);
   border-left: 1px solid var(--color-grey-medium);
   font-family: var(--font-secondary);
@@ -241,5 +179,5 @@ select {
   border: 0;
   border-radius: 0;
   font-family: inherit;
-  -webkit-appearance: none;
+  appearance: none;
 }

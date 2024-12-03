@@ -24,7 +24,7 @@ export function useSortable() {
     // items = modules;
     gridlist = new GridList(items);
 
-    positionHighlight = handle.querySelector('.position-highlight');
+    positionHighlight = handle.querySelector('#position-outline');
     positionHighlight.style.display = 'none';
 
     resetItems(items);
