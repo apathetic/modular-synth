@@ -1,8 +1,31 @@
-@import 'variables.scss';
 
+:root {
+  --header-height: 48px;
+  --font-primary: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+  --font-secondary: 'Nunito Sans', sans-serif;
+
+  --transition-time: 0.2s;
+  --transition-time-slow: 0.4s;
+
+  // note: this should match dimensions.js:
+  --rackHeight: 240px;
+  --rackWidth: 60px;
+  --cellHeight: 90px;
+  --cellWidth: 120px;
+  --border-radius: 4px;
+
+  --color-grey: #888;
+  --color-grey-dark: #333;
+  --color-grey-medium: #555;
+  --color-grey-light: #ccc;
+  --color-green: #1ed761;
+
+  --color-highlight: #54bfff;
+  --color-hover: #349fdf;
+}
 
 /* --------------------------------
-   Global
+  Global
 --------------------------------- */
 
 * {
@@ -13,7 +36,11 @@
 }
 
 html {
-  background: url('/images/bg1.jpg');
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.666),
+    rgba(0, 0, 0, 0.666) ),
+    url('/images/bg.jpg'
+  );
 }
 
 html, body {
@@ -24,10 +51,9 @@ html, body {
 main {
   height: 100%;
   color: #fff;
-  background-color: #222;
+  // background-color: #222;
   // background: linear-gradient(to bottom, #2a2a2a 0%, #1a1a1a 100%);
-
-  font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+  font-family: var(--font-primary);
   min-width: 600px;
 }
 
@@ -53,13 +79,9 @@ section {
   height: calc(100% - var(--header-height));
 }
 
-.pad {
-  padding: 1rem;
-}
-
 
 /* --------------------------------
-   Typography
+  Typography
 --------------------------------- */
 
 .h1, h1,
@@ -68,7 +90,7 @@ section {
 .h4, h4,
 .h5, h5 {
   margin-bottom: 0.5em;
-  font-family: var(--font-secondary)
+  font-family: var(--font-secondary);
 }
 
 h1 {}
@@ -86,11 +108,10 @@ h4 {
 
 
 /* --------------------------------
-   Buttons
+  Buttons
 --------------------------------- */
 
 button {
-  -webkit-appearance: none;
   background: none;
   border: none;
   border-radius: 3px;
@@ -181,6 +202,10 @@ button {
 /* --------------------------------
    General
 --------------------------------- */
+
+.pad {
+  padding: 1rem;
+}
 
 .visible {
   visibility: visible !important;
