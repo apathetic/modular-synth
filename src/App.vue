@@ -258,11 +258,11 @@
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
-    flex-basis: 60px;
-    transition: all 1s;
+    flex-basis: 24px;
+    transition: all var(--transition-time-slow);
 
     .edit-mode & {
-      flex-basis: 112px;
+      flex-basis: 60px;
     }
   }
 
@@ -285,7 +285,7 @@
   width: 8rem; /*100%;*/
 
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.2rem;
 
 }
 

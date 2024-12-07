@@ -15,6 +15,8 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
   import { useAppStore } from '@/stores/app';
   import { Meter } from '@/audio';
 
+  const HEIGHT = 132;
+
   export default {
     name: 'ui-VU',
 
@@ -39,7 +41,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
           this.loop();
         } else {
           // set buffer to 0 and update display
-          this.meterContext.clearRect(0, 0, 20, 132);
+          this.meterContext.clearRect(0, 0, 20, HEIGHT);
         }
       });
     },
@@ -50,12 +52,12 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 
     mounted() {
       const meterContext = this.meterContext = this.$refs.vu.getContext('2d');
-      const meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, 132);
+      const meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, HEIGHT);
 
       this.audio.connect && this.audio.connect(this.meter.input);
 
       meterContext.canvas.width = 20;
-      meterContext.canvas.height = 132;
+      meterContext.canvas.height = HEIGHT;
 
       meterGraident.addColorStop(0, '#BFFF02');
       meterGraident.addColorStop(0.8, '#02FF24');
@@ -72,11 +74,20 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
         const level = this.rms * 2;
 
         //                     x, y, width, height
-        meterContext.clearRect(0, 0, 20, 132);
-        meterContext.fillStyle = this.meterGraident;    // fill relevant bits with gradient
-        meterContext.fillRect(0, 0, 20, 132);
+        // meterContext.clearRect(0, 0, 20, 132);
+        // meterContext.fillStyle = this.meterGraident;    // fill relevant bits with gradient
+        // meterContext.fillRect(0, 0, 20, 132);
+        // meterContext.fillStyle = 'black';               // paint VU black
+        // meterContext.fillRect(0, 132 * level, 20, 132);
+
+
+        //                   x, y, w, h.  From upper-left
         meterContext.fillStyle = 'black';               // paint VU black
-        meterContext.fillRect(0, 132 * level, 20, 132);
+        meterContext.fillRect(0, 0, 20, HEIGHT);
+        meterContext.fillStyle = this.meterGraident;    // fill relevant bits with gradient
+        meterContext.fillRect(0, 0, 20, HEIGHT * level);
+
+
       },
 
       loop() {
@@ -97,6 +108,8 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
     background: black;
     width: 20px;
     height: 132px;
-    transform: rotate(180deg); // meh, i dont feel like figuring out the math in the x,y drawing
+
+    // b/c coords start at top-left, not bottom, and we draw from top -> down. however, VU paints from bottom -> up
+    rotate: 180deg;
   }
 </style>
