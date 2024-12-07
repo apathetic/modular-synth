@@ -2,10 +2,14 @@
   <main @mousedown="clearActive" :class="isEditing ? 'edit-mode': 'play-mode'">
     <header id="header" :class="[{'loaded': isAuthenticated}, 'pad']">
 
+      <img src="../public/images/icon.png" />
+
       <button class="mode" @click="toggleMode">
         <span class="play">play</span>
         <span class="edit">edit</span>
       </button>
+
+      <patch-manager></patch-manager>
 
       <!--
       <button class="save" @click="savePatch">
@@ -16,7 +20,6 @@
       </button>
       -->
 
-      <patch-manager></patch-manager>
 
       <!-- <Auth /> -->
 
