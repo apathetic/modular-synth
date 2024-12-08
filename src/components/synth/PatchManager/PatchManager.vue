@@ -232,7 +232,7 @@
     }
 
     input {
-      font-size: 15px; // inherit;
+      font-size: 14px;
       font-weight: 100;
       color: inherit;
       border: 0;

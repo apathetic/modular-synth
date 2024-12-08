@@ -67,18 +67,63 @@ main {
   min-width: 600px;
 }
 
+@property --a1 {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --a2 {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --p1 {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: false;
+}
+
+@keyframes wave {
+  40% {--a1: 5deg; }
+  100% {--a1: 0deg; }
+}
+
+@keyframes swir {
+  40% {--a2: 4deg; }
+  60% {--a2: 7deg; }
+  100% {--a2: 0deg; }
+}
+
+@keyframes perc {
+  33% {--p1: 3%; }
+  66% { --p1: -5%; }
+  100% {--p1: 0%; }
+}
+
+
 header {
+  --grad1: rgba(182,158,123,0.4); /* transparent */
+  --grad2: rgba(110,96,175,0.4); /* transparent */
+  --grad3: rgba(96,112,96,0.4); /* transparent */
+
   border-bottom: 1px solid var(--color-grey-dark);
   box-shadow: inset 0 -2px 4px var(--color-grey-medium);
   height: var(--header-height);
   width: 100%;
-  background-color: #666;
-  background: linear-gradient(187deg, #000 0%, #000 22%, transparent 22%) no-repeat,
-              linear-gradient(190deg, transparent 22%, #000 22%, #000 26%, transparent 26%) no-repeat,
-              linear-gradient(196deg, transparent 22%, #000 22%, #000 25%, transparent 25%) no-repeat,
-              linear-gradient(-137deg, transparent 22%, #000 22%, #000 24%, transparent 24%) no-repeat,
-              linear-gradient(230deg, #666 22%, #000 22%, #000 23%, #666 23%);
-  background-position: 0 0, 17px 0, 14px 0, 36px 0, 80px 0;
+  background: linear-gradient(calc(190deg + var(--a1)),  var(--grad1) 22%, #000 22%,                  #000 26%, transparent 26%) no-repeat,
+              linear-gradient(calc(196deg + var(--a1)),  var(--grad2) 22%, #000 22%,                  #000 25%, transparent 25%) no-repeat,
+              linear-gradient(calc(-137deg + var(--a1)), var(--grad3) 22%, #000 22%,                  #000 24%, transparent 24%) no-repeat,
+              linear-gradient(230deg,                   #66a 9%,        #000 9%,                  #000 12%, #666 12%);
+
+  background-position: 100px 0,
+                      153px 1px,
+                      103px 0,
+                      24px 0;
+
+  animation:18s wave infinite 2s,
+            11s swir infinite 4s,
+            26s perc infinite;
 }
 
 section {

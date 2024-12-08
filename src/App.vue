@@ -2,7 +2,7 @@
   <main @mousedown="clearActive" :class="isEditing ? 'edit-mode': 'play-mode'">
     <header id="header" :class="[{'loaded': isAuthenticated}, 'pad']">
 
-      <img src="../public/images/icon.png" />
+      <!-- <img src="../public/images/icon.png" /> -->
 
       <button class="mode" @click="toggleMode">
         <span class="play">play</span>
@@ -261,7 +261,7 @@
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
-    flex-basis: 24px;
+    flex-basis: 60px; /* 24px; */
     transition: all var(--transition-time-slow);
 
     .edit-mode & {
@@ -280,12 +280,12 @@
 
 .mode {
   align-items: center;
+  background: var(--color-grey-dark);
   border: 1px solid #333;
   box-shadow: inset 0 0.2em 0.6em rgba(0, 0, 0, 0.3);
-  background: var(--color-grey-dark);
   color: var(--color-inactive);
   display: flex;
-  width: 8rem; /*100%;*/
+  min-width: 8rem;
 
   margin: 0;
   font-size: 1.2rem;
@@ -302,7 +302,7 @@
     content: '';
     position: absolute;
     transition: left var(--transition-time);
-    background-color: #54bfff;
+    background-color: #54bfff8f;
     border-radius: 0.3em;
     width: 50%;
     height: 100%;
@@ -326,6 +326,9 @@
 
 .power {
   color: var(--color-inactive);
+  background: var(--color-grey-dark);
+  box-shadow: inset 0 0.2em 0.6em rgba(0, 0, 0, 0.3);
+  border-radius: 50%;;
 }
   .power svg {
     fill: currentColor;
