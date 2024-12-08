@@ -1,6 +1,6 @@
 
 :root {
-  --header-height: 48px;
+  --header-height: 40px;
   --gap: 24px;
 
   --transition-time: 0.2s;
@@ -187,7 +187,7 @@ button {
 --------------------------------- */
 
 .pad {
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .visible {

@@ -198,8 +198,7 @@
       line-height: 0;
       opacity: 0;
       position: absolute;
-      // right: 0.2em; // 2px;
-      top: 0;  /////
+      top: 0;
       transform: scale(0);
       transition: all var(--transition-time-slow);
       width: 2em; // 1.2em;
@@ -250,10 +249,10 @@
     }
 
     span {
-      font: 3em / 0.7em 'Anton';
+      font: 2.8em / 0.7em 'Anton';
       height: 100%;
       letter-spacing: 0.05em;
-      opacity: 0.25;
+      opacity: 0.15;
       overflow: hidden;
       position: absolute;
       right: var(--gap);

@@ -139,6 +139,10 @@
     width: auto;
     height: auto;
 
+    padding-top: 8rem;
+    border-top: 2px ridge #000;
+    border-radius: 0;
+
     .module-interface {
       // padding: 2em 1em 1em;
       padding: 0;

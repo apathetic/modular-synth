@@ -332,9 +332,9 @@
 }
   .power svg {
     fill: currentColor;
-    height: 2em;
+    height: 100%;
     transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    top: -1px;
+    top: -1.5px;
   }
 
   .power.on {
@@ -351,5 +351,9 @@
     top: 0;
     width: 100%;
     border-radius: 50%;
+  }
+
+  .power.off:hover {
+    color: #349fdf;
   }
 </style>
