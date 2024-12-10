@@ -91,16 +91,17 @@
       watch(() => props.modules, (newList, oldList) => {
         resetItems(newList);
 
-        if (newList.length > oldList.length) {
+        if (newList.length - oldList.length === 1) {
           // const item = this.modules.slice(-1)[0]; // get last (newest) item
           const item = newList.filter((i) => oldList.indexOf(i) === -1);
           resetItem(item);
           // console.log('added', item);
 
-        } else {
+        }
+        // if (oldList.length - newList.length === 1) {
           // this.gridList._pullItemsToLeft();
           // console.log('removed');
-        }
+        // }
       });
 
       watch(() => [store.patchId], () => {

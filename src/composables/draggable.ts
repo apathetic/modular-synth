@@ -8,7 +8,9 @@ const dragObj = {
   cursorStartX: null,
   cursorStartY: null,
   startX: null,
-  startY: null
+  startY: null,
+  x: null,
+  y: null,
 };
 
 
