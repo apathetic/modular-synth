@@ -8,5 +8,5 @@
 // - drags in Edit
 // - drags in play, but snaps on drag end
 
-describe('Draggable', () => {
+describe.skip('Draggable', () => {
 });
