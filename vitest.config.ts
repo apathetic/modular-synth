@@ -1,9 +1,12 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
-  // esbuild: {
-  //   jsx: 'transform',
-  // },
+  resolve: {
+    alias: [
+      { find: '@', replacement: resolve(__dirname, './src') }
+    ]
+  },
   test: {
     /**
      * options for test in a browser environment
