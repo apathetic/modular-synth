@@ -111,7 +111,7 @@
 
     <div class="params select">
       <span>0{{currentConfigId}}</span>
-      <select v-model="currentConfigId" ref="configRef" data-test="config">
+      <select v-model="currentConfigId" ref="configRef" data-testid="config">
         <!-- <option value="" disabled selected>&lt;select configs&gt;</option> -->
         <option v-for="(config, id) in configs" :key="id" :value="id">{{ config.name }}</option>
       </select>

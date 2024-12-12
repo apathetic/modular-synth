@@ -5,31 +5,32 @@ import { state as blank } from '@/stores/patch';
 import PatchManager from './PatchManager.vue';
 
 
-let mockStore;
 const mockPatch = blank();
+const mockStore = {
+  // state
+  isEditing: false,
+  patches: [mockPatch],
+  patchId: 0, // UGH this should be index not id
+  configId: 0, // UGH this should be index not id
+
+  // getters
+  patch: mockPatch,
+  configs: mockPatch.configs,
+  config: mockPatch.configs[0],
+
+  // actions
+  loadPatch: vi.fn(),
+  savePatch: vi.fn(),
+  addPatch: vi.fn(),
+  removePatch: vi.fn(),
+  addConfig: vi.fn(),
+  removeConfig: vi.fn(),
+};
+
 
 vi.mock('@/stores/app', async () => {
   return {
-    useAppStore: () => ({
-      // state
-      isEditing: false,
-      patches: [mockPatch],
-      patchId: 0, // UGH this should be index not id
-      configId: 0, // UGH this should be index not id
-
-      // getters
-      patch: mockPatch,
-      configs: mockPatch.configs,
-      config: mockPatch.configs[0],
-
-      // actions
-      loadPatch: vi.fn(),
-      savePatch: vi.fn(),
-      addPatch: vi.fn(),
-      removePatch: vi.fn(),
-      addConfig: vi.fn(),
-      removeConfig: vi.fn(),
-    })
+    useAppStore: () => mockStore
   };
 });
 
@@ -57,7 +58,7 @@ describe('PatchManager.vue', () => {
 
     it('can load a patch', async () => {
       render(PatchManager);
-      const patches = screen.getByTestId('patch');
+      const patches = screen.getByTestId('patch'); // the `patch` select dropdown
       await fireEvent.update(patches, { target: { value: 0 } })
 
       expect(mockStore.loadPatch).toBeCalled();
