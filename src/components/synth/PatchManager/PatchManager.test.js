@@ -1,32 +1,39 @@
-import { render, screen, getByTestId, getAllByRole, userEvent, selectOptions, fireEvent } from '@testing-library/vue';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, getByTestId, getAllByRole, userEvent, selectOptions, fireEvent } from '@testing-library/vue';
 import { useAppStore } from '@/stores/app';
 import { state as blank } from '@/stores/patch';
 import PatchManager from './PatchManager.vue';
 
 
 let mockStore;
+const mockPatch = blank();
+
 // const mockPatch = blank();
 const getMockStore = () => ({
-  loadPatch: vi.fn(),   // loadPatch: cy.spy().as('loadPatchSpy')
+  // state
+  isEditing: false,
+  patches: [mockPatch],
+  patchId: 0, // UGH this should be index not id
+  configId: 0, // UGH this should be index not id
+
+  // getters
+  patch: mockPatch,
+  configs: mockPatch.configs,
+  config: mockPatch.configs[0],
+
+  // actions
+  loadPatch: vi.fn(),
+  savePatch: vi.fn(),
   addPatch: vi.fn(),
   removePatch: vi.fn(),
-  patchId: 0, // UGH this should be index not id
-  patches: [blank()], // [mockPatch],
-  patch: {},
-
   addConfig: vi.fn(),
   removeConfig: vi.fn(),
-  configId: 0, // UGH this should be index not id
-  configs: [],
-  config: {},
-
-  isEditing: false,
 });
 
 vi.mock('@/stores/app', async () => {
   return {
-    useAppStore: () => mockStore,
+    // useAppStore: () => mockStore,
+    useAppStore: getMockStore
   };
 });
 
@@ -35,11 +42,11 @@ vi.mock('@/stores/app', async () => {
 describe('PatchManager.vue', () => {
 
   beforeEach(() => {
-    mockStore = getMockStore();
+    // mockStore = getMockStore();
     vi.clearAllMocks();
   });
 
-  describe('Patches: ', () => {
+  describe.only('Patches: ', () => {
     it.skip('loads a default patch', () => {
       render(PatchManager);
 

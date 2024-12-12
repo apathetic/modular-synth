@@ -4,37 +4,38 @@
   "author": "wes hatch <wes.hatch@gmail.com>",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "typings": "src/types/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm type-check && pnpm vite build",
+    "build": "pnpm ts && pnpm vite build",
     "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit -p tsconfig.json --composite false",
-    "test:e2e": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --component'",
+    "ts": "vue-tsc --build",
+    "test:e2e": "cypress open --component",
     "test:unit": "vitest --globals --environment jsdom --root src/",
-    "lint": "oxlint"
+    "lint": "oxlint . --fix -D correctness --ignore-path .gitignore"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.1",
-    "pinia": "^2.1.7",
+    "@supabase/supabase-js": "^2.47.5",
+    "pinia": "^2.3.0",
     "register-service-worker": "^1.7.2",
     "uuid": "^9.0.1",
-    "vue": "^3.4.3"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@testing-library/vue": "^8.0.1",
-    "@types/jsdom": "^20.0.1",
-    "@vitejs/plugin-vue": "^4.6.1",
-    "@vue/test-utils": "^2.4.3",
-    "@vue/tsconfig": "^0.1.3",
-    "jsdom": "^20.0.3",
-    "npm-run-all": "^4.1.5",
-    "oxlint": "^0.0.22",
-    "sass": "^1.69.6",
-    "typescript": "^4.9.5",
-    "vite": "^4.5.1",
-    "vitest": "^1.1.0",
-    "vue-tsc": "^1.8.27"
+    "@testing-library/vue": "^8.1.0",
+    "@types/jsdom": "^21.1.7",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.7.0",
+    "cypress": "^13.16.0",
+    "jsdom": "^25.0.1",
+    "oxlint": "^0.15.0",
+    "sass": "^1.82.0",
+    "typescript": "~5.6.3",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8",
+    "vue-tsc": "^2.1.10"
   },
   "postcss": {
     "plugins": {}
