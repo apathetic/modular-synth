@@ -1,7 +1,20 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
+    "target": "ES2022",
     "composite": true,
+    "skipLibCheck": true,
+
+
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "strict": true,
+
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
@@ -10,9 +23,6 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.vue",
-  //   "tests/**/*.ts",
-  //   "cypress.d.ts",
-  //   "cypress/**/*.ts"
     "tests/component/index.*",
     "tests/component/commands.ts",
     "env.d.ts"

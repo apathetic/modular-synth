@@ -128,13 +128,9 @@
 
 
 <style lang="scss">
-  @import '../../styles/variables.scss';
-  $height: 132px;
-
   #master-out {
     position: relative;
     border: 0;
-    // min-width: 100%;
     padding-bottom: 2rem;
     width: auto;
     height: auto;
@@ -162,7 +158,6 @@
     direction: rtl;
     writing-mode: vertical-lr;
     position: absolute;
-    // width: 100%;
     z-index: 1;
 
     &:focus {
@@ -171,9 +166,8 @@
 
     &::-webkit-slider-thumb {
       appearance: none;
-      background: white;// red;
+      background: white;
       width: 32px;
-      // width: 100%;
       height: 3px;
     }
   }

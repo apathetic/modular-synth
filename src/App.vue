@@ -2,8 +2,6 @@
   <main @mousedown="clearActive" :class="isEditing ? 'edit-mode': 'play-mode'">
     <header id="header" :class="[{'loaded': isAuthenticated}, 'pad']">
 
-      <!-- <img src="../public/images/icon.png" /> -->
-
       <button class="mode" @click="toggleMode">
         <span class="play">play</span>
         <span class="edit">edit</span>
@@ -75,7 +73,8 @@
   import masterOut from '@/components/synth/MasterOut.vue';
   import patchManager from '@/components/synth/PatchManager';
   import contextMenu from '@/components/UI/ContextMenu.vue';
-  // import type { Module } from '@/types';
+  import './styles/module.scss';
+  import type { Module } from '@/types';
 
   export default defineComponent({
     name: 'App',
@@ -184,9 +183,6 @@
 
 
 <style lang="scss">
-  @import 'styles/variables.scss';
-  @import 'styles/module.scss';
-
   #header {
     display: flex;
     gap: 1rem;

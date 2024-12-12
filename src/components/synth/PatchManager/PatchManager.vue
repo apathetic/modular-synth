@@ -125,8 +125,6 @@
 
 
 <style lang="scss">
-  @import '@/styles/variables.scss';
-
   .patch-manager {
     display: flex;
     flex: 0 1 100%;

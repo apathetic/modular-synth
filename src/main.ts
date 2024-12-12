@@ -14,5 +14,5 @@ createStore(app);
 registerComponents(app);
 // registerServiceWorker();
 
-app.provide('context', context);
+app.provide('context', <AudioContext>context);
 app.mount('body');
