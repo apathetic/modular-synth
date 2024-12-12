@@ -1,8 +1,9 @@
 import Connection from './Connection.vue';
 // import Connecting from '@/components/synth/Connecting.vue';
 
-import Unit from '@/components/synth/Unit.vue';  // Connection expects the audio node to be wrapped in this guy
 // import Node from '@/components/test/Node.vue';
+// import Unit from '@/components/synth/Unit.vue';  // Connection expects the audio node to be wrapped in this guy
+import Unit from '../Unit.vue';  // Connection expects the audio node to be wrapped in this guy
 
 
 // connection
@@ -41,7 +42,7 @@ describe.skip('Connection', () => {
 
   const components = {
     Connection,
-    Module,
+    // Module,
     Node
   };
 

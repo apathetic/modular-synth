@@ -23,8 +23,8 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.vue",
-    "tests/component/index.*",
-    "tests/component/commands.ts",
+    "tests/cypress/component/index.*",
+    "tests/cypress/component/commands.ts",
     "env.d.ts"
   ],
   "exclude": [

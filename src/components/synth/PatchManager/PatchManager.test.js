@@ -8,32 +8,28 @@ import PatchManager from './PatchManager.vue';
 let mockStore;
 const mockPatch = blank();
 
-// const mockPatch = blank();
-const getMockStore = () => ({
-  // state
-  isEditing: false,
-  patches: [mockPatch],
-  patchId: 0, // UGH this should be index not id
-  configId: 0, // UGH this should be index not id
-
-  // getters
-  patch: mockPatch,
-  configs: mockPatch.configs,
-  config: mockPatch.configs[0],
-
-  // actions
-  loadPatch: vi.fn(),
-  savePatch: vi.fn(),
-  addPatch: vi.fn(),
-  removePatch: vi.fn(),
-  addConfig: vi.fn(),
-  removeConfig: vi.fn(),
-});
-
 vi.mock('@/stores/app', async () => {
   return {
-    // useAppStore: () => mockStore,
-    useAppStore: getMockStore
+    useAppStore: () => ({
+      // state
+      isEditing: false,
+      patches: [mockPatch],
+      patchId: 0, // UGH this should be index not id
+      configId: 0, // UGH this should be index not id
+
+      // getters
+      patch: mockPatch,
+      configs: mockPatch.configs,
+      config: mockPatch.configs[0],
+
+      // actions
+      loadPatch: vi.fn(),
+      savePatch: vi.fn(),
+      addPatch: vi.fn(),
+      removePatch: vi.fn(),
+      addConfig: vi.fn(),
+      removeConfig: vi.fn(),
+    })
   };
 });
 
@@ -42,7 +38,6 @@ vi.mock('@/stores/app', async () => {
 describe('PatchManager.vue', () => {
 
   beforeEach(() => {
-    // mockStore = getMockStore();
     vi.clearAllMocks();
   });
 
