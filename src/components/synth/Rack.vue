@@ -37,6 +37,7 @@
 
 <script lang="ts">
   import { defineComponent, ref, watch, onMounted } from 'vue';
+  import { log } from '@/utils/logger';
   import { useAppStore } from '@/stores/app';
   import { useSortable } from '@/composables';
   import Connecting from './Connecting.vue';
@@ -69,7 +70,7 @@
       const store = useAppStore();
       const grid = ref(null); // template $ref
 
-      console.log('%c ◌ Rack: setting up... ', 'background:black;color:white;font-weight:bold');
+      log({ type:'system', action: 'setup', data:'Rack' });
 
 
       /*

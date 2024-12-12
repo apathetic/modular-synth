@@ -1,11 +1,12 @@
 <script lang="ts">
   import { defineComponent, computed, ref } from 'vue';
   import { useAppStore } from '@/stores/app';
+  import { log } from '@/utils/logger';
   // import Select from './Select.vue';
 
   export default defineComponent({
     setup () {
-      console.log('%c ◌ PatchManager: setting up... ', 'background:black;color:white;font-weight:bold');
+      log({ type:'system', action: 'setup', data: 'PatchManager' });
       const store = useAppStore();
       const patchRef = ref(null);
       const configRef = ref(null);

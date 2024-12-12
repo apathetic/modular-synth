@@ -126,7 +126,7 @@ describe('PatchManager.vue', () => {
   });
 
   describe('UI', () => {
-    it.only('renders the correct content', async () => {
+    it('renders the correct content', async () => {
       mockStore.patches = [{
         ...blank(),
         name: 'test-o',

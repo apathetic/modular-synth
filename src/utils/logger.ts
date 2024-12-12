@@ -22,7 +22,7 @@ export function log({ type, action, data = '' }: LogProps) {
 			break;
 
     case 'system': // black background
-      console.log('%c ◌ Synth: %s ', 'background:black;color:white;font-weight:bold', action);
+      console.log('%c ◌ %s setting up...', 'background:black;color:white;font-weight:bold', data);
       break;
 
     case 'patch': // grey background
