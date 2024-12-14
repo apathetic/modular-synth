@@ -35,15 +35,36 @@ export const useAppStore = defineStore('app', {
     activeId: undefined,
     patches: patches || [blank()],
 
-    // This is to prevent loading a patch on initial load. If this happens,
-    // computed getters, etc. run once, before the `loadPatch` action is called
-    // (from `PatchManager`).  This, in turn, mounts a bunch of <Connection>`s
-    // that then try to reconcile and connect to (non-existant) audio nodes.
-    patchId: -1, // id of the active patch
+    /**
+     * The `id` of the active patch
+		 * @type {number}
+     *
+     * Set initially to -1 to prevent loading a patch on initial load. If this
+     * did happen, computed getters would run before the `loadPatch` action is
+     * called from `PatchManager`. This would mount a bunch of <Connection>`s
+     * that then try to reconcile and connect to (non-existant) audio nodes.
+     */
+    patchId: -1,
 
-    // todo ==> settingsId ?
-    configId: 0, // id of the active parameter configuration
+    /**
+     * The `id` of the active parameter configuration
+		 * @type {number}
+     *
+     * [TODO] : consider renaming to settingsId ...?
+     */
+    configId: 0,
 
+    /**
+     * Stores the patch's active `AudioNode`s
+     * @type {Record<number, SynthNode>}
+     *
+     * -- Temporary(?) hack --
+     * Modules (UI) are serializeable, and stored as JSON.
+     * Nodes (audio) are determined at run-time, and stored in the registry.
+     * Ideally, there'd be a single data-type to encapsulate both (i.e. a
+     * computed getter would be an obvious choice), but at present `nodes` and
+     * `modules` are assembled via `getNode` and `getModule` into a single obj
+     */
     registry: {},
 
     session: undefined,

@@ -139,6 +139,8 @@ THOUGHTS:
               log({ type:'connection', action:'creating', data: str + ' (data => audio)' });
             }
 
+            // TODO MOVE THIS THIS THE AUDIO MODULE.
+            // DOENST MAKE SENSE TO SHIM IT HERE
             const interpolator = new Parameter(0);
 
             // this.$watch(outlet.data, interpolator.set);

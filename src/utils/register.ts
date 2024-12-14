@@ -1,8 +1,8 @@
 import inlets from '@/components/synth/Inlets.vue';
 import outlets from '@/components/synth/Outlets.vue';
-
 import * as UI from '@/components/UI';
 // import * as directives from '@/directives';
+import type { App } from 'vue';
 
 
 // import type { Component, Directive } from 'vue';
@@ -16,22 +16,20 @@ import * as UI from '@/components/UI';
  * Registers all base Vue Components/directives. Anything added to this root Vue
  * instance will be available everywhere as part of the universal bundle.
  */
-export function registerComponents(app) {
+export function registerComponents(app: App) {
 
   // System
   app.component('Inlets', inlets);
   app.component('Outlets', outlets);
 
   // UI
-  for (const key in UI) {
-    const component = UI[key];
-    // Vue.component(component.name, component);
+  Object.entries(UI).forEach(([key, component]) => {
     app.component(key, component);
-  }
+  });
 
   // Directives
   // for (const key in directives) {
-  //   const directive = directives[key];
+  //   const directive = directives[key as keyof typeof directives];
   //   app.directive(directive.name, directive);
   // }
 

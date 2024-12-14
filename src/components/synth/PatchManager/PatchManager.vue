@@ -89,9 +89,9 @@
 <template>
   <div :class="['patch-manager', {'editing': editing }]">
 
-    <div class="patch select">
+    <div class="patch select" data-testid="patch">
       <span>0{{currentPatchId}}</span>
-      <select v-model="currentPatchId" ref="patchRef" data-testid="patch">
+      <select v-model="currentPatchId" ref="patchRef">
         <!-- <option value="" disabled selected>&lt;select patch&gt;</option> -->
         <option v-for="(patch, id) in patches" :key="patch.id" :value="id">{{ patch.name }}</option>
       </select>

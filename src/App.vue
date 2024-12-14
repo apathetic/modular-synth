@@ -89,7 +89,7 @@
     },
 
     setup() {
-      log({ type:'system', action: 'setup', data:'Synth...' });
+      log({ type:'system', action: 'setup', data:'Synth' });
 
       const store = useAppStore();
       const sorting = ref(false);

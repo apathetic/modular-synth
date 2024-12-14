@@ -1,6 +1,4 @@
-// import { resolve } from 'node:path';
-// import { defineConfig } from 'vitest/config'
-import { resolve, fileURLToPath } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { mergeConfig, defineConfig, configDefaults } from 'vitest/config';
 import viteConfig from './vite.config';
 
@@ -8,11 +6,6 @@ import viteConfig from './vite.config';
 export default mergeConfig(
   viteConfig,
   defineConfig({
-    // resolve: {
-    //   alias: [
-    //     { find: '@/', replacement: resolve(__dirname, './src') }
-    //   ]
-    // },
     test: {
       // options for test in a browser environment
       // browser?: BrowserConfigOptions; //// FOR WEB AUDIO THINGS?
