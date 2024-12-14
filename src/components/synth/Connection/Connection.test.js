@@ -1,10 +1,9 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, getByTestId, getAllByRole, userEvent, selectOptions, fireEvent } from '@testing-library/vue';
+import { useAppStore } from '@/stores/app';
 import Connection from './Connection.vue';
-import Connecting from '@/components/synth/Connecting.vue';
 import type { Connection as ConnectionType } from '@/types';
 
-// INTEGRATION TEST
-// This tests the UI + associated / relevant components: Connecting, Unit,
-// removing / adding / etc
 
 // connection
 // - gets correct inlet: id, port
@@ -12,69 +11,92 @@ import type { Connection as ConnectionType } from '@/types';
 // - find src, dest nodes
 // - finds src, dest modules
 // - destroys if cannot make a connection
-// - binds to x1,x2x,y1,y2 / gets module coords
+//////// - binds to x1,x2x,y1,y2 / gets module coords
 // - can remove a connection
 // - handles audio / data types + mix thereof
 
+// xmas 2024:
+// when one connection fails they _all_ seem to get deleted
+// connecting from the _in_ port, back to something.
 
-// import Node from '@/components/test/Node.vue';
-const Module = () => {
-  // some fake MOdule
-};
 
-function mountConnection({ to }) {
-  const mockSource = {
-  };
 
-  const mockDestination = {
-    inlets: [
+
+
+const mockModule = defineComponent({
+  setup (props, { expose }) {
+    const outlets = [
       { label: 'in-1', data: context.createGain() }
       { label: 'in-2', data: vi.fn() }
-    ]
+    ];
+
+    // onMounted(() => storeToRefs.addToRegistry({ id, node: { outlets } }));
+    expose({ outlets });
+
+    return { outlets };
+  }
+});
+
+const mockDestinationModule = defineComponent({
+  setup (props, { expose }) {
+    return expose({
+      inlets: [
+        { label: 'in-1', data: context.createGain() }
+        { label: 'in-2', data: vi.fn() }
+      ]
+    });
+  }
+});
+
+// const src = {
+//   node: store.getNode(from.id),
+//   module: store.getModule(from.id)
+// };
+
+// const dest = {
+//   node: store.getNode(to.id),
+//   module: store.getModule(to.id)
+// };
+
+
+const mockConnection: ConnectionType = {
+  id: 1,
+  to: { id: 1, port: 0 },
+  from: { id: 2, port: 0 },
+};
+
+const mockStore = {
+  patchId: 0,
+  patches: [{
+    modules: [
+      { id: 1, type: 'mock' },
+      { id: 2, type: 'mock' }
+    ],
+  }],
+  registry: {
+    1: mockModule,
+    2: mockModule,
+  }
+};
+
+vi.mock('@/stores/app', async () => {
+  return {
+    useAppStore: () => mockStore
   };
+});
 
-  mountVue(
-    {
-      template: `
-        <div>
-          <Connection :id="1" :to="to" :from="from" />
-          <Module :module="node1"></Module>
-          <Module :module="node2"></Module>
-        </div>
-      `,
-      data: undefined,
-      components: { Connection, Module }
-    }, {
-      extensions: // store, or...?
-    }
-  );
 
-}
+app.component('mock', mockModule);
+
+
+
 
 
 
 describe.skip('Connection', () => {
 
-
-  const data = {
-    to: { id: 1, port: 0 },         // connection data
-    from: { id: 2, port: 1 },       // connection data
-
-    node1: { id: 1, type: 'Node' }, // Test data
-    node2: { id: 2, type: 'Node' }  // Test data
-  };
-
-  const components = {
-    Connection,
-    // Module,
-    Node
-  };
-
-
-
   context('Base', () => {
     it('can be created', () => {
-      mountConnection(...);
       connection = Cypress.vue; // the ref to the APP
                                 // HOW do get the component (which was set up in "mountVue") ?
       connection = connection.$children[0];
@@ -131,28 +153,5 @@ describe.skip('Connection', () => {
     });
   });
 
-  context('UI', () => {
-    it('should render correct (SVG) contents', () => {
-      cy.get('line').snapshot();
 
-      // throw Error('need content snapshot'); // TODO
-    });
-
-    it('sets its coordinates correctly', () => {
-      const toModule = {
-        x: 123, y: 45
-      };
-      const fromModule = {
-        x: 67, y: 89
-      };
-
-      connection.vm.toModule = toModule;
-      connection.vm.fromModule = fromModule;
-
-      expect(connection.vm.x1).toBe(70 + cellWidth);
-      expect(connection.vm.y1).toBe(1);
-      expect(connection.vm.x2).toBe(1);
-      expect(connection.vm.y2).toBe(1);
-    });
-  });
 });

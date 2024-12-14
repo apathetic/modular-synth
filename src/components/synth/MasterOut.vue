@@ -78,7 +78,7 @@
           node: {
             name: 'MasterOut',
             inlets,
-            gain
+            // gain
           },
         });
 

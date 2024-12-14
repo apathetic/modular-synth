@@ -4,6 +4,9 @@ import { useAppStore } from '@/stores/app';
 import { state as blank } from '@/stores/patch';
 import PatchManager from './PatchManager.vue';
 
+import { setActivePinia, createPinia } from 'pinia'
+
+
 
 const mockPatch = blank();
 const mockStore = {
@@ -40,28 +43,33 @@ describe('PatchManager.vue', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // creates a fresh pinia and makes it active
+    // so it's automatically picked up by any useStore() call
+    // without having to pass it to it: `useStore(pinia)`
+    // setActivePinia(createPinia())
+
   });
 
   describe.only('Patches: ', () => {
-    it.skip('loads a default patch', () => {
+    it('loads a default patch', () => {
       render(PatchManager);
 
-      // const selects = getAllByRole('option', { name: '<blank>' });
-      // expect(selects[0].selected).toBe(true);
-
-      // cy.contains('.patch option', '<blank>');
-      expect(screen.getByRole('option', { name: '<blank>' }).selected).toBe(true);
-
-      // cy.contains('.params option', '<blank>');
+      expect(screen.getByRole('option', { name: 'untitled' }).selected).toBe(true);
       expect(screen.getByRole('option', { name: '<blank>' }).selected).toBe(true);
     });
 
     it('can load a patch', async () => {
+      // const mockStore = useAppStore();
+
+      // mockStore.patches = [blank(), blank()];
       render(PatchManager);
+      expect(mockStore.loadPatch).toHaveBeenCalledTimes(1); // by default
+
       const patches = screen.getByTestId('patch'); // the `patch` select dropdown
       await fireEvent.update(patches, { target: { value: 0 } })
+      expect(mockStore.loadPatch).toHaveBeenCalledTimes(2);
 
-      expect(mockStore.loadPatch).toBeCalled();
     });
 
     it('in play mode, cannot add nor remove', () => {
@@ -69,9 +77,14 @@ describe('PatchManager.vue', () => {
 
       render(PatchManager);
       const buttons = screen.queryAllByRole('button');
+      const inputs = screen.queryAllByRole('input');
 
       buttons.forEach((button) => {
         expect(button).toHaveProperty('disabled', true);
+      });
+
+      inputs.forEach((input) => {
+        expect(input).toHaveProperty('disabled', true);
       });
     });
 
@@ -110,8 +123,17 @@ describe('PatchManager.vue', () => {
       expect(mockStore.removePatch).toHaveBeenCalledTimes(0);
     });
 
-    it.skip('in edit mode, can edit the patch name', () => {
+    it.only('in edit mode, can edit the patch name and parameters name', () => {
+      mockStore.isEditing = true;
 
+      render(PatchManager);
+      const inputs = screen.queryAllByRole('input');
+
+      fireEvent.change(inputs[0], { target: { value: 'rando' }});
+      expect(mockStore.patch).toHaveProperty('name', 'rando');
+
+      fireEvent.change(inputs[1], { target: { value: 'optionsatic' }});
+      expect(mockStore.config).toHaveProperty('name', 'optionsatic');
     });
   });
 
