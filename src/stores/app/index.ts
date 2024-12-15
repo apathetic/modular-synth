@@ -127,6 +127,8 @@ export const useAppStore = defineStore('app', {
       return this.config?.parameters || {};
     },
 
+    getNode: (state) => (id: number) => state.registry[id],
+
 
     // -----------------------------------------------
     //  USER
@@ -135,8 +137,6 @@ export const useAppStore = defineStore('app', {
     isAuthenticated (state): Boolean {
       return !!state.session;
     },
-
-    getNode: (state) => (id: number) => state.registry[id],
 
     bounds(): number {
       return this.modules.reduce((max, module) => Math.max(max, module.x), 0);

@@ -8,24 +8,13 @@
         <option v-for="(patch, id) in patches" :key="patch.id" :value="id">{{ patch.name }}</option>
       </select>
       <input type="text" v-model="currentPatchName">
-      <button
-        class="add"
-        title="add patch"
-        :disabled="!editing"
-        @click="addPatch"
-      >+</button>
-      <button
-        class="remove"
-        title="remove patch"
-        :disabled="!editing"
-        @click="removePatch"
-      >-</button>
+      <button class="add" title="add patch" :disabled="!editing" @click="addPatch">+</button>
+      <button class="remove" title="remove patch" :disabled="!editing" @click="removePatch">-</button>
     </div>
 
-    <div class="params select">
+    <div class="params select" data-testid="params">
       <span>0{{currentConfigId}}</span>
-      <select v-model="currentConfigId" ref="configRef" data-testid="config">
-        <!-- <option value="" disabled selected>&lt;select configs&gt;</option> -->
+      <select v-model="currentConfigId" ref="configRef">
         <option v-for="(config, id) in configs" :key="id" :value="id">{{ config.name }}</option>
       </select>
       <input type="text" v-model="currentConfigName">

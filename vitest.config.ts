@@ -10,20 +10,15 @@ export default mergeConfig(
       // options for test in a browser environment
       // browser?: BrowserConfigOptions; //// FOR WEB AUDIO THINGS?
 
-      root: fileURLToPath(new URL('./', import.meta.url)),
-      setupFiles: ['tests/setup.ts'],
+      silent : true,
       environment: 'jsdom',
+      setupFiles: ['tests/setup.ts'],
+      root: fileURLToPath(new URL('./', import.meta.url)),
       // include: [],
 
       // UNIT TESTS are *.test.js
       // COMPONENT TESTS are *.spec.ts
       exclude: [...configDefaults.exclude, '**/*.spec.{js,jsx,ts,tsx}'],
-
-      // globalSetup: [],
-      // globals
-      // typecheck:
-      // exclude: ['**/dist/**', '**/node_modules/**', '**/e2e/**'],
-      // ...
     },
   }),
 );

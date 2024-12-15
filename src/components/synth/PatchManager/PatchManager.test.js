@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, getByTestId, getAllByRole, userEvent, selectOptions, fireEvent } from '@testing-library/vue';
+import { render, screen, getByTestId, within, fireEvent } from '@testing-library/vue';
 import { useAppStore } from '@/stores/app';
 import { state as blank } from '@/stores/patch';
 import PatchManager from './PatchManager.vue';
@@ -59,17 +59,16 @@ describe('PatchManager.vue', () => {
       expect(screen.getByRole('option', { name: '<blank>' }).selected).toBe(true);
     });
 
-    it('can load a patch', async () => {
+    it('can load a patch', () => {
       // const mockStore = useAppStore();
-
-      // mockStore.patches = [blank(), blank()];
       render(PatchManager);
       expect(mockStore.loadPatch).toHaveBeenCalledTimes(1); // by default
 
-      const patches = screen.getByTestId('patch'); // the `patch` select dropdown
-      await fireEvent.update(patches, { target: { value: 0 } })
-      expect(mockStore.loadPatch).toHaveBeenCalledTimes(2);
+      const patch = screen.getByTestId('patch');
+      const dropdown = within(patch).getByRole('combobox');
 
+      fireEvent.update(dropdown, { target: { value: 0 } });
+      expect(mockStore.loadPatch).toHaveBeenCalledTimes(2);
     });
 
     it('in play mode, cannot add nor remove', () => {
@@ -88,51 +87,54 @@ describe('PatchManager.vue', () => {
       });
     });
 
-    it('in edit mode, can add a new patch', async () => {
+    it('in edit mode, can add a new patch', () => {
       mockStore.isEditing = true;
 
       render(PatchManager);
       const add = screen.getByTitle('add patch');
-      await fireEvent.click(add);
+      fireEvent.click(add);
 
       expect(mockStore.addPatch).toBeCalled();
     });
 
-    it('in edit mode, can remove a patch', async () => {
+    it('in edit mode, can remove a patch', () => {
       window.confirm = vi.fn(() => true);
       mockStore.isEditing = true;
       mockStore.patches = [blank(), blank()];
 
       render(PatchManager);
       const remove = screen.getByTitle('remove patch');
-      await fireEvent.click(remove);
+      fireEvent.click(remove);
 
       expect(mockStore.removePatch).toHaveBeenCalledTimes(1);
       expect(mockStore.removePatch).toHaveBeenCalledWith(mockStore.patchId);
     });
 
-    it('in edit mode, can not remove last patch', async () => {
+    it('in edit mode, can not remove last patch', () => {
       window.confirm = vi.fn(() => true);
       mockStore.isEditing = true;
       mockStore.patches = [blank()]; // only 1 patch
 
       render(PatchManager);
       const remove = screen.getByTitle('remove patch');
-      await fireEvent.click(remove);
+      fireEvent.click(remove);
 
       expect(mockStore.removePatch).toHaveBeenCalledTimes(0);
     });
 
-    it.only('in edit mode, can edit the patch name and parameters name', () => {
+    it('in edit mode, can edit the patch name and parameters name', () => {
       mockStore.isEditing = true;
 
       render(PatchManager);
-      const inputs = screen.queryAllByRole('input');
 
-      fireEvent.change(inputs[0], { target: { value: 'rando' }});
+      const patch = screen.getByTestId('patch');
+      const patchname = within(patch).getByRole('textbox');
+      fireEvent.update(patchname, 'rando');
       expect(mockStore.patch).toHaveProperty('name', 'rando');
 
-      fireEvent.change(inputs[1], { target: { value: 'optionsatic' }});
+      const params = screen.getByTestId('params');
+      const paramsname = within(params).getByRole('textbox');
+      fireEvent.update(paramsname, 'optionsatic');
       expect(mockStore.config).toHaveProperty('name', 'optionsatic');
     });
   });
