@@ -11,8 +11,8 @@ export const context: AudioContext = AudioContext && new AudioContext();
  * Store references to all WebAudio components. They are indexed by
  * `id` - the same `id` used to referece the `module` in the $store.
  */
-type Nodes = {[value: number]: Node};
-export const registry: Nodes = {};
+// type Nodes = {[value: number]: Node};
+// export const registry: Nodes = {};
 
 /**
  *

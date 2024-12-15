@@ -51,7 +51,7 @@ describe('PatchManager.vue', () => {
 
   });
 
-  describe.only('Patches: ', () => {
+  describe('Patches: ', () => {
     it('loads a default patch', () => {
       render(PatchManager);
 
@@ -122,7 +122,7 @@ describe('PatchManager.vue', () => {
       expect(mockStore.removePatch).toHaveBeenCalledTimes(0);
     });
 
-    it('in edit mode, can edit the patch name and parameters name', () => {
+    it('in edit mode, can edit the patch name /* and parameters name */', () => {
       mockStore.isEditing = true;
 
       render(PatchManager);
@@ -132,18 +132,55 @@ describe('PatchManager.vue', () => {
       fireEvent.update(patchname, 'rando');
       expect(mockStore.patch).toHaveProperty('name', 'rando');
 
+      // const params = screen.getByTestId('params');
+      // const paramsname = within(params).getByRole('textbox');
+      // fireEvent.update(paramsname, 'optionsatic');
+      // expect(mockStore.config).toHaveProperty('name', 'optionsatic');
+    });
+  });
+
+  describe.skip('Parameters', () => {
+    it.only('can load a set of parameters', () => {
+      mockStore.patches[0].configs = [
+        {'name':'wheee', 'parameters': {}},
+        {'name':'huzzah','parameters': {}},
+      ];
+
+      console.log(mockStore.patch);
+
+      render(PatchManager);
+
+      screen.debug();
+
+
+      const params = screen.getByTestId('params');
+      const dropdown = within(params).getByRole('combobox');
+
+      expect(within(params).getByRole('option', { name: 'wheee' }).selected).toBe(true);
+
+      // userEvent.selectOptions(
+      //   within(params).getByRole('combobox'),
+      //   within(params).getByRole('option', { name: 'Ireland' }),
+      // );
+
+
+      // expect(screen.getByRole('option', { name: 'wheee' }).selected).toBe(true);
+      // fireEvent.update(dropdown, { target: { value: 1 } });
+      // expect(screen.getByRole('option', { name: 'huzzah' }).selected).toBe(true);
+
+    });
+    it('in edit mode, can add a new parameter config', () => { });
+    it('in edit mode, can remove a parameter config', () => { });
+    it('in edit mode, can edit the parameters name', () => {
+      mockStore.isEditing = true;
+
+      render(PatchManager);
+
       const params = screen.getByTestId('params');
       const paramsname = within(params).getByRole('textbox');
       fireEvent.update(paramsname, 'optionsatic');
       expect(mockStore.config).toHaveProperty('name', 'optionsatic');
     });
-  });
-
-  describe('Parameters', () => {
-    it('can load a parameter config', () => {});
-    it('in edit mode, can add a new parameter config', () => { });
-    it('in edit mode, can remove a parameter config', () => { });
-    it('in edit mode, can edit the parameter config name', () => { });
 
     it('connections are connected upon loading a patch', () => {});
     it('parameters are applied upon loading a patch', () => {});

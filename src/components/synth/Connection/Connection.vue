@@ -62,6 +62,7 @@ THOUGHTS:
       id: Number,
       to: Object,
       from: Object,
+      type: String, // "audio" | "data"
     },
 
     setup (props) {
