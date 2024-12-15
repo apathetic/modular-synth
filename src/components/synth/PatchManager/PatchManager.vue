@@ -1,3 +1,42 @@
+<template>
+  <div :class="['patch-manager', {'editing': editing }]">
+
+    <div class="patch select" data-testid="patch">
+      <span>0{{currentPatchId}}</span>
+      <select v-model="currentPatchId" ref="patchRef">
+        <!-- <option value="" disabled selected>&lt;select patch&gt;</option> -->
+        <option v-for="(patch, id) in patches" :key="patch.id" :value="id">{{ patch.name }}</option>
+      </select>
+      <input type="text" v-model="currentPatchName">
+      <button
+        class="add"
+        title="add patch"
+        :disabled="!editing"
+        @click="addPatch"
+      >+</button>
+      <button
+        class="remove"
+        title="remove patch"
+        :disabled="!editing"
+        @click="removePatch"
+      >-</button>
+    </div>
+
+    <div class="params select">
+      <span>0{{currentConfigId}}</span>
+      <select v-model="currentConfigId" ref="configRef" data-testid="config">
+        <!-- <option value="" disabled selected>&lt;select configs&gt;</option> -->
+        <option v-for="(config, id) in configs" :key="id" :value="id">{{ config.name }}</option>
+      </select>
+      <input type="text" v-model="currentConfigName">
+      <button class="add" :disabled="!editing" @click="addConfig">+</button>
+      <button class="remove" :disabled="!editing" @click="removeConfig">-</button>
+    </div>
+
+  </div>
+</template>
+
+
 <script lang="ts">
   import { defineComponent, computed, ref } from 'vue';
   import { useAppStore } from '@/stores/app';
@@ -84,45 +123,6 @@
     },
   });
 </script>
-
-
-<template>
-  <div :class="['patch-manager', {'editing': editing }]">
-
-    <div class="patch select" data-testid="patch">
-      <span>0{{currentPatchId}}</span>
-      <select v-model="currentPatchId" ref="patchRef">
-        <!-- <option value="" disabled selected>&lt;select patch&gt;</option> -->
-        <option v-for="(patch, id) in patches" :key="patch.id" :value="id">{{ patch.name }}</option>
-      </select>
-      <input type="text" v-model="currentPatchName">
-      <button
-        class="add"
-        title="add patch"
-        :disabled="!editing"
-        @click="addPatch"
-      >+</button>
-      <button
-        class="remove"
-        title="remove patch"
-        :disabled="!editing"
-        @click="removePatch"
-      >-</button>
-    </div>
-
-    <div class="params select">
-      <span>0{{currentConfigId}}</span>
-      <select v-model="currentConfigId" ref="configRef" data-testid="config">
-        <!-- <option value="" disabled selected>&lt;select configs&gt;</option> -->
-        <option v-for="(config, id) in configs" :key="id" :value="id">{{ config.name }}</option>
-      </select>
-      <input type="text" v-model="currentConfigName">
-      <button class="add" :disabled="!editing" @click="addConfig">+</button>
-      <button class="remove" :disabled="!editing" @click="removeConfig">-</button>
-    </div>
-
-  </div>
-</template>
 
 
 <style lang="scss">
