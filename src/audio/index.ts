@@ -18,7 +18,7 @@ context.suspend();
 
 /**
  *
- */
+ * /
 type Constants = {[value: number]: AudioBufferSourceNode};
 const constants: Constants = {};  // memoize this shizz??
 
@@ -82,7 +82,7 @@ export function delay(delayTime: number = 0.1, maxDelayTime: number = 5): DelayN
  * Generate a constant stream of 1's (or given value) at the audio-rate.
  * @param value The value to generate.
  * @returns {ConstantSourceNode}
- */
+ * /
 export function signal(value: number = 1) {
   const source = context.createConstantSource();
   const setValue = (value: number) => source.offset.value = value;

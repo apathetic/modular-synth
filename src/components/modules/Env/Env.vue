@@ -5,10 +5,10 @@
     </div>
 
     <div class="module-interface">
-      <knob param="attack"  @value="A = $event" :min="0.01" :max="1" :default="0.1" :precision="2"></knob>
-      <knob param="decay"   @value="D = $event" :min="0.01" :max="1" :default="0.2" :precision="2"></knob>
-      <knob param="sustain" @value="S = $event" :min="0.01" :max="1" :default="0.8" :precision="2"></knob>
-      <knob param="release" @value="R = $event" :min="0.01" :max="1" :default="0.3" :precision="2"></knob>
+      <knob param="attack"  @value="setAttack"  :min="0.01" :max="1" :default="0.1" :precision="2"></knob>
+      <knob param="decay"   @value="setDecay"   :min="0.01" :max="1" :default="0.2" :precision="2"></knob>
+      <knob param="sustain" @value="setSustain" :min="0.01" :max="1" :default="0.8" :precision="2"></knob>
+      <knob param="release" @value="setRelease" :min="0.01" :max="1" :default="0.3" :precision="2"></knob>
     </div>
 
     <div class="module-connections">
@@ -20,10 +20,12 @@
 
 
 <script lang="ts">
-  import { signal } from '@/audio';
+  import { defineComponent, onUnmounted } from 'vue';
+  import { Envelope } from 'tone';
 
-  export default {
-    inject: [ 'context' ],
+  export default defineComponent({
+    name: 'Env',
+
     props: {
       id: {
         default: undefined,
@@ -31,86 +33,85 @@
       }
     },
 
-    data() {
-      return {
-        name: 'Env',
+    setup (props, { expose }) {
 
-        A: 0.1,
-        D: 0.1,
-        S: 0.6,
-        R: 0.1,
+      const env = new Envelope({
+        //     attack: 0.1,
+        //     decay: 0.2,
+        //     sustain: 0.5,
+        //     release: 0.8,
+      });
 
-        inlets: [
-          {
-            label: 'vel',
-            desc: 'Acts as a trigger for the envelope'
-          },
-          {
-            label: 'mod',
-            desc: '???'
-          }
-        ],
-
-        outlets: [
-          { label: 'out' }
-        ]
-      };
-    },
-
-    created() {
-      this.adsr = this.context.createGain();
-      this.adsr.gain.value = 0;
-
-      this.inlets[0].data = this.gate;      // input is mapped to gate fn
-      // this.inlets[1].data = function() {};  // mod?
-
-      this.outlets[0].audio = this.adsr;
-      signal(1).connect(this.adsr);
-    },
-
-    unmounted() {
-      signal(1).disconnect(this.adsr);
-      this.adsr.disconnect(); // this is done in Connection
-
-      // DESTROY signal? TODO
-    },
-
-    methods: {
-      gate(velocity) {
-        if (velocity) {
-          this.start();
-        } else {
-          this.stop();
+      const inlets = [
+        {
+          label: 'vel',
+          desc: 'Acts as a trigger for the envelope',
+          data: gate
+        },
+        {
+          label: 'mod',
+          desc: '???'
+          // data: TBD
         }
-      },
+      ];
 
-      start() {   // "trigger" ?
-        const now = this.context.currentTime;
-        const adsr = this.adsr.gain;
-        const currentValue = adsr.value;  // for the case where the previous envelope is still active
+      const outlets = [
+        {
+          label: 'out',
+          desc: 'An audio envelope signal',
+          audio: env
+        }
+      ];
 
-        adsr.cancelScheduledValues(now);
-        adsr.setValueAtTime(currentValue, now);
+
+      onUnmounted(() => {
+        env.dispose();
+      });
 
 
-        // perhaps better:
-
-        // setTargetAtTime(to, now, duration)
-        // exponentialRampToValueAtTime
-        adsr.linearRampToValueAtTime(1, now + this.A);
-        adsr.linearRampToValueAtTime(this.S, now + this.A + this.D);
-      },
-
-      stop() {    // "release"
-        const now = this.context.currentTime;
-        const adsr = this.adsr.gain;
-
-        adsr.cancelScheduledValues(0);
-        adsr.setValueAtTime(adsr.value, now);
-        adsr.linearRampToValueAtTime(0, now + this.R);
+      function setAttack(A: number) {
+        env.set({ attack: A });
       }
+
+      function setDecay(D: number) {
+        env.set({ decay: D });
+      }
+
+      function setSustain(S: number) {
+        env.set({ sustain: S });
+      }
+
+      function setRelease(R: number) {
+        env.set({ release: R });
+      }
+
+      function gate(velocity: number) {
+        if (velocity) {
+          env.triggerAttack();
+        } else {
+          env.triggerRelease();
+        }
+      }
+
+
+      // AUDIO
+      expose({
+        inlets,
+        outlets
+      });
+
+      // UI
+      return {
+        inlets,
+        outlets,
+        setAttack,
+        setDecay,
+        setSustain,
+        setRelease,
+      };
+
     }
-  };
+  });
 </script>
 
 
