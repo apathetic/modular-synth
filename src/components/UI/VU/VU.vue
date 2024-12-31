@@ -15,10 +15,11 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
   import { useAppStore } from '@/stores/app';
   import { Meter } from '@/audio';
 
+  const WIDTH = 16;
   const HEIGHT = 132;
 
   export default {
-    name: 'ui-VU',
+    name: 'VU',
 
     computed: {
       // ...mapGetters(['power'])
@@ -56,7 +57,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 
       this.audio.connect && this.audio.connect(this.meter.input);
 
-      meterContext.canvas.width = 20;
+      meterContext.canvas.width = WIDTH;
       meterContext.canvas.height = HEIGHT;
 
       meterGraident.addColorStop(0, '#BFFF02');
@@ -83,9 +84,9 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 
         //                   x, y, w, h.  From upper-left
         meterContext.fillStyle = 'black';               // paint VU black
-        meterContext.fillRect(0, 0, 20, HEIGHT);
+        meterContext.fillRect(0, 0, WIDTH, HEIGHT);
         meterContext.fillStyle = this.meterGraident;    // fill relevant bits with gradient
-        meterContext.fillRect(0, 0, 20, HEIGHT * level);
+        meterContext.fillRect(0, 0, WIDTH, HEIGHT * level);
 
 
       },
@@ -106,7 +107,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 <style lang="scss">
   canvas.vu {
     background: black;
-    width: 20px;
+    width: 16px;
     height: 132px;
 
     // b/c coords start at top-left, not bottom, and we draw from top -> down. however, VU paints from bottom -> up
