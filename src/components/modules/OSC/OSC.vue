@@ -6,11 +6,11 @@
 
     <div class="module-interface">
       <p>OSC</p>
-      <Dropdown param="type"   @value="type = $event" :options="types"></Dropdown>
-      <Slider   param="mod"    @value="mod = $event"    :min="0"    :max="100"></Slider>
-      <Knob     param="freq"   @value="freq = $event"   :min="100"  :max="12000" :default="440" mode="log"></Knob>
-      <Knob     param="PW"     @value="PW = $event"     :min="0"    :max="6.28"  :precision="2"></Knob>
-      <Knob     param="detune" @value="detune = $event" :min="-500" :max="500"></Knob>
+      <Dropdown param="type"   @value="setType"       :options="types"></Dropdown>
+      <Slider   param="mod"    @value="setDepth"      :min="0"    :max="100"></Slider>
+      <Knob     param="freq"   @value="setFrequency"  :min="100"  :max="12000" :default="440" mode="log"></Knob>
+      <Knob     param="PW"     @value="setPulseWidth" :min="0"    :max="6.28"  :precision="2"></Knob>
+      <Knob     param="detune" @value="setDetune"     :min="-500" :max="500"></Knob>
     </div>
 
     <div class="module-connections">
@@ -22,7 +22,7 @@
 
 
 <script lang="ts">
-  import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
+  import { defineComponent, ref, onUnmounted } from 'vue';
   import { Parameter, oscillator, gain } from '@/audio';
 
   export default defineComponent({
@@ -36,9 +36,10 @@
     },
 
     setup (props, { expose }) {
-      const context = inject('context') as AudioContext;
-      const types: OscillatorType[] = ['sine', 'sawtooth', 'triangle', 'square']; // ==> 'pulse' instead
+      const types: OscillatorType[] = ['sine', 'sawtooth', 'triangle', 'square'];
       const type = ref(types[0]);
+      // const osc = new AMOscillator(440, type.value);
+      // const osc = new Oscillator(440, type.value);
 
       const freq = ref(440);
       const mod = ref(0);
@@ -55,30 +56,30 @@
       modDepth.connect(osc.detune);      // input connects to audioParam (freq) "mod"
 
       // Pulse width
-      const pulse = new Parameter(0);
+      // const pulse = new Parameter(0);
 
 
       const inlets = [
         {
           label: 'freq',
           desc: 'The frequency of the Oscillator. [a-rate / k-rate]',
-          data: setFreq,
+          data: setFrequency,
         },
-        {
-          label: 'mod',
-          desc: 'Modulation input, ie. LFO or similar. Depth is controlled via the slider',
-          audio: modDepth,
-        },
+        // {
+        //   label: 'mod',
+        //   desc: 'Modulation input, ie. LFO or similar. Depth is controlled via the slider',
+        //   audio: modDepth,
+        // },
         {
           label: 'detune',
           desc: 'Detune the oscillator frequency, similar to bend',
           data: setDetune,
         },
-        {
-          label: 'pulse',
-          desc: 'Pulse width modulation. [0 - 1]',
-          audio: pulse.input,
-        }
+        // {
+        //   label: 'pulse',
+        //   desc: 'Pulse width modulation. [0 - 1]',
+        //   audio: pulse.input,
+        // }
       ];
 
       const outlets = [
@@ -89,34 +90,21 @@
         }
       ];
 
-      // Map k-Params
-      watch(freq, setFreq);
-      watch(type, setType);
-      watch(PW, setPulse);
-      watch(mod, setDepth);
 
-      osc.start();
-
-      onUnmounted(() => {
-        pulse.destroy();
-        osc.stop();
-        // osc.disconnect(); // this is done in Connection
-        modDepth.disconnect();
-      });
+      onUnmounted(() => { osc.dispose(); });
 
 
       /**
        * k-rate control of the Oscillator frequency.
-       * TODO: this should set a `base` modification frequency, around which an
-       * A-rate parameter may apply modulations.
        * @param {number} f frequency
        */
-      function setFreq(f: number) {
+      function setFrequency(f: number) {
         if (f < 1) { return; } // no DC
         // osc.cancelScheduledValues();
 
-        osc.frequency.exponentialRampToValueAtTime(f, context.currentTime + 0.01); // 10ms
-        freq.value = f; // updates knob display
+        // osc.frequency.exponentialRampToValueAtTime(f, context.currentTime + 0.01); // 10ms
+        // freq.value = f; // updates knob display
+        osc.set({ frequency: f });
       }
 
       /**
@@ -124,7 +112,7 @@
        * @param {OscillatorType} t One of the pre-defined oscillator wave types
        */
       function setType(t: OscillatorType) {
-        osc.type = t;
+        osc.set({ type: t });
       }
 
       /**
@@ -137,7 +125,7 @@
         // const freq = currentFreq * Math.pow(2, cents / 1200);
         // const depth = currentFreq * d / 100.0;
 
-        modDepth.gain.value = d; // freq - currentFreq;
+        osc.set({ harmonicity: d });
       }
 
       /**
@@ -153,30 +141,10 @@
        * Update Oscillator Pulse width
        * @param {float} p  Pulse, between 0 and 1.
        */
-      function setPulse(p: number) {
+      function setPulseWidth(p: number) {
         // Update the property that contains the value (not connecting audio nodes here)
         pulse.set(p);
         PW.value = p;
-      }
-
-      /**
-       * The phase of the oscillator in degrees.
-       * @type {Degrees}
-       * @name phase
-       * @example
-       * osc.phase = 180; //flips the phase of the oscillator
-       */
-      function getPhase() {
-        return phase.value * (180 / Math.PI);
-      }
-
-      /**
-       *
-       */
-      function setPhase(phaseValue: number) {
-        phase.value = phaseValue * Math.PI / 180;
-        // reset the type
-        // type.value = ....
       }
 
 
@@ -190,12 +158,12 @@
       return {
         inlets,
         outlets,
-        type,
         types,
-        mod,
-        freq,
-        PW,
-        detune,
+        setType,
+        setFrequency,
+        setPulseWidth,
+        setDepth,
+        setDetune,
       };
     }
   });

@@ -10,64 +10,74 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 
 
 <script lang="ts">
-  // import { mapGetters } from 'vuex';
-  import { mapState } from 'pinia';
+  import { defineComponent, ref, computed, watch, onMounted, onUnmounted } from 'vue';
+  import { Meter } from 'tone';
   import { useAppStore } from '@/stores/app';
-  import { Meter } from '@/audio';
+  // import { Meter } from '@/audio';
+  // import type { ToneAudioNode } from 'tone';
 
   const WIDTH = 16;
   const HEIGHT = 132;
 
-  export default {
+  export default defineComponent({
     name: 'VU',
-
-    computed: {
-      // ...mapGetters(['power'])
-      ...mapState(useAppStore, ['power']),
-    },
 
     props: {
       audio: {
-        type: AudioNode,
-        default: null
+        // type: any,//ToneAudioNode,//<GainOptions<'gain'>>,
+        default: null,
+        required: true,
       }
     },
 
-    created() {
-      this.meter = new Meter();
-      this.ticking = true;
+    setup(props, { expose }) {
+      const store = useAppStore();
+      const power = computed(() => store.power);
 
-      this.$watch('power', (on) => {
+    // computed: {
+    //   // ...mapGetters(['power'])
+    //   ...mapState(useAppStore, ['power']),
+    // },
+
+
+
+      let ticking = true;
+      const meter = new Meter();
+      const vu = ref();
+
+      props.audio.connect(meter);
+
+      watch(power, (on) => {
         if (on) {
-          this.loop();
+          loop();
         } else {
           // set buffer to 0 and update display
-          this.meterContext.clearRect(0, 0, 20, HEIGHT);
+          meterContext.clearRect(0, 0, 20, HEIGHT);
         }
       });
-    },
 
-    unmounted() {
-      // clean up METER // TODO
-    },
+      onUnmounted(() => {
+        // clean up METER // TODO
+      });
 
-    mounted() {
-      const meterContext = this.meterContext = this.$refs.vu.getContext('2d');
-      const meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, HEIGHT);
+      onMounted(() => {
+        // const meterContext = this.meterContext = this.$refs.vu.getContext('2d');
+        // const meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, HEIGHT);
+        const meterContext = vu.getContext('2d');
+        const meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, HEIGHT);
 
-      this.audio.connect && this.audio.connect(this.meter.input);
+        this.audio.connect && this.audio.connect(this.meter.input);
 
-      meterContext.canvas.width = WIDTH;
-      meterContext.canvas.height = HEIGHT;
+          meterContext.canvas.width = WIDTH;
+          meterContext.canvas.height = HEIGHT;
 
-      meterGraident.addColorStop(0, '#BFFF02');
-      meterGraident.addColorStop(0.8, '#02FF24');
-      meterGraident.addColorStop(1, '#FF0202');
-    },
+        meterGraident.addColorStop(0, '#BFFF02');
+        meterGraident.addColorStop(0.8, '#02FF24');
+        meterGraident.addColorStop(1, '#FF0202');
+      })
 
-    methods: {
-      draw() {
-        this.meter.process();
+      function draw() {
+        meter.process();
         this.rms = this.meter.rms;
         this.peak = this.meter.peak;
 
@@ -89,16 +99,26 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
         meterContext.fillRect(0, 0, WIDTH, HEIGHT * level);
 
 
-      },
+      }
 
-      loop() {
-        if (this.power) { // TODO check for this.editing, here?
-          this.ticking && this.draw();
-          this.ticking = !this.ticking;
-
-          window.requestAnimationFrame(this.loop);
+      function loop() {
+        if (power) {
+          ticking && draw();
+          ticking = !ticking;
+          window.requestAnimationFrame(loop);
         }
       }
+
+      // AUDIO
+      // expose({
+      //   meter
+      // });
+
+      // UI
+      return {
+        vu
+      }
+
     }
   };
 </script>

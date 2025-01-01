@@ -21,16 +21,27 @@
 
 <script lang="ts">
   import { defineComponent, ref, computed } from 'vue';
+  import { getTransport } from 'tone';
 
   export default defineComponent({
     name: 'Clock',
 
     setup() {
+      const transport = getTransport();
 
-      // all loops start when the Transport is started
-      Tone.getTransport().start();
-      // ramp up to 800 bpm over 10 seconds
-      Tone.getTransport().bpm.rampTo(800, 10);
+      function startTransport() {
+        // all loops start when the Transport is started
+        transport.start();
+      }
+
+      function stopTransport() {
+        transport.stop();
+      }
+
+      function setBPM(bpm: number) {
+        transport.bpm.value = bpm; // bpm.rampTo(800, 10);
+      }
+
     }
   });
 </script>

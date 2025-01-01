@@ -13,22 +13,28 @@
 
 <script lang="ts">
   import { defineComponent, computed } from 'vue';
+  import { getContext, getTransport } from 'tone';
   import { useAppStore } from '@/stores/app';
-  import { context } from '@/audio';
+  // import { context } from '@/audio';
 
   export default defineComponent({
     name: 'Power',
     setup() {
       const store = useAppStore();
       const power = computed(() => store.power);
+      // const transport = getTransport();
+      const context = getContext();
 
       function togglePower() {
         store.power = !store.power;
 
         if (store.power) {
-          context.resume();
+          // context.resume();
+          context.rawContext.resume();
+          // transport.start(); // no wait, do this in the Clock component
         } else {
-          context.suspend();
+          // context.suspend();
+          context.rawContext.suspend(0);
         }
       }
 

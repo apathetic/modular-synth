@@ -29,9 +29,9 @@
 
 <script lang="ts">
   import { defineComponent, ref, computed, watch, onMounted } from 'vue';
+  import { Gain } from 'tone';
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
-  import { context, gain as gainNode } from '@/audio';
   import VU from '../UI/VU';
 
 
@@ -43,12 +43,11 @@
 
       const store = useAppStore();
       const masterModule = computed(() => store.patch.modules[0]);
+      // const module = store.getModule(0);
 
-      const out1 = gainNode(0.5);
-      const out2 = gainNode(0.5);
 
-      out1.connect(context.destination);
-      out2.connect(context.destination);
+      const out1 = new Gain(0).toDestination();
+      const out2 = new Gain(0).toDestination();
 
       const el = ref<HTMLElement | null>(null);
       const gain = ref(0.5);
@@ -94,8 +93,10 @@
       });
 
       function setGain(g: number) {
-        out1.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
-        out2.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
+        out1.gain.rampTo(g, 0.1);
+        out2.gain.rampTo(g, 0.1);
+        // out1.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
+        // out2.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
       }
 
       // AUDIO
