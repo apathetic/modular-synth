@@ -12,36 +12,38 @@
 
 
 <script lang="ts">
-  // import * as Tone from 'tone';
-  import { start } from 'tone';
-  import { defineComponent, computed } from 'vue';
+  import { defineComponent, inject, computed, watch } from 'vue';
   import { useAppStore } from '@/stores/app';
 
   export default defineComponent({
     name: 'Power',
     setup() {
+      const context: AudioContext = inject('context');
       const store = useAppStore();
+      const power = computed(() => store.power);
+
+      watch(power, (on: boolean) => {
+        if (on) {
+          context.resume();
+        }
+        else {
+          context.suspend();
+        }
+      });
+
 
       window.addEventListener('keydown', (e) => {
         switch (e.key) {
           case 'Escape':
-
-            // this.togglePower();
-
+            // store.togglePower();
             break;
-          default:
-            // console.log(e.code);
         }
       });
 
-      async function togglePower() {
-        await start();
-        store.togglePower();
-      }
 
       return {
-        power: computed(() => store.power),
-        togglePower  //: store.togglePower,
+        power,
+        togglePower: store.togglePower,
       };
     }
   });
