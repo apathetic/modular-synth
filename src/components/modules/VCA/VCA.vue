@@ -17,7 +17,7 @@
 
 
 <script lang="ts">
-  import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
+  import { defineComponent, onUnmounted } from 'vue';
   import { gain } from '@/audio';
 
   export default defineComponent({
@@ -54,7 +54,7 @@
 
 
       onUnmounted(() => {
-        // this.inlets[0].audio.disconnect(); // this is done in Connection
+        vca.dispose();
       });
 
 

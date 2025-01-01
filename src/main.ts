@@ -1,5 +1,4 @@
 import { createApp } from 'vue';
-import { context } from '@/audio';
 import { createStore } from '@/stores';
 import { registerComponents } from '@/utils/register';
 import Synth from './App.vue';
@@ -14,5 +13,4 @@ createStore(app);
 registerComponents(app);
 // registerServiceWorker();
 
-app.provide('context', <AudioContext>context);
 app.mount('body');

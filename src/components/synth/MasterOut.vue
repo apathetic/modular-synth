@@ -8,7 +8,7 @@
   >
 
     <div class="module-interface">
-      <VU :audio="out1" />
+      <!-- <VU :audio="out1" /> -->
       <input
         type="range"
         orient="vertical"
@@ -17,7 +17,7 @@
         step="0.05"
         v-model="gain"
       />
-      <VU :audio="out2" />
+      <!-- <VU :audio="out2" /> -->
     </div>
 
     <div class="module-connections">

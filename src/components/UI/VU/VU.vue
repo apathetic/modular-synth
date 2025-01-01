@@ -33,12 +33,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
     setup(props, { expose }) {
       const store = useAppStore();
       const power = computed(() => store.power);
-
-    // computed: {
-    //   // ...mapGetters(['power'])
-    //   ...mapState(useAppStore, ['power']),
-    // },
-
+      /*
 
 
       let ticking = true;
@@ -118,9 +113,9 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
       return {
         vu
       }
-
+      /* */
     }
-  };
+  });
 </script>
 
 

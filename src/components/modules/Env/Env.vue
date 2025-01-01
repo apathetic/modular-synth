@@ -68,7 +68,6 @@
         env.dispose();
       });
 
-
       function setAttack(A: number) {
         env.set({ attack: A });
       }
