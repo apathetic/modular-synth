@@ -21,7 +21,7 @@
 
 <script lang="ts">
   import { defineComponent, onUnmounted } from 'vue';
-  import { Envelope } from 'tone';
+  import { AmplitudeEnvelope } from 'tone';
 
   export default defineComponent({
     name: 'Env',
@@ -35,7 +35,7 @@
 
     setup (props, { expose }) {
 
-      const env = new Envelope({
+      const env = new AmplitudeEnvelope({
         //     attack: 0.1,
         //     decay: 0.2,
         //     sustain: 0.5,
@@ -44,7 +44,7 @@
 
       const inlets = [
         {
-          label: 'gate',
+          label: 'vel',
           desc: 'Acts as a trigger for the envelope',
           data: gate
         },
@@ -67,6 +67,7 @@
       onUnmounted(() => {
         env.dispose();
       });
+
 
       function setAttack(A: number) {
         env.set({ attack: A });
