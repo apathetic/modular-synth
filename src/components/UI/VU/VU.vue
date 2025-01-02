@@ -33,12 +33,12 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
     setup(props, { expose }) {
       const store = useAppStore();
       const power = computed(() => store.power);
-      /*
 
 
       let ticking = true;
       const meter = new Meter();
       const vu = ref();
+      /*
 
       props.audio.connect(meter);
 
@@ -109,11 +109,11 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
       //   meter
       // });
 
+      /* */
       // UI
       return {
         vu
       }
-      /* */
     }
   });
 </script>

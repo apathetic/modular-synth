@@ -150,6 +150,7 @@
 
       // AUDIO
       expose({
+        // name: 'OSC', // for the registry
         inlets,
         outlets
       });

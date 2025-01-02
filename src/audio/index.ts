@@ -1,4 +1,6 @@
-// namespace µ {
+import { AMOscillator } from 'tone';
+import { Oscillator } from 'tone';
+import { Gain } from 'tone';
 
 
 /**
@@ -30,10 +32,13 @@ const constants: Constants = {};  // memoize this shizz??
  * @returns {OscillatorNode} The created oscillator node
  */
 export function oscillator(frequency: number = 440, type: OscillatorType = 'sine'): OscillatorNode {
-  const osc = context.createOscillator();
-  osc.frequency.value = frequency;
-  osc.type = type;
-  return osc;
+  // const osc = context.createOscillator();
+  // osc.frequency.value = frequency;
+  // osc.type = type;
+  // return osc;
+
+  const osc = new AMOscillator(frequency, type);
+
 }
 
 
@@ -43,9 +48,7 @@ export function oscillator(frequency: number = 440, type: OscillatorType = 'sine
  * @returns {GainNode} The created gain node
  */
 export function gain(value: number = 1): GainNode {
-  const gainNode = context.createGain();
-  gainNode.gain.value = value;
-  return gainNode;
+  return new Gain(value)
 }
 
 

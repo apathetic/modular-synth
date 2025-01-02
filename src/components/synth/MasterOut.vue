@@ -62,7 +62,6 @@
         }
       ];
 
-      stop();
       watch(gain, setGain);
 
       onMounted(() => {
@@ -74,7 +73,6 @@
           node: {
             // name: 'MasterOut',  // TODO: need to update SynthNode type if we want to use this
             inlets,
-            // gain
           },
         });
 
