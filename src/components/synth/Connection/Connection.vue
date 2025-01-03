@@ -50,7 +50,7 @@ THOUGHTS:
 
 
 <script lang="ts">
-  import { defineComponent, computed, ref, toRefs, watch, onUnmounted } from 'vue';
+  import { defineComponent, computed, ref, onUnmounted } from 'vue';
   import { useAppStore } from '@/stores/app';
   import { cellWidth } from '@/constants';
   import { Parameter } from '@/audio';

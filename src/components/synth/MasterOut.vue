@@ -28,7 +28,7 @@
 
 
 <script lang="ts">
-  import { defineComponent, ref, computed, watch, onMounted } from 'vue';
+  import { defineComponent, ref, computed, markRaw, watch, onMounted } from 'vue';
   import { Gain } from 'tone';
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
@@ -51,7 +51,7 @@
 
       const el = ref<HTMLElement | null>(null);
       const gain = ref(0.5);
-      const inlets = [
+      const inlets = markRaw([
         {
           label: 'out-1',
           audio: out1
@@ -60,7 +60,7 @@
           label: 'out-2',
           audio: out2
         }
-      ];
+      ]);
 
       watch(gain, setGain);
 
@@ -71,7 +71,6 @@
         store.addToRegistry({
           id: 0,
           node: {
-            // name: 'MasterOut',  // TODO: need to update SynthNode type if we want to use this
             inlets,
           },
         });

@@ -38,7 +38,7 @@ export function oscillator(frequency: number = 440, type: OscillatorType = 'sine
   // return osc;
 
   const osc = new AMOscillator(frequency, type);
-
+  return osc;
 }
 
 
@@ -131,23 +131,20 @@ export function signal(value: number = 1) {
  */
 export class Parameter {
   public set: (value: number) => void;
-  public input: GainNode;
-  public output: GainNode;
+  // public set: (value: number) => void;
+  public input?: GainNode;
+  public output?: GainNode;
 
   constructor(value: number = 0) {
-    const param = context.createGain();
+    // const param = context.createGain();
 
-    param.gain.value = value;
+    // param.gain.value = value;
 
-    this.set = (v: number) => { param.gain.value = v; };
-    this.output = param;
-    this.input = param;
+    // this.set = (v: number) => { param.gain.value = v; };
+    // this.output = param;
+    // this.input = param;
 
-    // this.input = (audio) ? param.gain : param.gain.value
-
-    signal(1).connect(param);
-
-    // return param;
+    // signal(1).connect(param);
   }
 
   public destroy() {
@@ -161,7 +158,7 @@ export class Parameter {
 /**
  * @class Audio VU meter.
  * https://stackoverflow.com/questions/44360301/web-audio-api-creating-a-peak-meter-with-analysernode
- */
+ * /
 export class Meter {
   public averaging: number;
   public volume: number;
@@ -218,7 +215,7 @@ export class Meter {
  *        to start and stop playing.
  * @param {Number} f Initial frequency of the oscillator.
  * @param {String} t Initial type of the oscillator.
- */
+ * /
 export class Oscillator {
   public frequency: Parameter;
   public output: OscillatorNode;
@@ -249,7 +246,7 @@ export class Oscillator {
  * down. We then threshold the result to either 1 or -1 using a waveshaper,
  * which turns it square ie. a PWM waveform.
  * Reference: https://github.com/pendragon-andyh/WebAudio-PulseOscillator
- */
+ * /
 export class PWM {
   public frequency: Parameter;
   public width: Parameter;
@@ -296,7 +293,7 @@ export class PWM {
 
   /**
    * Un-start the Oscillator
-   */
+   * /
   public stop() {
     (this.saw as OscillatorNode).disconnect();
     (this.pulseShaper as WaveShaperNode).disconnect();
@@ -312,7 +309,7 @@ export class PWM {
   /**
    * Generate a curve to be used in Waveshaping the Sawtooth wave.
    * NOTE: why 256 samples?? No idea. A goodly number I guess
-   */
+   * /
   private generateCurve() {
     const pulseCurve = new Float32Array(256);
 
@@ -335,3 +332,5 @@ export function parameter(value: number = 0): Parameter {
 }
 
 // }
+
+/** */

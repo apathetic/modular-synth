@@ -28,7 +28,6 @@
     setup (props) {
       // eslint-disable-next-line vue/no-setup-props-destructure
       const { type, id } = props.module;
-      // const { type: t, id } = props.module;
       const { coords, startDragging, isDragging } = useDraggable(props.module);
       const store = useAppStore();
 
@@ -47,8 +46,6 @@
       );
 
       // doenst need 2 b reactive:
-      // const width = `_${moduleSize[type][0]}U`;
-      // const tall = moduleSize[type][2] ? 'module--tall' : '';
       const width = `w:${moduleSize[type][0]}U`;
       const tall = `h:${moduleSize[type][1]}U`;
 
