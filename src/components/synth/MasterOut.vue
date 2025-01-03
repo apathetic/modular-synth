@@ -92,8 +92,6 @@
       function setGain(g: number) {
         out1.gain.rampTo(g, 0.1);
         out2.gain.rampTo(g, 0.1);
-        // out1.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
-        // out2.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
       }
 
       // AUDIO
