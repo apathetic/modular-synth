@@ -21,7 +21,8 @@
 
 <script lang="ts">
   import { defineComponent, onUnmounted } from 'vue';
-  import { Envelope } from 'tone';
+  import { Envelope, AmplitudeEnvelope } from 'tone';
+  import { debug } from '@/utils/logger';
 
   export default defineComponent({
     name: 'Env',
@@ -35,6 +36,7 @@
 
     setup (props, { expose }) {
 
+      // const env = new AmplitudeEnvelope
       const env = new Envelope({
         //     attack: 0.1,
         //     decay: 0.2,
@@ -49,9 +51,9 @@
           data: gate
         },
         {
-          label: 'mod',
-          desc: '???'
-          // data: TBD
+          label: 'signal',
+          desc: 'The audio signal to apply the envelope to',
+          audio: env
         }
       ];
 
@@ -69,24 +71,25 @@
       });
 
       function setAttack(A: number) {
-        env.set({ attack: A });
+        env.attack = A;
       }
 
       function setDecay(D: number) {
-        env.set({ decay: D });
+        env.decay = D;
       }
 
       function setSustain(S: number) {
-        env.set({ sustain: S });
+        env.sustain = S;
       }
 
       function setRelease(R: number) {
-        env.set({ release: R });
+        env.release = R;
       }
 
       function gate(velocity: number) {
+        debug('[env] gate', velocity);
         if (velocity) {
-          env.triggerAttack();
+          env.triggerAttack(0, velocity);
         } else {
           env.triggerRelease();
         }

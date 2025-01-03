@@ -64,6 +64,7 @@
           label: 'freq',
           desc: 'The frequency of the Oscillator. [a-rate / k-rate]',
           data: setFrequency,
+          // audio: osc.frequency,
         },
         // {
         //   label: 'mod',

@@ -4,6 +4,7 @@ interface LogProps {
   data?: any;
 }
 
+const DEBUG = false;
 
 export function log({ type, action, data = '' }: LogProps) {
 
@@ -46,4 +47,11 @@ export function log({ type, action, data = '' }: LogProps) {
       console.log('%c[%s] %s %s', style, type, action, data);
       break;
 	}
+}
+
+
+export function debug(...args: any[]) {
+  if (DEBUG) {
+    console.log('%c %s', 'color:orange', args.join(' '));
+  }
 }
