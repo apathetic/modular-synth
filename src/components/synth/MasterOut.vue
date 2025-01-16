@@ -29,7 +29,7 @@
 
 <script lang="ts">
   import { defineComponent, ref, computed, markRaw, watch, onMounted } from 'vue';
-  import { Gain } from 'tone';
+  import { Gain,     AMOscillator,Synth } from 'tone';
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
   import VU from '../UI/VU';
@@ -42,14 +42,11 @@
     setup(props, { expose }) {
       log({ type:'component', action:'creating', data:'MasterOut' });
 
+      const out1 = new Gain(0.5).toDestination();
+      const out2 = new Gain(0.5).toDestination();
+
       const store = useAppStore();
       const masterModule = computed(() => store.patch.modules[0]);
-      // const module = store.getModule(0);
-
-
-      const out1 = new Gain(0).toDestination();
-      const out2 = new Gain(0).toDestination();
-
       const el = ref<HTMLElement | null>(null);
       const gain = ref(0.5);
       const inlets = markRaw([
@@ -62,6 +59,26 @@
           audio: out2
         }
       ]);
+
+
+// sanity check
+////////////////////////////
+const osc = new AMOscillator(30, "sine", "square");
+osc.start();
+setTimeout(() => {
+const synth = new Synth();
+
+
+synth.connect(inlets[0].audio);
+// osc.connect(inlets[1].audio);
+
+  console.log('playyyy');
+synth.triggerAttackRelease("C4", "8n");
+}, 3333);
+//////////////////////////////////
+
+
+
 
       watch(gain, setGain);
 

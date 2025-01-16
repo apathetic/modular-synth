@@ -134,7 +134,7 @@
        * @param {number} d Detune, between 0 and 1.
        */
       function setDetune(d: number) {
-        const currentFreq = osc.frequency.value;
+        const currentFreq = osc.frequency.value as number;
         const freq = currentFreq * Math.pow(2, d);
       }
 

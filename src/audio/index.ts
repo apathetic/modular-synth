@@ -26,7 +26,7 @@ export function oscillator(frequency: number = 440, type: OscillatorType = 'sine
   // return osc;
 
   const osc = new AMOscillator(frequency, type);
-  return osc;
+  return osc.start();
 }
 
 
