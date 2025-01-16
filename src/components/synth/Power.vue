@@ -13,11 +13,12 @@
 
 <script lang="ts">
   import { defineComponent, computed } from 'vue';
-  import { getContext, getTransport } from 'tone';
+  import { getContext, start } from 'tone';
   import { useAppStore } from '@/stores/app';
 
   export default defineComponent({
     name: 'Power',
+
     setup() {
       const store = useAppStore();
       const power = computed(() => store.power);
@@ -27,6 +28,7 @@
         store.power = !store.power;
 
         if (store.power) {
+          // await start();
           context.rawContext.resume();
           // transport.start(); // no wait, do this in the Clock component
         } else {

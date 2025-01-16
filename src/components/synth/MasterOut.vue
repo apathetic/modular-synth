@@ -38,6 +38,7 @@
   export default defineComponent({
     name: 'MasterOut',
     components: { VU },
+
     setup(props, { expose }) {
       log({ type:'component', action:'creating', data:'MasterOut' });
 
