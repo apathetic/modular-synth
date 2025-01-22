@@ -24,15 +24,16 @@
       const power = computed(() => store.power);
       const context = getContext();
 
-      function togglePower() {
+      async function togglePower() {
         store.power = !store.power;
 
         if (store.power) {
-          // await start();
+          await start();
           context.rawContext.resume();
           // transport.start(); // no wait, do this in the Clock component
         } else {
-          context.rawContext.suspend(0);
+          // context.rawContext.suspend(0);
+          await (context.rawContext as AudioContext).suspend();
         }
       }
 
