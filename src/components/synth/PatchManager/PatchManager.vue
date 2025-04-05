@@ -18,8 +18,8 @@
         <option v-for="(config, id) in configs" :key="id" :value="id">{{ config.name }}</option>
       </select>
       <input type="text" v-model="currentConfigName">
-      <button class="add" :disabled="!editing" @click="addConfig">+</button>
-      <button class="remove" :disabled="!editing" @click="removeConfig">-</button>
+      <button class="add" title="add config" :disabled="!editing" @click="addConfig">+</button>
+      <button class="remove" title="remove config" :disabled="!editing" @click="removeConfig">-</button>
     </div>
 
   </div>

@@ -1,157 +1,215 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, getByTestId, getAllByRole, userEvent, selectOptions, fireEvent } from '@testing-library/vue';
-import { useAppStore } from '@/stores/app';
-import Connection from './Connection.vue';
-import type { Connection as ConnectionType } from '@/types';
+import { mount, shallowMount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import Connection from './Connection.vue'
+import { useAppStore } from '@/stores/app'
+import { Parameter } from '@/audio'
 
+// Mock the store
+vi.mock('@/stores/app', () => ({
+  useAppStore: vi.fn()
+}))
 
-// connection
-// - gets correct inlet: id, port
-// - gets correct outlet: id, port
-// - find src, dest nodes
-// - finds src, dest modules
-// - destroys if cannot make a connection
-//////// - binds to x1,x2x,y1,y2 / gets module coords
-// - can remove a connection
-// - handles audio / data types + mix thereof
+// Mock the audio Parameter class
+vi.mock('@/audio', () => ({
+  Parameter: vi.fn().mockImplementation(() => ({
+    set: vi.fn(),
+    output: {
+      connect: vi.fn()
+    },
+    destroy: vi.fn()
+  }))
+}))
 
-// xmas 2024:
-// when one connection fails they _all_ seem to get deleted
-// connecting from the _in_ port, back to something.
+// Mock the logger
+vi.mock('@/utils/logger', () => ({
+  log: vi.fn()
+}))
 
+describe('Connection.vue', () => {
+  let mockStore
+  let mockSourceNode
+  let mockDestNode
+  let mockSourceModule
+  let mockDestModule
 
+  beforeEach(() => {
+    // Create mock audio nodes with inlets and outlets
+    mockSourceNode = {
+      outlets: [
+        { audio: { connect: vi.fn(), disconnect: vi.fn() } },
+        { data: 'frequency', audio: null }
+      ],
+      $watch: vi.fn().mockReturnValue(vi.fn()) // Return a function that can be called to unwatch
+    }
 
-
-
-const mockModule = defineComponent({
-  setup (props, { expose }) {
-    const outlets = [
-      { label: 'in-1', data: context.createGain() }
-      { label: 'in-2', data: vi.fn() }
-    ];
-
-    // onMounted(() => storeToRefs.addToRegistry({ id, node: { outlets } }));
-    expose({ outlets });
-
-    return { outlets };
-  }
-});
-
-const mockDestinationModule = defineComponent({
-  setup (props, { expose }) {
-    return expose({
+    mockDestNode = {
       inlets: [
-        { label: 'in-1', data: context.createGain() }
-        { label: 'in-2', data: vi.fn() }
+        { audio: { connect: vi.fn() } },
+        { data: vi.fn(), audio: null }
       ]
-    });
-  }
-});
+    }
 
-// const src = {
-//   node: store.getNode(from.id),
-//   module: store.getModule(from.id)
-// };
+    // Create mock modules with position data
+    mockSourceModule = {
+      type: 'oscillator',
+      x: 100,
+      y: 100
+    }
 
-// const dest = {
-//   node: store.getNode(to.id),
-//   module: store.getModule(to.id)
-// };
+    mockDestModule = {
+      type: 'gain',
+      x: 200,
+      y: 200
+    }
 
+    // Setup mock store
+    mockStore = {
+      getNode: vi.fn((id) => {
+        if (id === 1) return mockSourceNode
+        if (id === 2) return mockDestNode
+        return null
+      }),
+      getModule: vi.fn((id) => {
+        if (id === 1) return mockSourceModule
+        if (id === 2) return mockDestModule
+        return null
+      }),
+      removeConnection: vi.fn()
+    }
 
-const mockConnection: ConnectionType = {
-  id: 1,
-  to: { id: 1, port: 0 },
-  from: { id: 2, port: 0 },
-};
+    useAppStore.mockReturnValue(mockStore)
+  })
 
-const mockStore = {
-  patchId: 0,
-  patches: [{
-    modules: [
-      { id: 1, type: 'mock' },
-      { id: 2, type: 'mock' }
-    ],
-  }],
-  registry: {
-    1: mockModule,
-    2: mockModule,
-  }
-};
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
 
-vi.mock('@/stores/app', async () => {
-  return {
-    useAppStore: () => mockStore
-  };
-});
+  it('renders a line with correct coordinates', () => {
+    const wrapper = shallowMount(Connection, {
+      props: {
+        id: 1,
+        from: { id: 1, port: 0 },
+        to: { id: 2, port: 0 },
+        type: 'audio'
+      }
+    })
 
+    const line = wrapper.find('line')
+    expect(line.exists()).toBe(true)
+    expect(line.attributes('x1')).toBeDefined()
+    expect(line.attributes('y1')).toBeDefined()
+    expect(line.attributes('x2')).toBeDefined()
+    expect(line.attributes('y2')).toBeDefined()
+  })
 
-app.component('mock', mockModule);
+  it('connects audio nodes when both have audio ports', () => {
+    mount(Connection, {
+      props: {
+        id: 1,
+        from: { id: 1, port: 0 },
+        to: { id: 2, port: 0 },
+        type: 'audio'
+      }
+    })
 
+    // Check that the audio connection was made
+    expect(mockSourceNode.outlets[0].audio.connect).toHaveBeenCalledWith(mockDestNode.inlets[0].audio)
+  })
 
+  it('sets up data to audio connection with Parameter', () => {
+    mount(Connection, {
+      props: {
+        id: 1,
+        from: { id: 1, port: 1 }, // Data port
+        to: { id: 2, port: 0 },   // Audio port
+        type: 'mixed'
+      }
+    })
 
+    // Check that Parameter was created and connected
+    expect(Parameter).toHaveBeenCalled()
+    expect(mockSourceNode.$watch).toHaveBeenCalled()
+  })
 
+  it('sets up data to data connection with $watch', () => {
+    // Mock data outlet and inlet
+    mockSourceNode.outlets[1] = { data: 'frequency', audio: null }
+    mockDestNode.inlets[1] = { data: vi.fn(), audio: null }
 
+    mount(Connection, {
+      props: {
+        id: 1,
+        from: { id: 1, port: 1 }, // Data port
+        to: { id: 2, port: 1 },   // Data port
+        type: 'data'
+      }
+    })
 
-describe.skip('Connection', () => {
+    // Check that $watch was set up
+    expect(mockSourceNode.$watch).toHaveBeenCalledWith('frequency', expect.any(Function))
+  })
 
-  context('Base', () => {
-    it('can be created', () => {
-      connection = Cypress.vue; // the ref to the APP
-                                // HOW do get the component (which was set up in "mountVue") ?
-      connection = connection.$children[0];
-    });
+  it('removes connection when clicked', async () => {
+    const wrapper = shallowMount(Connection, {
+      props: {
+        id: 1,
+        from: { id: 1, port: 0 },
+        to: { id: 2, port: 0 },
+        type: 'audio'
+      }
+    })
 
-    it('can be destroyed', () => {
-      connection = Cypress.vue;
+    await wrapper.find('line').trigger('click')
+    expect(mockStore.removeConnection).toHaveBeenCalledWith(1)
+  })
 
-      cy.spy(connection, 'removeConnection');
+  it('disconnects audio nodes on unmount', async () => {
+    const wrapper = mount(Connection, {
+      props: {
+        id: 1,
+        from: { id: 1, port: 0 },
+        to: { id: 2, port: 0 },
+        type: 'audio'
+      }
+    })
 
-      // do thing.
+    wrapper.unmount()
+    expect(mockSourceNode.outlets[0].audio.disconnect).toHaveBeenCalledWith(mockDestNode.inlets[0].audio)
+  })
 
-      expect(connection.removeConnection).to.be.called;
-      // expect $store mutation to have been called.
-    });
+  it('handles missing nodes gracefully', () => {
+    // Mock store to return null for nodes
+    mockStore.getNode.mockReturnValue(null)
 
+    const wrapper = shallowMount(Connection, {
+      props: {
+        id: 1,
+        from: { id: 1, port: 0 },
+        to: { id: 2, port: 0 },
+        type: 'audio'
+      }
+    })
 
-    it('resolves references to "to" and "from" nodes', () => {
-      connection = Cypress.vue; // the ref to the component (which was set up in "mountVue")
+    // Should not throw and should call removeConnection
+    expect(mockStore.removeConnection).toHaveBeenCalledWith(1)
+  })
 
-      // connection.setProps(CONNECTION_DATA);
-      expect(connection.toModule).to.equal(200);
-      expect(connection.fromModule).to.equal(-20);
-      connection.destroy();
-    });
+  it('handles connection errors gracefully', () => {
+    // Make connect throw an error
+    mockSourceNode.outlets[0].audio.connect.mockImplementation(() => {
+      throw new Error('Connection error')
+    })
 
-    it('can connect to MasterOut', () => {
+    mount(Connection, {
+      props: {
+        id: 1,
+        from: { id: 1, port: 0 },
+        to: { id: 2, port: 0 },
+        type: 'audio'
+      }
+    })
 
-    });
-
-    it('it removes itself if a connection cannot be made', () => {
-    });
-  });
-
-  context('Audio', () => {
-    it('must be made between different nodes', () => {
-    });
-
-    it('routes audio correctly between two AudioNodes', () => {
-    });
-
-    it('routes data correctly between data inlet/outlets', () => {
-    });
-
-    it('audio outlets cannot connect to data inlets', () => {
-    });
-
-    it('audio is disconnected after removing a connection', () => {
-    });
-  });
-
-  context('Data', () => {
-    it('data is disconnected after removing a connection', () => {
-    });
-  });
-
-
-});
+    // Should call removeConnection when error occurs
+    expect(mockStore.removeConnection).toHaveBeenCalledWith(1)
+  })
+})
