@@ -68,6 +68,7 @@ THOUGHTS:
     setup (props) {
       // eslint-disable-next-line vue/no-setup-props-destructure
       const { id, to, from } = props;  // props dont need to be reactive in this component
+
       if (!to || !from) {
         throw new Error('fatal: no to/from');
         return;
@@ -75,7 +76,7 @@ THOUGHTS:
 
       const store = useAppStore();
       const stroke = ref('white');
-      let unwatch;
+      let unwatch: (() => void) | undefined;
 
       const src = {
         node: store.getNode(from.id),
@@ -88,14 +89,14 @@ THOUGHTS:
       };
 
       if (!src.node || !dest.node) {
-        logError('node not registered');
-        return {};
+        logError(new Error('node not registered'));
+        return;
       }
 
 
           const x = src.module.type;
           const y = dest.module.type;
-      const str = `${x}#${from.port + 1} ⟹ ${y}#${to.port + 1}`;
+          const str = `${x}#${from.port + 1} ⟹ ${y}#${to.port + 1}`;
 
 
       const x1 = computed(() => src.module.x + cellWidth + 3);
@@ -179,11 +180,11 @@ THOUGHTS:
             const destType = inlet.data ? 'data' : inlet.audio ? 'audio' : 'unknown';
             const outType = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
 
-            this.stroke = 'red';
-            logError('Connection: mismatch (' + outType + ' ⟹ ' + destType + ')');
+            stroke.value = 'red';
+            logError(new Error(`Connection: mismatch (${outType} ⟹ ${destType})`));
           }
         } catch (e) {
-          logError(e);
+          logError(e instanceof Error ? e : new Error(String(e)));
           removeConnection();
         }
       }
@@ -192,7 +193,7 @@ THOUGHTS:
         store.removeConnection(id);
       }
 
-      function logError(e) {
+      function logError(e: Error) {
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
         console.log(`%c[error] connection`, 'color: red', JSON.stringify(to), JSON.stringify(from));
 
@@ -202,7 +203,7 @@ THOUGHTS:
 
       onUnmounted(() => {
         route(false);
-        unwatch && unwatch();
+        if (unwatch) unwatch();
       })
 
       route();

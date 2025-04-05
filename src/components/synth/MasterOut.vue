@@ -45,14 +45,14 @@
       const modules = computed(() => store.modules);
     // const module = store.getModule(0);
 
-      const context: AudioContext = inject('context');
+      const context = inject('context') as AudioContext;
       const out1 = context.createGain();
       const out2 = context.createGain();
 
       out1.connect(context.destination);
       out2.connect(context.destination);
 
-      const el = ref(null);
+      const el = ref<HTMLElement | null>(null);
       const gain = ref(0.5);
       const inlets = [
         {
@@ -76,7 +76,7 @@
         store.addToRegistry({
           id: 0,
           node: {
-            name: 'MasterOut',
+            // name: 'MasterOut',  // TODO: need to update SynthNode type if we want to use this
             inlets,
             // gain
           },
@@ -87,6 +87,8 @@
         determinePosition();
 
         function determinePosition() {
+          if (!el.value || !modRef) return;
+
           const x = modRef.scrollLeft +               // scroll offset +
                     el.value.getBoundingClientRect().left;  // viewport offset
           const y = el.value.offsetTop;                     // relative to parent

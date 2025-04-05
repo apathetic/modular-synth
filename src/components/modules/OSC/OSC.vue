@@ -36,7 +36,7 @@
     },
 
     setup (props, { expose }) {
-      const context: AudioContext = inject('context');
+      const context = inject('context') as AudioContext;
       const types: OscillatorType[] = ['sine', 'sawtooth', 'triangle', 'square']; // ==> 'pulse' instead
       const type = ref(types[0]);
 
@@ -157,7 +157,9 @@
        * @param {float} p  Pulse, between 0 and 1.
        */
       function setPulse(p: number) {
-        pulse.input = PW.value = p;
+        // Update the property that contains the value (not connecting audio nodes here)
+        pulse.set(p);
+        PW.value = p;
       }
 
       /**
@@ -174,8 +176,8 @@
       /**
        *
        */
-      function setPhase(phase) {
-        phase.value = phase.value * Math.PI / 180;
+      function setPhase(phaseValue: number) {
+        phase.value = phaseValue * Math.PI / 180;
         // reset the type
         // type.value = ....
       }

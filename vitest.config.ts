@@ -2,7 +2,6 @@ import { fileURLToPath } from 'node:url';
 import { mergeConfig, defineConfig, configDefaults } from 'vitest/config';
 import viteConfig from './vite.config';
 
-
 export default mergeConfig(
   viteConfig,
   defineConfig({
@@ -19,6 +18,6 @@ export default mergeConfig(
       // UNIT TESTS are *.test.js
       // COMPONENT TESTS are *.spec.ts
       exclude: [...configDefaults.exclude, '**/*.spec.{js,jsx,ts,tsx}'],
-    },
+    }
   }),
 );

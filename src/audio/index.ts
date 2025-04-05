@@ -72,8 +72,8 @@ export function signal(value: number = 1) {
  */
 export class Parameter {
   public set: (value: number) => void;
-  public input?: GainNode;
-  public output?: GainNode;
+  public input: GainNode;
+  public output: GainNode;
 
   constructor(value: number = 0) {
     const param = context.createGain();
@@ -94,7 +94,7 @@ export class Parameter {
   public destroy() {
     // (<GainNode>this.output).disconnect();
     this.output && this.output.disconnect();
-    this.input = this.output = undefined;
+    // this.input = this.output = undefined; // can set GainNode to undefined
   }
 }
 
