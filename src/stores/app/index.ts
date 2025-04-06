@@ -4,15 +4,15 @@ import { state as blank } from '../patch';
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
 import { fetch, create, save, remove } from '@/utils/supabase';
-import { validateData } from '@/utils/validatePatch';
+import { validateData, validatePatch, isPatch } from '@/utils/validatePatch';
 import { moduleSize } from '@/constants';
 
 
 
 
 
-const patches = JSON.parse(localStorage.getItem('patches') || 'null');
-// validateData(patches);
+const rawPatches = JSON.parse(localStorage.getItem('patches') || 'null');
+const patches = validateData(rawPatches);
 
 
 export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore('app', {
@@ -70,9 +70,13 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       // return !~state.patchId ? blank() : state.patches[state.patchId];
 
       const p = state.patches[state.patchId];
-      // THERE MUST ALWAYS BE A PATCH.
-      // if (!p) { throw new Error('fatal: there is no patch'); }
-      return p || blank();
+      // Validate that we have a proper patch
+      if (!p || !isPatch(p)) {
+        console.warn('Invalid patch at index', state.patchId);
+        return blank();
+      }
+
+      return p;
     },
 
     modules(): Module[] {
@@ -108,7 +112,12 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     config(state): Config {
-      return this.configs[state.configId] || [];
+      const config = this.configs?.[state.configId];
+      if (!config) {
+        throw new Error(`No config found at index ${state.configId}`);
+      }
+
+      return this.configs[state.configId];
     },
 
     parameters(): Record<parameterLabel, string | number> {
@@ -175,9 +184,13 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       if (id === this.patchId) { return; }
       // id = id ?? this.patchId as number;
 
+      // Validate the patch before processing it
+      // this.patches[id] = validatePatch(this.patches[id]);
+      validatePatch(this.patches[id]); // don't do anything with the patch, just validate it. should already be validated when loaded / fetched
 
       const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
       const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
+
       this.patches[id].connections = [];                // temporarily zero it out
       this.patches[id].configs = [];                    // temporarily zero it out
 
@@ -192,7 +205,6 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       this.patches[id].connections = connections;
       this.patches[id].configs = configs;
       // resetSorting();
-
     },
 
     /**
@@ -201,7 +213,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * @this {Store} reference to the pinia store
      */
     savePatch() {
-      const patch = this.patch;
+      // Validate the patch before saving
+      const patch = validatePatch(this.patch);
 
       save({ ...patch /*, id: patch.uuid */ })
         .then(() => {
@@ -246,7 +259,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       try {
         const patches = await fetch(); //// api.load('/patches').then((patches) => {
         console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
-        // this.patches = validateData(patches);
+        this.patches = validateData(patches);
       } catch (err) {
         console.log('Not signed in.', err);
       }
@@ -365,7 +378,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      */
     addConfig() {
       const config = {
-        name: '<empty>',
+        name: `<empty ${this.configs.length}>`,
         parameters: Object.assign({}, this.config?.parameters)
       };
 
@@ -377,6 +390,11 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * @param {number} id The configuration to remove
      */
     removeConfig(id: number) {
+      if (this.configs.length <= 1) {
+        console.warn('Cannot remove last config');
+        return;
+      }
+
       log({ type:'patch', action:'deleting config', data: id });
       this.configs.splice(id, 1);
       this.configId = 0;
@@ -398,4 +416,4 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
 });
 
 
-export const useAppStore = createAppStore({ patches: patches || [blank()] });
+export const useAppStore = createAppStore({ patches });

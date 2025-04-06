@@ -49,12 +49,23 @@
 
       const currentConfigName = computed({
         get() { return store.config?.name; },
-        set(value) { store.config.name = value; }
+        // set(value) { store.config.name = value; }
+        set(value) {
+          if (!store.config) { throw new Error('config is not set'); }
+          store.config.name = value;
+        }
       });
 
       const currentConfigId = computed({
         get() { return store.configId; },
-        set(id) { store.configId = id }
+        // set(id) { store.configId = id }
+        set(id) {
+          // Make sure we don't set an invalid config ID
+          if (id < 0 || id >= store.configs.length) {
+            throw new Error(`Invalid config id: ${id}, max: ${store.configs.length - 1}`);
+          }
+          store.configId = id;
+        }
       });
 
       const currentPatchId = computed({

@@ -27,18 +27,18 @@ function isPatch(obj: any): obj is Patch {
  * @param index - The index of the patch in the array (for logging)
  * @returns A valid patch with all required fields
  */
-function validatePatch(patch: Partial<Patch> | undefined, index: number): Patch {
+function validatePatch(patch: Partial<Patch> | undefined): Patch {
   const DEFAULT = blank();
 
   if (!patch || typeof patch !== 'object') {
-    console.warn('Patch at index "%s" is null or undefined. Replacing with default.', index);
+    console.warn('Patch is missing or undefined. Replacing with default.');
     return { ...DEFAULT };
   }
 
   const result = { ...patch } as Patch;
 
   if (!result.name) {
-    console.warn('Patch "%s" missing name', index);
+    console.warn('Patch "%s" missing name', patch.id);
     result.name = DEFAULT.name;
   }
 
