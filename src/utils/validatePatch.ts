@@ -1,5 +1,59 @@
 import { state as blank } from '@/stores/patch';
-import type { Patch, Config } from '@/types';
+import type { Patch, Config, Connection, Module, moduleType, Parameters } from '@/types';
+
+/**
+ * Type predicate to check if an object is a valid Module.
+ *
+ * @param obj - The object to check
+ * @returns A type predicate indicating if the object is a valid Module
+ */
+function isModule(obj: any): obj is Module {
+  if (!obj || typeof obj !== 'object') return false;
+
+  return (
+    typeof obj.id === 'number' &&
+    typeof obj.type === 'string' &&
+    typeof obj.x === 'number' &&
+    typeof obj.y === 'number' &&
+    typeof obj.col === 'number' &&
+    typeof obj.row === 'number'
+  );
+}
+
+/**
+ * Type predicate to check if an object is a valid Connection.
+ *
+ * @param obj - The object to check
+ * @returns A type predicate indicating if the object is a valid Connection
+ */
+function isConnection(obj: any): obj is Connection {
+  if (!obj || typeof obj !== 'object') return false;
+
+  return (
+    typeof obj.id === 'number' &&
+    obj.from && typeof obj.from === 'object' &&
+    typeof obj.from.id === 'number' &&
+    typeof obj.from.port === 'number' &&
+    obj.to && typeof obj.to === 'object' &&
+    typeof obj.to.id === 'number' &&
+    typeof obj.to.port === 'number'
+  );
+}
+
+/**
+ * Type predicate to check if an object is a valid Config.
+ *
+ * @param obj - The object to check
+ * @returns A type predicate indicating if the object is a valid Config
+ */
+function isConfig(obj: any): obj is Config {
+  if (!obj || typeof obj !== 'object') return false;
+
+  return (
+    typeof obj.name === 'string' &&
+    obj.parameters && typeof obj.parameters === 'object'
+  );
+}
 
 /**
  * Type predicate to check if an object is a valid Patch.
@@ -20,11 +74,46 @@ function isPatch(obj: any): obj is Patch {
   );
 }
 
+
+
+
+/**
+ * Validates a single config object to ensure it has all required fields.
+ *
+ * @param config - The config to validate
+ * @param patchName - The name of the containing patch (for logging)
+ * @param index - The index of the config in the array
+ * @returns A valid config with all required fields
+ */
+function validateConfig(config: Partial<Config> | null | undefined, patchName: string, index: number): Config {
+  const DEFAULT = blank();
+  const defaultConfig = DEFAULT.configs[0];
+
+  if (!config) {
+    console.warn('Patch "%s" has no config at index %d. Fixing...', patchName, index);
+    return { ...defaultConfig };
+  }
+
+  const result = { ...config } as Config;
+
+  if (!result.name || typeof result.name !== 'string') {
+    console.warn('Patch "%s" config at index %d missing valid name. Fixing...', patchName, index);
+    result.name = result.name || `<params>`;
+  }
+
+  if (!result.parameters || typeof result.parameters !== 'object') {
+    console.warn('Patch "%s" missing parameters in "%s". Fixing...', patchName, result.name);
+    result.parameters = {};
+  }
+
+  return result;
+}
+
+
 /**
  * Validates and fixes a single patch object to ensure it has all required fields.
  *
  * @param patch - The patch to validate
- * @param index - The index of the patch in the array (for logging)
  * @returns A valid patch with all required fields
  */
 function validatePatch(patch: Partial<Patch> | undefined): Patch {
@@ -74,41 +163,13 @@ function validatePatch(patch: Partial<Patch> | undefined): Patch {
     result.connections = [...DEFAULT.connections];
   }
 
+  // Validate and fix modules
   if (!result.modules) {
     console.warn('Patch "%s" no modules. Fixing...', result.name);
     result.modules = [...DEFAULT.modules];
-  }
-
-  return result;
-}
-
-/**
- * Validates a single config object to ensure it has all required fields.
- *
- * @param config - The config to validate
- * @param patchName - The name of the containing patch (for logging)
- * @param index - The index of the config in the array
- * @returns A valid config with all required fields
- */
-function validateConfig(config: Partial<Config> | null | undefined, patchName: string, index: number): Config {
-  const DEFAULT = blank();
-  const defaultConfig = DEFAULT.configs[0];
-
-  if (!config) {
-    console.warn('Patch "%s" has null config at index %d. Fixing...', patchName, index);
-    return { ...defaultConfig };
-  }
-
-  const result = { ...config } as Config;
-
-  if (!result.name || typeof result.name !== 'string') {
-    console.warn('Patch "%s" config at index %d missing valid name. Fixing...', patchName, index);
-    result.name = result.name || `<config ${index}>`;
-  }
-
-  if (!result.parameters || typeof result.parameters !== 'object') {
-    console.warn('Patch "%s" missing parameters in "%s". Fixing...', patchName, result.name);
-    result.parameters = { ...defaultConfig.parameters };
+  } else if (!Array.isArray(result.modules)) {
+    console.warn('Patch "%s" has invalid modules (not an array). Fixing...', result.name);
+    result.modules = [...DEFAULT.modules];
   }
 
   return result;
@@ -140,6 +201,10 @@ function validateData(patches?: unknown): Patch[] {
 
 export {
   isPatch,
+  isModule,
+  isConnection,
+  isConfig,
   validatePatch,
   validateData,
+  validateConfig,
 };

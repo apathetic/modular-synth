@@ -1,5 +1,18 @@
 import { defineStore } from 'pinia'
-import { state as blank } from '../patch';
+import { state as emptyPatch } from '../patch';
+import type {
+  AppState,
+  Patch,
+  Config,
+  Connection,
+  Parameters,
+  parameterLabel,
+  MouseCoords,
+  GridCoords,
+  Module,
+  SynthNode,
+  RackUnit } from '@/types';
+
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
@@ -11,8 +24,8 @@ import { moduleSize } from '@/constants';
 
 
 
-const rawPatches = JSON.parse(localStorage.getItem('patches') || 'null');
-const patches = validateData(rawPatches);
+// const rawPatches = JSON.parse(localStorage.getItem('patches') || 'null');
+// const patches = validateData(rawPatches);
 
 
 export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore('app', {
@@ -32,7 +45,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * called from `PatchManager`. This would mount a bunch of <Connection>`s
      * that then try to reconcile and connect to (non-existant) audio nodes.
      */
-    patchId: -1,
+    patchId: 0, // -1,
 
     /**
      * The `id` of the active parameter configuration
@@ -67,13 +80,14 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     // -----------------------------------------------
 
     patch(state): Patch {
-      // return !~state.patchId ? blank() : state.patches[state.patchId];
+      // return !~state.patchId ? emptyPatch() : state.patches[state.patchId];
 
       const p = state.patches[state.patchId];
-      // Validate that we have a proper patch
+
       if (!p || !isPatch(p)) {
         console.warn('Invalid patch at index', state.patchId);
-        return blank();
+        throw new Error('Invalid patch at index ' + state.patchId);
+        // return emptyPatch();
       }
 
       return p;
@@ -226,11 +240,11 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     /**
-     * Insert a new, blank patch into the workspace.
+     * Insert a new, emptyPatch patch into the workspace.
      * @this Store The Vue (pinia) store instance.
      */
     addPatch () {
-      this.patchId = this.patches.push(blank()) - 1;
+      this.patchId = this.patches.push(emptyPatch()) - 1;
       this.configId = 0;
     },
 
@@ -257,9 +271,14 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      */
     async fetchPatches() {
       try {
-        const patches = await fetch(); //// api.load('/patches').then((patches) => {
-        console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
+        ////
+
+        // const patches = await fetch(); //// api.load('/patches').then((patches) => {
+        // console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
+
+        const patches = JSON.parse(localStorage.getItem('patches') || 'null');
         this.patches = validateData(patches);
+
       } catch (err) {
         console.log('Not signed in.', err);
       }
@@ -378,7 +397,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      */
     addConfig() {
       const config = {
-        name: `<empty ${this.configs.length}>`,
+        name: '<empty>',
         parameters: Object.assign({}, this.config?.parameters)
       };
 
@@ -415,5 +434,5 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
   }
 });
 
-
+const patches = [emptyPatch()];
 export const useAppStore = createAppStore({ patches });
