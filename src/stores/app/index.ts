@@ -27,13 +27,13 @@ const patches = JSON.parse(localStorage.getItem('patches') || 'null');
 // validateData(patches);
 
 
-export const useAppStore = defineStore('app', {
+export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore('app', {
   state: () => <AppState>{
     power: false,
     isEditing: false,
     hoveredId: undefined,
     activeId: undefined,
-    patches: patches || [blank()],
+    patches: patches,
 
     /**
      * The `id` of the active patch
@@ -389,3 +389,6 @@ export const useAppStore = defineStore('app', {
 
   }
 });
+
+
+export const useAppStore = createAppStore({ patches: patches || [blank()] });

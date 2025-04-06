@@ -15,7 +15,7 @@
     <div class="params select" data-testid="params">
       <span>0{{currentConfigId}}</span>
       <select v-model="currentConfigId" ref="configRef">
-        <option v-for="(config, id) in configs" :key="id" :value="id">{{ config.name }}</option>
+        <option v-for="(config, i) in configs" :key="i" :value="i">{{ config.name }}</option>
       </select>
       <input type="text" v-model="currentConfigName">
       <button class="add" title="add config" :disabled="!editing" @click="addConfig">+</button>
