@@ -226,7 +226,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       }
 
       id = id ?? this.patchId as number;
-      log({ type:'patch', action:'deleting', data: this.patch.name });
+      log({ type:'patch', action:'deleting patch', data: this.patch.name });
 
       this.patches.splice(id, 1);
       this.loadPatch(0);
@@ -370,7 +370,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * @param {number} id The configuration to remove
      */
     removeConfig(id: number) {
-      console.log('remoeing', id);
+      log({ type:'patch', action:'deleting config', data: id });
       this.configs.splice(id, 1);
       this.configId = 0;
     },

@@ -5,7 +5,7 @@
       <span>0{{currentPatchId}}</span>
       <select v-model="currentPatchId" ref="patchRef">
         <!-- <option value="" disabled selected>&lt;select patch&gt;</option> -->
-        <option v-for="(patch, id) in patches" :key="patch.id" :value="id">{{ patch.name }}</option>
+        <option v-for="(patch, i) in patches" :key="patch.id" :value="i">{{ patch.name }}</option>
       </select>
       <input type="text" v-model="currentPatchName">
       <button class="add" title="add patch" :disabled="!editing" @click="addPatch">+</button>

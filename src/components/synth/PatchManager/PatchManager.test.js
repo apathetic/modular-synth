@@ -6,10 +6,6 @@ import PatchManager from './PatchManager.vue';
 import { state as blank } from '@/stores/patch';
 
 
-import { nextTick } from 'vue';
-
-
-
 vi.mock('@/stores/app', async (importOriginal) => {
   const actual = await importOriginal();
   return {
@@ -18,14 +14,11 @@ vi.mock('@/stores/app', async (importOriginal) => {
   };
 });
 
-// Create a custom store factory for tests
+
 const createTestStore = (initialPatches = [blank()]) => {
   const store = createAppStore({ patches: initialPatches })();
 
-  // Set initial patchId to 0 to ensure the patch is loaded
   store.patchId = 0;
-
-  // Mock loadPatch to avoid audio node creation
   store.loadPatch = vi.fn((id) => {
     store.patchId = id;
     store.configId = 0;
@@ -33,6 +26,7 @@ const createTestStore = (initialPatches = [blank()]) => {
 
   return store;
 };
+
 
 describe('PatchManager.vue', () => {
   let mockStore;
@@ -256,6 +250,7 @@ describe('PatchManager.vue', () => {
         { ...blank(), name: 'first-patch', configs: [{ name: 'config1' }] },
         { ...blank(), name: 'second-patch', configs: [{ name: 'config2' }] }
       ];
+      const loadPatchSpy = vi.spyOn(mockStore, 'loadPatch');
 
       render(PatchManager);
 
@@ -264,12 +259,15 @@ describe('PatchManager.vue', () => {
       const patchInput = within(patch).getByRole('textbox');
       expect(patchInput.value).to.equal('first-patch');
 
-      // Update patch selection
+      // Update patch selection - use an actual Number here, not a string
       const dropdown = within(patch).getByRole('combobox');
-      fireEvent.update(dropdown, { target: { value: '1' } });
+      fireEvent.update(dropdown, { target: { value: 1 } });
 
-      // Wait for Vue to update
-      await nextTick();
+      // Verify loadPatch was called with the right argument
+      expect(loadPatchSpy).toHaveBeenCalledWith(1);
+
+      // Verify patchId was updated
+      expect(mockStore.patchId).to.equal(1);
 
       // shows second patch
       expect(patchInput.value).to.equal('second-patch');
