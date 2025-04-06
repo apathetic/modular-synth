@@ -31,6 +31,8 @@ describe('Connection.vue', () => {
   let mockDestNode
   let mockSourceModule
   let mockDestModule
+  let mockSourceRackUnit
+  let mockDestRackUnit
 
   beforeEach(() => {
     // Create mock audio nodes with inlets and outlets
@@ -62,17 +64,25 @@ describe('Connection.vue', () => {
       y: 200
     }
 
+    // Create mock RackUnits with module and node properties
+    mockSourceRackUnit = {
+      id: 1,
+      module: mockSourceModule,
+      node: mockSourceNode
+    }
+
+    mockDestRackUnit = {
+      id: 2,
+      module: mockDestModule,
+      node: mockDestNode
+    }
+
     // Setup mock store
     mockStore = {
-      getNode: vi.fn((id) => {
-        if (id === 1) return mockSourceNode
-        if (id === 2) return mockDestNode
-        return null
-      }),
-      getModule: vi.fn((id) => {
-        if (id === 1) return mockSourceModule
-        if (id === 2) return mockDestModule
-        return null
+      getRackUnit: vi.fn((id) => {
+        if (id === 1) return mockSourceRackUnit
+        if (id === 2) return mockDestRackUnit
+        return undefined
       }),
       removeConnection: vi.fn()
     }
@@ -177,9 +187,9 @@ describe('Connection.vue', () => {
     expect(mockSourceNode.outlets[0].audio.disconnect).toHaveBeenCalledWith(mockDestNode.inlets[0].audio)
   })
 
-  it('handles missing nodes gracefully', () => {
-    // Mock store to return null for nodes
-    mockStore.getNode.mockReturnValue(null)
+  it('handles missing rackUnits gracefully', () => {
+    // Mock store to return undefined for rackUnits
+    mockStore.getRackUnit.mockReturnValue(undefined)
 
     const wrapper = shallowMount(Connection, {
       props: {

@@ -46,7 +46,7 @@ export type Patch = {
 
 export type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
 
-type RackUnit = {
+type Module = {
   id: number;
   type: moduleType;
   col: number;
@@ -57,26 +57,17 @@ type RackUnit = {
   y: number;
 };
 
-// interface MasterOut extends RackUnit {
-//   type: 'MasterOut',
-//   id: 0;
-//   x: 0;
-//   y: 0;
-// }
-
-// type MasterOut = Pick<RackUnit, 'type'|'id'> {
-//   type: 'MasterOut';
-//   id: 0;
-//   x: 0;
-//   y: 0;
-// };
 
 
-export type Module = RackUnit; //| MasterOut;
-
-// all in one:
-type Module_ = RackUnit & SynthNode;
-
+/**
+ * RackUnit represents a complete rack unit with both
+ * UI/positioning data (Module) and audio processing capabilities (SynthNode)
+ */
+export type RackUnit = {
+  id: number;  // ID shared by both module and node
+  module: Module;
+  node: SynthNode;
+};
 
 // A reference to the rendered node (ie. in the APP)
 //  * with webaudio inlets/outlets
@@ -85,6 +76,23 @@ export type SynthNode = {
   inlets?: Inlet[];
   outlets?: Outlet[];
 };
+
+
+
+// interface MasterOut extends Module {
+//   type: 'MasterOut',
+//   id: 0;
+//   x: 0;
+//   y: 0;
+// }
+
+// type MasterOut = Pick<Module, 'type'|'id'> {
+//   type: 'MasterOut';
+//   id: 0;
+//   x: 0;
+//   y: 0;
+// };
+
 
 
 

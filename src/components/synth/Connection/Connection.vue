@@ -56,6 +56,7 @@ THOUGHTS:
   import { cellWidth } from '@/constants';
   import { Parameter } from '@/audio';
   import { log } from '@/utils/logger';
+  import type { RackUnit } from '@/types';
 
   export default defineComponent({
     props: {
@@ -78,18 +79,11 @@ THOUGHTS:
       const stroke = ref('white');
       let unwatch: (() => void) | undefined;
 
-      const src = {
-        node: store.getNode(from.id),
-        module: store.getModule(from.id)
-      };
+      const src = store.getRackUnit(from.id);
+      const dest = store.getRackUnit(to.id);
 
-      const dest = {
-        node: store.getNode(to.id),
-        module: store.getModule(to.id)
-      };
-
-      if (!src.node || !dest.node) {
-        logError(new Error('node not registered'));
+      if (!src || !dest) {
+        logError(new Error('unit not registered'));
         return;
       }
 
@@ -104,7 +98,6 @@ THOUGHTS:
       const x2 = computed(() => dest.module.x - 3);
       const y2 = computed(() => dest.module.y + (to.port * 20) + 27);
 
-
       /**
        * Connect the actual AudioNode of the module. This is the meat-and-bones of
        * the App, so to speak.
@@ -112,8 +105,17 @@ THOUGHTS:
        * @return {Void}
        */
       function route(connect = true) {
-        const inlet = dest.node.inlets[to.port];
-        const outlet = src.node.outlets[from.port];
+        // if (!to || !from || !src.node.inlets || !dest.node.inlets) {
+        //   return;
+        // }
+
+        const inlet = dest.node.inlets[to!.port];
+        const outlet = src.node.outlets?.[from!.port];
+
+        if (!inlet || !outlet) {
+          logError(new Error('inlet or outlet not found'));
+          return;
+        }
 
         try {
           if (outlet.audio && inlet.audio) {
@@ -125,7 +127,6 @@ THOUGHTS:
 
             if (connect) {
               source.connect(destination);
-              // console.log('%c[connection] %s', 'color: blue', str);
               log({ type:'connection', action:'creating', data: str });
             } else {
               source.disconnect(destination);
@@ -204,7 +205,7 @@ THOUGHTS:
       onUnmounted(() => {
         route(false);
         if (unwatch) unwatch();
-      })
+      });
 
       route();
 

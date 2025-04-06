@@ -16,7 +16,7 @@
   import { useConnection } from '@/composables';
   import { useAppStore } from '@/stores/app';
   import { cellWidth } from '@/constants';
-  import type { Module } from '@/types';
+  import type { Module, RackUnit } from '@/types';
 
   export default defineComponent({
     setup () {
@@ -36,9 +36,10 @@
         }
 
         const { port, id } = connector.from;
-        const from = store.getModule(id); // need x,y of this module (so connector stays linked to port)
+        const { module } = store.getRackUnit(id); // need x,y of this module (so connector stays linked to port)
 
-        dragStart(from, port);
+        if (!module || port === undefined) return;
+        dragStart(module, port);
       });
 
       /**

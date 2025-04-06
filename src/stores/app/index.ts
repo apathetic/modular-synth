@@ -10,7 +10,8 @@ import type {
   MouseCoords,
   GridCoords,
   Module,
-  SynthNode } from '@/types';
+  SynthNode,
+  RackUnit } from '@/types';
 
 
 import { nextTick } from 'vue';
@@ -128,6 +129,25 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     getNode: (state) => (id: number) => state.registry[id],
+
+    /**
+     * Returns a RackUnit that combines Module and SynthNode as separate properties
+     * This provides a single entity representation of a module in the rack
+     */
+    getRackUnit() {
+      return (id: number): RackUnit | undefined => {
+        const module = this.modules.find((mod: Module) => mod.id === id);
+        const node = this.registry[id];
+
+        if (!module || !node) return undefined;
+
+        return {
+          id,
+          module,
+          node
+        };
+      };
+    },
 
 
     // -----------------------------------------------

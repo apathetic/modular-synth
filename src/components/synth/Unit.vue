@@ -37,7 +37,7 @@
   import { log } from '@/utils/logger';
   import * as Modules from '@/components/';
   import Debugger from '@/components/modules/Debugger.vue';
-  import type { Module } from '@/types';
+  import type { Module, SynthNode } from '@/types';
   import type { PropType } from 'vue'
 
   export default defineComponent({
@@ -87,7 +87,10 @@
         // `modules` are already tracked... but they're JSON.
         // We want to track all INSTANTIATED web audio nodes
         // This is possible only after the module has rendered
-        store.addToRegistry({ id, node: node.value });
+        if (node.value) {
+          // Add the audio node to the registry using the same id as the module
+          store.addToRegistry({ id, node: node.value as SynthNode });
+        }
       });
 
       onBeforeUnmount(() => {
