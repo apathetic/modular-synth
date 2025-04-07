@@ -1,5 +1,32 @@
+import { z } from 'zod';
 import { state as blank } from '@/stores/patch';
-import type { Patch, Config, Connection, Module, moduleType, Parameters } from '@/types';
+import type { Patch, Config, /* Connection, Module, moduleType , Parameters*/ } from '@/types';
+
+
+
+const ModuleTypeEnum = z.enum(['MasterOut', 'Analyser', 'Clock', 'Compressor', 'Debugger', 'Delay', 'Drive', 'Env', 'Filter', 'LFO', 'Mixer', 'Node', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']);
+type moduleType = z.infer<typeof ModuleTypeEnum>; // 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
+
+
+
+const MasterOutSchema = z.object({
+  id: z.literal(0),
+  type: z.literal('MasterOut'),
+  x: z.number(),
+  y: z.number(),
+});
+
+const ModuleSchema = z.object({
+  id: z.number(),
+  type: ModuleTypeEnum,
+  col: z.number(),
+  row: z.number(),
+  x: z.number(),
+  y: z.number(),
+  w: z.number().optional(),
+  h: z.number().optional()
+}).or(MasterOutSchema);
+type Module = z.infer<typeof ModuleSchema>;
 
 /**
  * Type predicate to check if an object is a valid Module.
@@ -7,172 +34,110 @@ import type { Patch, Config, Connection, Module, moduleType, Parameters } from '
  * @param obj - The object to check
  * @returns A type predicate indicating if the object is a valid Module
  */
-function isModule(obj: any): obj is Module {
-  if (!obj || typeof obj !== 'object') return false;
+const isModule = (module: unknown): module is Module => ModuleSchema.safeParse(module).success;
 
-  return (
-    typeof obj.id === 'number' &&
-    typeof obj.type === 'string' &&
-    typeof obj.x === 'number' &&
-    typeof obj.y === 'number' &&
-    typeof obj.col === 'number' &&
-    typeof obj.row === 'number'
-  );
-}
+
+
+const ConnectionSchema = z.object({
+  id: z.number(),
+  from: z.object({
+    id: z.number(),
+    port: z.number()
+  }),
+  to: z.object({
+    id: z.number(),
+    port: z.number()
+  })
+});
+type Connection = z.infer<typeof ConnectionSchema>;
 
 /**
  * Type predicate to check if an object is a valid Connection.
+ * For type predicates, we do a direct property check rather than using Zod.
  *
  * @param obj - The object to check
  * @returns A type predicate indicating if the object is a valid Connection
  */
-function isConnection(obj: any): obj is Connection {
-  if (!obj || typeof obj !== 'object') return false;
+const isConnection = (connection: unknown): connection is Connection => ConnectionSchema.safeParse(connection).success;
 
-  return (
-    typeof obj.id === 'number' &&
-    obj.from && typeof obj.from === 'object' &&
-    typeof obj.from.id === 'number' &&
-    typeof obj.from.port === 'number' &&
-    obj.to && typeof obj.to === 'object' &&
-    typeof obj.to.id === 'number' &&
-    typeof obj.to.port === 'number'
-  );
-}
 
+
+const ConfigSchema = z.object({
+  name: z.string(),
+  parameters: z.record(z.string(), z.union([z.string(), z.number()]))
+});
 /**
  * Type predicate to check if an object is a valid Config.
+ * For type predicates, we do a direct property check rather than using Zod.
  *
  * @param obj - The object to check
  * @returns A type predicate indicating if the object is a valid Config
  */
-function isConfig(obj: any): obj is Config {
-  if (!obj || typeof obj !== 'object') return false;
+const isConfig = (config: unknown): config is Config => ConfigSchema.safeParse(config).success;
 
-  return (
-    typeof obj.name === 'string' &&
-    obj.parameters && typeof obj.parameters === 'object'
-  );
-}
+
+const PatchSchema = z.object({
+  id: z.string(),
+  i: z.number(), // PatchKey
+  name: z.string(),
+  modules: z.array(ModuleSchema),
+  connections: z.array(ConnectionSchema),
+  configs: z.array(ConfigSchema)
+});
 
 /**
  * Type predicate to check if an object is a valid Patch.
- * This allows TypeScript to narrow types based on the validation result.
+ * For type predicates, we use a direct property check with a more lenient approach.
  *
  * @param obj - The object to check
  * @returns A type predicate indicating if the object is a valid Patch
  */
-function isPatch(obj: any): obj is Patch {
-  if (!obj || typeof obj !== 'object') return false;
-
-  return (
-    typeof obj.name === 'string' &&
-    typeof obj.id === 'string' &&
-    Array.isArray(obj.modules) &&
-    Array.isArray(obj.connections) &&
-    Array.isArray(obj.configs)
-  );
-}
-
-
-
-
-/**
- * Validates a single config object to ensure it has all required fields.
- *
- * @param config - The config to validate
- * @param patchName - The name of the containing patch (for logging)
- * @param index - The index of the config in the array
- * @returns A valid config with all required fields
- */
-function validateConfig(config: Partial<Config> | null | undefined, patchName: string, index: number): Config {
-  const DEFAULT = blank();
-  const defaultConfig = DEFAULT.configs[0];
-
-  if (!config) {
-    console.warn('Patch "%s" has no config at index %d. Fixing...', patchName, index);
-    return { ...defaultConfig };
+const isPatch = (patch: unknown): patch is Patch => {
+  const result = PatchSchema.safeParse(patch);
+  if (!result.success) {
+    console.error('Invalid patch:', result.error);
   }
+  return result.success;
+};
 
-  const result = { ...config } as Config;
 
-  if (!result.name || typeof result.name !== 'string') {
-    console.warn('Patch "%s" config at index %d missing valid name. Fixing...', patchName, index);
-    result.name = result.name || `<params>`;
-  }
 
-  if (!result.parameters || typeof result.parameters !== 'object') {
-    console.warn('Patch "%s" missing parameters in "%s". Fixing...', patchName, result.name);
-    result.parameters = {};
-  }
 
-  return result;
-}
+
+/////
 
 
 /**
  * Validates and fixes a single patch object to ensure it has all required fields.
+ * Uses Zod for validation with fallbacks to default values when necessary.
  *
  * @param patch - The patch to validate
  * @returns A valid patch with all required fields
  */
-function validatePatch(patch: Partial<Patch> | undefined): Patch {
+function fixPatch(patch: Partial<Patch>): Patch {
   const DEFAULT = blank();
+  let result: Partial<Patch> = { ...patch };
 
-  if (!patch || typeof patch !== 'object') {
-    console.warn('Patch is missing or undefined. Replacing with default.');
-    return { ...DEFAULT };
+
+  // Check and fix ID
+  if (typeof result.id !== 'string') {
+    console.warn('Patch missing valid id. Fixing...');
+    result.id = DEFAULT.id;
+    // needsWarning = true;
   }
 
-  const result = { ...patch } as Patch;
-
-  if (!result.name) {
-    console.warn('Patch "%s" missing name', patch.id);
+  // Check and fix name
+  if (typeof result.name !== 'string') {
+    console.warn('Patch missing valid name. Fixing...');
     result.name = DEFAULT.name;
   }
 
-  if (result.id === undefined) {
-    console.warn('Patch "%s" missing id. Fixing...', result.name);
-    result.id = DEFAULT.id; // note: should autogenerate a UUID, here
+
+  if (!isPatch(result)) {
+    throw new Error('PATCH VALIDATION and subsequent fix failed.');
   }
 
-  if (!result.configs) {
-    console.warn('Patch "%s" missing configs. Fixing...', result.name);
-    result.configs = [...DEFAULT.configs];
-  } else if (!Array.isArray(result.configs) || result.configs.length === 0) {
-    console.warn('Patch "%s" has invalid configs array. Fixing...', result.name);
-    result.configs = [...DEFAULT.configs];
-  }
-
-  // Ensure at least one config always exists
-  if (result.configs.length === 0) {
-    console.warn('Patch "%s" has no configs. Adding default config...', result.name);
-    result.configs.push({
-      name: '<blank>',
-      parameters: {}
-    });
-  }
-
-  // Validate each config within the patch
-  for (let i = 0; i < result.configs.length; i++) {
-    result.configs[i] = validateConfig(result.configs[i], result.name, i);
-  }
-
-  if (!result.connections) {
-    console.warn('Patch "%s" missing connections. Fixing...', result.name);
-    result.connections = [...DEFAULT.connections];
-  }
-
-  // Validate and fix modules
-  if (!result.modules) {
-    console.warn('Patch "%s" no modules. Fixing...', result.name);
-    result.modules = [...DEFAULT.modules];
-  } else if (!Array.isArray(result.modules)) {
-    console.warn('Patch "%s" has invalid modules (not an array). Fixing...', result.name);
-    result.modules = [...DEFAULT.modules];
-  }
-
-  return result;
+  return result as Patch;
 }
 
 /**
@@ -188,15 +153,14 @@ function validatePatch(patch: Partial<Patch> | undefined): Patch {
  * @param patches - The array of patches to validate
  * @returns An array of validated patches
  */
-function validateData(patches?: unknown): Patch[] {
-  // If patches is null, undefined, or not an array, return a blank patch
+function validateData(patches: unknown): Patch[] {
   if (!patches || !Array.isArray(patches) || patches.length === 0) {
-    return [blank()];
+    throw new Error('Invalid patches array.');
   }
 
-  // Validate each patch
-  return patches.map(validatePatch);
+  return patches.map((patch) => isPatch(patch) ? patch : fixPatch(patch));
 }
+
 
 
 export {
@@ -204,7 +168,13 @@ export {
   isModule,
   isConnection,
   isConfig,
-  validatePatch,
+  fixPatch,
   validateData,
-  validateConfig,
+
+
+  PatchSchema,
+  ModuleSchema,
+  ConnectionSchema,
+  ConfigSchema,
+  // ParametersSchema
 };

@@ -17,7 +17,7 @@ import type {
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
 import { fetch, create, save, remove } from '@/utils/supabase';
-import { validateData, validatePatch, isPatch } from '@/utils/validatePatch';
+import { validateData, fixPatch, isPatch } from '@/utils/validatePatch';
 import { moduleSize } from '@/constants';
 
 
@@ -80,14 +80,10 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     // -----------------------------------------------
 
     patch(state): Patch {
-      // return !~state.patchId ? emptyPatch() : state.patches[state.patchId];
-
       const p = state.patches[state.patchId];
 
       if (!p || !isPatch(p)) {
-        console.warn('Invalid patch at index', state.patchId);
         throw new Error('Invalid patch at index ' + state.patchId);
-        // return emptyPatch();
       }
 
       return p;
@@ -199,8 +195,10 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       // id = id ?? this.patchId as number;
 
       // Validate the patch before processing it
-      // this.patches[id] = validatePatch(this.patches[id]);
-      validatePatch(this.patches[id]); // don't do anything with the patch, just validate it. should already be validated when loaded / fetched
+      if (!isPatch(this.patches[id])) {
+        console.error('Invalid patch at index', id);
+        // this.patches[id] = fixPatch(this.patches[id]);
+      }
 
       const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
       const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
@@ -228,7 +226,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      */
     savePatch() {
       // Validate the patch before saving
-      const patch = validatePatch(this.patch);
+      // const patch = validatePatch(this.patch);
+      const patch: Patch = isPatch(this.patch) ? this.patch : fixPatch(this.patch);
 
       save({ ...patch /*, id: patch.uuid */ })
         .then(() => {

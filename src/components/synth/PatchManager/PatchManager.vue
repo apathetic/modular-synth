@@ -49,11 +49,7 @@
 
       const currentConfigName = computed({
         get() { return store.config?.name; },
-        // set(value) { store.config.name = value; }
-        set(value) {
-          if (!store.config) { throw new Error('config is not set'); }
-          store.config.name = value;
-        }
+        set(value) { store.config.name = value; }
       });
 
       const currentConfigId = computed({
