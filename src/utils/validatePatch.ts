@@ -1,12 +1,10 @@
 import { z } from 'zod';
 import { state as blank } from '@/stores/patch';
-import type { Patch, Config, /* Connection, Module, moduleType , Parameters*/ } from '@/types';
 
 
 
 const ModuleTypeEnum = z.enum(['MasterOut', 'Analyser', 'Clock', 'Compressor', 'Debugger', 'Delay', 'Drive', 'Env', 'Filter', 'LFO', 'Mixer', 'Node', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']);
-type moduleType = z.infer<typeof ModuleTypeEnum>; // 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
-
+type moduleType = z.infer<typeof ModuleTypeEnum>;
 
 
 const MasterOutSchema = z.object({

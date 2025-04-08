@@ -1,18 +1,5 @@
 import { defineStore } from 'pinia'
 import { state as emptyPatch, masterout } from '../patch';
-import type {
-  AppState,
-  Patch,
-  Config,
-  Connection,
-  Parameters,
-  parameterLabel,
-  MouseCoords,
-  GridCoords,
-  Module,
-  SynthNode,
-  RackUnit } from '@/types';
-
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
@@ -78,35 +65,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     //  SYNTH
     // -----------------------------------------------
 
-    patchXXX(state): Patch {
-      if (!state.patches.length) {
-        throw new Error('No patches found');
-      }
-
-      // if (!state.patchId) {
-      //   console.log('patch not loaded');
-      //   return { modules: [], connections: [], configs: [], name: 'loading...' } as unknown as Patch;
-      // }
-
-
-      const p = state.patches[state.patchId];
-
-      if (!p || !isPatch(p)) {
-        throw new Error('Invalid patch at index ' + state.patchId);
-      }
-
-      if (!p.loaded) {
-        console.log('patch not loaded');
-        // return { modules: [], connections: [], configs: [], name: 'loading...' } as unknown as Patch;
-      }
-
-      return p;
-    },
-
     modules(): Module[] {
-      // return this.patch.loaded ? this.patch.modules : [masterout];
-      // return this.patches.length ? this.patch.modules : [];
-
       // THERE WILL ALWAYS BE AT LEAST ONE MODULE: masterout
       return this.patch.modules;
     },
@@ -135,7 +94,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     configs(): Config[] {
-      return this.patch.configs;
+      return this.patch.loaded ? this.patch.configs : [{ name: 'loading...' } as Config];
+      // return this.patch.configs;
     },
 
     config(state): Config {
@@ -206,15 +166,11 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * @param {number} id The id of the patch to load
      */
     async loadPatch(id: number) {
-      console.log('loadPatch', id);
-
       // const { resetSorting } = useSortable();
-      if (id === this.patchId) {
-        if (this.patch.loaded) {
-          return;
-        }
+
+      if (id === this.patchId && this.patch.loaded) {
+        return;
       }
-      // id = id ?? this.patchId as number;
 
       // Validate the patch before processing it
       if (!isPatch(this.patches[id])) {
@@ -222,47 +178,28 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
         // this.patches[id] = fixPatch(this.patches[id]);
       }
 
-      // this.patches[this.patchId].loaded = false;        // reset the previous patch's loaded state
-
-
-
-      // const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
-      // const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
-
-      // this.patches[id].connections = [];                // temporarily zero it out so that it will not load immediately
-      // this.patches[id].configs = [];                    // temporarily zero it out
-
       const patch = this.patches[id];
       const connections = patch.connections; // keep a ref to the _soon-to-be-loaded_ connections array
       const configs = patch.configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
 
       patch.loaded = false;
-      patch.connections = [];
-      patch.configs = [];
+      patch.connections = [];                // set to empty array so that it will not load immediately
+      patch.configs = [];                    // set to empty array so that it will not load immediately
 
-      this.patch = patch; //
-      this.patchId = id;                                // trigger loading a new patch
-      this.configId = 0;                                // select 1st set when new patch loaded
+      this.patch = patch;
+      this.patchId = id;
+      this.configId = 0;                     // select 1st set when new patch loaded
 
       log({ type:'patch', action:'loading ', data: patch.name });
 
       // ensure AudioNodes have been instantiated before proceeding with routing
       // ensure components w/ parameters have mounted before applying parameter configs
-
-
       await nextTick();
-      console.log('connections and configs');
 
       // Now we can safely instantiate parameters and connections
-      // this.patches[id].connections = connections;
-      // this.patches[id].configs = configs;
-      // this.patches[id].loaded = true;
-      // resetSorting();
-
       this.patch.connections = connections;
       this.patch.configs = configs;
       this.patch.loaded = true;
-
     },
 
     /**
