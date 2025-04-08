@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { state as emptyPatch } from '../patch';
+import { state as emptyPatch, masterout } from '../patch';
 import type {
   AppState,
   Patch,
@@ -39,13 +39,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     /**
      * The `id` of the active patch
 		 * @type {number}
-     *
-     * Set initially to -1 to prevent loading a patch on initial load. If this
-     * did happen, computed getters would run before the `loadPatch` action is
-     * called from `PatchManager`. This would mount a bunch of <Connection>`s
-     * that then try to reconcile and connect to (non-existant) audio nodes.
      */
-    patchId: 0, // -1,
+    patchId: 0,
 
     /**
      * The `id` of the active parameter configuration
@@ -70,6 +65,10 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
 
     session: undefined,
     // authenticated: false,
+
+
+    patch: { modules: [], connections: [], configs: [], name: 'loading...' } as unknown as Patch,
+
   },
 
   getters: {
@@ -79,17 +78,35 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     //  SYNTH
     // -----------------------------------------------
 
-    patch(state): Patch {
+    patchXXX(state): Patch {
+      if (!state.patches.length) {
+        throw new Error('No patches found');
+      }
+
+      // if (!state.patchId) {
+      //   console.log('patch not loaded');
+      //   return { modules: [], connections: [], configs: [], name: 'loading...' } as unknown as Patch;
+      // }
+
+
       const p = state.patches[state.patchId];
 
       if (!p || !isPatch(p)) {
         throw new Error('Invalid patch at index ' + state.patchId);
       }
 
+      if (!p.loaded) {
+        console.log('patch not loaded');
+        // return { modules: [], connections: [], configs: [], name: 'loading...' } as unknown as Patch;
+      }
+
       return p;
     },
 
     modules(): Module[] {
+      // return this.patch.loaded ? this.patch.modules : [masterout];
+      // return this.patches.length ? this.patch.modules : [];
+
       // THERE WILL ALWAYS BE AT LEAST ONE MODULE: masterout
       return this.patch.modules;
     },
@@ -189,9 +206,14 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * @param {number} id The id of the patch to load
      */
     async loadPatch(id: number) {
-      // const { resetSorting } = useSortable();
+      console.log('loadPatch', id);
 
-      if (id === this.patchId) { return; }
+      // const { resetSorting } = useSortable();
+      if (id === this.patchId) {
+        if (this.patch.loaded) {
+          return;
+        }
+      }
       // id = id ?? this.patchId as number;
 
       // Validate the patch before processing it
@@ -200,23 +222,47 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
         // this.patches[id] = fixPatch(this.patches[id]);
       }
 
-      const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
-      const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
+      // this.patches[this.patchId].loaded = false;        // reset the previous patch's loaded state
 
-      this.patches[id].connections = [];                // temporarily zero it out
-      this.patches[id].configs = [];                    // temporarily zero it out
 
+
+      // const connections = this.patches[id].connections; // keep a ref to the _soon-to-be-loaded_ connections array
+      // const configs = this.patches[id].configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
+
+      // this.patches[id].connections = [];                // temporarily zero it out so that it will not load immediately
+      // this.patches[id].configs = [];                    // temporarily zero it out
+
+      const patch = this.patches[id];
+      const connections = patch.connections; // keep a ref to the _soon-to-be-loaded_ connections array
+      const configs = patch.configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
+
+      patch.loaded = false;
+      patch.connections = [];
+      patch.configs = [];
+
+      this.patch = patch; //
       this.patchId = id;                                // trigger loading a new patch
       this.configId = 0;                                // select 1st set when new patch loaded
-      log({ type:'patch', action:'loading ', data: this.patch.name });
+
+      log({ type:'patch', action:'loading ', data: patch.name });
 
       // ensure AudioNodes have been instantiated before proceeding with routing
       // ensure components w/ parameters have mounted before applying parameter configs
-      await nextTick();
 
-      this.patches[id].connections = connections;
-      this.patches[id].configs = configs;
+
+      await nextTick();
+      console.log('connections and configs');
+
+      // Now we can safely instantiate parameters and connections
+      // this.patches[id].connections = connections;
+      // this.patches[id].configs = configs;
+      // this.patches[id].loaded = true;
       // resetSorting();
+
+      this.patch.connections = connections;
+      this.patch.configs = configs;
+      this.patch.loaded = true;
+
     },
 
     /**
@@ -273,10 +319,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
         ////
 
         // const patches = await fetch(); //// api.load('/patches').then((patches) => {
+        // this.patches = validateData(patches);
         // console.log('%c Patches synched from API ', 'background:#666;color:white;font-weight:bold;');
-
-        const patches = JSON.parse(localStorage.getItem('patches') || 'null');
-        this.patches = validateData(patches);
 
       } catch (err) {
         console.log('Not signed in.', err);
@@ -433,5 +477,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
   }
 });
 
-const patches = [emptyPatch()];
+
+const localPatches = JSON.parse(localStorage.getItem('patches') || 'null');
+const patches = localPatches || [emptyPatch()];
+
 export const useAppStore = createAppStore({ patches });

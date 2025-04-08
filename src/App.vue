@@ -137,7 +137,7 @@
 
       return {
         // power: computed(() => store.power),
-        patch: computed(() => store.patch),
+        // patch: computed(() => store.patch),
         modules: computed(() => store.modules.filter((m: Module) => m.id !== 0)),
         isEditing: computed(() => store.isEditing),
         connections: computed(() => store.connections),

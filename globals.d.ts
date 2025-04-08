@@ -23,7 +23,7 @@ type AppState = {
 }
 
 // for alt PatchStore:
-// type PatchState = Patch & {
+// export type PatchState = Patch & {
 //   activeId?: number;
 //   hoveredId?: number;
 //   configId: number;
