@@ -1,6 +1,20 @@
 {
   "imports": {
+    "vue": "npm:vue@3.2.39",
     "@/": "./src/",
-    "vue": "npm:vue@3.2.39"
+    "@/audio": "./src/audio/index.ts",
+    "@/stores": "./src/stores/index.ts",
+    "@/stores/app": "./src/stores/app/index.ts",
+    "@/stores/patch": "./src/stores/patch/index.ts",
+    "@/utils/register": "./src/utils/register/index.ts",
+    "@/utils/logger": "./src/utils/logger/index.ts",
+    "@/utils/supabase": "./src/utils/supabase/index.ts",
+    "@/utils/validatePatch": "./src/utils/validatePatch/index.ts",
+    "@/composables": "./src/composables/index.ts",
+    "@/components": "./src/components/index.ts",
+    "@/components/UI": "./src/components/UI/index.ts",
+    "@/styles/": "./src/styles/",
+    "@/styles/styles.css": "./src/styles/styles.css",
+    "@/types": "./src/types/index.ts"
   }
 }
