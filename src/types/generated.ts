@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 // Export the module type enum and its inferred type
-export const ModuleTypeEnum = z.enum(['MasterOut', 'Analyser', 'Clock', 'Compressor', 'Debugger', 'Delay', 'Drive', 'Env', 'Filter', 'LFO', 'Mixer', 'Node', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']);
+export const ModuleTypeEnum = z.enum(['Analyser', 'Clock', 'Compressor', 'Debugger', 'Delay', 'Drive', 'Env', 'Filter', 'LFO', 'Mixer', 'Node', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']);
 export type moduleType = z.infer<typeof ModuleTypeEnum>;
 
-// Export schemas and their inferred types
+
 export const MasterOutSchema = z.object({
   id: z.literal(0),
   type: z.literal('MasterOut'),
@@ -21,8 +21,9 @@ export const ModuleSchema = z.object({
   y: z.number(),
   w: z.number().optional(),
   h: z.number().optional()
-}).or(MasterOutSchema);
-// export type Module = z.infer<typeof ModuleSchema>;
+})
+// .or(MasterOutSchema);
+
 
 export const ConnectionSchema = z.object({
   id: z.number(),
@@ -35,13 +36,13 @@ export const ConnectionSchema = z.object({
     port: z.number()
   })
 });
-// export type Connection = z.infer<typeof ConnectionSchema>;
+
 
 export const ConfigSchema = z.object({
   name: z.string(),
   parameters: z.record(z.string(), z.union([z.string(), z.number()]))
 });
-// export type Config = z.infer<typeof ConfigSchema>;
+
 
 export const PatchSchema = z.object({
   id: z.string(),

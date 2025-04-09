@@ -2,6 +2,7 @@
   "imports": {
     "vue": "npm:vue@3.2.39",
     "@/": "./src/",
+    "@/App.vue": "./src/App.vue",
     "@/audio": "./src/audio/index.ts",
     "@/stores": "./src/stores/index.ts",
     "@/stores/app": "./src/stores/app/index.ts",

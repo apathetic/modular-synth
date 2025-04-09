@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { state as emptyPatch, masterout } from '../patch';
+import { state as emptyPatch } from '../patch';
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
@@ -309,14 +309,14 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     /**
      * Adds a new module to the patch.
      * @param {Object} data A partial serialized Module object
-     * @param {string} data.type
+     * @param {moduleType} data.type
      * @param {number} data.x
      * @param {number} data.y
      */
     addModule(data: Pick<Module, 'type'|'x'|'y'>) {
       const { type, x, y } = data;
       const patch = this.patch;
-      const size = moduleSize[type] || [1, 1];
+      const size = moduleSize[type as moduleType] || [1, 1];
 
       patch.i++;     // or uuid
       patch.modules.push({
