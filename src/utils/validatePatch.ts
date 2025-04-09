@@ -4,10 +4,6 @@ import {
   ConnectionSchema,
   ConfigSchema,
   PatchSchema,
-  type Module,
-  type Connection,
-  type Config,
-  type Patch
 } from '@/types/generated';
 
 /**

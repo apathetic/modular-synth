@@ -5,7 +5,6 @@
     "composite": true,
     "skipLibCheck": true,
 
-
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -18,14 +17,13 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    },
+    }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.vue",
-    "tests/cypress/component/index.*",
-    "tests/cypress/component/commands.ts",
-    "globals.d.ts"
+    "globals.d.ts",
+    "src/types/generated.ts"
   ],
   "exclude": [
     "src/**/__tests__/*",

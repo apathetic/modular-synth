@@ -1,6 +1,4 @@
 
-/// <reference path="./types/generated.ts" />
-
 // type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
 
 // type MasterOut = Pick<Module, 'type'|'id'> {
@@ -88,8 +86,8 @@ type SynthNode = {
   outlets?: Outlet[];
 };
 
-type parameterLabel = `${Module['id']}-${string}`;
-type Parameters = Record<parameterLabel, string|number>;
+// type parameterLabel = `${Module['id']}-${string}`;
+// type Parameters = Record<parameterLabel, string|number>;
 
 // type port = {
 type Inlet = {
@@ -117,9 +115,9 @@ type MouseCoords = {
   // id:
 };
 
-  type GridCoords = {
-    id: number;
-    col: number;
-    row: number;
-  };
+type GridCoords = {
+  id: number;
+  col: number;
+  row: number;
+};
 

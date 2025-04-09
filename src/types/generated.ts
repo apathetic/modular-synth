@@ -22,7 +22,7 @@ export const ModuleSchema = z.object({
   w: z.number().optional(),
   h: z.number().optional()
 }).or(MasterOutSchema);
-export type Module = z.infer<typeof ModuleSchema>;
+// export type Module = z.infer<typeof ModuleSchema>;
 
 export const ConnectionSchema = z.object({
   id: z.number(),
@@ -35,13 +35,13 @@ export const ConnectionSchema = z.object({
     port: z.number()
   })
 });
-export type Connection = z.infer<typeof ConnectionSchema>;
+// export type Connection = z.infer<typeof ConnectionSchema>;
 
 export const ConfigSchema = z.object({
   name: z.string(),
   parameters: z.record(z.string(), z.union([z.string(), z.number()]))
 });
-export type Config = z.infer<typeof ConfigSchema>;
+// export type Config = z.infer<typeof ConfigSchema>;
 
 export const PatchSchema = z.object({
   id: z.string(),
@@ -52,4 +52,14 @@ export const PatchSchema = z.object({
   connections: z.array(ConnectionSchema),
   configs: z.array(ConfigSchema)
 });
-export type Patch = z.infer<typeof PatchSchema>;
+// export type Patch = z.infer<typeof PatchSchema>;
+
+declare global {
+  type moduleType = z.infer<typeof ModuleTypeEnum>;
+  type Module = z.infer<typeof ModuleSchema>;
+  type Connection = z.infer<typeof ConnectionSchema>;
+  type Config = z.infer<typeof ConfigSchema>;
+  type Patch = z.infer<typeof PatchSchema>;
+  type parameterLabel = `${number}-${string}`;
+  // type Parameters = Record<parameterLabel, string | number>;
+}
