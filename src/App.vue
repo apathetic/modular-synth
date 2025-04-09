@@ -50,7 +50,7 @@
   import PatchManager from '@/components/synth/PatchManager';
   import ContextMenu from '@/components/synth/ContextMenu.vue';
   import './styles/module.scss';
-  import type { Module } from '@/types';
+
 
   export default defineComponent({
     name: 'App',

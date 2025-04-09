@@ -1,19 +1,19 @@
-import type { Session } from "@supabase/supabase-js";
+// import type { Session } from "@supabase/supabase-js";
 
 type PatchKey = number; // string; // uuid; // string
 
-export type AppState = {
+type AppState = {
   power: boolean;
   isEditing: boolean;
   hoveredId?: number;
   activeId?: number;
 
   patches: Patch[]; // all available patches
+  patch: Patch;     // active patch
   patchId: number;  // active patch id
   configId: number; // active parameter config id
 
   // references to all audio nodes in the current patch.
-  // Nodes/Modules are kinda conflated / they share the same `this` instance ... :(
   registry: {[value: number]: SynthNode};
 
   session?: Session;
@@ -23,28 +23,29 @@ export type AppState = {
 }
 
 // for alt PatchStore:
-export type PatchState = Patch & {
-  activeId?: number;
-  hoveredId?: number;
-  configId: number;
+// type PatchState = Patch & {
+//   activeId?: number;
+//   hoveredId?: number;
+//   configId: number;
 
-  registry: {[value: number]: SynthNode};
-};
+//   registry: {[value: number]: SynthNode};
+// };
 
-// export interface UserState {
+// interface UserState {
 //   session: Session;
 // }
 
-export type Patch = {
+type Patch = {
   id: string;
-  i: PatchKey;
+  i: PatchKey; // TODO use uuid for things
+  loaded: boolean; // patch must be loaded (via `loadPatch`) so that modules, connections, and parameters are correctly instantiated
   name: string;
   modules: Module[];
   connections: Connection[];
   configs: Config[];
 };
 
-export type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
+type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
 
 type Module = {
   id: number;
@@ -63,7 +64,7 @@ type Module = {
  * RackUnit represents a complete rack unit with both
  * UI/positioning data (Module) and audio processing capabilities (SynthNode)
  */
-export type RackUnit = {
+type RackUnit = {
   id: number;  // ID shared by both module and node
   module: Module;
   node: SynthNode;
@@ -72,19 +73,12 @@ export type RackUnit = {
 // A reference to the rendered node (ie. in the APP)
 //  * with webaudio inlets/outlets
 //  * also includes coords?
-export type SynthNode = {
+type SynthNode = {
   inlets?: Inlet[];
   outlets?: Outlet[];
 };
 
 
-
-// interface MasterOut extends Module {
-//   type: 'MasterOut',
-//   id: 0;
-//   x: 0;
-//   y: 0;
-// }
 
 // type MasterOut = Pick<Module, 'type'|'id'> {
 //   type: 'MasterOut';
@@ -97,17 +91,17 @@ export type SynthNode = {
 
 
 // interface Settings ?
-export interface Config {
+interface Config {
   name: string;
   parameters: Parameters;
 }
 
-export type parameterLabel = `${Module['id']}-${string}`;
-export type Parameters = Record<parameterLabel, string|number>;
+type parameterLabel = `${Module['id']}-${string}`;
+type Parameters = Record<parameterLabel, string|number>;
 
 
 
-export type Connection = {
+type Connection = {
   id: number;
   from: {
     id: number;
@@ -120,7 +114,7 @@ export type Connection = {
 };
 
 // type port = {
-export type Inlet = {
+type Inlet = {
   // data: () => void | audio: AudioNode;
   audio?: AudioNode; ///   audioNode: any; // webaudioNOde / elementary node / tone class / etc
   data?: () => void;
@@ -128,7 +122,7 @@ export type Inlet = {
   desc?: string;
 }
 
-export type Outlet = {
+type Outlet = {
   audio?: AudioNode;
   data?: () => void;
   label?: string;
@@ -140,13 +134,13 @@ export type Outlet = {
 
 
 
-export type MouseCoords = {
+type MouseCoords = {
   x: number;
   y: number;
   // id:
 };
 
-export type GridCoords = {
+type GridCoords = {
   id: number;
   col: number;
   row: number;

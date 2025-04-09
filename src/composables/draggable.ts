@@ -21,16 +21,16 @@ const dragObj = {
  * @param {number} coords.y
  * @param {number} coords.id
  */
-export function useDraggable(coords) {
+export function useDraggable(coords: GridCoords) {
   const { startSorting, whileSorting, stopSorting } = useSortable();
   const store = useAppStore();
   const isDragging = ref(false);
 
-  function startDragging(event, element) {
+  function startDragging(event: MouseEvent, element: HTMLElement) {
     // const element = this.$el; // refers to the calling fn // event.target;
     // const BCR = element.getBoundingClientRect();
 
-    element.style.zIndex = ++dragObj.zIndex;     // Update element's z-index.
+    element.style.zIndex = String(++dragObj.zIndex);     // Update element's z-index.
 
     // Save starting positions of current coords, cursor and element.
     dragObj.x = coords.x;
@@ -49,15 +49,16 @@ export function useDraggable(coords) {
       startSorting();
     }
 
-    document.addEventListener(EVENT.MOUSE_MOVE, whileDragging);
-    document.addEventListener(EVENT.MOUSE_UP, stopDragging);
+    document.addEventListener('mousemove', whileDragging as EventListener);
+    document.addEventListener('mouseup', stopDragging as EventListener);
   }
 
-  function whileDragging(event) {
+  function whileDragging(event: MouseEvent) {
+
     // we _always_ want to change the module's coordinates
     // while dragging, whether in isEditing mode or not:
-    coords.x = dragObj.startX + event.clientX - dragObj.cursorStartX;
-    coords.y = dragObj.startY + event.clientY - dragObj.cursorStartY;
+    coords.x = dragObj.startX! + event.clientX - dragObj.cursorStartX!;
+    coords.y = dragObj.startY! + event.clientY - dragObj.cursorStartY!;
 
     if (!store.isEditing) {
       whileSorting(coords);
@@ -78,8 +79,8 @@ export function useDraggable(coords) {
       stopSorting();
     }
 
-    document.removeEventListener(EVENT.MOUSE_MOVE, whileDragging);
-    document.removeEventListener(EVENT.MOUSE_UP, stopDragging);
+    document.removeEventListener('mousemove', whileDragging as EventListener);
+    document.removeEventListener('mouseup', stopDragging as EventListener);
   }
 
   return {

@@ -1,5 +1,4 @@
 import { state as blank } from '@/stores/patch';
-import type { Patch } from '@/types';
 
 
 /**

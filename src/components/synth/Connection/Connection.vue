@@ -51,12 +51,10 @@ THOUGHTS:
 
 <script lang="ts">
   import { defineComponent, computed, ref, toRefs, watch, onUnmounted } from 'vue';
-  // import { mapState } from 'pinia';
   import { useAppStore } from '@/stores/app';
   import { cellWidth } from '@/constants';
   import { Parameter } from '@/audio';
   import { log } from '@/utils/logger';
-  import type { RackUnit } from '@/types';
 
   export default defineComponent({
     props: {
@@ -69,15 +67,15 @@ THOUGHTS:
     setup (props) {
       // eslint-disable-next-line vue/no-setup-props-destructure
       const { id, to, from } = props;  // props dont need to be reactive in this component
+      const store = useAppStore();
+      const stroke = ref('white');
+      let unwatch: (() => void) | undefined;
 
       if (!to || !from) {
         throw new Error('fatal: no to/from');
         return;
       }
 
-      const store = useAppStore();
-      const stroke = ref('white');
-      let unwatch: (() => void) | undefined;
 
       const src = store.getRackUnit(from.id);
       const dest = store.getRackUnit(to.id);

@@ -1,18 +1,5 @@
 import { defineStore } from 'pinia'
 import { state as blank } from '../patch';
-import type {
-  AppState,
-  Patch,
-  Config,
-  Connection,
-  Parameters,
-  parameterLabel,
-  MouseCoords,
-  GridCoords,
-  Module,
-  SynthNode,
-  RackUnit } from '@/types';
-
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
@@ -94,21 +81,21 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     activeModule(state): Module | undefined {
-      return this.modules.find((module) => module.id === state.activeId);
+      return this.modules.find((module: Module) => module.id === state.activeId);
     },
 
     /** deprecated. Use above */
     active(state): Module | undefined {
-      return this.modules.find((module) => module.id === state.activeId);
+      return this.modules.find((module: Module) => module.id === state.activeId);
     },
 
     focused(state): Module | undefined {
-      return this.modules.find((module) => module.id === state.hoveredId);
+      return this.modules.find((module: Module) => module.id === state.hoveredId);
     },
 
     getModule(): Function {
       return (id: number): Module | undefined => (
-        this.modules.find((module) => module.id === id)
+        this.modules.find((module: Module) => module.id === id)
       );
     },
 
@@ -124,7 +111,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       return this.configs[state.configId] || [];
     },
 
-    parameters(): Parameters {
+    parameters(): Record<parameterLabel, string | number> {
       return this.config?.parameters || {};
     },
 
@@ -159,7 +146,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     bounds(): number {
-      return this.modules.reduce((max, module) => Math.max(max, module.x), 0);
+      return this.modules.reduce((max: number, module: Module) => Math.max(max, module.x), 0);
     }
   },
 
@@ -292,7 +279,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     updateRackPosition(data: GridCoords) {
-      const module = this.modules.find((m) => m.id === data.id); /// this.getModule(data.id)
+      const module = this.modules.find((m: Module) => m.id === data.id); /// this.getModule(data.id)
 
       if (module) {
         module.col = data.col;
@@ -341,12 +328,12 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       // only delete active/hoveredId modules
       if (activeId === hoveredId) {
         try {
-          this.patch.modules = modules.filter((m) => m.id !== activeId);
+          this.patch.modules = modules.filter((m: Module) => m.id !== activeId);
         } catch (e) {
           console.log('why', e)
         }
 
-        connections.forEach((connection) => {
+        connections.forEach((connection: Connection) => {
           if (connection.to.id === activeId || connection.from.id === activeId) {
             this.removeConnection(connection.id);
           }
@@ -370,7 +357,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      */
     removeConnection(id: number) {
       const { patch, connections } = this;
-      patch.connections = connections.filter((c) => c.id !== id);
+      patch.connections = connections.filter((c: Connection) => c.id !== id);
     },
 
     /**
@@ -395,14 +382,14 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       this.configId = 0;
     },
 
-    setParameter (data: { id: parameterLabel; value: Parameters[parameterLabel]}) {
+    setParameter (data: { id: parameterLabel; value: string | number }) {
       if (this.parameters) {
         this.parameters[data.id] = data.value;
       }
     },
 
     removeParameter (id: parameterLabel) {
-      this.configs.forEach((config) => {
+      this.configs.forEach((config: Config) => {
         delete config.parameters[id];
       });
     }

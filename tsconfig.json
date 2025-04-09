@@ -25,7 +25,7 @@
     "src/**/*.vue",
     "tests/cypress/component/index.*",
     "tests/cypress/component/commands.ts",
-    "env.d.ts"
+    "globals.d.ts"
   ],
   "exclude": [
     "src/**/__tests__/*",
