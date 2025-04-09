@@ -27,7 +27,7 @@
   import sync from './worker';
   // import rollover from './rollover';
 
-  const noteNames: String[] = [];
+  const noteNames: string[] = [];
   const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
   for (let i = 0; i < 127; i++) {

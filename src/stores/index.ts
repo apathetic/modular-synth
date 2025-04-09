@@ -1,4 +1,4 @@
-import { watch, type App } from 'vue';
+import { watch } from 'vue';
 import { createPinia } from 'pinia';
 import { useAppStore } from './app';
 import type { App as Application } from 'vue';

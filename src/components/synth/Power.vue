@@ -18,7 +18,7 @@
   export default defineComponent({
     name: 'Power',
     setup() {
-      const context: AudioContext = inject('context');
+      const context = inject('context') as AudioContext;
       const store = useAppStore();
       const power = computed(() => store.power);
 

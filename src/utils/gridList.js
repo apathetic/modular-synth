@@ -1,4 +1,3 @@
-
 const defaults = {
   lanes: 3,
   direction: 'horizontal'
@@ -408,7 +407,7 @@ export default class GridList {
     for (i = 0; i < N; i++) {
       if (!this.grid[i]) {
         // this.grid.push(new GridCol(this._options.lanes));
-        this.grid.push(new Array(this._options.lanes).fill(null));
+        this.grid.push(Array.from({ length: this._options.lanes }).fill(null));
       }
     }
   }

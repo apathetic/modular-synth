@@ -3,7 +3,7 @@ const addResourcesToCache = async (resources) => {
   await cache.addAll(resources);
 };
 
-const putInCache = async (request, response) => {
+const _putInCache = async (request, response) => {
   const cache = await caches.open('v1');
   await cache.put(request, response);
 };
@@ -38,7 +38,7 @@ self.addEventListener('sync', function (event) {
 });
 
 
-addEventListener('message', async ({ data, source }) => {
+addEventListener('message', async ({ data }) => {
 	console.log('SW', data);
   if ('broadcast' in data ) {
 

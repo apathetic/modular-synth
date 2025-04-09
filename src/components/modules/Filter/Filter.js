@@ -4,9 +4,9 @@ define(["Tone/core/Tone", "Tone/signal/Signal"], function(Tone){
 
 	/**
 	 *  @class  Tone.Filter is a filter which allows for all of the same native methods
-	 *          as the [BiquadFilterNode](http://webaudio.github.io/web-audio-api/#the-biquadfilternode-interface). 
-	 *          Tone.Filter has the added ability to set the filter rolloff at -12 
-	 *          (default), -24 and -48. 
+	 *          as the [BiquadFilterNode](http://webaudio.github.io/web-audio-api/#the-biquadfilternode-interface).
+	 *          Tone.Filter has the added ability to set the filter rolloff at -12
+	 *          (default), -24 and -48.
 	 *
 	 *  @constructor
 	 *  @extends {Tone}
@@ -30,7 +30,7 @@ define(["Tone/core/Tone", "Tone/signal/Signal"], function(Tone){
 		this._filters = [];
 
 		/**
-		 *  The cutoff frequency of the filter. 
+		 *  The cutoff frequency of the filter.
 		 *  @type {Frequency}
 		 *  @signal
 		 */
@@ -49,7 +49,7 @@ define(["Tone/core/Tone", "Tone/signal/Signal"], function(Tone){
 		 *  @signal
 		 */
 		this.gain = new Tone.Signal({
-			"value" : options.gain, 
+			"value" : options.gain,
 			"convert" : false
 		});
 
@@ -96,8 +96,8 @@ define(["Tone/core/Tone", "Tone/signal/Signal"], function(Tone){
 	};
 
 	/**
-	 * The type of the filter. Types: "lowpass", "highpass", 
-	 * "bandpass", "lowshelf", "highshelf", "notch", "allpass", or "peaking". 
+	 * The type of the filter. Types: "lowpass", "highpass",
+	 * "bandpass", "lowshelf", "highshelf", "notch", "allpass", or "peaking".
 	 * @memberOf Tone.Filter#
 	 * @type {string}
 	 * @name type
@@ -137,7 +137,7 @@ define(["Tone/core/Tone", "Tone/signal/Signal"], function(Tone){
 			//check the rolloff is valid
 			if (cascadingCount === -1){
 				throw new RangeError("Tone.Filter: rolloff can only be -12, -24, -48 or -96");
-			} 
+			}
 			cascadingCount += 1;
 			this._rolloff = rolloff;
 			//first disconnect the filters and throw them away
@@ -146,7 +146,8 @@ define(["Tone/core/Tone", "Tone/signal/Signal"], function(Tone){
 				this._filters[i].disconnect();
 				this._filters[i] = null;
 			}
-			this._filters = new Array(cascadingCount);
+			// this._filters = new Array(cascadingCount);
+			this._filters = Array.from({ length: cascadingCount });
 			for (var count = 0; count < cascadingCount; count++){
 				var filter = this.context.createBiquadFilter();
 				filter.type = this._type;
@@ -163,7 +164,7 @@ define(["Tone/core/Tone", "Tone/signal/Signal"], function(Tone){
 	});
 
 	/**
-	 *  Clean up. 
+	 *  Clean up.
 	 *  @return {Tone.Filter} this
 	 */
 	Tone.Filter.prototype.dispose = function(){

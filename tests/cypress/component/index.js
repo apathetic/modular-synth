@@ -1,11 +1,10 @@
-
 import './commands';
 
 import { mount } from 'cypress/vue';
-import { createApp } from 'vue';
+// import { createApp } from 'vue';
 import { createPinia } from 'pinia'
-import { context } from '@/audio';
-import { createStore } from '@/stores';
+// import { context } from '@/audio';
+// import { createStore } from '@/stores';
 import { useAppStore } from '@/stores/app';
 import { registerComponents } from '@/utils/register';
 

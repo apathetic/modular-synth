@@ -95,7 +95,7 @@ describe('Connection.vue', () => {
   })
 
   it('renders a line with correct coordinates', () => {
-    const wrapper = shallowMount(Connection, {
+    const _wrapper = shallowMount(Connection, {
       props: {
         id: 1,
         from: { id: 1, port: 0 },
@@ -104,7 +104,7 @@ describe('Connection.vue', () => {
       }
     })
 
-    const line = wrapper.find('line')
+    const line = _wrapper.find('line')
     expect(line.exists()).toBe(true)
     expect(line.attributes('x1')).toBeDefined()
     expect(line.attributes('y1')).toBeDefined()
@@ -160,7 +160,7 @@ describe('Connection.vue', () => {
   })
 
   it('removes connection when clicked', async () => {
-    const wrapper = shallowMount(Connection, {
+    const _wrapper = shallowMount(Connection, {
       props: {
         id: 1,
         from: { id: 1, port: 0 },
@@ -169,12 +169,12 @@ describe('Connection.vue', () => {
       }
     })
 
-    await wrapper.find('line').trigger('click')
+    await _wrapper.find('line').trigger('click')
     expect(mockStore.removeConnection).toHaveBeenCalledWith(1)
   })
 
   it('disconnects audio nodes on unmount', async () => {
-    const wrapper = mount(Connection, {
+    const _wrapper = mount(Connection, {
       props: {
         id: 1,
         from: { id: 1, port: 0 },
@@ -183,7 +183,7 @@ describe('Connection.vue', () => {
       }
     })
 
-    wrapper.unmount()
+    _wrapper.unmount()
     expect(mockSourceNode.outlets[0].audio.disconnect).toHaveBeenCalledWith(mockDestNode.inlets[0].audio)
   })
 
@@ -191,7 +191,7 @@ describe('Connection.vue', () => {
     // Mock store to return undefined for rackUnits
     mockStore.getRackUnit.mockReturnValue(undefined)
 
-    const wrapper = shallowMount(Connection, {
+    const _wrapper = shallowMount(Connection, {
       props: {
         id: 1,
         from: { id: 1, port: 0 },

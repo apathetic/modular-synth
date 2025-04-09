@@ -1,8 +1,7 @@
 // import { supabase } from './supabase'
-import { createClient } from '@supabase/supabase-js'
-import { state as blank } from '@/stores/patch';
+import { createClient } from '@supabase/supabase-js';
+// @ts-ignore
 import { URL, PUBLIC_KEY } from '../../supabase.config.js';
-import type { Patch } from '@/types';
 
 const supabase = createClient(URL, PUBLIC_KEY);
 
@@ -37,8 +36,8 @@ const supabase = createClient(URL, PUBLIC_KEY);
 
 export const auth = supabase.auth;
 
-const login = async ({ email, password }) => {};
-const isLoggedIn = () => {};
+const _login = async ({ _email, _password }: any) => {};
+const _isLoggedIn = () => {};
 
 
 /**
@@ -46,7 +45,7 @@ const isLoggedIn = () => {};
  * @returns {} The user's patches
  */
 export const fetch = async () => {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('patches')
     .select();
 
@@ -54,7 +53,7 @@ export const fetch = async () => {
 };
 
 export const create = async (data: Patch) => {
-  const { error } = await supabase
+  /* const { error } = */ await supabase
     .from('patches')
     .insert(data);
     // .insert({ id: 1, name: 'Denmark' })
@@ -63,7 +62,7 @@ export const create = async (data: Patch) => {
 };
 
 export const save = async ({ id, ...data }: Patch) => {
-  const { error } = await supabase
+  /* const { error } = */ await supabase
     .from('patches')
     .update(data)
     // .update({ name: 'Australia' })
@@ -72,7 +71,7 @@ export const save = async ({ id, ...data }: Patch) => {
 
 /* */
 export const remove = async (id: string) => {
-  const { error } = await supabase
+  /* const { error } = */ await supabase
     .from('patches')
     .delete()
     .eq('id', id);
@@ -81,7 +80,7 @@ export const remove = async (id: string) => {
 
 // ie sync all patches
 export const update = async (data: Patch) => {
-  const { error } = await supabase
+  /* const { error } = */ await supabase
     .from('patches')
     .upsert(data);
 

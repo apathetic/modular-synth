@@ -1,6 +1,5 @@
 import { ref } from 'vue';
 import { useAppStore } from '@/stores/app';
-import { EVENT } from '@/events';
 import { useSortable } from './sortable';
 
 const dragObj = {

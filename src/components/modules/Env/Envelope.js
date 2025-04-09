@@ -1,23 +1,23 @@
-define(["Tone/core/Tone", "Tone/signal/TimelineSignal", 
+define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 	"Tone/signal/Pow", "Tone/type/Type"], function(Tone){
 
 	"use strict";
 
 	/**
 	 *  @class  Tone.Envelope is an [ADSR](https://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope)
-	 *          envelope generator. Tone.Envelope outputs a signal which 
-	 *          can be connected to an AudioParam or Tone.Signal. 
+	 *          envelope generator. Tone.Envelope outputs a signal which
+	 *          can be connected to an AudioParam or Tone.Signal.
 	 *          <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/ADSR_parameter.svg">
 	 *
 	 *  @constructor
 	 *  @extends {Tone}
-	 *  @param {Time} [attack] The amount of time it takes for the envelope to go from 
-	 *                         0 to it's maximum value. 
+	 *  @param {Time} [attack] The amount of time it takes for the envelope to go from
+	 *                         0 to it's maximum value.
 	 *  @param {Time} [decay]	The period of time after the attack that it takes for the envelope
-	 *                       	to fall to the sustain value. 
+	 *                       	to fall to the sustain value.
 	 *  @param {NormalRange} [sustain]	The percent of the maximum value that the envelope rests at until
-	 *                                	the release is triggered. 
-	 *  @param {Time} [release]	The amount of time after the release is triggered it takes to reach 0. 
+	 *                                	the release is triggered.
+	 *  @param {Time} [release]	The amount of time after the release is triggered it takes to reach 0.
 	 *  @example
 	 * //an amplitude envelope
 	 * var gainNode = Tone.context.createGain();
@@ -34,24 +34,24 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 		//get all of the defaults
 		var options = this.optionsObject(arguments, ["attack", "decay", "sustain", "release"], Tone.Envelope.defaults);
 
-		/** 
+		/**
 		 *  When triggerAttack is called, the attack time is the amount of
-		 *  time it takes for the envelope to reach it's maximum value. 
+		 *  time it takes for the envelope to reach it's maximum value.
 		 *  @type {Time}
 		 */
 		this.attack = options.attack;
 
 		/**
 		 *  After the attack portion of the envelope, the value will fall
-		 *  over the duration of the decay time to it's sustain value. 
+		 *  over the duration of the decay time to it's sustain value.
 		 *  @type {Time}
 		 */
 		this.decay = options.decay;
-		
+
 		/**
-		 * 	The sustain value is the value 
+		 * 	The sustain value is the value
 		 * 	which the envelope rests at after triggerAttack is
-		 * 	called, but before triggerRelease is invoked. 
+		 * 	called, but before triggerRelease is invoked.
 		 *  @type {NormalRange}
 		 */
 		this.sustain = options.sustain;
@@ -59,7 +59,7 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 		/**
 		 *  After triggerRelease is called, the envelope's
 		 *  value will fall to it's miminum value over the
-		 *  duration of the release time. 
+		 *  duration of the release time.
 		 *  @type {Time}
 		 */
 		this.release = options.release;
@@ -108,8 +108,8 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 	};
 
 	/**
-	 * Read the current value of the envelope. Useful for 
-	 * syncronizing visual output to the envelope. 
+	 * Read the current value of the envelope. Useful for
+	 * syncronizing visual output to the envelope.
 	 * @memberOf Tone.Envelope#
 	 * @type {Number}
 	 * @name value
@@ -122,7 +122,7 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 	});
 
 	/**
-	 * The shape of the attack. 
+	 * The shape of the attack.
 	 * Can be any of these strings:
 	 * <ul>
 	 *   <li>linear</li>
@@ -135,7 +135,7 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 	 * </ul>
 	 * Can also be an array which describes the curve. Values
 	 * in the array are evenly subdivided and linearly
-	 * interpolated over the duration of the attack. 
+	 * interpolated over the duration of the attack.
 	 * @memberOf Tone.Envelope#
 	 * @type {String|Array}
 	 * @name attackCurve
@@ -159,7 +159,7 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 				//otherwise just return the array
 				return this._attackCurve;
 			}
-		}, 
+		},
 		set : function(curve){
 			//check if it's a valid type
 			if (Tone.Envelope.Type.hasOwnProperty(curve)){
@@ -178,7 +178,7 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 	});
 
 	/**
-	 * The shape of the release. See the attack curve types. 
+	 * The shape of the release. See the attack curve types.
 	 * @memberOf Tone.Envelope#
 	 * @type {String|Array}
 	 * @name releaseCurve
@@ -199,7 +199,7 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 				//otherwise just return the array
 				return this._releaseCurve;
 			}
-		}, 
+		},
 		set : function(curve){
 			//check if it's a valid type
 			if (Tone.Envelope.Type.hasOwnProperty(curve)){
@@ -218,7 +218,7 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 	});
 
 	/**
-	 *  Trigger the attack/decay portion of the ADSR envelope. 
+	 *  Trigger the attack/decay portion of the ADSR envelope.
 	 *  @param  {Time} [time=now] When the attack should start.
 	 *  @param {NormalRange} [velocity=1] The velocity of the envelope scales the vales.
 	 *                               number between 0-1
@@ -264,10 +264,10 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 		this._sig.exponentialRampToValue(velocity * this.sustain, decay, attack + time);
 		return this;
 	};
-	
+
 	/**
 	 *  Triggers the release of the envelope.
-	 *  @param  {Time} [time=now] When the release portion of the envelope should start. 
+	 *  @param  {Time} [time=now] When the release portion of the envelope should start.
 	 *  @returns {Tone.Envelope} this
 	 *  @example
 	 *  //trigger release immediately
@@ -305,10 +305,10 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 
 	/**
 	 *  triggerAttackRelease is shorthand for triggerAttack, then waiting
-	 *  some duration, then triggerRelease. 
+	 *  some duration, then triggerRelease.
 	 *  @param {Time} duration The duration of the sustain.
 	 *  @param {Time} [time=now] When the attack should be triggered.
-	 *  @param {number} [velocity=1] The velocity of the envelope. 
+	 *  @param {number} [velocity=1] The velocity of the envelope.
 	 *  @returns {Tone.Envelope} this
 	 *  @example
 	 * //trigger the attack and then the release after 0.6 seconds.
@@ -332,14 +332,14 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 	};
 
 	/**
-	 *  Borrows the connect method from Tone.Signal. 
+	 *  Borrows the connect method from Tone.Signal.
 	 *  @function
 	 *  @private
 	 */
 	Tone.Envelope.prototype.connect = Tone.Signal.prototype.connect;
 
  	/**
- 	 *  Generate some complex envelope curves. 
+ 	 *  Generate some complex envelope curves.
  	 */
 	(function _createCurves(){
 
@@ -368,7 +368,7 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 		var steps = 5;
 		for (i = 0; i < curveLen; i++){
 			stairsCurve[i] = Math.ceil((i / (curveLen - 1)) * steps) / steps;
-		}		
+		}
 
 		//in-out easing curve
 		var sineCurve = [];
@@ -391,7 +391,8 @@ define(["Tone/core/Tone", "Tone/signal/TimelineSignal",
 		 *  @private
 		 */
 		function invertCurve(curve){
-			var out = new Array(curve.length);
+			// var out = new Array(curve.length);
+			var out = Array.from({ length: curve.length });
 			for (var j = 0; j < curve.length; j++){
 				out[j] = 1 - curve[j];
 			}

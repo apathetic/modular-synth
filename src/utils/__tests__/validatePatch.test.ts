@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as ValidatePatchModule from '../validatePatch';
-import { state as blank } from '@/stores/patch';
-import type { Patch } from '@/types';
+import {
+  PatchSchema,
+  ModuleSchema,
+} from '@/types/generated';
 
-// Destructure for easier access in tests
 const {
   validateData,
   fixPatch,
@@ -11,10 +12,6 @@ const {
   isModule,
   isConnection,
   isConfig,
-  PatchSchema,
-  ModuleSchema,
-  ConnectionSchema,
-  ConfigSchema
 } = ValidatePatchModule;
 
 // Mock console.warn and console.error

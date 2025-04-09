@@ -7,7 +7,7 @@ export default function(payload) {
       broadcast: payload
     });
 
-		registry.active.onmessage = (event) => {
+		registry.active.onmessage = (_event) => {
 				console.log('data receie xdxxsddddd');
 		};
 	});

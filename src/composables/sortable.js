@@ -42,8 +42,8 @@ export function useSortable() {
   }
 
   function resetSorting() {
-    widestItem = Math.max.apply(null, gridlist.items.map((item) => item.w ));
-    tallestItem = Math.max.apply(null, gridlist.items.map((item) => item.h ));
+    widestItem = Math.max.apply(null, gridlist.items.map((item) => item.w));
+    tallestItem = Math.max.apply(null, gridlist.items.map((item) => item.h));
     applyPositionToItems();
   }
 
@@ -101,6 +101,7 @@ export function useSortable() {
     });
 
     handle.style.width = (gridlist.grid.length + widestItem) * rackWidth;
+    tallestItem.useless = true;
   }
 
 

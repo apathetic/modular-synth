@@ -9,7 +9,7 @@ window.AudioContext = vi.fn().mockImplementation(() => ({
     stop: vi.fn(),
     loop: false,
   })),
-  decodeAudioData: vi.fn().mockImplementation((buffer, successCallback, errorCallback) => {
+  decodeAudioData: vi.fn().mockImplementation((buffer, successCallback, _errorCallback) => {
     successCallback(buffer);
   }),
   destination: {},

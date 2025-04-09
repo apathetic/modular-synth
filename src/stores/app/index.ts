@@ -3,8 +3,8 @@ import { state as emptyPatch } from '../patch';
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
-import { fetch, create, save, remove } from '@/utils/supabase';
-import { validateData, fixPatch, isPatch } from '@/utils/validatePatch';
+import { /* fetch, create, */ save, /* remove */ } from '@/utils/supabase';
+import { /* validateData, */ fixPatch, isPatch } from '@/utils/validatePatch';
 import { moduleSize } from '@/constants';
 
 
@@ -137,7 +137,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     //  USER
     // -----------------------------------------------
 
-    isAuthenticated (state): Boolean {
+    isAuthenticated (state): boolean {
       return !!state.session;
     },
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { render, screen, getByTestId, within, fireEvent, cleanup } from '@testing-library/vue';
+import { render, screen, within, fireEvent, cleanup } from '@testing-library/vue';
 import { setActivePinia, createPinia } from 'pinia';
 import { createAppStore, useAppStore } from '@/stores/app';
 import PatchManager from './PatchManager.vue';

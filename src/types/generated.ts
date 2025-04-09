@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-// Export the module type enum and its inferred type
 export const ModuleTypeEnum = z.enum(['Analyser', 'Clock', 'Compressor', 'Debugger', 'Delay', 'Drive', 'Env', 'Filter', 'LFO', 'Mixer', 'Node', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']);
-export type moduleType = z.infer<typeof ModuleTypeEnum>;
 
 
 export const MasterOutSchema = z.object({
@@ -11,6 +9,7 @@ export const MasterOutSchema = z.object({
   x: z.number(),
   y: z.number(),
 });
+
 
 export const ModuleSchema = z.object({
   id: z.number(),
@@ -53,7 +52,6 @@ export const PatchSchema = z.object({
   connections: z.array(ConnectionSchema),
   configs: z.array(ConfigSchema)
 });
-// export type Patch = z.infer<typeof PatchSchema>;
 
 declare global {
   type moduleType = z.infer<typeof ModuleTypeEnum>;
@@ -63,4 +61,14 @@ declare global {
   type Patch = z.infer<typeof PatchSchema>;
   type parameterLabel = `${number}-${string}`;
   // type Parameters = Record<parameterLabel, string | number>;
+}
+
+
+export {
+  type moduleType,
+  type Module,
+  type Connection,
+  type Config,
+  type Patch,
+//  parameterLabel
 }
