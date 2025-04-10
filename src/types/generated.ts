@@ -48,7 +48,7 @@ export const PatchSchema = z.object({
   i: z.number(), // PatchKey
   loaded: z.boolean(),
   name: z.string(),
-  modules: z.array(ModuleSchema),
+  modules: z.array(z.union([ModuleSchema, MasterOutSchema])),
   connections: z.array(ConnectionSchema),
   configs: z.array(ConfigSchema)
 });
@@ -56,6 +56,7 @@ export const PatchSchema = z.object({
 declare global {
   type moduleType = z.infer<typeof ModuleTypeEnum>;
   type Module = z.infer<typeof ModuleSchema>;
+  type MasterOut = z.infer<typeof MasterOutSchema>;
   type Connection = z.infer<typeof ConnectionSchema>;
   type Config = z.infer<typeof ConfigSchema>;
   type Patch = z.infer<typeof PatchSchema>;
@@ -67,6 +68,7 @@ declare global {
 export {
   type moduleType,
   type Module,
+  type MasterOut,
   type Connection,
   type Config,
   type Patch,

@@ -60,12 +60,12 @@ export function useKeyboard({ noteOn, noteOff }: UseKeyboardProps) {
   }
 
   function unsubscribe() {
-    window.removeEventListener(EVENT.KEY_DOWN, keydown);
-    window.removeEventListener(EVENT.KEY_UP, keyup);
+    window.removeEventListener(EVENT.KEY_DOWN, keydown as EventListener);
+    window.removeEventListener(EVENT.KEY_UP, keyup as EventListener);
   }
 
-  window.addEventListener(EVENT.KEY_DOWN, keydown);
-  window.addEventListener(EVENT.KEY_UP, keyup);
+  window.addEventListener(EVENT.KEY_DOWN, keydown as EventListener);
+  window.addEventListener(EVENT.KEY_UP, keyup as EventListener);
 
   return unsubscribe;
 }

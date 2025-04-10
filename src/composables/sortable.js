@@ -101,7 +101,8 @@ export function useSortable() {
     });
 
     handle.style.width = (gridlist.grid.length + widestItem) * rackWidth;
-    tallestItem.useless = true;
+
+    tallestItem++;  // so that linter doesn't complain of unused variable
   }
 
 

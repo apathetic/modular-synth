@@ -1,9 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as ValidatePatchModule from '../validatePatch';
-import {
-  PatchSchema,
-  ModuleSchema,
-} from '@/types/generated';
+import { PatchSchema, ModuleSchema } from '@/types/generated';
+import type { Patch } from '@/types/generated';
 
 const {
   validateData,

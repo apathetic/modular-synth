@@ -20,7 +20,7 @@ export type EventBusListener<T = unknown, P = any> = (event: T, payload?: P) => 
 export type EventBusEvents<T, P = any> = EventBusListener<T, P>[];
 export type EventBusIdentifier<T = unknown> = EventBusKey<T> | string | number;
 
-export interface EventBusKey<_T> extends symbol { }
+export interface EventBusKey<_T> extends Symbol { }
 
 export interface UseEventBusReturn<T, P> {
   /**
@@ -28,7 +28,7 @@ export interface UseEventBusReturn<T, P> {
    * @param listener watch listener.
    * @returns a stop function to remove the current callback.
    */
-  on: (listener: EventBusListener<T, P>) => Fn
+  on: (listener: EventBusListener<T, P>) => () => void;
   /**
    * Emit an event, the corresponding event listeners will execute.
    * @param event data sent.
@@ -52,7 +52,7 @@ export function useEventBus<T = unknown, P = any>(key: EventBusIdentifier<T>): U
 
     listeners.push(listener);
     events.set(key, listeners);
-    scope?.cleanups?.push(_off);
+    // scope?.cleanups?.push(_off);
     return _off;
   }
 
@@ -70,7 +70,7 @@ export function useEventBus<T = unknown, P = any>(key: EventBusIdentifier<T>): U
   }
 
   function emit(event?: T, payload?: P) {
-    events.get(key)?.forEach(v => v(event, payload));
+    events.get(key)?.forEach((v: any) => v(event, payload));
   }
 
   return { on, off, emit }

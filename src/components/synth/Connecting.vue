@@ -16,7 +16,7 @@
   import { useConnection } from '@/composables';
   import { useAppStore } from '@/stores/app';
   import { cellWidth } from '@/constants';
-  import type { Module, RackUnit } from '@/types';
+  import type { Module } from '@/types/generated';
 
   export default defineComponent({
     setup () {

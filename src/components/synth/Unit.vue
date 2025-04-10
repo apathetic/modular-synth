@@ -37,7 +37,8 @@
   import { log } from '@/utils/logger';
   import * as Modules from '@/components/';
   import Debugger from '@/components/modules/Debugger.vue';
-  import type { Module, SynthNode } from '@/types';
+  import type { Module } from '@/types/generated';
+  import type { SynthNode } from '@/types/globals';
   import type { PropType } from 'vue'
 
   export default defineComponent({

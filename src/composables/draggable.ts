@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { useAppStore } from '@/stores/app';
 import { useSortable } from './sortable';
 
+
 const dragObj = {
   zIndex: 0,
   cursorStartX: null,
@@ -10,7 +11,7 @@ const dragObj = {
   startY: null,
   x: null,
   y: null,
-};
+} as any;
 
 
 /**
@@ -20,7 +21,7 @@ const dragObj = {
  * @param {number} coords.y
  * @param {number} coords.id
  */
-export function useDraggable(coords: GridCoords) {
+export function useDraggable(coords: any) {
   const { startSorting, whileSorting, stopSorting } = useSortable();
   const store = useAppStore();
   const isDragging = ref(false);

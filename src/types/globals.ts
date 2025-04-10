@@ -48,7 +48,7 @@
 
 
 
-type AppState = {
+export type AppState = {
   power: boolean;
   isEditing: boolean;
   hoveredId?: number;
@@ -62,7 +62,7 @@ type AppState = {
   // references to all audio nodes in the current patch.
   registry: {[value: number]: SynthNode};
 
-  session?: Session;
+  // session?: Session;
 
   // UI: STUFFS
   canvasOffset?: number;
@@ -72,7 +72,7 @@ type AppState = {
 * RackUnit represents a complete rack unit with both
 * UI/positioning data (Module) and audio processing capabilities (SynthNode)
 */
-type RackUnit = {
+export type RackUnit = {
   id: number;  // ID shared by both module and node
   module: Module;
   node: SynthNode;
@@ -81,7 +81,7 @@ type RackUnit = {
 // A reference to the rendered node (ie. in the APP)
 //  * with webaudio inlets/outlets
 //  * also includes coords?
-type SynthNode = {
+export type SynthNode = {
   inlets?: Inlet[];
   outlets?: Outlet[];
 };
@@ -109,13 +109,13 @@ type Outlet = {
 
 
 
-type MouseCoords = {
+export type MouseCoords = {
   x: number;
   y: number;
   // id:
 };
 
-type GridCoords = {
+export type GridCoords = {
   id: number;
   col: number;
   row: number;

@@ -43,7 +43,7 @@
   import Connecting from './Connecting.vue';
   import Connect from './Connection';
   import Unit from './Unit.vue';
-  import type { Module, Connection } from '@/types';
+  import type { Module, Connection } from '@/types/generated';
 
   export default defineComponent({
     name: 'Rack',
