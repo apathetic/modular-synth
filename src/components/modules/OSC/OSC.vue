@@ -23,7 +23,7 @@
 
 <script lang="ts">
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
-  import { Parameter } from '@/audio';
+  import { Parameter, oscillator, gain } from '@/audio';
 
   export default defineComponent({
     name: 'OSC',
@@ -47,14 +47,11 @@
       const detune = ref(0);
 
       // Oscillator
-      const osc = context.createOscillator();
-      osc.frequency.value = freq.value;
-      osc.type = type.value;
+      const osc = oscillator(freq.value, type.value);
 
       // Modulation depth
       // modDepth = new Parameter(0);
-      const modDepth = context.createGain();
-      modDepth.gain.value = 0;
+      const modDepth = gain(0);
       modDepth.connect(osc.detune);      // input connects to audioParam (freq) "mod"
 
       // Pulse width

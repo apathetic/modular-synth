@@ -23,6 +23,32 @@ const constants: Constants = {};  // memoize this shizz??
 
 
 /**
+ * Create a new WebAudio oscillator with the specified frequency and type.
+ * @param {number} frequency - Initial frequency of the oscillator in Hz
+ * @param {OscillatorType} type - Wave type of the oscillator
+ * @returns {OscillatorNode} The created oscillator node
+ */
+export function oscillator(frequency: number = 440, type: OscillatorType = 'sine'): OscillatorNode {
+  const osc = context.createOscillator();
+  osc.frequency.value = frequency;
+  osc.type = type;
+  return osc;
+}
+
+
+/**
+ * Create a new WebAudio gain node with the specified gain value.
+ * @param {number} value - Initial gain value
+ * @returns {GainNode} The created gain node
+ */
+export function gain(value: number = 1): GainNode {
+  const gainNode = context.createGain();
+  gainNode.gain.value = value;
+  return gainNode;
+}
+
+
+/**
  * Generate a constant stream of 1's (or given value) at the audio-rate.
  * @param value The value to generate.
  * @returns {ConstantSourceNode}

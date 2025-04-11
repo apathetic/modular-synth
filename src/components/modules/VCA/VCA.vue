@@ -18,6 +18,7 @@
 
 <script lang="ts">
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
+  import { gain } from '@/audio';
 
   export default defineComponent({
     name: 'VCA',
@@ -30,10 +31,7 @@
     },
 
     setup (props, { expose }) {
-      const context: AudioContext = inject('context');
-      const vca = context.createGain();
-
-      vca.gain.value = 0;
+      const vca = gain(0);
 
       const inlets = [
         {

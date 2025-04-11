@@ -31,6 +31,7 @@
   import { defineComponent, ref, computed, watch, onMounted, inject } from 'vue';
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
+  import { gain as gainNode } from '@/audio';
   import VU from '../UI/VU';
 
 
@@ -48,8 +49,8 @@
     // const module = store.getModule(0);
 
       const context = inject('context') as AudioContext;
-      const out1 = context.createGain();
-      const out2 = context.createGain();
+      const out1 = gainNode(0.5);
+      const out2 = gainNode(0.5);
 
       out1.connect(context.destination);
       out2.connect(context.destination);
