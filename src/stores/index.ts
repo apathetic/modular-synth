@@ -1,6 +1,7 @@
 import { watch } from 'vue';
 import { createPinia } from 'pinia';
 import { useAppStore } from './app';
+import { validateData } from '@/utils/validatePatch';
 import type { App as Application } from 'vue';
 
 
@@ -16,10 +17,12 @@ const debounce = (fn: Function, delay: number) => {
 
 // persist the whole state to the local storage whenever it changes
 const persistState = debounce((state: any) => {
-  // ideally this woul be a watchi inside the appStore
   localStorage.setItem('patches', JSON.stringify(state.app.patches));
 
-  // validatePatch(...); // ?
+  if (!validateData(state.app.patches)) {
+    console.error('Invalid patch:', state.app.patches);
+  }
+
 	console.log('saving...');
 }, 2000);
 

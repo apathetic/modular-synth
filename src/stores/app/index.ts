@@ -6,9 +6,8 @@ import { log } from '@/utils/logger';
 import { /* fetch, create, */ save, /* remove */ } from '@/utils/supabase';
 import { /* validateData, */ fixPatch, isPatch } from '@/utils/validatePatch';
 import { moduleSize } from '@/constants';
-
-
-
+import type { AppState, RackUnit, SynthNode, MouseCoords, GridCoords } from '@/types/globals';
+// import type {  MasterOut, Module } from '@/types/generated';
 
 
 // const rawPatches = JSON.parse(localStorage.getItem('patches') || 'null');
@@ -41,12 +40,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * Stores the patch's active `AudioNode`s
      * @type {Record<number, SynthNode>}
      *
-     * -- Temporary(?) hack --
      * Modules (UI) are serializeable, and stored as JSON.
      * Nodes (audio) are determined at run-time, and stored in the registry.
-     * Ideally, there'd be a single data-type to encapsulate both (i.e. a
-     * computed getter would be an obvious choice), but at present `nodes` and
-     * `modules` are assembled via `getNode` and `getModule` into a single obj
      */
     registry: {},
 
@@ -54,7 +49,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     // authenticated: false,
 
 
-    patch: { modules: [], connections: [], configs: [], name: 'loading...' } as unknown as Patch,
+    patch: { modules: [], connections: [], configs: [{ name: 'loading...' }], name: 'loading...' } as unknown as Patch,
 
   },
 
@@ -66,8 +61,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     // -----------------------------------------------
 
     modules(): Module[] {
-      // THERE WILL ALWAYS BE AT LEAST ONE MODULE: masterout
-      return this.patch.modules;
+      // masterOut needs to be included as this.modules is used when connecting modules
+      return this.patch.modules as Module[];
     },
 
     activeModule(state): Module | undefined {

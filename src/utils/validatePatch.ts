@@ -85,24 +85,23 @@ function fixPatch(patch: Partial<Patch>): Patch {
 }
 
 /**
- * This validates an array of Patch objects coming from the server, and
- * ensures that each object has all the required fields. This
- * is important because everywhere else in the App we assume that
- * these fields are present -- and Firebase does _not_ store empty
- * values / arrays, etc. All data validation happens here.
+ * This validates an array of Patch objects, ensuring that each has all the
+ * required fields. This is important because everywhere else in the App we
+ * assume that these fields are present.
  *
- * This function should only be used when loading/saving patches,
- * not during normal runtime operations.
+ * This function should only be used when loading/saving patches, not during
+ * normal runtime operations.
  *
  * @param patches - The array of patches to validate
  * @returns An array of validated patches
  */
-function validateData(patches: unknown): Patch[] {
+function validateData(patches: unknown): Boolean/* Patch[] */ {
   if (!patches || !Array.isArray(patches) || patches.length === 0) {
     throw new Error('Invalid patches array.');
   }
 
-  return patches.map((patch) => isPatch(patch) ? patch : fixPatch(patch));
+  return patches.every((patch) => isPatch(patch));
+  // return patches.map((patch) => isPatch(patch) ? patch : fixPatch(patch));
 }
 
 export {

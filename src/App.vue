@@ -136,15 +136,12 @@
 
 
       return {
-        // power: computed(() => store.power),
-        // patch: computed(() => store.patch),
         modules: computed(() => store.modules.filter((m: Module) => m.id !== 0)),
         isEditing: computed(() => store.isEditing),
         connections: computed(() => store.connections),
         activeModule: computed(() => store.activeModule),
         isAuthenticated: computed(() => store.isAuthenticated),
 
-        // togglePower: store.togglePower,
         toggleMode: store.toggleMode,
         clearActive: store.clearActive,
         fetchPatches: store.fetchPatches,

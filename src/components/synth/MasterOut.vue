@@ -42,7 +42,9 @@
 
       const store = useAppStore();
       const power = computed(() => store.power);
-      const modules = computed(() => store.modules);
+
+      // const modules = computed(() => store.modules);
+      const masterModule = computed(() => store.patch.modules[0]);
     // const module = store.getModule(0);
 
       const context = inject('context') as AudioContext;
@@ -93,8 +95,11 @@
                     el.value.getBoundingClientRect().left;  // viewport offset
           const y = el.value.offsetTop;                     // relative to parent
 
-          modules.value[0].x = x;
-          modules.value[0].y = y;
+          // modules.value[0].x = x;
+          // modules.value[0].y = y;
+
+          masterModule.value.x = x;
+          masterModule.value.y = y;
         }
       });
 

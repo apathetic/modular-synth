@@ -12,7 +12,7 @@ export const masterout = {
   id: 0,
   x: 0,
   y: 0,
-} as unknown as Module;
+} as MasterOut;
 
 
 // A.K.A. "blank" state

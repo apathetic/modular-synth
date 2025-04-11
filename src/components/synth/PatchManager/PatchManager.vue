@@ -96,7 +96,8 @@
       }
 
 
-      // patches must be loaded via `loadPatch` in order for the modules, connections, and parameters to be correctly instantiated
+      // patches must be loaded via `loadPatch` in order for the modules,
+      // connections, and parameters to be correctly instantiated
       store.loadPatch(0);
 
 
