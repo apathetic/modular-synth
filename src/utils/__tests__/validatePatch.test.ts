@@ -9,7 +9,7 @@ const {
   isPatch,
   isModule,
   isConnection,
-  isConfig,
+  isPreset,
 } = ValidatePatchModule;
 
 // Mock console.warn and console.error
@@ -105,24 +105,24 @@ describe('isConnection', () => {
   });
 });
 
-describe('isConfig', () => {
-  it('should return true for a valid config', () => {
-    const config = {
+describe('isPreset', () => {
+  it('should return true for a valid preset', () => {
+    const preset = {
       name: 'Default',
       parameters: { '1-frequency': 440 }
     };
-    expect(isConfig(config)).toBe(true);
+    expect(isPreset(preset)).toBe(true);
   });
 
   it('should return false for null or undefined', () => {
-    expect(isConfig(null)).toBe(false);
-    expect(isConfig(undefined)).toBe(false);
+    expect(isPreset(null)).toBe(false);
+    expect(isPreset(undefined)).toBe(false);
   });
 
   it('should return false for objects missing required fields', () => {
-    expect(isConfig({})).toBe(false);
-    expect(isConfig({ name: 'Default' })).toBe(false);
-    expect(isConfig({ parameters: {} })).toBe(false);
+    expect(isPreset({})).toBe(false);
+    expect(isPreset({ name: 'Default' })).toBe(false);
+    expect(isPreset({ parameters: {} })).toBe(false);
   });
 });
 

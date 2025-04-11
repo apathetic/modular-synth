@@ -13,13 +13,13 @@
     </div>
 
     <div class="params select" data-testid="params">
-      <span>0{{currentConfigId}}</span>
-      <select v-model="currentConfigId" ref="configRef">
-        <option v-for="(config, i) in configs" :key="i" :value="i">{{ config.name }}</option>
+      <span>0{{currentPresetId}}</span>
+      <select v-model="currentPresetId" ref="presetRef">
+        <option v-for="(preset, i) in presets" :key="i" :value="i">{{ preset.name }}</option>
       </select>
-      <input type="text" v-model="currentConfigName">
-      <button class="add" title="add config" :disabled="!editing" @click="addConfig">+</button>
-      <button class="remove" title="remove config" :disabled="!editing" @click="removeConfig">-</button>
+      <input type="text" v-model="currentPresetName">
+      <button class="add" title="add preset" :disabled="!editing" @click="addPreset">+</button>
+      <button class="remove" title="remove preset" :disabled="!editing" @click="removePreset">-</button>
     </div>
 
   </div>
@@ -37,36 +37,36 @@
       log({ type:'system', action: 'setup', data: 'PatchManager' });
       const store = useAppStore();
       const patchRef = ref(null);
-      const configRef = ref(null);
+      const presetRef = ref(null);
       const editing = computed(() => store.isEditing);
       const patches = computed(() => store.patches);
-      const configs = computed(() => store.configs);
+      const presets = computed(() => store.presets);
 
       const currentPatchName = computed({
         get() { return store.patch?.name },
         set(value) { store.patch.name = value }
       });
 
-      const currentConfigName = computed({
-        get() { return store.config?.name; },
-        set(value) { store.config.name = value; }
+      const currentPresetName = computed({
+        get() { return store.preset?.name; },
+        set(value) { store.preset.name = value; }
       });
 
-      const currentConfigId = computed({
-        get() { return store.configId; },
-        // set(id) { store.configId = id }
+      const currentPresetId = computed({
+        get() { return store.presetId; },
+        // set(id) { store.presetId = id }
         set(id) {
-          // Make sure we don't set an invalid config ID
-          if (id < 0 || id >= store.configs.length) {
-            throw new Error(`Invalid config id: ${id}, max: ${store.configs.length - 1}`);
+          // Make sure we don't set an invalid preset ID
+          if (id < 0 || id >= store.presets.length) {
+            throw new Error(`Invalid preset id: ${id}, max: ${store.presets.length - 1}`);
           }
-          store.configId = id;
+          store.presetId = id;
         }
       });
 
       const currentPatchId = computed({
         get() { return store.patchId; },
-        set(id) { store.loadPatch(id); currentConfigId.value = 0 }
+        set(id) { store.loadPatch(id); currentPresetId.value = 0 }
       });
 
 
@@ -83,16 +83,16 @@
         store.removePatch(currentPatchId.value);
       }
 
-      function addConfig() {
-        store.addConfig();
-        currentConfigId.value = configs.value.length - 1; // load it (via watch) and select it.
+      function addPreset() {
+        store.addPreset();
+        currentPresetId.value = presets.value.length - 1; // load it (via watch) and select it.
       }
 
-      function removeConfig() {
-        const confirm = window.confirm('Delete ' + currentConfigName.value + '?');
+      function removePreset() {
+        const confirm = window.confirm('Delete ' + currentPresetName.value + '?');
 
-        if (configs.value.length <= 1 || !confirm) { return; }
-        store.removeConfig(currentConfigId.value);
+        if (presets.value.length <= 1 || !confirm) { return; }
+        store.removePreset(currentPresetId.value);
       }
 
 
@@ -111,12 +111,12 @@
         currentPatchId,
         currentPatchName,
 
-        configs,
-        configRef,
-        addConfig,
-        removeConfig,
-        currentConfigId,
-        currentConfigName,
+        presets,
+        presetRef,
+        addPreset,
+        removePreset,
+        currentPresetId,
+        currentPresetName,
       }
     },
   });

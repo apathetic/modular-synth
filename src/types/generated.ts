@@ -37,7 +37,7 @@ export const ConnectionSchema = z.object({
 });
 
 
-export const ConfigSchema = z.object({
+export const PresetSchema = z.object({
   name: z.string(),
   parameters: z.record(z.string(), z.union([z.string(), z.number()]))
 });
@@ -50,7 +50,7 @@ export const PatchSchema = z.object({
   name: z.string(),
   modules: z.array(z.union([ModuleSchema, MasterOutSchema])),
   connections: z.array(ConnectionSchema),
-  configs: z.array(ConfigSchema)
+  presets: z.array(PresetSchema)
 });
 
 declare global {
@@ -58,7 +58,7 @@ declare global {
   type Module = z.infer<typeof ModuleSchema>;
   type MasterOut = z.infer<typeof MasterOutSchema>;
   type Connection = z.infer<typeof ConnectionSchema>;
-  type Config = z.infer<typeof ConfigSchema>;
+  type Preset = z.infer<typeof PresetSchema>;
   type Patch = z.infer<typeof PatchSchema>;
   type parameterLabel = `${number}-${string}`;
   // type Parameters = Record<parameterLabel, string | number>;
@@ -70,7 +70,7 @@ export {
   type Module,
   type MasterOut,
   type Connection,
-  type Config,
+  type Preset,
   type Patch,
 //  parameterLabel
 }

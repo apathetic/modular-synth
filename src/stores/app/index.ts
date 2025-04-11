@@ -29,12 +29,10 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     patchId: 0,
 
     /**
-     * The `id` of the active parameter configuration
+     * The `id` of the active preset
 		 * @type {number}
-     *
-     * [TODO] : consider renaming to settingsId ...?
      */
-    configId: 0,
+    presetId: 0,
 
     /**
      * Stores the patch's active `AudioNode`s
@@ -49,7 +47,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     // authenticated: false,
 
 
-    patch: { modules: [], connections: [], configs: [{ name: 'loading...' }], name: 'loading...' } as unknown as Patch,
+    patch: { modules: [], connections: [], presets: [{ name: 'loading...' }], name: 'loading...' } as unknown as Patch,
 
   },
 
@@ -88,22 +86,22 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       return this.patch.connections;
     },
 
-    configs(): Config[] {
-      return this.patch.loaded ? this.patch.configs : [{ name: 'loading...' } as Config];
-      // return this.patch.configs;
+    presets(): Preset[] {
+      return this.patch.loaded ? this.patch.presets : [{ name: 'loading...' } as Preset];
+      // return this.patch.presets;
     },
 
-    config(state): Config {
-      const config = this.configs?.[state.configId];
-      if (!config) {
-        throw new Error(`No config found at index ${state.configId}`);
+    preset(state): Preset {
+      const preset = this.presets?.[state.presetId];
+      if (!preset) {
+        throw new Error(`No preset found at index ${state.presetId}`);
       }
 
-      return this.configs[state.configId];
+      return this.presets[state.presetId];
     },
 
     parameters(): Record<parameterLabel, string | number> {
-      return this.config?.parameters || {};
+      return this.preset?.parameters || {};
     },
 
     getNode: (state) => (id: number) => state.registry[id],
@@ -151,11 +149,11 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
 
     /**
      * Loads and instantiates a patch from the Store. This includes setting up
-     * `modules`, `configs`, routing audio, and applying any `parameters`.
+     * `modules`, `presets`, routing audio, and applying any `parameters`.
      *
      * NOTE: we cannot load `modules`, `connections`, and `parameters` all at once.
      *       Modules must be mounted first so that all AudioNodes are available
-     *       to the `connections`; likewise the `configs` need to be available
+     *       to the `connections`; likewise the `presets` need to be available
      *       before `parameters` are instantiated.
      *
      * @this {Store} reference to the pinia store
@@ -176,25 +174,25 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
 
       const patch = this.patches[id];
       const connections = patch.connections; // keep a ref to the _soon-to-be-loaded_ connections array
-      const configs = patch.configs;         // keep a ref to the _soon-to-be-loaded_ parameter configs
+      const presets = patch.presets;         // keep a ref to the _soon-to-be-loaded_ parameter presets
 
       patch.loaded = false;
       patch.connections = [];                // set to empty array so that it will not load immediately
-      patch.configs = [];                    // set to empty array so that it will not load immediately
+      patch.presets = [];                    // set to empty array so that it will not load immediately
 
       this.patch = patch;
       this.patchId = id;
-      this.configId = 0;                     // select 1st set when new patch loaded
+      this.presetId = 0;                     // select 1st set when new patch loaded
 
       log({ type:'patch', action:'loading ', data: patch.name });
 
       // ensure AudioNodes have been instantiated before proceeding with routing
-      // ensure components w/ parameters have mounted before applying parameter configs
+      // ensure components w/ parameters have mounted before applying parameter presets
       await nextTick();
 
       // Now we can safely instantiate parameters and connections
       this.patch.connections = connections;
-      this.patch.configs = configs;
+      this.patch.presets = presets;
       this.patch.loaded = true;
     },
 
@@ -223,7 +221,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      */
     addPatch () {
       this.patchId = this.patches.push(emptyPatch()) - 1;
-      this.configId = 0;
+      this.presetId = 0;
     },
 
     /**
@@ -371,28 +369,28 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     /**
      * Adds an new, empty parameter-configuration object.
      */
-    addConfig() {
-      const config = {
+    addPreset() {
+      const preset = {
         name: '<empty>',
-        parameters: Object.assign({}, this.config?.parameters)
+        parameters: Object.assign({}, this.preset?.parameters)
       };
 
-      this.configId = this.configs.push(config) - 1; // select new config by default (push returns array length)
+      this.presetId = this.presets.push(preset) - 1; // select new preset by default (push returns array length)
     },
 
     /**
      * Remove a set of parameters.
      * @param {number} id The configuration to remove
      */
-    removeConfig(id: number) {
-      if (this.configs.length <= 1) {
-        console.warn('Cannot remove last config');
+    removePreset(id: number) {
+      if (this.presets.length <= 1) {
+        console.warn('Cannot remove last preset');
         return;
       }
 
-      log({ type:'patch', action:'deleting config', data: id });
-      this.configs.splice(id, 1);
-      this.configId = 0;
+      log({ type:'patch', action:'deleting preset', data: id });
+      this.presets.splice(id, 1);
+      this.presetId = 0;
     },
 
     setParameter (data: { id: parameterLabel; value: string | number }) {
@@ -402,8 +400,8 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     removeParameter (id: parameterLabel) {
-      this.configs.forEach((config: Config) => {
-        delete config.parameters[id];
+      this.presets.forEach((preset: Preset) => {
+        delete preset.parameters[id];
       });
     }
 

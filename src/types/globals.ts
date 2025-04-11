@@ -57,7 +57,7 @@ export type AppState = {
   patches: Patch[]; // all available patches
   patch: Patch;     // active patch
   patchId: number;  // active patch id
-  configId: number; // active parameter config id
+  presetId: number; // active parameter preset id
 
   // references to all audio nodes in the current patch.
   registry: {[value: number]: SynthNode};

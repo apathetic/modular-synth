@@ -2,7 +2,7 @@ import { state as blank } from '@/stores/patch';
 import {
   ModuleSchema,
   ConnectionSchema,
-  ConfigSchema,
+  PresetSchema,
   PatchSchema,
 } from '@/types/generated';
 
@@ -24,13 +24,13 @@ const isModule = (module: unknown): module is Module => ModuleSchema.safeParse(m
 const isConnection = (connection: unknown): connection is Connection => ConnectionSchema.safeParse(connection).success;
 
 /**
- * Type predicate to check if an object is a valid Config.
+ * Type predicate to check if an object is a valid Preset.
  * For type predicates, we do a direct property check rather than using Zod.
  *
  * @param obj - The object to check
- * @returns A type predicate indicating if the object is a valid Config
+ * @returns A type predicate indicating if the object is a valid Preset
  */
-const isConfig = (config: unknown): config is Config => ConfigSchema.safeParse(config).success;
+const isPreset = (preset: unknown): preset is Preset => PresetSchema.safeParse(preset).success;
 
 /**
  * Type predicate to check if an object is a valid Patch.
@@ -108,7 +108,7 @@ export {
   isPatch,
   isModule,
   isConnection,
-  isConfig,
+  isPreset,
   fixPatch,
   validateData,
 };

@@ -21,7 +21,7 @@ const createTestStore = (initialPatches = [blank()]) => {
   store.patchId = 0;
   store.loadPatch = vi.fn((id) => {
     store.patchId = id;
-    store.configId = 0;
+    store.presetId = 0;
   });
 
   return store;
@@ -134,7 +134,7 @@ describe('PatchManager.vue', () => {
       mockStore = createTestStore([{
         ...blank(),
         name: 'original',
-        configs: [{ name: 'original-config', parameters: {} }]
+        presets: [{ name: 'original-preset', parameters: {} }]
       }]);
       mockStore.isEditing = true;
 
@@ -148,13 +148,13 @@ describe('PatchManager.vue', () => {
       const params = screen.getByTestId('params');
       const paramsname = within(params).getByRole('textbox');
       fireEvent.update(paramsname, 'paramtasatic');
-      expect(mockStore.config.name).to.equal('paramtasatic');
+      expect(mockStore.preset.name).to.equal('paramtasatic');
     });
   });
 
   describe('Parameters', () => {
     it.skip('can load a set of parameters', async () => {
-      mockStore.patches[0].configs = [
+      mockStore.patches[0].presets = [
         {'name':'wheee', 'parameters': {}},
         {'name':'huzzah','parameters': {}}
       ];
@@ -164,44 +164,44 @@ describe('PatchManager.vue', () => {
       const params = screen.getByTestId('params');
       const paramsInput = within(params).getByRole('textbox');
 
-      // Input text should match the first config's name
+      // Input text should match the first preset's name
       expect(paramsInput.value).to.equal('wheee');
 
-      // Select the second config from the dropdown
+      // Select the second preset from the dropdown
       const dropdown = within(params).getByRole('combobox');
       fireEvent.update(dropdown, { target: { value: '1' } });
 
-      // Verify the input text was updated to the new config name
+      // Verify the input text was updated to the new preset name
       expect(paramsInput.value).to.equal('huzzah');
     });
 
-    it('in edit mode, can add a new parameter config', () => {
+    it('in edit mode, can add a new parameter preset', () => {
       mockStore.isEditing = true;
-      const addConfigSpy = vi.spyOn(mockStore, 'addConfig');
+      const addPresetSpy = vi.spyOn(mockStore, 'addPreset');
 
       render(PatchManager);
 
-      const add = within(screen.getByTestId('params')).getByTitle('add config');
+      const add = within(screen.getByTestId('params')).getByTitle('add preset');
       fireEvent.click(add);
 
-      expect(addConfigSpy).toHaveBeenCalledTimes(1);
+      expect(addPresetSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('in edit mode, can remove a parameter config', () => {
-      mockStore.patches[0].configs = [
-        {'name':'config1', 'parameters': {}},
-        {'name':'config2', 'parameters': {}}
+    it('in edit mode, can remove a parameter preset', () => {
+      mockStore.patches[0].presets = [
+        {'name':'preset1', 'parameters': {}},
+        {'name':'preset2', 'parameters': {}}
       ];
       mockStore.isEditing = true;
 
       render(PatchManager);
 
-      const removeConfigSpy = vi.spyOn(mockStore, 'removeConfig');
-      const remove = within(screen.getByTestId('params')).getByTitle('remove config');
+      const removePresetSpy = vi.spyOn(mockStore, 'removePreset');
+      const remove = within(screen.getByTestId('params')).getByTitle('remove preset');
       fireEvent.click(remove);
 
-      expect(removeConfigSpy).toHaveBeenCalledTimes(1);
-      expect(removeConfigSpy).toHaveBeenCalledWith(mockStore.configId);
+      expect(removePresetSpy).toHaveBeenCalledTimes(1);
+      expect(removePresetSpy).toHaveBeenCalledWith(mockStore.presetId);
     });
 
     it('in edit mode, can edit the parameters name', () => {
@@ -212,27 +212,27 @@ describe('PatchManager.vue', () => {
       const params = screen.getByTestId('params');
       const paramsname = within(params).getByRole('textbox');
       fireEvent.update(paramsname, 'paramtasatic');
-      expect(mockStore.config.name).to.equal('paramtasatic');
+      expect(mockStore.preset.name).to.equal('paramtasatic');
     });
 
-    it('cannot remove last parameter config', () => {
+    it('cannot remove last parameter preset', () => {
       mockStore.isEditing = true;
 
-      const removeConfigSpy = vi.spyOn(mockStore, 'removeConfig');
+      const removePresetSpy = vi.spyOn(mockStore, 'removePreset');
 
       render(PatchManager);
 
-      const remove = within(screen.getByTestId('params')).getByTitle('remove config');
+      const remove = within(screen.getByTestId('params')).getByTitle('remove preset');
       fireEvent.click(remove);
 
-      expect(removeConfigSpy).not.toHaveBeenCalled();
+      expect(removePresetSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('UI', () => {
     it('renders the correct content', () => {
       mockStore.patches[0].name = 'test-o';
-      mockStore.patches[0].configs[0].name = 'supasynth';
+      mockStore.patches[0].presets[0].name = 'supasynth';
 
       render(PatchManager);
 
@@ -247,8 +247,8 @@ describe('PatchManager.vue', () => {
 
     it('updates display when new patch is selected', async () => {
       mockStore.patches = [
-        { ...blank(), name: 'first-patch', configs: [{ name: 'config1' }] },
-        { ...blank(), name: 'second-patch', configs: [{ name: 'config2' }] }
+        { ...blank(), name: 'first-patch', presets: [{ name: 'setting1' }] },
+        { ...blank(), name: 'second-patch', presets: [{ name: 'setting2' }] }
       ];
       const loadPatchSpy = vi.spyOn(mockStore, 'loadPatch');
 

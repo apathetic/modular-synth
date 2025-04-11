@@ -13,11 +13,11 @@
     <button class="remove" @click="remove">-</button>
   </div>
     <!-- <Select
-      :items="configs"
-      :itemId="currentConfigId"
-      :itemName="currentConfigName"
-      :add="addConfig"
-      :remove="removeConfig"
+      :items="presets"
+      :itemId="currentPresetId"
+      :itemName="currentPresetName"
+      :add="addPreset"
+      :remove="removePreset"
     /> -->
 </template>
 
