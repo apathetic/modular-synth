@@ -21,6 +21,7 @@
 
 <script lang="ts">
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
+  import { gain, filter, delay } from '@/audio';
 
   const params = {
     delay: {
@@ -52,17 +53,19 @@
 
   export default defineComponent({
     props: {
-      id: null
+      id: {
+        default: undefined,
+        required: true
+      }
     },
     setup (props, { expose }) {
-      const context = inject('context');
-      const input = context.createGain();
-      const output = context.createGain();
-      const dryNode = context.createGain();
-      const wetNode = context.createGain();
-      const filter = context.createBiquadFilter();
-      const delayNode = context.createDelay(5);
-      const feedbackNode = context.createGain();
+      const input = gain();
+      const output = gain();
+      const dryNode = gain(params.dry.default);
+      const wetNode = gain(params.wet.default);
+      const filterNode = filter('lowpass', params.filter.default);
+      const delayNode = delay(params.delay.default / 1000.0, 5);
+      const feedbackNode = gain(params.feedback.default);
 
       const inlets = [
         {
@@ -87,20 +90,13 @@
       const dry = ref(params.dry.default);
       const wet = ref(params.wet.default);
       const feedback = ref(params.feedback.default);
-      const delay = ref(params.delay.default);
+      const delayTime = ref(params.delay.default);
       const cutoff = ref(params.filter.default);
-
-      dryNode.gain.value = dry.value;
-      wetNode.gain.value = wet.value;
-      feedbackNode.gain.value = feedback.value;
-      delayNode.delayTime.value = delay.value / 1000.0;
-      filter.frequency.value = cutoff.value;
-      filter.type = 'lowpass';
 
       input.connect(delayNode);
       input.connect(dryNode);
-      delayNode.connect(filter);
-      filter.connect(feedbackNode);
+      delayNode.connect(filterNode);
+      filterNode.connect(feedbackNode);
       feedbackNode.connect(delayNode);
       feedbackNode.connect(wetNode);
       wetNode.connect(output);
@@ -109,17 +105,11 @@
       watch(wet, (v) => wetNode.gain.value = v);
       watch(dry, (v) => dryNode.gain.value = v);
       watch(feedback, (v) => feedbackNode.gain.value = v);
-      watch(delay, (v) => delayNode.delayTime.value = v / 1000.0);
-      watch(cutoff, (v) => filter.frequency.value = v);
+      watch(delayTime, (v) => delayNode.delayTime.value = v / 1000.0);
+      watch(cutoff, (v) => filterNode.frequency.value = v);
 
       onUnmounted(() => {
-        // input = null;
-        // output = null;
-        // dryNode = null;
-        // wetNode = null;
-        // filter = null;
-        // delayNode = null;
-        // feedbackNode = null;
+        // clean disconnections happen in Connection component
       });
 
       // AUDIO
@@ -133,7 +123,7 @@
         dry,
         wet,
         feedback,
-        delay,
+        delay: delayTime,
         cutoff,
 
         inlets,

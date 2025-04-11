@@ -49,6 +49,35 @@ export function gain(value: number = 1): GainNode {
 
 
 /**
+ * Create a new WebAudio biquad filter node with the specified parameters.
+ * @param {BiquadFilterType} type - The type of filter
+ * @param {number} frequency - Initial frequency value in Hz
+ * @param {number} q - Initial Q value
+ * @returns {BiquadFilterNode} The created filter node
+ */
+export function filter(type: BiquadFilterType = 'lowpass', frequency: number = 350, q: number = 1): BiquadFilterNode {
+  const filterNode = context.createBiquadFilter();
+  filterNode.type = type;
+  filterNode.frequency.value = frequency;
+  filterNode.Q.value = q;
+  return filterNode;
+}
+
+
+/**
+ * Create a new WebAudio delay node with the specified delay time.
+ * @param {number} delayTime - Initial delay time in seconds
+ * @param {number} maxDelayTime - Maximum possible delay time in seconds
+ * @returns {DelayNode} The created delay node
+ */
+export function delay(delayTime: number = 0.1, maxDelayTime: number = 5): DelayNode {
+  const delayNode = context.createDelay(maxDelayTime);
+  delayNode.delayTime.value = delayTime;
+  return delayNode;
+}
+
+
+/**
  * Generate a constant stream of 1's (or given value) at the audio-rate.
  * @param value The value to generate.
  * @returns {ConstantSourceNode}
