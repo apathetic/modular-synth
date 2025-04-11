@@ -12,8 +12,8 @@
     </div>
 
     <div class="module-connections">
-      <Inlets  :ports="inlets"></Inlets>
-      <Outlets :ports="outlets"></Outlets>
+      <Inlets  :ports="inlets"  :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
     </div>
   </div>
 </template>
@@ -21,22 +21,24 @@
 <script lang="ts">
   // import Knob from './UI/Knob';
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
-  import { Parameter } from '@/audio';
+  import { Parameter, gain } from '@/audio';
 
   export default defineComponent({
     name: 'Mixer',
 
     props: {
-      id: null
+      id: {
+        default: undefined,
+        required: true
+      }
     },
 
     setup (props, { expose }) {
-      const context: AudioContext = inject('context');
-      const gain1 = context.createGain();
-      const gain2 = context.createGain();
-      const gain3 = context.createGain();
-      const gain4 = context.createGain();
-      const output = context.createGain();
+      const gain1 = gain(0);
+      const gain2 = gain(0);
+      const gain3 = gain(0);
+      const gain4 = gain(0);
+      const output = gain(1);
 
       const one = ref(0);
       const two = ref(0);
@@ -61,10 +63,11 @@
       gain3.connect(output);
       gain4.connect(output);
 
-      watch(one, (v) => gain1.gain.value = v);
-      watch(two, (v) => gain2.gain.value = v);
-      watch(three, (v) => gain3.gain.value = v);
-      watch(four, (v) => gain4.gain.value = v);
+      // Scale the gain values from 0-100 to 0-1 to prevent clipping
+      watch(one, (v) => gain1.gain.value = v / 100);
+      watch(two, (v) => gain2.gain.value = v / 100);
+      watch(three, (v) => gain3.gain.value = v / 100);
+      watch(four, (v) => gain4.gain.value = v / 100);
 
       // watch
       // function update() {
