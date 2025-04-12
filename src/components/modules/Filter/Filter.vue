@@ -9,7 +9,7 @@
       <Knob param="Q"    @value="Q = $event"    :min="0"   :max="1" :precision="2"></Knob>
       <Dropdown param="type" @value="type = $event" :options="types"></Dropdown>
 
-      <canvas ref="canvas"></canvas>
+      <canvas ref="canvas" width="100" height="50"></canvas>
     </div>
 
     <div class="module-connections">
@@ -21,7 +21,7 @@
 
 
 <script lang="ts">
-  import { defineComponent, ref, watch, onUnmounted } from 'vue';
+  import { defineComponent, ref, watch, onMounted, onUnmounted } from 'vue';
   import { filter, parameter } from '@/audio';
 
   export default defineComponent({
@@ -37,11 +37,62 @@
       const type = ref<BiquadFilterType>(types[0]);
       const freq = ref(440);
       const Q = ref(1);
+      const canvas = ref<HTMLCanvasElement | null>(null);
 
       // Create the filter and its modulation
       const filterNode = filter(type.value, freq.value, Q.value);
       const mod = parameter(500); // range: 0 - 500 cents (interval of a 5th)
       mod.output.connect(filterNode.detune);
+
+      // Function to draw the filter curve
+      const drawFilterCurve = () => {
+        if (!canvas.value) return;
+
+        const ctx = canvas.value.getContext('2d');
+        if (!ctx) return;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+
+        // Generate frequency points (log scale)
+        const frequencies = new Float32Array(100);
+        for (let i = 0; i < frequencies.length; i++) {
+          frequencies[i] = 20 * Math.pow(2, i / 10); // 20Hz to 20kHz
+        }
+
+        // Get frequency response
+        const magResponse = new Float32Array(frequencies.length);
+        const phaseResponse = new Float32Array(frequencies.length);
+        filterNode.getFrequencyResponse(frequencies, magResponse, phaseResponse);
+
+        // Draw the curve
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ccff';
+        ctx.lineWidth = 2;
+
+        for (let i = 0; i < frequencies.length; i++) {
+          const x = (i / frequencies.length) * canvas.value.width;
+          const y = (1 - magResponse[i]) * canvas.value.height;
+
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+
+        ctx.stroke();
+      };
+
+      // Watch for changes and redraw
+      watch([freq, Q, type], () => {
+        drawFilterCurve();
+      });
+
+      // Initial draw
+      onMounted(() => {
+        drawFilterCurve();
+      });
 
       const inlets = [
         {
@@ -89,7 +140,8 @@
         freq,
         Q,
         type,
-        types
+        types,
+        canvas
       }
     }
   });
@@ -141,6 +193,14 @@
       transform: scale(1.5);
       top: 43px;
       left: -4px;
+    }
+
+    canvas {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
     }
   }
 </style>
