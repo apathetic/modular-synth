@@ -321,4 +321,13 @@ export class PWM {
   }
 }
 
+/**
+ * Create a new Parameter with the specified initial value.
+ * @param {number} value - Initial value of the parameter
+ * @returns {Parameter} The created parameter
+ */
+export function parameter(value: number = 0): Parameter {
+  return new Parameter(value);
+}
+
 // }

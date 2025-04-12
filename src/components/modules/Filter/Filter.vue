@@ -21,39 +21,38 @@
 
 
 <script lang="ts">
-  import { defineComponent, inject, ref, watch, onMounted, onUnmounted } from 'vue';
-  import { Parameter } from '@/audio';
+  import { defineComponent, ref, watch, onUnmounted } from 'vue';
+  import { filter, parameter } from '@/audio';
 
   export default defineComponent({
     props: {
-      id: null
+      id: {
+        default: undefined,
+        required: true
+      }
     },
 
     setup (props, { expose }) {
-      const context = inject('context');
-      const types = ['allpass', 'bandpass', 'highpass', 'lowpass', 'peaking'];
-      const type = ref(types[0]);
+      const types = ['allpass', 'bandpass', 'highpass', 'lowpass', 'peaking'] as const;
+      const type = ref<BiquadFilterType>(types[0]);
       const freq = ref(440);
       const Q = ref(1);
 
-      const filter = context.createBiquadFilter();
-      filter.type = type.value;
-      filter.frequency.value = freq.value;
-      filter.Q.value = Q.value;
-
-      const mod = new Parameter(500); // range: 0 - 500 cents (interval of a 5th)
-      mod.output.connect(filter.detune);    // filter tremolo
+      // Create the filter and its modulation
+      const filterNode = filter(type.value, freq.value, Q.value);
+      const mod = parameter(500); // range: 0 - 500 cents (interval of a 5th)
+      mod.output.connect(filterNode.detune);
 
       const inlets = [
         {
           label: 'input',
           desc: 'signal to filter',
-          audio: filter
+          audio: filterNode
         },
         {
           label: 'freq',
           desc: 'filter frequency',
-          data: (f) => filter.frequency.value = f
+          data: (f: number) => filterNode.frequency.value = f
         },
         {
           label: 'mod',
@@ -65,14 +64,17 @@
         {
           label: 'output',
           desc: 'Audio output',
-          audio: filter
+          audio: filterNode
         }
       ];
 
-      watch(freq, (f) => filter.frequency.value = f);
-      watch(Q, (q) => filter.Q.value = q);
-      // $watch('type', (t) => filter.type = t || 'lowpass');
+      watch(freq, (f) => filterNode.frequency.value = f);
+      watch(Q, (q) => filterNode.Q.value = q);
+      watch(type, (t) => filterNode.type = t as BiquadFilterType);
 
+      onUnmounted(() => {
+        mod.destroy();
+      });
 
       // AUDIO
       expose({
