@@ -50,7 +50,7 @@ export const PatchSchema = z.object({
   name: z.string(),
   modules: z.array(z.union([ModuleSchema, MasterOutSchema])),
   connections: z.array(ConnectionSchema),
-  presets: z.array(PresetSchema)
+  presets: z.array(PresetSchema).nonempty()
 });
 
 declare global {
