@@ -7,7 +7,7 @@
     @mouseout="clearFocus"
   >
 
-    <div class="module-interface">
+    <div class="module-interface" v-if="power">
       <VU :audio="out1" />
       <input
         type="range"
@@ -44,11 +44,8 @@
       const store = useAppStore();
       const masterModule = computed(() => store.patch.modules[0]);
 
-      const out1 = gainNode(0.5);
-      const out2 = gainNode(0.5);
 
-      out1.connect(context.destination);
-      out2.connect(context.destination);
+      let out1, out2;
 
       const el = ref<HTMLElement | null>(null);
       const gain = ref(0.5);
@@ -63,25 +60,32 @@
         }
       ];
 
-      stop();
       watch(gain, setGain);
+      watch(power, (on) => {
+        if (on) {
+          // const context = inject('context') as AudioContext;
+          out1 = gainNode(0.5);
+          out2 = gainNode(0.5);
+
+          out1.connect(context.destination);
+          out2.connect(context.destination);
+
+          store.addToRegistry({
+            id: 0,
+            node: {
+              inlets,
+            },
+          });
+        }
+      });
 
       onMounted(() => {
         const modRef: HTMLElement | null = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
         if (!modRef) throw new Error('Could not find #modules element');
 
-        store.addToRegistry({
-          id: 0,
-          node: {
-            // name: 'MasterOut',  // TODO: need to update SynthNode type if we want to use this
-            inlets,
-            // gain
-          },
-        });
-
         window.addEventListener('resize', determinePosition);
         modRef.addEventListener('scroll', determinePosition);
-        determinePosition();
+        // determinePosition();
 
         function determinePosition() {
           const m: HTMLElement = el.value!;
@@ -94,6 +98,7 @@
       });
 
       function setGain(g: number) {
+        if (!out1 || !out2) return;
         out1.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
         out2.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
       }
