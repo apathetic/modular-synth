@@ -87,7 +87,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     presets(): Preset[] {
-      return this.patch.loaded ? this.patch.presets : [{ name: 'loading...' } as Preset];
+      return this.patch.loaded ? this.patch.presets : [{ name: '-XX' } as Preset];
       // return this.patch.presets;
     },
 
@@ -141,6 +141,15 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
   },
 
   actions: {
+
+    // -----------------------------------------------
+    //  APP
+    // -----------------------------------------------
+
+    // togglePower() {
+    //   this.power = !this.power;
+    // },
+    toggleMode() { this.isEditing = !this.isEditing; },
 
 
     // -----------------------------------------------
@@ -257,14 +266,6 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
         console.log('Not signed in.', err);
       }
     },
-
-
-    // -----------------------------------------------
-    //  APP
-    // -----------------------------------------------
-
-    togglePower() { this.power = !this.power; },
-    toggleMode() { this.isEditing = !this.isEditing; },
 
 
     // -----------------------------------------------

@@ -12,38 +12,37 @@
 
 
 <script lang="ts">
-  import { defineComponent, inject, computed, watch } from 'vue';
+  import { defineComponent, computed } from 'vue';
   import { useAppStore } from '@/stores/app';
+  import { context } from '@/audio';
 
   export default defineComponent({
     name: 'Power',
     setup() {
-      const context = inject('context') as AudioContext;
       const store = useAppStore();
       const power = computed(() => store.power);
 
-      watch(power, (on: boolean) => {
-        if (on) {
+      function togglePower() {
+        store.power = !store.power;
+
+        if (store.power) {
           context.resume();
-        }
-        else {
+        } else {
           context.suspend();
         }
-      });
-
+      }
 
       window.addEventListener('keydown', (e) => {
         switch (e.key) {
           case 'Escape':
-            // store.togglePower();
+            // store.power = false;
             break;
         }
       });
 
-
       return {
         power,
-        togglePower: store.togglePower,
+        togglePower
       };
     }
   });

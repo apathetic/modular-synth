@@ -70,7 +70,6 @@
 
       stop();
       watch(gain, setGain);
-      watch(power, (on) => (on) ? start() : stop()); // TODO move out of here
 
       onMounted(() => {
         const modRef: HTMLElement | null = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
@@ -104,9 +103,6 @@
         }
       });
 
-        // TODO move out of here
-      function start() { context.resume(); }
-      function stop() { context.suspend(); }
       function setFocus(id: number) { store.setFocus(id); }
       function clearFocus() { store.clearFocus(); }
 
