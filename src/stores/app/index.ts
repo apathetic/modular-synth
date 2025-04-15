@@ -83,12 +83,11 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     connections(): Connection[] {
-      return this.patch.connections;
+      return this.patch.loaded ? this.patch.connections : [];
     },
 
     presets(): Preset[] {
-      return this.patch.loaded ? this.patch.presets : [{ name: '-XX' } as Preset];
-      // return this.patch.presets;
+      return this.patch.loaded ? this.patch.presets : [{ name: 'loading...' } as Preset];
     },
 
     preset(state): Preset {
@@ -146,9 +145,6 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     //  APP
     // -----------------------------------------------
 
-    // togglePower() {
-    //   this.power = !this.power;
-    // },
     toggleMode() { this.isEditing = !this.isEditing; },
 
 
@@ -169,39 +165,28 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * @param {number} id The id of the patch to load
      */
     async loadPatch(id: number) {
-      // const { resetSorting } = useSortable();
 
       if (id === this.patchId && this.patch.loaded) {
         return;
       }
 
-      // Validate the patch before processing it
       if (!isPatch(this.patches[id])) {
         console.error('Invalid patch at index', id);
-        // this.patches[id] = fixPatch(this.patches[id]);
       }
 
       const patch = this.patches[id];
-      const connections = patch.connections; // keep a ref to the _soon-to-be-loaded_ connections array
-      const presets = patch.presets;         // keep a ref to the _soon-to-be-loaded_ parameter presets
+      log({ type:'patch', action:'loading ', data: patch.name });
 
       patch.loaded = false;
-      patch.connections = [];                // set to empty array so that it will not load immediately
-      patch.presets = [];                    // set to empty array so that it will not load immediately
 
       this.patch = patch;
       this.patchId = id;
       this.presetId = 0;                     // select 1st set when new patch loaded
 
-      log({ type:'patch', action:'loading ', data: patch.name });
-
-      // ensure AudioNodes have been instantiated before proceeding with routing
-      // ensure components w/ parameters have mounted before applying parameter presets
+      // ensure AudioNodes have been instantiated before proceeding with routing Connections
       await nextTick();
 
-      // Now we can safely instantiate parameters and connections
-      this.patch.connections = connections;
-      this.patch.presets = presets;
+      // Now we can safely instantiate connections
       this.patch.loaded = true;
     },
 

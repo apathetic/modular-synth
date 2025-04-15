@@ -7,6 +7,7 @@
  */
 // export const context: AudioContext = AudioContext && new AudioContext();
 export const context: AudioContext = new AudioContext();
+context.suspend();
 
 /**
  * Store references to all WebAudio components. They are indexed by
