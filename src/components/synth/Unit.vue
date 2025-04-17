@@ -1,34 +1,3 @@
-// TODO: could this be <Module />?
-<template>
-  <div
-    class="module"
-    ref="el"
-    :class="[width, tall, { dragging: isDragging }, { active: isActive }]"
-    :style="position"
-    @mousedown.stop="(e) => startDragging(e, el)"
-  >
-
-    <!-- @mouseover.stop="setFocus(module.id)"
-    @mouseout.stop="clearFocus()" -->
-
-
-    <!-- <div class="module-interface"> -->
-      <component
-        ref="node"
-        :is="module.type"
-        :id="module.id"
-      />
-
-    <!-- </div> -->
-
-    <!-- <div class="module-connections"> -->
-      <!-- <slot #inlets></slot> -->
-      <!-- <slot #outlets></slot> -->
-    <!-- </div> -->
-  </div>
-</template>
-
-
 <script lang="ts">
   import { defineComponent, computed, ref, onMounted, onBeforeUnmount, onErrorCaptured } from 'vue';
   import { rackWidth, rackHeight, moduleSize } from '@/constants';
@@ -123,3 +92,18 @@
   });
 </script>
 
+<template>
+  <div
+    class="module"
+    ref="el"
+    :class="[width, tall, { dragging: isDragging }, { active: isActive }]"
+    :style="position"
+    @mousedown.stop="(e) => startDragging(e, el)"
+  >
+    <component
+      ref="node"
+      :is="module.type"
+      :id="module.id"
+    />
+  </div>
+</template>

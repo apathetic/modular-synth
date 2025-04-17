@@ -1,40 +1,3 @@
-<template>
-  <div
-    id="modules"
-    ref="grid"
-    @scroll="onScroll"
-    XXXXv-contextmenu:modules
-  >
-
-    <div class="highlight" id="position-outline">
-      <div class="inner"></div>
-    </div>
-
-    <Unit
-      v-for="module in modules"
-      :module="module"
-      :key="module.type + module.id"
-      @mousedown.stop="setActive(module.id)"
-      @mouseover.stop="setFocus(module.id)"
-      @mouseout.stop="clearFocus()"
-    />
-
-    <svg id="connections" :style="width">
-      <Connecting />
-      <Connection
-        v-for="connection in connections"
-        :id="connection.id"
-        :to="connection.to"
-        :from="connection.from"
-        :key="connection.id"
-        @mousedown="setActive(connection.id)">
-      </Connection>
-    </svg>
-
-  </div>
-</template>
-
-
 <script lang="ts">
   import { defineComponent, ref, watch, onMounted } from 'vue';
   import { log } from '@/utils/logger';
@@ -131,9 +94,43 @@
         setFocus,
         clearFocus,
       }
-  },
-
-
-});
-
+    },
+  });
 </script>
+
+
+<template>
+  <div
+    id="modules"
+    ref="grid"
+    @scroll="onScroll"
+    XXXXv-contextmenu:modules
+  >
+
+    <div class="highlight" id="position-outline">
+      <div class="inner"></div>
+    </div>
+
+    <Unit
+      v-for="module in modules"
+      :module="module"
+      :key="module.type + module.id"
+      @mousedown.stop="setActive(module.id)"
+      @mouseover.stop="setFocus(module.id)"
+      @mouseout.stop="clearFocus()"
+    />
+
+    <svg id="connections" :style="width">
+      <Connecting />
+      <Connection
+        v-for="connection in connections"
+        :id="connection.id"
+        :to="connection.to"
+        :from="connection.from"
+        :key="connection.id"
+        @mousedown="setActive(connection.id)">
+      </Connection>
+    </svg>
+
+  </div>
+</template>
