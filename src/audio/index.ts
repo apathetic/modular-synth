@@ -5,11 +5,45 @@ import { Gain } from 'tone';
 
 /**
  * The application's audio context.
- * @type {AudioContext}
+ * This class provides a reference to the AudioContext that will be initialized
+ * after user interaction. It ensures type safety and prevents premature initialization.
  */
-// export const context: AudioContext = AudioContext && new AudioContext();
-export const context: AudioContext = new AudioContext();
-context.suspend();
+const µ = {
+  _context: null as AudioContext | null,
+
+  get context(): AudioContext {
+    if (!this._context) {
+      this._context = new window.AudioContext();
+    }
+    return this._context;
+  },
+};
+
+export const context: AudioContext = new Proxy(µ.context, {
+  get(target, prop: keyof AudioContext) {
+    const value = target[prop];
+    if (typeof value === 'function') {
+      return value.bind(target);
+    }
+    return value;
+  },
+
+  set(target, prop: keyof AudioContext, value) {
+    // @ts-expect-error You can't set read-only properties on AudioContext (anyways); we don't need TS to check this
+    target[prop] = value;
+    return true;
+  }
+});
+
+
+
+
+
+
+
+
+
+
 
 
 

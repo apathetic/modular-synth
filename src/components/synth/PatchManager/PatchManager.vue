@@ -27,7 +27,7 @@
 
 
 <script lang="ts">
-  import { defineComponent, computed, ref } from 'vue';
+  import { defineComponent, computed, ref, watch } from 'vue';
   import { useAppStore } from '@/stores/app';
   import { log } from '@/utils/logger';
   // import Select from './Select.vue';
@@ -96,10 +96,13 @@
       }
 
 
-      // patches must be loaded via `loadPatch` in order for the modules,
-      // connections, and parameters to be correctly instantiated
-      store.loadPatch(0);
-
+      watch(() => store.power, (on: boolean) => {
+        if (on) {
+          // patches must be loaded via `loadPatch` in order for the modules,
+          // connections, and parameters to be correctly instantiated
+          store.loadPatch(0);
+        }
+      });
 
       return {
         editing,

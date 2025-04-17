@@ -47,7 +47,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     // authenticated: false,
 
 
-    patch: { modules: [], connections: [], presets: [{ name: 'loading...' }], name: 'loading...' } as unknown as Patch,
+    patch: { modules: [], connections: [], presets: [{ name: '-' }], name: '-' } as unknown as Patch,
 
   },
 
@@ -174,14 +174,20 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
         console.error('Invalid patch at index', id);
       }
 
+
+      this.patchId = id;
+      this.presetId = 0;                     // select 1st set when new patch loaded
+    //   if (this.power) {
+    //     await this._loadPatch(id);
+    //   }
+    // },
+    // async _loadPatch(id: number) {
       const patch = this.patches[id];
       log({ type:'patch', action:'loading ', data: patch.name });
 
       patch.loaded = false;
 
       this.patch = patch;
-      this.patchId = id;
-      this.presetId = 0;                     // select 1st set when new patch loaded
 
       // ensure AudioNodes have been instantiated before proceeding with routing Connections
       await nextTick();
