@@ -94,7 +94,7 @@
         setFocus,
         clearFocus,
       }
-    },
+    }
   });
 </script>
 
@@ -134,3 +134,50 @@
 
   </div>
 </template>
+
+
+<style lang="scss">
+  #modules {
+    display:inline-block;
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: auto;
+
+    &::-webkit-scrollbar {
+      width: 1em;
+      height: 1em;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--color-grey-dark);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--color-grey-medium);
+      border: 2px solid var(--color-grey-dark);
+      border-radius: 0.5em;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: var(--color-grey-dark);
+    }
+  }
+
+  #connections {
+    min-width: 100%;
+    min-height: 100%;
+    overflow: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: opacity 0.1s;
+    transition-delay: var(--transition-time-slow);
+
+    .play-mode & {
+      opacity: 0;
+      transition-delay: 0s;
+      z-index: -1;
+    }
+  }
+</style>
