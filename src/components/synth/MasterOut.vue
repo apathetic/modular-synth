@@ -28,10 +28,10 @@
 
 
 <script lang="ts">
-  import { defineComponent, ref, computed, watch, onMounted, inject } from 'vue';
+  import { defineComponent, ref, computed, watch, onMounted } from 'vue';
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
-  import { gain as gainNode } from '@/audio';
+  import { context, gain as gainNode } from '@/audio';
   import VU from '../UI/VU';
 
 
@@ -42,13 +42,8 @@
       log({ type:'component', action:'creating', data:'MasterOut' });
 
       const store = useAppStore();
-      const power = computed(() => store.power);
-
-      // const modules = computed(() => store.modules);
       const masterModule = computed(() => store.patch.modules[0]);
-    // const module = store.getModule(0);
 
-      const context = inject('context') as AudioContext;
       const out1 = gainNode(0.5);
       const out2 = gainNode(0.5);
 
@@ -77,34 +72,23 @@
 
         store.addToRegistry({
           id: 0,
-          node: {
-            // name: 'MasterOut',  // TODO: need to update SynthNode type if we want to use this
-            inlets,
-            // gain
-          },
+          node: { inlets },
         });
 
-        window.addEventListener('resize', determinePosition);
-        modRef.addEventListener('scroll', determinePosition);
-        determinePosition();
-
         function determinePosition() {
-          if (!el.value || !modRef) return;
-
-          const x = modRef.scrollLeft +               // scroll offset +
-                    el.value.getBoundingClientRect().left;  // viewport offset
-          const y = el.value.offsetTop;                     // relative to parent
-
-          // modules.value[0].x = x;
-          // modules.value[0].y = y;
+          const m: HTMLElement = el.value!;
+          const x = modRef!.scrollLeft + m.getBoundingClientRect().left;  // scroll offset + viewport offset
+          const y = m.offsetTop; // relative to parent
 
           masterModule.value.x = x;
           masterModule.value.y = y;
         }
-      });
 
-      function setFocus(id: number) { store.setFocus(id); }
-      function clearFocus() { store.clearFocus(); }
+        window.addEventListener('resize', determinePosition);
+        modRef.addEventListener('scroll', determinePosition);
+
+        determinePosition();
+      });
 
       function setGain(g: number) {
         out1.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
@@ -119,8 +103,8 @@
       // UI
       return {
         el,
-        setFocus,
-        clearFocus,
+        setFocus: store.setFocus,
+        clearFocus: store.clearFocus,
         out1,
         out2,
         gain,

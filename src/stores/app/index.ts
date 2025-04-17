@@ -43,12 +43,15 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      */
     registry: {},
 
+    /**
+     * The patch currently being edited
+     * @type {Patch}
+     */
+    patch: emptyPatch(),
+
+
     session: undefined,
     // authenticated: false,
-
-
-    patch: { modules: [], connections: [], presets: [{ name: 'loading...' }], name: 'loading...' } as unknown as Patch,
-
   },
 
   getters: {
