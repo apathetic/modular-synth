@@ -144,7 +144,7 @@
        */
       function setPulseWidth(p: number) {
         // Update the property that contains the value (not connecting audio nodes here)
-        pulse.set(p);
+        // pulse.set(p);
         PW.value = p;
       }
 

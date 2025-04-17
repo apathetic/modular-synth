@@ -17,7 +17,7 @@
         step="0.05"
         v-model="gain"
       />
-      <!-- <VU :audio="out2" /> -->
+      <VU :audio="out2" />
     </div>
 
     <div class="module-connections">
@@ -33,7 +33,7 @@
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
   import VU from '../UI/VU';
-
+  import type { ToneAudioNode } from 'tone';
 
   export default defineComponent({
     name: 'MasterOut',
@@ -42,14 +42,12 @@
     setup(props, { expose }) {
       log({ type:'component', action:'creating', data:'MasterOut' });
 
-      const out1 = new Gain(0.5).toDestination();
-      const out2 = new Gain(0.5).toDestination();
+      let out1: ToneAudioNode | null = null;
+      let out2: ToneAudioNode | null = null;
 
       const store = useAppStore();
+      const power = computed(() => store.power);
       const masterModule = computed(() => store.patch.modules[0]);
-
-
-      let out1, out2;
 
       const el = ref<HTMLElement | null>(null);
       const gain = ref(0.5);
@@ -64,35 +62,12 @@
         }
       ]);
 
-
-// sanity check
-////////////////////////////
-const osc = new AMOscillator(30, "sine", "square");
-osc.start();
-setTimeout(() => {
-const synth = new Synth();
-
-
-synth.connect(inlets[0].audio);
-// osc.connect(inlets[1].audio);
-
-  console.log('playyyy');
-synth.triggerAttackRelease("C4", "8n");
-}, 3333);
-//////////////////////////////////
-
-
-
-
       watch(gain, setGain);
+
       watch(power, (on) => {
         if (on) {
-          // const context = inject('context') as AudioContext;
-          out1 = gainNode(0.5);
-          out2 = gainNode(0.5);
-
-          out1.connect(context.destination);
-          out2.connect(context.destination);
+          out1 = new Gain(0.5).toDestination();
+          out2 = new Gain(0.5).toDestination();
 
           store.addToRegistry({
             id: 0,
@@ -100,6 +75,17 @@ synth.triggerAttackRelease("C4", "8n");
               inlets,
             },
           });
+
+console.log('sanity');
+
+
+          // Play a quick blip sound
+          const synth = new Synth();
+          synth.connect(out1);
+          synth.triggerAttackRelease("C4", "8n");
+
+
+
         }
       });
 
@@ -122,9 +108,9 @@ synth.triggerAttackRelease("C4", "8n");
       });
 
       function setGain(g: number) {
-        if (!out1 || !out2) return;
-        out1.gain.rampTo(g, 0.1);
-        out2.gain.rampTo(g, 0.1);
+        // if (!out1 || !out2) return;
+        (out1 as Gain).gain.rampTo(g, 0.1);
+        (out2 as Gain).gain.rampTo(g, 0.1);
       }
 
       // AUDIO
@@ -140,6 +126,7 @@ synth.triggerAttackRelease("C4", "8n");
         out1,
         out2,
         gain,
+        power,
         inlets,
       };
     }
