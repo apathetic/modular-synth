@@ -25,16 +25,19 @@
       const context = getContext();
 
       async function togglePower() {
-        store.power = !store.power;
 
-        if (store.power) {
+        if (!store.power) {
+          console.log('tone start');
           await start();
-          context.rawContext.resume();
+          // context.rawContext.resume();
           // transport.start(); // no wait, do this in the Clock component
         } else {
           // context.rawContext.suspend(0);
-          await (context.rawContext as AudioContext).suspend();
+          // await (context.rawContext as AudioContext).suspend();
         }
+
+        // toggle power after the `awaits` as there are watch's on it
+        store.power = !store.power;
       }
 
       window.addEventListener('keydown', (e) => {

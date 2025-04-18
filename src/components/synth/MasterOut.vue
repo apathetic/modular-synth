@@ -54,34 +54,33 @@
       const inlets = markRaw([
         {
           label: 'out-1',
-          audio: out1
+          // audio: out1
         },
         {
           label: 'out-2',
-          audio: out2
+          // audio: out2
         }
-      ]);
+      ]) as any;
 
       watch(gain, setGain);
 
       watch(power, (on) => {
         if (on) {
-          out1 = new Gain(0.5).toDestination();
-          out2 = new Gain(0.5).toDestination();
+          inlets[0].audio = new Gain(0.5).toDestination();
+          inlets[1].audio = new Gain(0.5).toDestination();
+          // out1 = new Gain(0.5).toDestination();
+          // out2 = new Gain(0.5).toDestination();
 
           store.addToRegistry({
             id: 0,
-            node: {
-              inlets,
-            },
+            node: { inlets },
           });
 
-console.log('sanity');
 
 
           // Play a quick blip sound
           const synth = new Synth();
-          synth.connect(out1);
+          synth.connect(/* out1 */inlets[1].audio);
           synth.triggerAttackRelease("C4", "8n");
 
 
@@ -93,10 +92,6 @@ console.log('sanity');
         const modRef: HTMLElement | null = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
         if (!modRef) throw new Error('Could not find #modules element');
 
-        window.addEventListener('resize', determinePosition);
-        modRef.addEventListener('scroll', determinePosition);
-        // determinePosition();
-
         function determinePosition() {
           const m: HTMLElement = el.value!;
           const x = modRef!.scrollLeft + m.getBoundingClientRect().left;  // scroll offset + viewport offset
@@ -105,6 +100,12 @@ console.log('sanity');
           masterModule.value.x = x;
           masterModule.value.y = y;
         }
+
+        window.addEventListener('resize', determinePosition);
+        modRef.addEventListener('scroll', determinePosition);
+
+        determinePosition();
+
       });
 
       function setGain(g: number) {
