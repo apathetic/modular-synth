@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import MasterOut from './MasterOut.vue';
-import { useAppStore } from '@/stores';
+import { useAppStore } from '@/stores/app';
 import { context } from '@/audio';
 
 // Mock the store
-vi.mock('@/stores', () => ({
+vi.mock('@/stores/app', () => ({
   useAppStore: vi.fn(() => ({
     patch: {
       modules: [{ x: 0, y: 0 }]

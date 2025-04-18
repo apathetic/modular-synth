@@ -23,11 +23,8 @@
     "src/**/*.ts",
     "src/**/*.js",
     "src/**/*.vue",
-    // "globals.d.ts",
-    // "src/types/generated.ts"
   ],
   "exclude": [
-    "src/**/__tests__/*",
     "tests/OLD",
     "node_modules"
   ]
