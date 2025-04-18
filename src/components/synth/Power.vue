@@ -32,8 +32,8 @@
           // context.rawContext.resume();
           // transport.start(); // no wait, do this in the Clock component
         } else {
-          // context.rawContext.suspend(0);
-          // await (context.rawContext as AudioContext).suspend();
+          context.rawContext.suspend(0);
+          await (context.rawContext as AudioContext).suspend();
         }
 
         // toggle power after the `awaits` as there are watch's on it

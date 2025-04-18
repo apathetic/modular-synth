@@ -7,8 +7,8 @@
     @mouseout="clearFocus"
   >
 
-    <div class="module-interface" v-if="power">
-      <VU :audio="out1" />
+    <div class="module-interface">
+      <VU :audio="inlets[0].audio" />
       <input
         type="range"
         orient="vertical"
@@ -17,7 +17,7 @@
         step="0.05"
         v-model="gain"
       />
-      <VU :audio="out2" />
+      <VU :audio="inlets[1].audio" />
     </div>
 
     <div class="module-connections">
@@ -29,7 +29,7 @@
 
 <script lang="ts">
   import { defineComponent, ref, computed, markRaw, watch, onMounted } from 'vue';
-  import { Gain,     AMOscillator,Synth } from 'tone';
+  import { Gain } from 'tone';
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
   import VU from '../UI/VU';
@@ -75,16 +75,6 @@
             id: 0,
             node: { inlets },
           });
-
-
-
-          // Play a quick blip sound
-          const synth = new Synth();
-          synth.connect(/* out1 */inlets[1].audio);
-          synth.triggerAttackRelease("C4", "8n");
-
-
-
         }
       });
 
@@ -105,13 +95,16 @@
         modRef.addEventListener('scroll', determinePosition);
 
         determinePosition();
-
       });
 
       function setGain(g: number) {
-        // if (!out1 || !out2) return;
-        (out1 as Gain).gain.rampTo(g, 0.1);
-        (out2 as Gain).gain.rampTo(g, 0.1);
+        if (!power.value) return;
+
+        const out1: Gain = inlets[0].audio;
+        const out2: Gain = inlets[1].audio;
+
+        out1.gain.rampTo(g, 0.1);
+        out2.gain.rampTo(g, 0.1);
       }
 
       // AUDIO

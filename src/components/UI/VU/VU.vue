@@ -11,7 +11,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 
 <script lang="ts">
   import { defineComponent, ref, computed, watch, onMounted, onUnmounted } from 'vue';
-  import { Meter } from 'tone';
+  import { Meter, ToneAudioNode } from 'tone';
   import { useAppStore } from '@/stores/app';
   // import { Meter } from '@/audio';
   // import type { ToneAudioNode } from 'tone';
@@ -24,30 +24,37 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 
     props: {
       audio: {
-        // type: any,//ToneAudioNode,//<GainOptions<'gain'>>,
+        // type: ToneAudioNode, //
         default: null,
         required: true,
       }
     },
 
     setup(props, { expose }) {
+      if (props.audio === null) {
+        // throw new Error('VU must have an audio prop');
+        return;
+      }
+
+      const meter = new Meter();
       const store = useAppStore();
       const power = computed(() => store.power);
-
+      const vu = ref();
 
       let ticking = true;
-      const meter = new Meter();
-      const vu = ref();
-      /*
+      let meterContext: CanvasRenderingContext2D | null = null;
+      let meterGraident: CanvasGradient | null = null;
 
-      props.audio.connect(meter);
 
       watch(power, (on) => {
         if (on) {
+        console.log(props);
+          props.audio.connect(meter);
+          // props.audio!.connect(meter.input);
           loop();
         } else {
           // set buffer to 0 and update display
-          meterContext.clearRect(0, 0, 20, HEIGHT);
+          meterContext!.clearRect(0, 0, 20, HEIGHT);
         }
       });
 
@@ -58,13 +65,13 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
       onMounted(() => {
         // const meterContext = this.meterContext = this.$refs.vu.getContext('2d');
         // const meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, HEIGHT);
-        const meterContext = vu.getContext('2d');
-        const meterGraident = this.meterGraident = meterContext.createLinearGradient(0, 0, 0, HEIGHT);
+        meterContext = vu.value.getContext('2d');
+        meterGraident = meterContext!.createLinearGradient(0, 0, 0, HEIGHT);
+        // if (!meterContext) throw new Error('Could not find meter context');
 
-        this.audio.connect && this.audio.connect(this.meter.input);
 
-          meterContext.canvas.width = WIDTH;
-          meterContext.canvas.height = HEIGHT;
+        meterContext!.canvas.width = WIDTH;
+        meterContext!.canvas.height = HEIGHT;
 
         meterGraident.addColorStop(0, '#BFFF02');
         meterGraident.addColorStop(0.8, '#02FF24');
@@ -90,7 +97,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
         //                   x, y, w, h.  From upper-left
         meterContext.fillStyle = 'black';               // paint VU black
         meterContext.fillRect(0, 0, WIDTH, HEIGHT);
-        meterContext.fillStyle = this.meterGraident;    // fill relevant bits with gradient
+        meterContext.fillStyle = meterGraident;    // fill relevant bits with gradient
         meterContext.fillRect(0, 0, WIDTH, HEIGHT * level);
 
 
