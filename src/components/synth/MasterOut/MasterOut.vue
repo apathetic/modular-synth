@@ -32,7 +32,7 @@
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
   import { context, gain as gainNode } from '@/audio';
-  import VU from '../UI/VU';
+  import VU from '@/components/UI/VU';
 
 
   export default defineComponent({

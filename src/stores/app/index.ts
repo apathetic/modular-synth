@@ -132,7 +132,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     //  USER
     // -----------------------------------------------
 
-    isAuthenticated (state): boolean {
+    isAuthenticated (_state): boolean {
       // return !!state.session;
       return true;
     },
