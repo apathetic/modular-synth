@@ -7,7 +7,7 @@
     "@/stores": "./src/stores/index.ts",
     "@/stores/app": "./src/stores/app/index.ts",
     "@/stores/patch": "./src/stores/patch/index.ts",
-    "@/utils/register": "./src/utils/register/index.ts",
+    "@/utils/register": "./src/utils/register.ts",
     "@/utils/logger": "./src/utils/logger/index.ts",
     "@/utils/supabase": "./src/utils/supabase/index.ts",
     "@/utils/validatePatch": "./src/utils/validatePatch/index.ts",
@@ -19,6 +19,12 @@
     "@/types": "./src/types/index.ts"
   },
   "tasks": {
-    "start": "deno run --allow-net --allow-read --allow-env ./src/main.ts"
+    "start": "deno run --allow-net --allow-read --allow-env ./src/main.ts",
+    "serve": "deno run --allow-net --allow-read server.ts",
+    "deploy": "pnpm build && deno run --allow-net --allow-read server.ts"
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["dom", "dom.iterable", "esnext"]
   }
 }
