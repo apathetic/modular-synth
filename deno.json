@@ -17,5 +17,8 @@
     "@/styles/": "./src/styles/",
     "@/styles/styles.css": "./src/styles/styles.css",
     "@/types": "./src/types/index.ts"
+  },
+  "tasks": {
+    "start": "deno run --allow-net --allow-read --allow-env ./src/main.ts"
   }
 }

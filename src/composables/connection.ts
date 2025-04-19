@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import { useAppStore} from '@/stores/app';
-// import { getCurrentInstance } from 'vue';
+import type { Connection } from '@/types/generated';
 
 const emptyConnector = () => ({
   id: undefined,
@@ -12,7 +12,7 @@ const emptyConnector = () => ({
     id: undefined,
     port: undefined,
   }
-});
+} as unknown as Connection);
 const activeConnector = reactive(emptyConnector());
 
 /**
@@ -21,7 +21,7 @@ const activeConnector = reactive(emptyConnector());
 export function useConnection() {
   const store = useAppStore();
 
-  function startConnecting(id, port) {
+  function startConnecting(id: number, port: number) {
     // const instance = getCurrentInstance(); // gets the current component so we dont need to even pass port, id
 
     // needed to trigger the `watch` on the activeConnector (in instances where
@@ -33,7 +33,7 @@ export function useConnection() {
 		store.patch.i++;
   }
 
-  function stopConnecting(id, port) {
+  function stopConnecting(id: number, port: number) {
     if (!activeConnector.from.id) {
       // eg. an errant click on the inlet
       return;
