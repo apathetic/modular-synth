@@ -22,7 +22,7 @@
     "register-service-worker": "^1.7.2",
     "uuid": "^9.0.1",
     "vue": "^3.5.13",
-    "zod": "^3.24.2"
+    "zod": "4.0.0-beta.20250424T163858"
   },
   "devDependencies": {
     "@testing-library/vue": "^8.1.0",

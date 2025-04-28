@@ -55,12 +55,12 @@ export const PatchSchema = z.object({
 
 declare global {
   type moduleType = z.infer<typeof ModuleTypeEnum>;
-  type Module = z.infer<typeof ModuleSchema>;
-  type MasterOut = z.infer<typeof MasterOutSchema>;
+  type Module     = z.infer<typeof ModuleSchema>;
+  type MasterOut  = z.infer<typeof MasterOutSchema>;
   type Connection = z.infer<typeof ConnectionSchema>;
-  type Preset = z.infer<typeof PresetSchema>;
-  type Patch = z.infer<typeof PatchSchema>;
-  type parameterLabel = `${number}-${string}`;
+  type Preset     = z.infer<typeof PresetSchema>;
+  type Patch      = z.infer<typeof PatchSchema>;
+  type parameterLabel = `${number}-${string}`; // ${ModuleTypeEnum}-${string}`;
   // type Parameters = Record<parameterLabel, string | number>;
 }
 
