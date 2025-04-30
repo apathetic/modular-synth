@@ -1,30 +1,32 @@
 {
   "imports": {
-    "vue": "npm:vue@3.2.39",
-    "@/": "./src/",
+    "@oak/oak": "jsr:@oak/oak@^17.0.0",
+    "vue": "npm:vue@^3.4",
+    "vue-router": "npm:vue-router@^4.2",
     "@/App.vue": "./src/App.vue",
+    "@/": "./src/",
+    "@/constants": "./src/constants.ts",
     "@/audio": "./src/audio/index.ts",
     "@/stores": "./src/stores/index.ts",
     "@/stores/app": "./src/stores/app/index.ts",
     "@/stores/patch": "./src/stores/patch/index.ts",
-    "@/utils/register": "./src/utils/register.ts",
-    "@/utils/logger": "./src/utils/logger/index.ts",
-    "@/utils/supabase": "./src/utils/supabase/index.ts",
-    "@/utils/validatePatch": "./src/utils/validatePatch/index.ts",
-    "@/composables": "./src/composables/index.ts",
-    "@/components": "./src/components/index.ts",
-    "@/components/UI": "./src/components/UI/index.ts",
     "@/styles/": "./src/styles/",
-    "@/styles/styles.css": "./src/styles/styles.css",
-    "@/types": "./src/types/index.ts"
+    "@/utils/logger": "./src/utils/logger.ts",
+    "@/utils/register": "./src/utils/register.ts",
+    "@/utils/validatePatch": "./src/utils/validatePatch.ts",
+    "@/types/generated": "./src/types/generated.ts"
   },
   "tasks": {
     "start": "deno run --allow-net --allow-read --allow-env ./src/main.ts",
-    "serve": "deno run --allow-net --allow-read server.ts",
-    "deploy": "pnpm build && deno run --allow-net --allow-read server.ts"
+    "build": "pnpm vite build"
   },
   "compilerOptions": {
-    "allowJs": true,
     "lib": ["dom", "dom.iterable", "esnext"]
+  },
+  "deploy": {
+    "project": "de45f9f1-c75e-43ba-9957-4d84053c52dd",
+    "exclude": ["**/node_modules"],
+    "include": ["./dist/**", "server.ts"],
+    "entrypoint": "server.ts"
   }
 }

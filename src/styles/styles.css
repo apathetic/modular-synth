@@ -46,7 +46,7 @@
 }
 
 html {
-  background: linear-gradient(#000a,#000a), url('/images/bg.jpg');
+  background: linear-gradient(#141414aa, #000000aa), url('/images/bg.jpg');
 }
 
 html, body {

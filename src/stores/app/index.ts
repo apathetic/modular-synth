@@ -3,7 +3,7 @@ import { state as emptyPatch } from '@/stores/patch';
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
-import { /* fetch, create, */ save, /* remove */ } from '@/utils/supabase';
+// import { /* fetch, create, */ save, /* remove */ } from '@/utils/supabase';
 import { /* validateData, */ fixPatch, isPatch } from '@/utils/validatePatch';
 import { moduleSize } from '@/constants';
 import type { AppState, RackUnit, SynthNode, MouseCoords, GridCoords } from '@/types/globals';
@@ -203,13 +203,13 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       // const patch = validatePatch(this.patch);
       const patch: Patch = isPatch(this.patch) ? this.patch : fixPatch(this.patch);
 
-      save({ ...patch /*, id: patch.uuid */ })
-        .then(() => {
-          console.log('saved: ', patch.name);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // save({ ...patch /*, id: patch.uuid */ })
+      //   .then(() => {
+      //     console.log('saved: ', patch.name);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     },
 
     /**
