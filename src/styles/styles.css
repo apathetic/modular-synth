@@ -46,11 +46,7 @@
 }
 
 html {
-  background: linear-gradient(
-    rgba(0, 0, 0, 0.666),
-    rgba(0, 0, 0, 0.666) ),
-    url('/images/bg.jpg'
-  );
+  background: linear-gradient(#000a,#000a), url('/images/bg.jpg');
 }
 
 html, body {

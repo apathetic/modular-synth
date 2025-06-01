@@ -21,8 +21,8 @@ dependencies:
     specifier: ^3.5.13
     version: 3.5.13(typescript@5.6.3)
   zod:
-    specifier: 4.0.0-beta.20250424T163858
-    version: 4.0.0-beta.20250424T163858
+    specifier: 3.25.44
+    version: 3.25.44
 
 devDependencies:
   '@testing-library/vue':
@@ -1297,10 +1297,6 @@ packages:
       typescript: 5.6.3
       vue: 3.5.13(typescript@5.6.3)
     dev: true
-
-  /@zod/core@0.9.0:
-    resolution: {integrity: sha512-bVfPiV2kDUkAJ4ArvV4MHcPZA8y3xOX6/SjzSy2kX2ACopbaaAP4wk6hd/byRmfi9MLNai+4SFJMmcATdOyclg==}
-    dev: false
 
   /abbrev@2.0.0:
     resolution: {integrity: sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==}
@@ -3767,8 +3763,6 @@ packages:
       fd-slicer: 1.1.0
     dev: true
 
-  /zod@4.0.0-beta.20250424T163858:
-    resolution: {integrity: sha512-fKhW+lEJnfUGo0fvQjmam39zUytARR2UdCEh7/OXJSBbKScIhD343K74nW+UUHu/r6dkzN6Uc/GqwogFjzpCXg==}
-    dependencies:
-      '@zod/core': 0.9.0
+  /zod@3.25.44:
+    resolution: {integrity: sha512-BVwH2PnqCwxUN+SNjzRL6kcGvvz1JuojtB+uZB1Hg8DA56Zqn0pjpIwMrb1IhUsF75DjpEe4fhxPKO6+AErqzw==}
     dev: false
