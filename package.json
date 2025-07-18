@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm vite build",
-    "buildXX": "pnpm ts && pnpm vite build",
     "preview": "vite preview",
     "ts": "vue-tsc --build",
     "test:e2e": "cypress open --component",
@@ -22,7 +21,7 @@
     "register-service-worker": "^1.7.2",
     "uuid": "^9.0.1",
     "vue": "^3.5.13",
-    "zod": "3.25.44"
+    "zod": "4.0.5"
   },
   "devDependencies": {
     "@testing-library/vue": "^8.1.0",

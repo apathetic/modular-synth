@@ -1,6 +1,6 @@
 import { watch } from 'vue';
 import { createPinia } from 'pinia';
-import { useAppStore } from './app';
+import { useAppStore } from '@/stores/app';
 import { validateData } from '@/utils/validatePatch';
 import type { App as Application } from 'vue';
 

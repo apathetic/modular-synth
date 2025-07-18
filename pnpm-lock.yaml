@@ -21,8 +21,8 @@ dependencies:
     specifier: ^3.5.13
     version: 3.5.13(typescript@5.6.3)
   zod:
-    specifier: 3.25.44
-    version: 3.25.44
+    specifier: 4.0.5
+    version: 4.0.5
 
 devDependencies:
   '@testing-library/vue':
@@ -3763,6 +3763,6 @@ packages:
       fd-slicer: 1.1.0
     dev: true
 
-  /zod@3.25.44:
-    resolution: {integrity: sha512-BVwH2PnqCwxUN+SNjzRL6kcGvvz1JuojtB+uZB1Hg8DA56Zqn0pjpIwMrb1IhUsF75DjpEe4fhxPKO6+AErqzw==}
+  /zod@4.0.5:
+    resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
     dev: false
