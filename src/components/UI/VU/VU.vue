@@ -28,7 +28,7 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 
     props: {
       audio: {
-        type: AudioNode,
+        type: window['AudioNode'],
         default: null
       }
     },

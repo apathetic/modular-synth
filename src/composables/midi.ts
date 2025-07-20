@@ -12,16 +12,16 @@ export default function useEventsBus(){
  * @see https://github.com/vueuse/vueuse/blob/main/packages/core/useEventBus/index.ts
  */
 
-import { getCurrentScope } from 'vue';
+// import { getCurrentScope } from 'vue';
 // import type { EffectScope } from 'vue';
 
 const events = new Map();
 
 export type EventBusListener<T = unknown, P = any> = (event: T, payload?: P) => void;
 export type EventBusEvents<T, P = any> = EventBusListener<T, P>[];
-export type EventBusIdentifier<T = unknown> = EventBusKey<T> | string | number;
+export type EventBusIdentifier=any;//<T = unknown> = EventBusKey<T> | string | number;
 
-export interface EventBusKey<_T> extends Symbol { }
+// export interface EventBusKey<_T> extends Symbol { }
 
 export interface UseEventBusReturn<T, P> {
   /**
@@ -43,7 +43,7 @@ export interface UseEventBusReturn<T, P> {
 }
 
 export function useEventBus<T = unknown, P = any>(key: EventBusIdentifier<T>): UseEventBusReturn<T, P> {
-  const scope = getCurrentScope();
+  // const scope = getCurrentScope();
 
   function on(listener: EventBusListener<T, P>) {
     const listeners = events.get(key) || [];

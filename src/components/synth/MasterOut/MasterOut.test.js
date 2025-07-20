@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import MasterOut from './MasterOut.vue';
 import { useAppStore } from '@/stores/app';
-import { context } from '@/audio';
+// import { context } from '@/audio';
 
 // Mock the store
 vi.mock('@/stores/app', () => ({

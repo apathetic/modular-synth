@@ -237,8 +237,8 @@ describe('fixPatch', () => {
   });
 
   it('should throw an error if patch cannot be fixed', () => {
-    // Spy on isPatch instead of replacing it
-    const mockIsPatch = vi.spyOn(ValidatePatchModule, 'isPatch')
+    const mockIsPatch = vi
+      .spyOn(ValidatePatchModule, 'isPatch')
       .mockImplementationOnce(() => false);
 
     const patch: Partial<Patch> = {
@@ -269,8 +269,8 @@ describe('validateData', () => {
   });
 
   it('should validate each patch in the array', () => {
-    // Spy on isPatch instead of replacing it
-    const mockIsPatch = vi.spyOn(ValidatePatchModule, 'isPatch')
+    const mockIsPatch = vi
+      .spyOn(ValidatePatchModule, 'isPatch')
       .mockImplementation(() => true);
 
     const patches = [
@@ -287,8 +287,8 @@ describe('validateData', () => {
   });
 
   it('should fix invalid patches in the array', () => {
-    // Spy on isPatch and fixPatch instead of replacing them
-    const mockIsPatch = vi.spyOn(ValidatePatchModule, 'isPatch')
+    const mockIsPatch = vi
+      .spyOn(ValidatePatchModule, 'isPatch')
       .mockImplementationOnce(() => true)
       .mockImplementationOnce(() => false);
 

@@ -14,7 +14,7 @@ let positionHighlight;
 export function useSortable() {
   let maxGridCols;
   let widestItem;
-  let tallestItem;
+  let _tallestItem;
   let previousDragPosition;
   const store = useAppStore();
   // const activeModule = computed(() => store.activeModule);
@@ -101,8 +101,6 @@ export function useSortable() {
     });
 
     handle.style.width = (gridlist.grid.length + widestItem) * rackWidth;
-
-    tallestItem++;  // so that linter doesn't complain of unused variable
   }
 
 

@@ -203,6 +203,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       // const patch = validatePatch(this.patch);
       const patch: Patch = isPatch(this.patch) ? this.patch : fixPatch(this.patch);
 
+      console.log('saving: ', JSON.stringify(patch));
       // save({ ...patch /*, id: patch.uuid */ })
       //   .then(() => {
       //     console.log('saved: ', patch.name);

@@ -41,4 +41,3 @@ All patch data is, by default, stored in LocalStorage. However, if you wish to p
 * [Component structure](docs/components.md)
 * [Component roadmap](docs/roadmap.md)
 * [Application events](docs/events.md)
-
