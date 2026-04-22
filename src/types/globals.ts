@@ -1,3 +1,4 @@
+import type { SynthModule } from './audio';
 
 // type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
 
@@ -73,32 +74,16 @@ export type RackUnit = {
   node: SynthNode;
 };
 
-// A reference to the rendered node (ie. in the APP)
-//  * with webaudio inlets/outlets
-//  * also includes coords?
-export type SynthNode = {
-  inlets?: Inlet[];
-  outlets?: Outlet[];
-};
-
-
-// type port = {
-type Inlet = {
-  audio?: AudioNode; ///   audioNode: any; // webaudioNOde / elementary node / tone class / etc
-  data?: () => void;
-  label?: string;
-  desc?: string;
-}
-
-type Outlet = {
-  audio?: AudioNode;
-  data?: () => void;
-  label?: string;
-  desc?: string;
-}
-
-// export type Inlet = port;
-// export type Outlet = port;
+/**
+ * Registry-facing view of a live rack unit: whatever a module component
+ * `expose()`s for routing. Weaker than `SynthModule` on purpose — the
+ * registry accepts anything that looks like a port-bearing thing, including
+ * legacy Options-API modules that don't yet implement `destroy()`.
+ *
+ * Once every module is migrated to a `SynthModule`, this alias collapses
+ * and consumers can switch to `SynthModule` directly (Phase 4 cleanup).
+ */
+export type SynthNode = Partial<Pick<SynthModule, 'inlets' | 'outlets'>>;
 
 
 

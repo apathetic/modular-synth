@@ -20,97 +20,51 @@
 
 
 <script lang="ts">
-  import { signal } from '@/audio';
+  import { defineComponent, ref, watch, onUnmounted } from 'vue';
+  import { Envelope } from '@/audio/modules/envelope';
 
-  export default {
-    inject: [ 'context' ],
+  /*
+    Thin UI shell around `Envelope`.
+    The component's job is to own the four reactive refs bound to the knobs
+    and forward their values into the class.
+  */
+  export default defineComponent({
+    name: 'Env',
+
     props: {
       id: {
         default: undefined,
-        required: true
-      }
+        required: true,
+      },
     },
 
-    data() {
+    setup(_props, { expose }) {
+      const env = new Envelope({ attack: 0.1, decay: 0.1, sustain: 0.6, release: 0.1 });
+
+      const A = ref(env.attack);
+      const D = ref(env.decay);
+      const S = ref(env.sustain);
+      const R = ref(env.release);
+
+      watch(A, (v) => { env.attack  = v; });
+      watch(D, (v) => { env.decay   = v; });
+      watch(S, (v) => { env.sustain = v; });
+      watch(R, (v) => { env.release = v; });
+
+      onUnmounted(() => env.destroy());
+
+      expose({
+        inlets: env.inlets,
+        outlets: env.outlets,
+      });
+
       return {
-        name: 'Env',
-
-        A: 0.1,
-        D: 0.1,
-        S: 0.6,
-        R: 0.1,
-
-        inlets: [
-          {
-            label: 'vel',
-            desc: 'Acts as a trigger for the envelope'
-          },
-          {
-            label: 'mod',
-            desc: '???'
-          }
-        ],
-
-        outlets: [
-          { label: 'out' }
-        ]
+        A, D, S, R,
+        inlets: env.inlets,
+        outlets: env.outlets,
       };
     },
-
-    created() {
-      this.adsr = this.context.createGain();
-      this.adsr.gain.value = 0;
-
-      this.inlets[0].data = this.gate;      // input is mapped to gate fn
-      // this.inlets[1].data = function() {};  // mod?
-
-      this.outlets[0].audio = this.adsr;
-      signal(1).connect(this.adsr);
-    },
-
-    unmounted() {
-      signal(1).disconnect(this.adsr);
-      this.adsr.disconnect(); // this is done in Connection
-
-      // DESTROY signal? TODO
-    },
-
-    methods: {
-      gate(velocity) {
-        if (velocity) {
-          this.start();
-        } else {
-          this.stop();
-        }
-      },
-
-      start() {   // "trigger" ?
-        const now = this.context.currentTime;
-        const adsr = this.adsr.gain;
-        const currentValue = adsr.value;  // for the case where the previous envelope is still active
-
-        adsr.cancelScheduledValues(now);
-        adsr.setValueAtTime(currentValue, now);
-
-
-        // perhaps better:
-
-        // setTargetAtTime(to, now, duration)
-        // exponentialRampToValueAtTime
-        adsr.linearRampToValueAtTime(1, now + this.A);
-        adsr.linearRampToValueAtTime(this.S, now + this.A + this.D);
-      },
-
-      stop() {    // "release"
-        const now = this.context.currentTime;
-        const adsr = this.adsr.gain;
-
-        adsr.cancelScheduledValues(0);
-        adsr.setValueAtTime(adsr.value, now);
-        adsr.linearRampToValueAtTime(0, now + this.R);
-      }
-    }
-  };
+  });
 </script>
 
 
