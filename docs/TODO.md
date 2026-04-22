@@ -38,6 +38,41 @@
 
 
 - TESTING
+  - Tests worth writing (salvaged from the deleted `tests/OLD` folder — the
+    code there was unrunnable against the current stack but the author's
+    list of behaviors-to-cover still reads well):
+    - OSC / Oscillator
+      - can set frequency and it lands on `osc.frequency.value`
+      - cannot be set to DC (default-clamped to a safe non-zero on 0 input)
+      - handles all 4 basic waveform types (triangle, sawtooth, sine, square)
+      - can set modulation depth via an input connection
+      - PWM pulse-width bounds and shape
+      - frequency modulation via a second oscillator input
+    - Envelope
+      - passes no signal before being triggered
+      - passes signal once `triggerAttack()` is called
+      - release tail plays out over the release duration after trigger-off
+    - LFO
+      - output stays within `[−depth, +depth]` range
+      - can be rectified via offset (output stays positive)
+      - depth can be modulated by an input
+    - Knob (UI)
+      - linear vs. logarithmic mapping mode
+      - respects `min`, `max`, default, and decimal-precision props
+      - writes to `store.setParameter` on user drag, not on mount
+      - picks up the store value on patch load (`watchEffect` path)
+    - Connection / routing (complement to `routing.test.ts`)
+      - audio outlets cannot connect to data-only inlets (and vice-versa)
+      - removing a connection disconnects both ends (no orphaned audio edges)
+      - data-rate routing fires the downstream watcher only on value change
+    - Rack / Sortable
+      - DnD reorder persists `col`/`row` to the patch
+      - adding a module finds the next free grid slot
+      - removing a module compacts sibling positions (if that's the policy)
+    - Patch lifecycle
+      - switching patches fully tears down the audio registry before rebuild
+      - DEL on the MasterOut sentinel is a no-op (see also `removeModule`
+        guard discussed in the MasterOut-singleton refactor)
 
 
 - MODULES
