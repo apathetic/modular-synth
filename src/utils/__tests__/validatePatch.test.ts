@@ -109,7 +109,7 @@ describe('isPreset', () => {
   it('should return true for a valid preset', () => {
     const preset = {
       name: 'Default',
-      parameters: { '1-frequency': 440 }
+      parameters: { 1: { frequency: 440 } }
     };
     expect(isPreset(preset)).toBe(true);
   });

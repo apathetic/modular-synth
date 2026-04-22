@@ -27,21 +27,30 @@ afterEach(() => {
 });
 
 describe('setParameter', () => {
-  it('writes `${moduleId}-${param}` into the active preset', () => {
+  it('writes parameters[moduleId][param] into the active preset', () => {
     const store = freshStore();
 
-    store.setParameter({ id: '1-freq', value: 880 });
+    store.setParameter({ moduleId: 1, param: 'freq', value: 880 });
 
-    expect(store.parameters['1-freq']).toBe(880);
-    expect(store.patch.presets[store.presetId]!.parameters['1-freq']).toBe(880);
+    expect(store.getParameter(1, 'freq')).toBe(880);
+    expect(store.patch.presets[store.presetId]!.parameters[1]!.freq).toBe(880);
   });
 
-  it('overwrites an existing value for the same key', () => {
+  it('overwrites an existing value for the same (moduleId, param)', () => {
     const store = freshStore();
-    store.setParameter({ id: '1-freq', value: 100 });
-    store.setParameter({ id: '1-freq', value: 200 });
+    store.setParameter({ moduleId: 1, param: 'freq', value: 100 });
+    store.setParameter({ moduleId: 1, param: 'freq', value: 200 });
 
-    expect(store.parameters['1-freq']).toBe(200);
+    expect(store.getParameter(1, 'freq')).toBe(200);
+  });
+
+  it('creates the module bucket on first write', () => {
+    const store = freshStore([blank()]);
+    expect(store.patch.presets[0]!.parameters[7]).toBeUndefined();
+
+    store.setParameter({ moduleId: 7, param: 'foo', value: 42 });
+
+    expect(store.patch.presets[0]!.parameters[7]).toEqual({ foo: 42 });
   });
 
   it('only mutates the currently-selected preset', () => {
@@ -49,66 +58,65 @@ describe('setParameter', () => {
     store.addPreset(); // clones current preset and selects it
     expect(store.presetId).toBe(1);
 
-    store.setParameter({ id: '1-freq', value: 999 });
+    store.setParameter({ moduleId: 1, param: 'freq', value: 999 });
 
-    expect(store.patch.presets[1]!.parameters['1-freq']).toBe(999);
-    expect(store.patch.presets[0]!.parameters['1-freq']).not.toBe(999);
+    expect(store.patch.presets[1]!.parameters[1]!.freq).toBe(999);
+    expect(store.patch.presets[0]!.parameters[1]!.freq).not.toBe(999);
   });
 
   it('accepts string values (e.g. Dropdown selections)', () => {
     const store = freshStore();
-    store.setParameter({ id: '2-waveform', value: 'square' });
-    expect(store.parameters['2-waveform']).toBe('square');
-  });
-
-  it('never writes a value under a synthetic `undefined-*` key', () => {
-    // Smoke test to document the contract enforced by `useModuleId`:
-    // if a control ever lacked a parent module id, `useModuleId` would throw
-    // at construction time — so no `undefined-*` key can ever be produced
-    // by normal UI interaction.
-    const store = freshStore();
-    expect(
-      Object.keys(store.parameters).some((k) => k.startsWith('undefined-')),
-    ).toBe(false);
+    store.setParameter({ moduleId: 2, param: 'waveform', value: 'square' });
+    expect(store.getParameter(2, 'waveform')).toBe('square');
   });
 });
 
 describe('removeParameter', () => {
-  it('deletes the key from every preset, not just the active one', () => {
+  it('deletes the leaf from every preset, not just the active one', () => {
     const store = freshStore();
-    store.setParameter({ id: '1-freq', value: 100 });
-    store.addPreset(); // inherits `1-freq`
-    store.setParameter({ id: '1-mod', value: 0.5 });
+    store.setParameter({ moduleId: 1, param: 'freq', value: 100 });
+    store.addPreset(); // inherits `1.freq`
+    store.setParameter({ moduleId: 1, param: 'mod', value: 0.5 });
 
-    expect(store.patch.presets[0]!.parameters['1-freq']).toBe(100);
-    expect(store.patch.presets[1]!.parameters['1-freq']).toBe(100);
+    expect(store.patch.presets[0]!.parameters[1]!.freq).toBe(100);
+    expect(store.patch.presets[1]!.parameters[1]!.freq).toBe(100);
 
-    store.removeParameter('1-freq');
+    store.removeParameter({ moduleId: 1, param: 'freq' });
 
-    expect(store.patch.presets[0]!.parameters['1-freq']).toBeUndefined();
-    expect(store.patch.presets[1]!.parameters['1-freq']).toBeUndefined();
-    // unrelated keys untouched
-    expect(store.patch.presets[1]!.parameters['1-mod']).toBe(0.5);
+    expect(store.patch.presets[0]!.parameters[1]?.freq).toBeUndefined();
+    expect(store.patch.presets[1]!.parameters[1]?.freq).toBeUndefined();
+    // unrelated leaves untouched
+    expect(store.patch.presets[1]!.parameters[1]!.mod).toBe(0.5);
   });
 
-  it('is a no-op for an unknown key', () => {
-    const store = freshStore();
-    store.setParameter({ id: '1-freq', value: 100 });
+  it('drops the module bucket when its last leaf is removed', () => {
+    const store = freshStore([blank()]);
+    store.setParameter({ moduleId: 9, param: 'only', value: 1 });
+    expect(store.patch.presets[0]!.parameters[9]).toEqual({ only: 1 });
 
-    expect(() => store.removeParameter('9-missing')).not.toThrow();
-    expect(store.parameters['1-freq']).toBe(100);
+    store.removeParameter({ moduleId: 9, param: 'only' });
+
+    expect(store.patch.presets[0]!.parameters[9]).toBeUndefined();
+  });
+
+  it('is a no-op for an unknown (moduleId, param)', () => {
+    const store = freshStore();
+    store.setParameter({ moduleId: 1, param: 'freq', value: 100 });
+
+    expect(() => store.removeParameter({ moduleId: 9, param: 'missing' })).not.toThrow();
+    expect(store.getParameter(1, 'freq')).toBe(100);
   });
 });
 
 describe('addPreset / removePreset', () => {
   it('addPreset clones the current preset parameters and selects the new one', () => {
     const store = freshStore();
-    store.setParameter({ id: '1-freq', value: 440 });
+    store.setParameter({ moduleId: 1, param: 'freq', value: 440 });
 
     store.addPreset();
 
     expect(store.presetId).toBe(1);
-    expect(store.patch.presets[1]!.parameters['1-freq']).toBe(440);
+    expect(store.patch.presets[1]!.parameters[1]!.freq).toBe(440);
   });
 
   it('removePreset refuses to delete the last preset', () => {
@@ -131,16 +139,23 @@ describe('addPreset / removePreset', () => {
 });
 
 describe('basicPatch preset defaults', () => {
-  // Regression guard for the `undefined-*` bug: keys must be scoped by the
-  // owning module id, matching what `useParameter` writes at runtime.
-  it('ships preset parameter keys in the `${moduleId}-${param}` shape', () => {
-    const { presets } = basicPatch();
-    const keys = Object.keys(presets[0]!.parameters);
+  // Regression guard: parameters must be nested by numeric moduleId, and the
+  // moduleIds must correspond to real modules in the patch.
+  it('ships preset parameters in `parameters[moduleId][name]` shape', () => {
+    const { modules, presets } = basicPatch();
+    const ids = new Set(modules.map((m) => (m as Module).id));
+    const params = presets[0]!.parameters;
 
-    expect(keys.length).toBeGreaterThan(0);
-    for (const key of keys) {
-      expect(key).toMatch(/^\d+-[A-Za-z]+$/);
-      expect(key.startsWith('undefined-')).toBe(false);
+    const moduleIdKeys = Object.keys(params);
+    expect(moduleIdKeys.length).toBeGreaterThan(0);
+
+    for (const key of moduleIdKeys) {
+      expect(key).toMatch(/^\d+$/);
+      expect(ids.has(Number(key))).toBe(true);
+
+      const bucket = params[Number(key) as unknown as keyof typeof params];
+      expect(typeof bucket).toBe('object');
+      expect(bucket && Object.keys(bucket).length).toBeGreaterThan(0);
     }
   });
 });

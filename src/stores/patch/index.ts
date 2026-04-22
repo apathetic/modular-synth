@@ -33,7 +33,8 @@ export const state = () => <Patch>{
  * A small, playable starting point: NoteIn -> OSC -> VCA -> MasterOut with an
  * Env modulating the VCA. Ships with a `Vanilla` preset of sensible defaults.
  *
- * NOTE: preset parameter keys must match the `${moduleId}-${param}` shape that
+ * NOTE: preset parameters are indexed first by `moduleId`, then by parameter
+ * name — e.g. `parameters[1].freq = 100`. This is the same shape that
  * `useParameter` writes at runtime.
  */
 export const basicPatch = (): Patch => (<Patch>{
@@ -58,14 +59,8 @@ export const basicPatch = (): Patch => (<Patch>{
   presets: [{
     name: 'Vanilla',
     parameters: {
-      '1-mod': 0,
-      '1-freq': 100,
-      '1-PW': 0,
-      '1-detune': -500,
-      '5-attack': 0.01,
-      '5-decay': 0.01,
-      '5-sustain': 0.01,
-      '5-release': 0.01,
+      1: { mod: 0, freq: 100, PW: 0, detune: -500 },
+      5: { attack: 0.01, decay: 0.01, sustain: 0.01, release: 0.01 },
     }
   }]
 });

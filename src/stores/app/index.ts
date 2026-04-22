@@ -6,8 +6,9 @@ import { log } from '@/utils/logger';
 // import { /* fetch, create, */ save, /* remove */ } from '@/utils/db';
 import { fixPatch, isPatch } from '@/utils/validatePatch';
 import { loadPatches, clearStorage } from '@/utils/persistence';
+import { registry } from '@/audio/registry';
 import { moduleSize } from '@/constants';
-import type { AppState, RackUnit, SynthNode, MouseCoords, GridCoords } from '@/types/globals';
+import type { AppState, RackUnit, MouseCoords, GridCoords } from '@/types/globals';
 // import type {  MasterOut, Module } from '@/types/generated';
 
 
@@ -32,17 +33,12 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     presetId: 0,
 
     /**
-     * Stores the patch's active `AudioNode`s
-     * @type {Record<number, SynthNode>}
-     *
-     * Modules (UI) are serializeable, and stored as JSON.
-     * Nodes (audio) are determined at run-time, and stored in the registry.
-     */
-    registry: {},
-
-    /**
      * The patch currently being edited
      * @type {Patch}
+     *
+     * Live `AudioNode`s associated with `patch.modules` live in the
+     * module-level `registry` (`@/audio/registry`) — NOT in Pinia state —
+     * because audio handles aren't serializable and don't need reactivity.
      */
     patch: emptyPatch(),
 
@@ -99,11 +95,20 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       return this.presets[state.presetId];
     },
 
-    parameters(): Record<parameterLabel, string | number> {
+    parameters(): ParameterMap {
       return this.preset?.parameters || {};
     },
 
-    getNode: (state) => (id: number) => state.registry[id],
+    /**
+     * Resolve a single parameter value for the active preset.
+     */
+    getParameter() {
+      return (moduleId: number, name: string): ParameterValue | undefined => (
+        this.preset?.parameters[moduleId]?.[name]
+      );
+    },
+
+    getNode: () => (id: number) => registry.get(id),
 
     /**
      * Returns a RackUnit that combines Module and SynthNode as separate properties
@@ -112,7 +117,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     getRackUnit() {
       return (id: number): RackUnit | undefined => {
         const module = this.modules.find((mod: Module) => mod.id === id);
-        const node = this.registry[id];
+        const node = registry.get(id);
 
         if (!module || !node) return undefined;
 
@@ -238,7 +243,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       this.patches = [basicPatch()];
       this.patchId = 0;
       this.presetId = 0;
-      this.registry = {};
+      registry.clear();
       this.patch = this.patches[0];
       clearStorage();
     },
@@ -304,8 +309,6 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       }
     },
 
-    addToRegistry({ id, node }: { id: number; node: SynthNode }) { this.registry[id] = node; },
-    removeFromRegistry (id: number) { delete this.registry[id]; },
     setActive(id: number) { this.activeId = id; },
     clearActive() { this.activeId = undefined; },
     setFocus(id: number) { this.hoveredId = id; },
@@ -343,7 +346,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       const { activeId, hoveredId, modules, connections } = this;
 
       // only delete active/hoveredId modules
-      if (activeId === hoveredId) {
+      if (activeId === hoveredId && activeId !== undefined) {
         try {
           this.patch.modules = modules.filter((m: Module) => m.id !== activeId);
         } catch (e) {
@@ -356,7 +359,12 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
           }
         });
 
-        // Note: KNOB / SLIDERS will remove themselves, yay!
+        // Drop the module's parameter bucket from every preset. Knobs also
+        // clean up their own leaves on unmount, but doing it here keeps the
+        // graph consistent even if parameters were set without a live knob.
+        this.patch.presets.forEach((preset: Preset) => {
+          delete preset.parameters[activeId];
+        });
       }
     },
 
@@ -378,13 +386,17 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     /**
-     * Adds an new, empty parameter-configuration object.
+     * Adds a new, empty preset object. The new object inherits the current
+     * preset's values as a deep copy.
      */
     addPreset() {
-      const preset = {
-        name: '<empty>',
-        parameters: Object.assign({}, this.preset?.parameters)
-      };
+      const source: ParameterMap = this.preset?.parameters ?? {};
+      const parameters: ParameterMap = {};
+      for (const [moduleId, bucket] of Object.entries(source)) {
+        parameters[Number(moduleId)] = { ...bucket };
+      }
+
+      const preset: Preset = { name: '<empty>', parameters };
 
       this.presetId = this.presets.push(preset) - 1; // select new preset by default (push returns array length)
     },
@@ -404,15 +416,31 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       this.presetId = 0;
     },
 
-    setParameter (data: { id: parameterLabel; value: string | number }) {
-      if (this.parameters) {
-        this.parameters[data.id] = data.value;
-      }
+    /**
+     * Set a parameter value on the currently-selected preset.
+     */
+    setParameter(data: { moduleId: number; param: string; value: ParameterValue }) {
+      const preset = this.presets[this.presetId];
+      if (!preset) return;
+
+      const bucket = preset.parameters[data.moduleId] ?? (preset.parameters[data.moduleId] = {});
+      bucket[data.param] = data.value;
     },
 
-    removeParameter (id: parameterLabel) {
+    /**
+     * Remove a single parameter leaf from every preset. Cleans up the owning
+     * module bucket when it becomes empty.
+     */
+    removeParameter(data: { moduleId: number; param: string }) {
       this.presets.forEach((preset: Preset) => {
-        delete preset.parameters[id];
+        const bucket = preset.parameters[data.moduleId];
+        if (!bucket) return;
+
+        delete bucket[data.param];
+
+        if (Object.keys(bucket).length === 0) {
+          delete preset.parameters[data.moduleId];
+        }
       });
     }
 

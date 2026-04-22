@@ -37,9 +37,12 @@ export const ConnectionSchema = z.object({
 });
 
 
+// Nested parameter shape: `parameters[moduleId][paramName] = value`.
+// Object keys in JSON are strings — we coerce the outer key to number at the
+// type level but the on-disk form is always string-keyed.
 export const PresetSchema = z.object({
   name: z.string(),
-  parameters: z.record(z.string(), z.union([z.string(), z.number()]))
+  parameters: z.record(z.string(), z.record(z.string(), z.union([z.string(), z.number()])))
 });
 
 
@@ -60,8 +63,11 @@ declare global {
   type Connection = z.infer<typeof ConnectionSchema>;
   type Preset     = z.infer<typeof PresetSchema>;
   type Patch      = z.infer<typeof PatchSchema>;
-  type parameterLabel = `${number}-${string}`; // ${ModuleTypeEnum}-${string}`;
-  // type Parameters = Record<parameterLabel, string | number>;
+  type ParameterValue = string | number;
+  // `parameters[moduleId][paramName] = value`. `moduleId` is a number at
+  // runtime; JSON serialization coerces keys to strings and Record<number, …>
+  // accepts either at the type level.
+  type ParameterMap = Record<number, Record<string, ParameterValue>>;
 }
 
 
@@ -72,5 +78,4 @@ export {
   type Connection,
   type Preset,
   type Patch,
-//  parameterLabel
 }

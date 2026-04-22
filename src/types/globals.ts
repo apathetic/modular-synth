@@ -59,11 +59,6 @@ export type AppState = {
   patchId: number;  // active patch id
   presetId: number; // active parameter preset id
 
-  // references to all audio nodes in the current patch.
-  registry: {[value: number]: SynthNode};
-
-  // session?: Session;
-
   // UI: STUFFS
   canvasOffset?: number;
 }
@@ -86,8 +81,6 @@ export type SynthNode = {
   outlets?: Outlet[];
 };
 
-// type parameterLabel = `${Module['id']}-${string}`;
-// type Parameters = Record<parameterLabel, string|number>;
 
 // type port = {
 type Inlet = {

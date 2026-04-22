@@ -20,7 +20,7 @@ const makeValidPatch = (overrides: Partial<Patch> = {}): Patch => ({
   name: 'Test',
   modules: [{ id: 0, type: 'MasterOut', x: 0, y: 0 } as MasterOut],
   connections: [],
-  presets: [{ name: 'default', parameters: { '1-freq': 440 } }],
+  presets: [{ name: 'default', parameters: { 1: { freq: 440 } } }],
   ...overrides,
 });
 
@@ -156,7 +156,10 @@ describe('serializePatches', () => {
     const original = makeValidPatch({
       id: 'roundtrip',
       name: 'RoundTrip',
-      presets: [{ name: 'p1', parameters: { '1-freq': 220, '5-attack': 0.05 } }],
+      presets: [{
+        name: 'p1',
+        parameters: { 1: { freq: 220 }, 5: { attack: 0.05 } },
+      }],
     });
 
     localStorage.setItem(STORAGE_KEY, serializePatches([original]));
@@ -164,9 +167,10 @@ describe('serializePatches', () => {
 
     expect(loaded!.id).toBe('roundtrip');
     expect(loaded!.name).toBe('RoundTrip');
+    // JSON keys come back as strings, so `Number(k)` for numeric lookups
     expect(loaded!.presets[0]!.parameters).toEqual({
-      '1-freq': 220,
-      '5-attack': 0.05,
+      1: { freq: 220 },
+      5: { attack: 0.05 },
     });
     expect(loaded!.loaded).toBe(false);
   });

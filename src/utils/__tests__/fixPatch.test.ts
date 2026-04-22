@@ -22,13 +22,13 @@ const basePatch = (overrides: Partial<Patch> = {}): Partial<Patch> => ({
 });
 
 describe('fixPatch — preset parameters', () => {
-  it('passes through well-formed `${moduleId}-${param}` keys untouched', () => {
+  it('passes through well-formed nested parameters[moduleId][name] untouched', () => {
     const patch = basePatch({
-      presets: [{ name: 'clean', parameters: { '1-freq': 440, '1-mod': 0.5 } }],
+      presets: [{ name: 'clean', parameters: { 1: { freq: 440, mod: 0.5 } } }],
     });
 
     const fixed = fixPatch(patch);
-    expect(fixed.presets[0]!.parameters).toEqual({ '1-freq': 440, '1-mod': 0.5 });
+    expect(fixed.presets[0]!.parameters).toEqual({ 1: { freq: 440, mod: 0.5 } });
   });
 
   it('leaves empty preset parameters empty (not undefined)', () => {

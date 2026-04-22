@@ -26,12 +26,15 @@
 
     setup (props, { emit }) {
       const { param, min, max } = props;
-      const parentId = useModuleId();
+      const moduleId = useModuleId();
 
-      const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
-      const type = 'slider';
-
-      const { start, mapped, normalized } = useParameter({ id, type, min, max });
+      const { start, mapped, normalized } = useParameter({
+        moduleId,
+        param,
+        type: 'slider',
+        min,
+        max,
+      });
       const amount = ref('');
 
       // for the component

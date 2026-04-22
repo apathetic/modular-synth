@@ -3,6 +3,7 @@
   import { rackWidth, rackHeight, moduleSize } from '@/constants';
   import { useDraggable, provideModuleId } from '@/composables';
   import { useAppStore } from '@/stores/app';
+  import { registry } from '@/audio/registry';
   import { log } from '@/utils/logger';
   import * as Modules from '@/components/';
   import Debugger from '@/components/modules/Debugger.vue';
@@ -58,14 +59,13 @@
         // We want to track all INSTANTIATED web audio nodes
         // This is possible only after the module has rendered
         if (node.value) {
-          // Add the audio node to the registry using the same id as the module
-          store.addToRegistry({ id, node: node.value as SynthNode });
+          registry.add(id, node.value as SynthNode);
         }
       });
 
       onBeforeUnmount(() => {
         log({ type:'component', action:'destroying', data:type });
-        store.removeFromRegistry(id);
+        registry.remove(id);
       });
 
       onErrorCaptured((e) => {

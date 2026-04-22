@@ -32,6 +32,7 @@
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
   import { context, gain as gainNode } from '@/audio';
+  import { registry } from '@/audio/registry';
   import VU from '../UI/VU';
 
 
@@ -70,10 +71,7 @@
         const modRef: HTMLElement | null = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
         if (!modRef) throw new Error('Could not find #modules element');
 
-        store.addToRegistry({
-          id: 0,
-          node: { inlets },
-        });
+        registry.add(0, { inlets });
 
         function determinePosition() {
           const m: HTMLElement = el.value!;

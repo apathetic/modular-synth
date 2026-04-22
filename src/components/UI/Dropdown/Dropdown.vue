@@ -45,21 +45,15 @@
       const selected = ref(1);
       const type = 'Dropdown';
       const store = useAppStore();
-      // const { parameters } = storeToRefs(store);
 
-      // TODO integrate w/ parameter.js
-      // console.log('%c[parameter] Creating %s Dropdown', 'color: teal', param);
-      const str = `${type} (...)`;
+      const moduleId = useModuleId();
+      const str = `${type} ${moduleId}.${param}`;
       log({ type:'parameter', action:'creating', data: str });
-
-      const parentId = useModuleId();
 
       emit('value', options[0]); // update parent w/ value
 
-      const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
-
       watchEffect(() => {
-        const value = store.parameters[id] || options[0];
+        const value = store.getParameter(moduleId, param) ?? options[0];
 
         emit('value', value);
         selected.value = options.indexOf(value);
@@ -68,7 +62,7 @@
       });
 
       onUnmounted(() => {
-        store.removeParameter(id);
+        store.removeParameter({ moduleId, param });
         log({ type:'parameter', action:'destroying', data:str });
       });
 
@@ -86,9 +80,7 @@
       function select(index) {
         const value = options[index];
 
-        // selected = index;
-        // emit('value', value);
-        store.setParameter({ id, value });
+        store.setParameter({ moduleId, param, value });
       }
 
       return {

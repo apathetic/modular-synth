@@ -74,14 +74,12 @@ is a "freq" parameter in the parent Component.
 
     setup (props, { emit }) {
       const { param, min, max, mode } = props;
-      const parentId = useModuleId();
+      const moduleId = useModuleId();
       const track = ref('');
       const arc = ref('');
-
-      const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
       const type = 'knob';
 
-      const { start, mapped, normalized } = useParameter({ id, type, min, max, mode });
+      const { start, mapped, normalized } = useParameter({ moduleId, param, type, min, max, mode });
 
       // for the component
       watchEffect(() => {

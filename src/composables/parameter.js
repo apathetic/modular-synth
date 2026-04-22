@@ -4,26 +4,39 @@ import { log } from '@/utils/logger';
 import { EVENT } from '../events';
 
 
+/**
+ * Bind a UI control (knob/slider/…) to a parameter leaf on the active preset.
+ * Parameters are stored as `preset.parameters[moduleId][param]`.
+ *
+ * @param {Object}  props
+ * @param {number}  props.moduleId  owning module id (from `useModuleId()`)
+ * @param {string}  props.param     parameter name (e.g. 'freq', 'attack')
+ * @param {string}  props.type      UI type label, used only for logging
+ * @param {number} [props.min=0]
+ * @param {number} [props.max=1]
+ * @param {string} [props.mode='linear']   'linear' | 'log'
+ * @param {number} [props.default]
+ */
 export function useParameter(props) {
-  const { id, type, min, max, mode } = Object.assign({
+  const { moduleId, param, type, min, max, mode } = Object.assign({
     mode: 'linear',
-		min: 0,
-		max: 1
-	}, props);
+    min: 0,
+    max: 1,
+  }, props);
 
   const store = useAppStore();
   const normalized = ref(0); // 0 -> 1 internally
-  const mapped = ref(props.default || min);
+  const mapped = ref(props.default ?? min);
   const range = max - min;
   let active = false;
   let startValue = 0;
   let startY = null;
 
-  const str = `${type} (${id})`;
+  const str = `${type} ${moduleId}.${param}`;
   log({ type:'parameter', action:'creating', data: str });
 
 
-  store.setParameter({ id, value: mapped.value });
+  store.setParameter({ moduleId, param, value: mapped.value });
 
 
   // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App, or: just add / remove dynamically as needed?
@@ -46,18 +59,19 @@ export function useParameter(props) {
 
 
   onUnmounted(() => {
-    // this called when the component is explicity removed
-    // and also when it's just cleaned up due to patch change
-		store.removeParameter(id);
+    // Fires on explicit module removal AND on patch switches (everything
+    // remounts). The store action is idempotent: deleting an absent leaf is
+    // a no-op, so patch-switch teardown is harmless.
+    store.removeParameter({ moduleId, param });
     window.removeEventListener(EVENT.MOUSE_UP, mouseup);
     window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
 
-    log({ type:'parameter', action:'destroying', data:str });
+    log({ type:'parameter', action:'destroying', data: str });
   });
 
 
   watchEffect(() => {
-    const value = store.parameters[id];
+    const value = store.getParameter(moduleId, param);
 
     if (value !== undefined) {
       mapped.value = value;
@@ -89,7 +103,7 @@ export function useParameter(props) {
     if (normalized.value === value) return;
 
     normalized.value = value;
-    store.setParameter({ id, value: computeValue(value) });
+    store.setParameter({ moduleId, param, value: computeValue(value) });
   }
 
   /**
