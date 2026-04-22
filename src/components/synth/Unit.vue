@@ -6,7 +6,7 @@
   import { registry } from '@/audio/registry';
   import { MASTER_ID } from '@/audio/master';
   import { log } from '@/utils/logger';
-  import * as Modules from '@/components/';
+  import { modules } from '@/components';
   import Debugger from '@/components/modules/Debugger.vue';
   import type { Module } from '@/types/generated';
   import type { SynthNode } from '@/types/globals';
@@ -16,7 +16,7 @@
     name: 'Unit',
 
     components: {
-      ...Modules,
+      ...modules,
       Debugger
     },
 

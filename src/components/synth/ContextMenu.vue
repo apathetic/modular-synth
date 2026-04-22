@@ -30,7 +30,7 @@
 
 
 <script lang="ts">
-  import * as Modules from '@/components';
+  import { modules } from '@/components';
   import { useAppStore } from '@/stores/app';
 
   export default {
@@ -38,7 +38,7 @@
       return {
         active: '',
         coords: [],
-        modules: Object.keys(Modules)
+        modules: Object.keys(modules)
       };
     },
 
