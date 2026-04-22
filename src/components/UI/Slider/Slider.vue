@@ -7,9 +7,8 @@
 
 
 <script lang="ts">
-  import { defineComponent, computed, ref, watchEffect } from 'vue';
-  import { getCurrentInstance } from 'vue';
-  import { useParameter } from '@/composables';
+  import { defineComponent, ref, watchEffect } from 'vue';
+  import { useParameter, useModuleId } from '@/composables';
 
   export default defineComponent({
     name: 'Slider',
@@ -27,8 +26,8 @@
 
     setup (props, { emit }) {
       const { param, min, max } = props;
-      const instance = getCurrentInstance(); // gets the current component and its application context
-      const parentId = instance.parent.ctx.id;
+      const parentId = useModuleId();
+
       const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
       const type = 'slider';
 

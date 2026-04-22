@@ -4,3 +4,4 @@ export { useEventBus } from './bus';
 export { useKeyboard } from './keyboard';
 export { useParameter } from './parameter';
 export { useSortable } from './sortable';
+export { useModuleId, provideModuleId } from './moduleId';

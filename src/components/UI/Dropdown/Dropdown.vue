@@ -17,8 +17,9 @@
 
 
 <script lang="ts">
-  import { defineComponent, ref, watchEffect, getCurrentInstance, onUnmounted } from 'vue';
+  import { defineComponent, ref, watchEffect, onUnmounted } from 'vue';
   import { useAppStore } from '@/stores/app';
+  import { useModuleId } from '@/composables';
   // import { useParameter } from '@/composables';
   import { log } from '@/utils/logger';
 
@@ -51,11 +52,11 @@
       const str = `${type} (...)`;
       log({ type:'parameter', action:'creating', data: str });
 
-      const instance = getCurrentInstance(); // gets the current component and its application context
-      const parentId = instance.parent.ctx.id;
-      const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
+      const parentId = useModuleId();
 
       emit('value', options[0]); // update parent w/ value
+
+      const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
 
       watchEffect(() => {
         const value = store.parameters[id] || options[0];

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { defineComponent, computed, ref, onMounted, onBeforeUnmount, onErrorCaptured } from 'vue';
   import { rackWidth, rackHeight, moduleSize } from '@/constants';
-  import { useDraggable } from '@/composables';
+  import { useDraggable, provideModuleId } from '@/composables';
   import { useAppStore } from '@/stores/app';
   import { log } from '@/utils/logger';
   import * as Modules from '@/components/';
@@ -28,6 +28,7 @@
     setup (props) {
       const { type, id } = props.module; // note: we destructure here b/c we don't care about reactivity
       // const { type: t, id } = props.module;
+      provideModuleId(id);
       const { coords, startDragging, isDragging } = useDraggable(props.module);
       const store = useAppStore();
 

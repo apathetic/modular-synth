@@ -1,7 +1,10 @@
+# misc
 .DS_Store
+tsconfig.tsbuildinfo
 /node_modules
 /dist
 
+# generated
 /tests/videos/*
 /tests/screenshots/*
 /tests/OLD

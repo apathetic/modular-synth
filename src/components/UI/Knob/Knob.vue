@@ -25,8 +25,7 @@ is a "freq" parameter in the parent Component.
 
 <script lang="ts">
   import { defineComponent, watchEffect, ref, onMounted } from 'vue';
-  import { getCurrentInstance } from 'vue';
-  import { useParameter } from '@/composables';
+  import { useParameter, useModuleId } from '@/composables';
 
   const SIZE = 20;
   const X = 24; // half the css knob radius
@@ -75,14 +74,14 @@ is a "freq" parameter in the parent Component.
 
     setup (props, { emit }) {
       const { param, min, max, mode } = props;
-      const instance = getCurrentInstance(); // gets the current component and its application context
-      const parentId = instance.parent.ctx.id;
+      const parentId = useModuleId();
+      const track = ref('');
+      const arc = ref('');
+
       const id = `${parentId}-${param}`; // ie 11-detune or 11-freq or 5-mod
       const type = 'knob';
 
       const { start, mapped, normalized } = useParameter({ id, type, min, max, mode });
-      const track = ref('');
-      const arc = ref('');
 
       // for the component
       watchEffect(() => {
