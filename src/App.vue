@@ -136,7 +136,7 @@
 
 
       return {
-        modules: computed(() => store.modules.filter((m: Module) => m.id !== 0)),
+        modules: computed(() => store.rackModules),
         isEditing: computed(() => store.isEditing),
         connections: computed(() => store.connections),
         activeModule: computed(() => store.activeModule),

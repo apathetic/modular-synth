@@ -4,6 +4,7 @@
   import { useDraggable, provideModuleId } from '@/composables';
   import { useAppStore } from '@/stores/app';
   import { registry } from '@/audio/registry';
+  import { MASTER_ID } from '@/audio/master';
   import { log } from '@/utils/logger';
   import * as Modules from '@/components/';
   import Debugger from '@/components/modules/Debugger.vue';
@@ -28,14 +29,15 @@
 
     setup (props) {
       const { type, id } = props.module; // note: we destructure here b/c we don't care about reactivity
-      // const { type: t, id } = props.module;
+
+      if (id === MASTER_ID || type === 'MasterOut') { throw new Error('<Unit> cannot render MasterOut'); }
+
       provideModuleId(id);
+
       const { coords, startDragging, isDragging } = useDraggable(props.module);
       const store = useAppStore();
-
       const el = ref(undefined); // this'll be a ref to the DOM node
       const node = ref(null);    // this'll be a ref to the instantiated audio node
-
       const isActive = computed(() => id == store.activeId);
       const position = computed(() => store.isEditing || isDragging.value ?
         {

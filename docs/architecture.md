@@ -99,6 +99,36 @@ list of `AudioNode → AudioNode` edges in memory beyond what WebAudio tracks
 internally. `<Connection>` holds a closure that knows how to undo its own
 edge on unmount.
 
+### MasterOut is a singleton
+
+`MasterOut` is the fixed sink that every patch routes into. Conceptually it
+isn't a user-placed rack module — its id is always `0`, `fixPatch` re-inserts
+it if missing, and it's rendered once in App.vue's sidebar. Its audio graph
+lives in `src/audio/master.ts`:
+
+```ts
+// src/audio/master.ts — runs once at module load
+const out1 = gain(0.5), out2 = gain(0.5);
+out1.connect(context.destination);
+out2.connect(context.destination);
+registry.add(MASTER_ID, { inlets: [...] });
+export const master = { out1, out2, inlets, setGain };
+```
+
+Because the nodes are module-level singletons, re-rendering `<MasterOut />`
+is an audio no-op — no duplicate summing gains, no second
+`context.destination` wire, no registry clobber.
+
+Three layers enforce the "render exactly once" contract:
+
+1. `store.rackModules` (getter) excludes `id === MASTER_ID` — anything
+   iterating `<Unit>`s binds here, not to `store.modules`.
+2. `MasterOut` is deliberately **not** in the `src/components` barrel, so
+   `<component :is="module.type">` inside `<Unit>` can't resolve it.
+3. `<Unit>` throws if it ever receives `id === MASTER_ID` or
+   `type === 'MasterOut'`, converting a silent double-mount into a loud,
+   actionable error.
+
 The "what kind of edge is this and how do I create/destroy it" decision
 lives in `src/audio/routing.ts`:
 
@@ -255,4 +285,5 @@ localStorage ──(loadPatches)──►  patches[]  ──(loadPatch)──►
 * `src/utils/validatePatch.ts` — Zod type guards and `fixPatch`.
 * `src/audio/registry.ts` — runtime-only audio registry.
 * `src/audio/routing.ts` — `wire()` / `unwire()` strategies for connections.
+* `src/audio/master.ts` — MasterOut singleton (gain nodes, destination wiring).
 * `src/composables/parameter.js` — UI ↔ store binding.

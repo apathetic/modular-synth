@@ -31,55 +31,40 @@
   import { defineComponent, ref, computed, watch, onMounted } from 'vue';
   import { useAppStore } from '@/stores';
   import { log } from '@/utils/logger';
-  import { context, gain as gainNode } from '@/audio';
-  import { registry } from '@/audio/registry';
+  import { master, MASTER_ID } from '@/audio/master';
   import VU from '../UI/VU';
 
 
+  /*
+    MasterOut is a singleton: its audio graph (gain nodes, destination wiring,
+    `registry.add(0, ...)`) is built once at module load in `@/audio/master`.
+    This component is a UI shell, rendered exactly once in App.vue's sidebar.
+  */
   export default defineComponent({
     name: 'MasterOut',
     components: { VU },
-    setup(props, { expose }) {
+    setup(_props, { expose }) {
       log({ type:'component', action:'creating', data:'MasterOut' });
 
       const store = useAppStore();
-      const masterModule = computed(() => store.patch.modules[0]);
-
-      const out1 = gainNode(0.5);
-      const out2 = gainNode(0.5);
-
-      out1.connect(context.destination);
-      out2.connect(context.destination);
+      const masterModule = computed(() => store.patch.modules.find((m: Module) => m.id === MASTER_ID));
 
       const el = ref<HTMLElement | null>(null);
       const gain = ref(0.5);
-      const inlets = [
-        {
-          label: 'out-1',
-          audio: out1
-        },
-        {
-          label: 'out-2',
-          audio: out2
-        }
-      ];
 
-      stop();
-      watch(gain, setGain);
+      watch(gain, master.setGain);
 
       onMounted(() => {
         const modRef: HTMLElement | null = document.querySelector('#modules'); // rare time we need to scrape DOM. Doesnt need to be reactive
         if (!modRef) throw new Error('Could not find #modules element');
 
-        registry.add(0, { inlets });
-
         function determinePosition() {
           const m: HTMLElement = el.value!;
-          const x = modRef!.scrollLeft + m.getBoundingClientRect().left;  // scroll offset + viewport offset
-          const y = m.offsetTop; // relative to parent
+          const mod = masterModule.value;
+          if (!m || !mod) return;
 
-          masterModule.value.x = x;
-          masterModule.value.y = y;
+          mod.x = modRef!.scrollLeft + m.getBoundingClientRect().left;
+          mod.y = m.offsetTop;
         }
 
         window.addEventListener('resize', determinePosition);
@@ -88,25 +73,16 @@
         determinePosition();
       });
 
-      function setGain(g: number) {
-        out1.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
-        out2.gain.linearRampToValueAtTime(g, context.currentTime + 0.1);
-      }
+      expose({ inlets: master.inlets });
 
-      // AUDIO
-      expose({
-        inlets
-      });
-
-      // UI
       return {
         el,
         setFocus: store.setFocus,
         clearFocus: store.clearFocus,
-        out1,
-        out2,
+        out1: master.out1,
+        out2: master.out2,
         gain,
-        inlets,
+        inlets: master.inlets,
       };
     }
   });

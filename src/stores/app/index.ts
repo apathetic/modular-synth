@@ -7,6 +7,7 @@ import { log } from '@/utils/logger';
 import { fixPatch, isPatch } from '@/utils/validatePatch';
 import { loadPatches, clearStorage } from '@/utils/persistence';
 import { registry } from '@/audio/registry';
+import { MASTER_ID } from '@/audio/master';
 import { moduleSize } from '@/constants';
 import type { AppState, RackUnit, MouseCoords, GridCoords } from '@/types/globals';
 // import type {  MasterOut, Module } from '@/types/generated';
@@ -54,9 +55,19 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     //  SYNTH
     // -----------------------------------------------
 
+    /**
+     * Get all modules, including MasterOut. Use `rackModules` when you want
+     * only user-placed modules.
+     */
     modules(): Module[] {
-      // masterOut needs to be included as this.modules is used when connecting modules
       return this.patch.modules as Module[];
+    },
+
+    /**
+     * Rack-renderable modules — i.e. everything except the MasterOut
+     */
+    rackModules(): Module[] {
+      return this.modules.filter((m: Module) => m.id !== MASTER_ID);
     },
 
     activeModule(state): Module | undefined {
