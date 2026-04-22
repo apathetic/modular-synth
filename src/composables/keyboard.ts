@@ -1,5 +1,3 @@
-import { EVENT } from '@/events';
-
 interface UseKeyboardProps {
   noteOn: (note: number, vel: number) => void;
   noteOff: (note: number) => void;
@@ -60,12 +58,12 @@ export function useKeyboard({ noteOn, noteOff }: UseKeyboardProps) {
   }
 
   function unsubscribe() {
-    window.removeEventListener(EVENT.KEY_DOWN, keydown as EventListener);
-    window.removeEventListener(EVENT.KEY_UP, keyup as EventListener);
+    window.removeEventListener('keydown', keydown as EventListener);
+    window.removeEventListener('keyup', keyup as EventListener);
   }
 
-  window.addEventListener(EVENT.KEY_DOWN, keydown as EventListener);
-  window.addEventListener(EVENT.KEY_UP, keyup as EventListener);
+  window.addEventListener('keydown', keydown as EventListener);
+  window.addEventListener('keyup', keyup as EventListener);
 
   return unsubscribe;
 }

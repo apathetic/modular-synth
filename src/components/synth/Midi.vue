@@ -12,10 +12,22 @@
 
 
 <script lang="ts">
-import { EVENT } from '@/events';
 import { useEventBus } from '@/composables';
 
 // TODO: just implement UI, here, using midi composable for the logic
+
+/**
+ * Event names published onto `useEventBus('midi')`. The only consumer
+ * today (`NoteIn.vue`) listens with a catch-all handler, but we keep the
+ * names stable so a future subscriber can filter on them cleanly.
+ */
+const MIDI = {
+  NOTE_ON: 'midi:noteOn',
+  NOTE_OFF: 'midi:noteOff',
+  CONTROLLER: 'midi:controller',
+  PITCH: 'midi:pitchWheel',
+  POLY: 'midi:polyPressure',
+} as const;
 
 
 export default {
@@ -100,15 +112,15 @@ export default {
       if (channel === 9) { return; }
 
       if (cmd === 8 || (cmd === 9 && velocity === 0)) { // with MIDI, note on with velocity zero is the same as note off
-        bus.emit(EVENT.MIDI_NOTEOFF, { note });
+        bus.emit(MIDI.NOTE_OFF, { note });
       } else if (cmd === 9) {
-        bus.emit(EVENT.MIDI_NOTEON, { note, velocity }); // / 127.0);
+        bus.emit(MIDI.NOTE_ON, { note, velocity }); // / 127.0);
       } else if (cmd === 11) {
-        bus.emit(EVENT.MIDI_CONTROLLER, { note, velocity }); // / 127.0);
+        bus.emit(MIDI.CONTROLLER, { note, velocity }); // / 127.0);
       } else if (cmd === 14) {
-        bus.emit(EVENT.MIDI_PITCH, { xxx: ((velocity * 128.0 + note) - 8192) / 8192.0 });
+        bus.emit(MIDI.PITCH, { xxx: ((velocity * 128.0 + note) - 8192) / 8192.0 });
       } else if (cmd === 10) {  // poly aftertouch
-        bus.emit(EVENT.MIDI_POLY, { note, velocity }); // / 127.0);
+        bus.emit(MIDI.POLY, { note, velocity }); // / 127.0);
       } else {
         console.log('[MIDI] did not respond to:' + data[0] + ' ' + data[1] + ' ' + data[2]);
       }

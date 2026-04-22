@@ -1,7 +1,6 @@
 import { watchEffect, ref, onUnmounted } from 'vue';
 import { useAppStore } from '@/stores/app';
 import { log } from '@/utils/logger';
-import { EVENT } from '../events';
 
 
 /**
@@ -54,13 +53,13 @@ export function useParameter(props) {
     }
   };
 
-  window.addEventListener(EVENT.MOUSE_UP, mouseup);
-  window.addEventListener(EVENT.MOUSE_MOVE, mousemove);
+  window.addEventListener('mouseup', mouseup);
+  window.addEventListener('mousemove', mousemove);
 
 
   onUnmounted(() => {
-    window.removeEventListener(EVENT.MOUSE_UP, mouseup);
-    window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
+    window.removeEventListener('mouseup', mouseup);
+    window.removeEventListener('mousemove', mousemove);
 
     log({ type:'parameter', action:'destroying', data: str });
   });
