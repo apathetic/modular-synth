@@ -100,11 +100,13 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     /**
-     * Resolve a single parameter value for the active preset.
+     * Resolve a single parameter value for the active preset. Safe to call
+     * while the patch is still loading — the `presets` getter returns a
+     * stub without a `parameters` field until `patch.loaded` flips true.
      */
     getParameter() {
       return (moduleId: number, name: string): ParameterValue | undefined => (
-        this.preset?.parameters[moduleId]?.[name]
+        this.preset?.parameters?.[moduleId]?.[name]
       );
     },
 
@@ -417,22 +419,24 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     /**
-     * Set a parameter value on the currently-selected preset.
+     * Write a parameter value into the currently-selected preset. Only ever
+     * called from user interaction (knob drag, dropdown select), by which
+     * point the patch is loaded and the preset exists.
      */
     setParameter(data: { moduleId: number; param: string; value: ParameterValue }) {
-      const preset = this.presets[this.presetId];
-      if (!preset) return;
-
+      const preset = this.patch.presets[this.presetId];
       const bucket = preset.parameters[data.moduleId] ?? (preset.parameters[data.moduleId] = {});
       bucket[data.param] = data.value;
     },
 
     /**
      * Remove a single parameter leaf from every preset. Cleans up the owning
-     * module bucket when it becomes empty.
+     * module bucket when it becomes empty. Called from knob unmount on
+     * module deletion, and also (harmlessly) on patch switch — the target
+     * keys simply don't exist in the incoming patch's presets.
      */
     removeParameter(data: { moduleId: number; param: string }) {
-      this.presets.forEach((preset: Preset) => {
+      this.patch.presets.forEach((preset: Preset) => {
         const bucket = preset.parameters[data.moduleId];
         if (!bucket) return;
 

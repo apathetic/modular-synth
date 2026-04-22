@@ -50,10 +50,10 @@ THOUGHTS:
 
 
 <script lang="ts">
-  import { defineComponent, computed, ref, toRefs, watch, onUnmounted } from 'vue';
+  import { defineComponent, computed, ref, onUnmounted } from 'vue';
   import { useAppStore } from '@/stores/app';
   import { cellWidth } from '@/constants';
-  import { Parameter } from '@/audio';
+  import { wire, type WireResult } from '@/audio/routing';
   import { log } from '@/utils/logger';
 
   export default defineComponent({
@@ -65,127 +65,58 @@ THOUGHTS:
     },
 
     setup (props) {
-      const { id, to, from } = props;  // note: we destructure here b/c props dont need to be reactive in this component
+      const { id, to, from } = props; // note: we destructure here b/c props dont need to be reactive in this component
       const store = useAppStore();
       const stroke = ref('white');
-      let unwatch: (() => void) | undefined;
 
       if (!to || !from) {
-        throw new Error('fatal: no to/from');
-        return;
+        throw new Error('Connection: missing to/from');
       }
-
 
       const src = store.getRackUnit(from.id);
       const dest = store.getRackUnit(to.id);
 
       if (!src || !dest) {
-        logError(new Error('unit not registered'));
+        logError(new Error('Connection: rack unit not registered'));
         return;
       }
 
-
-          const x = src.module.type;
-          const y = dest.module.type;
-          const str = `${x}#${from.port + 1} ⟹ ${y}#${to.port + 1}`;
-
+      const label = `${src.module.type}#${from.port + 1} ⟹ ${dest.module.type}#${to.port + 1}`;
 
       const x1 = computed(() => src.module.x + cellWidth + 3);
       const y1 = computed(() => src.module.y + (from.port * 20) + 27);
       const x2 = computed(() => dest.module.x - 3);
       const y2 = computed(() => dest.module.y + (to.port * 20) + 27);
 
-      /**
-       * Connect the actual AudioNode of the module. This is the meat-and-bones of
-       * the App, so to speak.
-       * @type {Boolean} connect Connect two nodes if true, disconnect if false.
-       * @return {Void}
-       */
-      function route(connect = true) {
-        // if (!to || !from || !src.node.inlets || !dest.node.inlets) {
-        //   return;
-        // }
+      // All of the "connect these two web-audio nodes" logic lives in
+      // @/audio/routing. Here we just wire it up, colour the line, and
+      // remember how to tear it down.
+      let handle: WireResult | undefined;
+      try {
+        handle = wire(
+          { node: src.node,  port: from.port },
+          { node: dest.node, port: to.port },
+        );
+        log({ type:'connection', action:'creating', data: `${label} (${handle.kind})` });
 
-        const inlet = dest.node.inlets[to!.port];
-        const outlet = src.node.outlets?.[from!.port];
-
-        if (!inlet || !outlet) {
-          logError(new Error('inlet or outlet not found'));
-          return;
+        if (handle.kind === 'data-data') {
+          stroke.value = '#999';
         }
-
-        try {
-          if (outlet.audio && inlet.audio) {
-            // -------------------
-            // AUDIO -> AUDIO
-            // -------------------
-            const source = outlet.audio;
-            const destination = inlet.audio;
-
-            if (connect) {
-              source.connect(destination);
-              log({ type:'connection', action:'creating', data: str });
-            } else {
-              source.disconnect(destination);
-              log({ type:'connection', action:'destroying', data: str });
-            }
-
-          } else if (outlet.data && inlet.audio) {
-            // -------------------
-            // DATA -> AUDIO
-            // -------------------
-
-            if (connect) {
-              log({ type:'connection', action:'creating', data: str + ' (data => audio)' });
-            }
-
-            // TODO MOVE THIS THIS THE AUDIO MODULE.
-            // DOENST MAKE SENSE TO SHIM IT HERE
-            const interpolator = new Parameter(0);
-
-            // this.$watch(outlet.data, interpolator.set);
-            // const unwatch = watch(action, interpolator);
-            unwatch = src.node.$watch(outlet.data, interpolator.set);
-
-
-
-            interpolator.output.connect(inlet.audio);
-
-            //
-          } else if (outlet.data && inlet.data) {
-            // -------------------
-            // DATA -> DATA
-            // -------------------
-            const action = outlet.data; // STRING
-            const update = inlet.data;  // FUNCTION
-
-            if (typeof update === 'function') {
-              // "this.unwatch" is a fn that removes itself
-              // "action" is a string -- is refers us to the property on source.node that should be watched;
-              // ... when it is changed, the receiver function, "update" (on toModule), is fired with the new value.
-
-              // this.unwatch = this.source.node.$watch(action, update);
-              // const unwatch = watch(action, update);
-              unwatch = src.node.$watch(action, update); // watch the [action] prop on the node
-
-
-              stroke.value = '#999';
-              // this.fromModule.$on(action, update);
-
-            //
-            }
-          } else {
-            const destType = inlet.data ? 'data' : inlet.audio ? 'audio' : 'unknown';
-            const outType = outlet.data ? 'data' : outlet.audio ? 'audio' : 'unknown';
-
-            stroke.value = 'red';
-            logError(new Error(`Connection: mismatch (${outType} ⟹ ${destType})`));
-          }
-        } catch (e) {
-          logError(e instanceof Error ? e : new Error(String(e)));
-          removeConnection();
-        }
+      } catch (e) {
+        stroke.value = 'red';
+        logError(e instanceof Error ? e : new Error(String(e)));
       }
+
+      onUnmounted(() => {
+        if (!handle) return;
+        log({ type:'connection', action:'destroying', data: label });
+        try {
+          handle.unwire();
+        } catch (e) {
+          // Teardown errors shouldn't prevent component unmount.
+          console.warn('[connection] unwire failed:', e);
+        }
+      });
 
       function removeConnection() {
         store.removeConnection(id);
@@ -195,16 +126,10 @@ THOUGHTS:
         console.log('%c%s', 'color: red', e.toString().slice(0, 100));
         console.log(`%c[error] connection`, 'color: red', JSON.stringify(to), JSON.stringify(from));
 
-        // bail whenever the connection fails.
+        // Bail whenever the connection fails. Removing the connection from
+        // the patch unmounts this component, which triggers unwire().
         removeConnection();
       }
-
-      onUnmounted(() => {
-        route(false);
-        if (unwatch) unwatch();
-      });
-
-      route();
 
       return {
         stroke,
@@ -212,7 +137,7 @@ THOUGHTS:
         x1,
         y1,
         x2,
-        y2
+        y2,
       };
     }
   });

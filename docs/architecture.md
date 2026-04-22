@@ -99,6 +99,27 @@ list of `AudioNode → AudioNode` edges in memory beyond what WebAudio tracks
 internally. `<Connection>` holds a closure that knows how to undo its own
 edge on unmount.
 
+The "what kind of edge is this and how do I create/destroy it" decision
+lives in `src/audio/routing.ts`:
+
+```ts
+import { wire } from '@/audio/routing';
+
+const handle = wire(
+  { node: src.node,  port: from.port },
+  { node: dest.node, port: to.port },
+);
+// ...later
+handle.unwire();
+```
+
+`wire()` picks one of three strategies based on what the ports expose —
+`audio → audio`, `data → audio` (via an interpolating `Parameter`), or
+`data → data` (via a Vue `$watch`) — and hands back an idempotent disposer
+tagged with the strategy it used. Keeping this out of the Vue component
+means the component stays small and the strategies are exercised directly
+in unit tests (`src/audio/__tests__/routing.test.ts`).
+
 ## 3. Parameter values
 
 Knob / slider / dropdown state, stored **per preset** inside the patch. The
@@ -143,9 +164,23 @@ store.parameters;                        // full ParameterMap for active preset
 ```
 
 `useParameter()` (in `src/composables/parameter.js`) is the bridge between
-the UI control and the store. It seeds a default on mount, reflects store
-value → `mapped`/`normalized` refs with `watchEffect`, and writes back
-on drag.
+the UI control and the store.
+
+* **Read** side: a `watchEffect` reflects `store.getParameter(moduleId,
+  param)` → local `mapped` / `normalized` refs.
+* **Write** side: `store.setParameter(...)` is called *only* from user
+  input (drag, dropdown select). There is no default-seeding on mount:
+  unset entries stay at the control's `props.default ?? min` and are only
+  materialized in the preset once the user actually changes them.
+* **Teardown**: deliberately does **not** call `store.removeParameter` on
+  unmount. The two scenarios that fire unmounts — module deletion and
+  patch switch — are either redundant with `removeModule`'s per-preset
+  cleanup (scenario 1) or actively harmful (scenario 2: `this.patch` has
+  already swapped, so leaves would be deleted from the incoming patch).
+
+This keeps presets small and round-trip-stable — a freshly-loaded preset
+looks identical on save, with no drive-by writes during mount or
+teardown.
 
 ## How the three graphs relate
 
@@ -165,7 +200,7 @@ patches remounts every module, which means:
    for GC.
 2. `store.patch` swaps to the new patch object.
 3. `await nextTick()` — DOM + registry re-populate for the new patch.
-4. `patch.loaded = true` → `<Connection>` components mount → `route()` runs,
+4. `patch.loaded = true` → `<Connection>` components mount → `wire()` runs,
    wiring the new audio graph.
 
 The `nextTick` + `loaded` gate is what keeps `Connection.setup` from
@@ -192,7 +227,7 @@ localStorage ──(loadPatches)──►  patches[]  ──(loadPatch)──►
                              │
                      <Connection v-for="c">
                              │
-                 route() → outlet.audio.connect(inlet.audio)
+                 wire() → outlet.audio.connect(inlet.audio)
 
      UI interaction
          │
@@ -219,4 +254,5 @@ localStorage ──(loadPatches)──►  patches[]  ──(loadPatch)──►
 * `src/utils/persistence.ts` — read/validate/repair.
 * `src/utils/validatePatch.ts` — Zod type guards and `fixPatch`.
 * `src/audio/registry.ts` — runtime-only audio registry.
+* `src/audio/routing.ts` — `wire()` / `unwire()` strategies for connections.
 * `src/composables/parameter.js` — UI ↔ store binding.

@@ -35,9 +35,9 @@ export function useParameter(props) {
   const str = `${type} ${moduleId}.${param}`;
   log({ type:'parameter', action:'creating', data: str });
 
-
-  store.setParameter({ moduleId, param, value: mapped.value });
-
+  // No default seeding: the preset holds values the user has overridden.
+  // Until someone writes, `mapped.value` stays at `props.default ?? min`
+  // and the watchEffect below is a no-op.
 
   // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App, or: just add / remove dynamically as needed?
   const mouseup = () => {
@@ -59,10 +59,6 @@ export function useParameter(props) {
 
 
   onUnmounted(() => {
-    // Fires on explicit module removal AND on patch switches (everything
-    // remounts). The store action is idempotent: deleting an absent leaf is
-    // a no-op, so patch-switch teardown is harmless.
-    store.removeParameter({ moduleId, param });
     window.removeEventListener(EVENT.MOUSE_UP, mouseup);
     window.removeEventListener(EVENT.MOUSE_MOVE, mousemove);
 
