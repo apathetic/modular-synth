@@ -3,7 +3,7 @@ import { state as emptyPatch } from '@/stores/patch';
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
-// import { /* fetch, create, */ save, /* remove */ } from '@/utils/supabase';
+// import { /* fetch, create, */ save, /* remove */ } from '@/utils/db';
 import { /* validateData, */ fixPatch, isPatch } from '@/utils/validatePatch';
 import { moduleSize } from '@/constants';
 import type { AppState, RackUnit, SynthNode, MouseCoords, GridCoords } from '@/types/globals';

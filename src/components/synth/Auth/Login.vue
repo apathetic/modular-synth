@@ -1,6 +1,6 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { auth } from '@/utils/supabase';
+  import { auth } from '@/utils/db';
 
   export default defineComponent({
     name: 'Login',

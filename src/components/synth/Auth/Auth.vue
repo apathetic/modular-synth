@@ -24,6 +24,7 @@
   import Signin from './SignIn.vue';
   import Modal from '@/components/UI/Modal.vue';
   import { useAppStore } from '@/stores/app';
+  import { auth } from '@/utils/db';
   import { mapState } from 'pinia';
 
 
@@ -51,7 +52,6 @@
       },
 
       signOut() {
-        // const auth = getAuth();
         auth.signOut();
       }
     }

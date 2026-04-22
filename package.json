@@ -16,7 +16,6 @@
     "lint": "oxlint --fix"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.47.5",
     "pinia": "^2.3.0",
     "register-service-worker": "^1.7.2",
     "uuid": "^9.0.1",

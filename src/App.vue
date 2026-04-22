@@ -40,7 +40,7 @@
   import { defineComponent, ref, computed } from 'vue';
   import { debug } from './debug';
   import { useAppStore } from '@/stores/app';
-  import { auth } from '@/utils/supabase';
+  import { auth } from '@/utils/db';
   import { log } from '@/utils/logger';
   import Auth from '@/components/synth/Auth'; // signIn
   import midi from '@/components/synth/Midi.vue';

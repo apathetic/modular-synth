@@ -19,8 +19,7 @@
 
 <script lang="ts">
   import { ref } from 'vue';
-  // import { supabase } from '../supabase';
-  import { auth } from '@/utils/supabase';
+  import { auth } from '@/utils/db';
 
   export default {
     setup() {
@@ -29,7 +28,6 @@
 
       const handleSignin = async () => {
         try {
-          // Use the Supabase provided method to handle the signin
           const { error } = await auth.signIn({
             email: email.value,
             password: password.value,
