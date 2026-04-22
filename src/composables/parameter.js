@@ -38,29 +38,29 @@ export function useParameter(props) {
   // Until someone writes, `mapped.value` stays at `props.default ?? min`
   // and the watchEffect below is a no-op.
 
-  // TODO: avoid dupl w/ every knob? ie. one mouseup listener in the App, or: just add / remove dynamically as needed?
-  const mouseup = () => {
-    window.mouseDown = false;
-    active = false;
+  // Drag listeners are attached on mousedown and detached on mouseup so the
+  // app never carries 2N idle listeners for N parameters. `active` and the
+  // listeners are the only drag state; there's no shared window flag.
+  const mousemove = (e) => {
+    if (active) update(e);
+  };
 
+  const mouseup = () => {
+    active = false;
     document.body.style.webkitUserSelect = 'auto';
     document.body.style.userSelect = 'auto';
+    window.removeEventListener('mousemove', mousemove);
+    // mouseup listener self-removes via `{ once: true }`.
   };
-
-  const mousemove = (e) => {
-    if (window.mouseDown && active) {
-      update(e);
-    }
-  };
-
-  window.addEventListener('mouseup', mouseup);
-  window.addEventListener('mousemove', mousemove);
 
   onUnmounted(() => {
-    window.removeEventListener('mouseup', mouseup);
-    window.removeEventListener('mousemove', mousemove);
-
     log({ type:'parameter', action:'destroying', data: str });
+    // Normally `mouseup` disposes its own listeners. If we unmount mid-drag
+    // (module deletion, patch switch, ...) we need to clean up manually.
+    if (active) {
+      window.removeEventListener('mousemove', mousemove);
+      window.removeEventListener('mouseup', mouseup);
+    }
   });
 
 
@@ -76,14 +76,19 @@ export function useParameter(props) {
 
 
   /**
-   * Set up calculations for updating new knob values.
+   * Set up calculations for updating new knob values. Attaches the drag
+   * listeners for the lifetime of this gesture — `mouseup` is registered
+   * with `{ once: true }` so it cleans itself up, and it in turn detaches
+   * `mousemove`.
    * @param {MouseEvent} e The mouse down Event.
    */
   function start(e) {
-    window.mouseDown = true;
     active = true;
     startValue = normalized.value;
     startY = e.clientY;
+
+    window.addEventListener('mousemove', mousemove);
+    window.addEventListener('mouseup', mouseup, { once: true });
   }
 
   /**
