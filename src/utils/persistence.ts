@@ -78,21 +78,27 @@ export function loadPatches(): Patch[] {
 }
 
 /**
- * Produce the JSON string written to localStorage. Deep-clones each patch,
- * strips the transient `loaded` flag, and wraps in a versioned envelope.
+ * Produce the JSON string written to localStorage. Wraps in a versioned
+ * envelope and strips the transient `loaded` flag via the stringify replacer.
+ *
+ * NOTE: intentionally avoids `structuredClone` here. `persistState` hands us
+ * a Pinia reactive proxy, and `structuredClone` walks it via property
+ * descriptors — which bypasses Vue's ref auto-unwrap and chokes on any non-
+ * cloneable host object (AudioNode, DOM element, function) that may have
+ * leaked into patch state. `JSON.stringify` goes through each property's
+ * getter instead, so refs are unwrapped and non-serializable values are
+ * silently dropped.
  */
 export function serializePatches(patches: Patch[]): string {
-  const cleaned = patches.map((patch) => {
-    const { loaded: _loaded, ...rest } = structuredClone(patch);
-    return rest;
-  });
-
   const envelope: StoredEnvelope = {
     version: STORAGE_VERSION,
-    patches: cleaned,
+    patches,
   };
 
-  return JSON.stringify(envelope);
+  return JSON.stringify(envelope, (key, value) => {
+    if (key === 'loaded') return undefined;
+    return value;
+  });
 }
 
 /**

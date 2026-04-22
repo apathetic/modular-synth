@@ -46,7 +46,7 @@ export const PresetSchema = z.object({
 export const PatchSchema = z.object({
   id: z.string(),
   i: z.number(), // PatchKey
-  loaded: z.boolean(),
+  loaded: z.boolean().optional(), // a transient runtime flag stripped on write; absent on disk.
   name: z.string(),
   modules: z.array(z.union([ModuleSchema, MasterOutSchema])),
   connections: z.array(ConnectionSchema),
