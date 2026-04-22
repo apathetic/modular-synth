@@ -114,7 +114,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .env {
     background: linear-gradient(to bottom, #383633 0%, #32312e 98%, #242320 100%);
     color: #fff;

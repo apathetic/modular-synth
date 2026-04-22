@@ -8,8 +8,7 @@ import { createPinia } from 'pinia'
 import { useAppStore } from '@/stores/app';
 import { registerComponents } from '@/utils/register';
 
-import '@/styles/styles.scss';
-import '../../src/styles/module.scss';
+import '@/styles/styles.css';
 
 
 // declare global {

@@ -141,7 +141,7 @@ is a "freq" parameter in the parent Component.
 </script>
 
 
-<style lang="scss">
+<style>
   .knob {
     width: 48px;
     height: 64px;
@@ -150,7 +150,7 @@ is a "freq" parameter in the parent Component.
     text {
       text-anchor: middle;
       font-size: 1rem;
-      // fill: #fff;
+      /* fill: #fff; */
     }
 
     .track {

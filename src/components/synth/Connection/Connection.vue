@@ -144,7 +144,7 @@ THOUGHTS:
 </script>
 
 
-<style lang="scss">
+<style>
   svg {
     line {
       &:hover {

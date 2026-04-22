@@ -123,7 +123,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .patch-manager {
     display: flex;
     flex: 0 1 100%;
@@ -137,7 +137,7 @@
       }
 
       span {
-        // display: none;
+        /* display: none; */
         opacity: 0;
       }
 
@@ -172,7 +172,7 @@
       }
 
       &::after {
-        content: '▿';  // ▽
+        content: '▿'; /* ▽ */
         position: absolute;
         right: 8px;
         top: 0;
@@ -191,23 +191,23 @@
       display: block;
       font-size: 1em;
       font-family: inherit;
-      height: 2em; // 1.2em;
+      height: 2em; /* 1.2em; */
       line-height: 0;
       opacity: 0;
       position: absolute;
       top: 0;
       transform: scale(0);
       transition: all var(--transition-time-slow);
-      width: 2em; // 1.2em;
+      width: 2em; /* 1.2em; */
       z-index: 1;
 
       &.add {
-        // top: -4px;
+        /* top: -4px; */
         right: 0.2em;
       }
 
       &.remove {
-        // bottom: -4px;
+        /* bottom: -4px; */
         right: 2.4em;
       }
 
@@ -238,7 +238,7 @@
       height: 100%;
       left: 12px;
       right: var(--gap);
-      // transition: left var(--transition-time-slow);
+      /* transition: left var(--transition-time-slow); */
 
       &:focus {
         outline: none;

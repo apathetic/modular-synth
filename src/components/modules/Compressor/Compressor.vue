@@ -50,7 +50,7 @@
   };
 </script>
 
-<style lang="scss">
+<style>
   .compressor {
   }
 </style>

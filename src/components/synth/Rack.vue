@@ -136,7 +136,7 @@
 </template>
 
 
-<style lang="scss">
+<style>
   #modules {
     display:inline-block;
     flex: 1;

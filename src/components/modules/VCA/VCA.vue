@@ -74,7 +74,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .vca {
     background: linear-gradient(to bottom, #242320 0%, #181310 98%, #101310 100%);
     color: #fff;

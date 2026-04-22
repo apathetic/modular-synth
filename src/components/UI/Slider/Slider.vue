@@ -57,7 +57,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .slider {
     background: #444;
     border-radius: 4px;

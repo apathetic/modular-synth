@@ -48,9 +48,6 @@ importers:
       oxlint:
         specifier: ^0.15.0
         version: 0.15.0
-      sass:
-        specifier: ^1.86.3
-        version: 1.86.3
       typescript:
         specifier: ~5.6.3
         version: 5.6.3
@@ -2798,6 +2795,7 @@ snapshots:
   chokidar@4.0.1:
     dependencies:
       readdirp: 4.0.2
+    optional: true
 
   ci-info@4.1.0: {}
 
@@ -3260,7 +3258,8 @@ snapshots:
 
   ieee754@1.2.1: {}
 
-  immutable@5.0.3: {}
+  immutable@5.0.3:
+    optional: true
 
   indent-string@4.0.0: {}
 
@@ -3642,7 +3641,8 @@ snapshots:
 
   react-is@17.0.2: {}
 
-  readdirp@4.0.2: {}
+  readdirp@4.0.2:
+    optional: true
 
   regenerator-runtime@0.14.1: {}
 
@@ -3714,6 +3714,7 @@ snapshots:
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.1
+    optional: true
 
   saxes@6.0.0:
     dependencies:

@@ -146,7 +146,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .analyser {
 
     .module-interface {
@@ -156,9 +156,9 @@
       height: 222px;
       width: 356px;
       display: block;
-      // left: 1px;
-      // opacity: 0;
+      /* left: 1px; */
+      /* opacity: 0; */
       transition: opacity var(--transition-time)
     }
-  };
+  }
 </style>

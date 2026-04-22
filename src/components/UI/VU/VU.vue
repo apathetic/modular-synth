@@ -104,13 +104,13 @@ https://www.w3.org/TR/webaudio/#todo-fix-up-this-example.-a-volume-meter-and-cli
 </script>
 
 
-<style lang="scss">
+<style>
   canvas.vu {
     background: black;
     width: 16px;
     height: 132px;
 
-    // b/c coords start at top-left, not bottom, and we draw from top -> down. however, VU paints from bottom -> up
+    /* b/c coords start at top-left, not bottom, and we draw from top -> down. however, VU paints from bottom -> up */
     rotate: 180deg;
   }
 </style>

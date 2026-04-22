@@ -95,21 +95,20 @@
 </script>
 
 
-<style lang="scss">
-  $grey: #a8a8a8;
-  $purple: #c35896;
+<style>
   .comb {
+    --grey: var(--module-surface);
+    --purple: #c35896;
+
     background:
-      linear-gradient(187deg,                  $purple 0%,  $purple 22%, transparent 22%) no-repeat,
-      linear-gradient(192deg, transparent 22%, $purple 22%, $purple 26%, transparent 26%) no-repeat,
-      linear-gradient(196deg, transparent 22%, $purple 22%, $purple 25%, transparent 25%) no-repeat,
-      linear-gradient(199deg, transparent 22%, $purple 22%, $purple 24%, transparent 24%) no-repeat,
-      linear-gradient(201deg, $grey 22%,       $purple 22%, $purple 23%, $grey 23%);
+      linear-gradient(187deg,                  var(--purple) 0%,  var(--purple) 22%, transparent 22%) no-repeat,
+      linear-gradient(192deg, transparent 22%, var(--purple) 22%, var(--purple) 26%, transparent 26%) no-repeat,
+      linear-gradient(196deg, transparent 22%, var(--purple) 22%, var(--purple) 25%, transparent 25%) no-repeat,
+      linear-gradient(199deg, transparent 22%, var(--purple) 22%, var(--purple) 24%, transparent 24%) no-repeat,
+      linear-gradient(201deg, var(--grey) 22%, var(--purple) 22%, var(--purple) 23%, var(--grey) 23%);
 
     background-position: 0 0, 0 5px, 100% 16px, 100% 38px, 100% 50px;
     background-size: 100%, 110%, 120%, 120%, 130%;
-
-
 
     color: #fff;
 

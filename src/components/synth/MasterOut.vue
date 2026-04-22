@@ -113,7 +113,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   #master-out {
     position: relative;
     border: 0;
@@ -126,7 +126,7 @@
     border-radius: 0;
 
     .module-interface {
-      // padding: 2em 1em 1em;
+      /* padding: 2em 1em 1em; */
       padding: 0;
       visibility: visible;
       display: flex;
@@ -136,7 +136,7 @@
 
   }
 
-  // .slider,
+  /* .slider, */
   input[type="range"] {
     appearance: none;
     background: transparent;

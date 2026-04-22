@@ -95,7 +95,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .dropdown {
     list-style: none;
     width: 7em;

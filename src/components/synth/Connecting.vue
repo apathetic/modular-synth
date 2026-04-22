@@ -91,7 +91,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .dotted {
     stroke-dasharray: 5;
     stroke-dashoffset: 5;

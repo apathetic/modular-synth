@@ -167,32 +167,31 @@
 </script>
 
 
-<style lang="scss">
-  $grey: #a8a8a8;
-  // $teal: #409d9e;
-  $teal: #2c6c6d;
-
+<style>
   .filter {
+    --grey: var(--module-surface);
+    --teal: #2c6c6d;
+
     background-image: radial-gradient(
       circle,
-      $grey 0%,
-      $grey  10%,
-      $teal 10%,
-      $teal 26%,
-      $grey  26%,
-      $grey  28%,
-      $teal 28%,
-      $teal 36%,
-      $grey  36%,
-      $grey  40%,
-      $teal 40%,
-      $teal 44%,
-      $grey  44%,
-      $grey  52%,
-      $teal 52%,
-      $teal 54%,
-      $grey  54%,
-      $grey  100%
+      var(--grey) 0%,
+      var(--grey) 10%,
+      var(--teal) 10%,
+      var(--teal) 26%,
+      var(--grey) 26%,
+      var(--grey) 28%,
+      var(--teal) 28%,
+      var(--teal) 36%,
+      var(--grey) 36%,
+      var(--grey) 40%,
+      var(--teal) 40%,
+      var(--teal) 44%,
+      var(--grey) 44%,
+      var(--grey) 52%,
+      var(--teal) 52%,
+      var(--teal) 54%,
+      var(--grey) 54%,
+      var(--grey) 100%
     );
     background-position: 100% 66%;
     background-size: 150%;
@@ -218,17 +217,13 @@
 
 
     canvas {
-      // height: 222px;
-      // width: 356px;
       display: block;
       background-color: whitesmoke;
       position: absolute;
       left: 1px;
       bottom: 2px;
-      // right: 1px;
       width: 100%;
-      // opacity: 0;
-      transition: opacity var(--transition-time)
+      transition: opacity var(--transition-time);
     }
 
 

@@ -64,9 +64,7 @@
 </script>
 
 
-<style lang="scss">
-  @import '@/styles/variables.scss';
-
+<style>
   .item {
     color: #fff;
     margin: 0 5px;
@@ -90,7 +88,7 @@
 
         &::after {
           display: none;
-          // opacity: 0;
+          /* opacity: 0; */
         }
       }
     }
@@ -100,7 +98,7 @@
     }
 
     &::after {
-      content: '▿';  // ▽
+      content: '▿'; /* ▽ */
       position: absolute;
       right: 7px;
       top: 0;
@@ -112,7 +110,7 @@
 
       border-radius: 50%;
       background: var(--color-grey-medium);
-      border: 1px solid rgba(black, 0.1);
+      border: 1px solid rgba(0 0 0 / 0.1);
 
       font-size: 1em;
       font-family: inherit;
@@ -154,7 +152,7 @@
     }
 
     input {
-      font-size: 20px; // inherit;
+      font-size: 20px; /* inherit; */
       font-weight: 100;
       color: inherit;
       border: 0;

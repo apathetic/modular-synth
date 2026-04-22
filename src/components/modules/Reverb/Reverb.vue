@@ -99,7 +99,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .reverb {
     background: linear-gradient(to bottom, #e6dcce 0%, #c9c1b0 98%, #8a8478 100%);
     color: #000;

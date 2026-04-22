@@ -94,12 +94,11 @@
   });
 </script>
 
-<style lang="scss">
-  $color: #333;
+<style>
   .mixer {
     background:
-      linear-gradient(45deg, $color 0%, $color 48%, transparent 48%) no-repeat,
-      linear-gradient(135deg, transparent 52%, $color 52%, transparent 100%);
+      linear-gradient(45deg, #333 0%, #333 48%, transparent 48%) no-repeat,
+      linear-gradient(135deg, transparent 52%, #333 52%, transparent 100%);
 
     .knob {
       position: absolute;

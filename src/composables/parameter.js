@@ -56,7 +56,6 @@ export function useParameter(props) {
   window.addEventListener('mouseup', mouseup);
   window.addEventListener('mousemove', mousemove);
 
-
   onUnmounted(() => {
     window.removeEventListener('mouseup', mouseup);
     window.removeEventListener('mousemove', mousemove);

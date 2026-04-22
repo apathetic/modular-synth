@@ -50,7 +50,6 @@
   import MasterOut from '@/components/synth/MasterOut.vue';
   import PatchManager from '@/components/synth/PatchManager';
   import ContextMenu from '@/components/synth/ContextMenu.vue';
-  import './styles/module.scss';
 
 
   export default defineComponent({
@@ -159,7 +158,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   #header {
     display: flex;
     gap: 1rem;
@@ -186,48 +185,48 @@
     }
   }
 
-  // #modules {
-  //   display:inline-block;
-  //   flex: 1;
-  //   overflow-x: auto;
-  //   overflow-y: hidden;
-  //   width: auto;
+  /* #modules { */
+  /*   display:inline-block; */
+  /*   flex: 1; */
+  /*   overflow-x: auto; */
+  /*   overflow-y: hidden; */
+  /*   width: auto; */
 
-  //   &::-webkit-scrollbar {
-  //     width: 1em;
-  //     height: 1em;
-  //   }
+  /*   &::-webkit-scrollbar { */
+  /*     width: 1em; */
+  /*     height: 1em; */
+  /*   } */
 
-  //   &::-webkit-scrollbar-track {
-  //     background: var(--color-grey-dark);
-  //   }
+  /*   &::-webkit-scrollbar-track { */
+  /*     background: var(--color-grey-dark); */
+  /*   } */
 
-  //   &::-webkit-scrollbar-thumb {
-  //     background-color: var(--color-grey-medium);
-  //     border: 2px solid var(--color-grey-dark);
-  //     border-radius: 0.5em;
-  //   }
+  /*   &::-webkit-scrollbar-thumb { */
+  /*     background-color: var(--color-grey-medium); */
+  /*     border: 2px solid var(--color-grey-dark); */
+  /*     border-radius: 0.5em; */
+  /*   } */
 
-  //   &::-webkit-scrollbar-corner {
-  //     background: var(--color-grey-dark);
-  //   }
-  // }
+  /*   &::-webkit-scrollbar-corner { */
+  /*     background: var(--color-grey-dark); */
+  /*   } */
+  /* } */
 
-  // #connections {
-  //   min-width: 100%;
-  //   min-height: 100%;
-  //   position: absolute;
-  //   left: 0;
-  //   top: 0;
-  //   transition: opacity 0.1s;
-  //   transition-delay: var(--transition-time-slow);
+  /* #connections { */
+  /*   min-width: 100%; */
+  /*   min-height: 100%; */
+  /*   position: absolute; */
+  /*   left: 0; */
+  /*   top: 0; */
+  /*   transition: opacity 0.1s; */
+  /*   transition-delay: var(--transition-time-slow); */
 
-  //   .play-mode & {
-  //     opacity: 0;
-  //     transition-delay: 0s;
-  //     z-index: -1;
-  //   }
-  // }
+  /*   .play-mode & { */
+  /*     opacity: 0; */
+  /*     transition-delay: 0s; */
+  /*     z-index: -1; */
+  /*   } */
+  /* } */
 
   #sidebar {
     background-color: #444;
@@ -237,9 +236,9 @@
     flex-basis: 48px;
     transition: all var(--transition-time-slow);
 
-    // .edit-mode & {
-    //   flex-basis: 60px;
-    // }
+    /* .edit-mode & { */
+    /*   flex-basis: 60px; */
+    /* } */
   }
 
 

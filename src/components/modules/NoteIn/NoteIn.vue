@@ -133,8 +133,8 @@
   });
 </script>
 
-<style lang="scss">
-  // @import 'styles/variables.scss';
+<style>
+  /* @import 'styles/variables.scss'; */
   .note-in {
     .received {
       display: block;

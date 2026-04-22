@@ -61,7 +61,7 @@
   };
 </script>
 
-<style lang="scss">
+<style>
   .drive {
   }
 </style>

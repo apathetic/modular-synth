@@ -60,7 +60,7 @@
 </script>
 
 
-<style lang="scss">
+<style>
   .auth {
     align-self: center;
 

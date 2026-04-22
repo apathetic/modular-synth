@@ -128,8 +128,8 @@
   };
 </script>
 
-<style lang="scss">
+<style>
   .debugger {
     overflow: hidden;
-  };
+  }
 </style>
