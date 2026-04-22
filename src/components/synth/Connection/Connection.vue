@@ -65,8 +65,7 @@ THOUGHTS:
     },
 
     setup (props) {
-      // eslint-disable-next-line vue/no-setup-props-destructure
-      const { id, to, from } = props;  // props dont need to be reactive in this component
+      const { id, to, from } = props;  // note: we destructure here b/c props dont need to be reactive in this component
       const store = useAppStore();
       const stroke = ref('white');
       let unwatch: (() => void) | undefined;

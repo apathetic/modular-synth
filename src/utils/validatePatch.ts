@@ -95,7 +95,7 @@ function fixPatch(patch: Partial<Patch>): Patch {
  * @param patches - The array of patches to validate
  * @returns An array of validated patches
  */
-function validateData(patches: unknown): Boolean/* Patch[] */ {
+function validateData(patches: unknown): boolean/* Patch[] */ {
   if (!patches || !Array.isArray(patches) || patches.length === 0) {
     throw new Error('Invalid patches array.');
   }
