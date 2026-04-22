@@ -2,6 +2,7 @@ import { watch } from 'vue';
 import { createPinia } from 'pinia';
 import { useAppStore } from '@/stores/app';
 import { validateData } from '@/utils/validatePatch';
+import { STORAGE_KEY, serializePatches } from '@/utils/persistence';
 import type { App as Application } from 'vue';
 
 
@@ -15,15 +16,25 @@ const debounce = (fn: Function, delay: number) => {
   };
 };
 
-// persist the whole state to the local storage whenever it changes
+// persist patches to localStorage whenever the store state changes.
 const persistState = debounce((state: any) => {
-  localStorage.setItem('patches', JSON.stringify(state.app.patches));
-
-  if (!validateData(state.app.patches)) {
-    console.error('Invalid patch:', state.app.patches);
+  try {
+    const body = serializePatches(state.app.patches);
+    localStorage.setItem(STORAGE_KEY, body);
+  } catch (err) {
+    console.error('[persistState] write failed:', err);
+    return;
   }
 
-	console.log('saving...');
+  try {
+    if (!validateData(state.app.patches)) {
+      console.error('Invalid patch:', state.app.patches);
+    }
+  } catch (err) {
+    console.warn('[persistState] validateData threw:', err);
+  }
+
+  console.log('saving...');
 }, 2000);
 
 

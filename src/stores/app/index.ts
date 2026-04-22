@@ -1,17 +1,14 @@
 import { defineStore } from 'pinia'
-import { state as emptyPatch } from '@/stores/patch';
+import { state as emptyPatch, basicPatch } from '@/stores/patch';
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
 // import { /* fetch, create, */ save, /* remove */ } from '@/utils/db';
-import { /* validateData, */ fixPatch, isPatch } from '@/utils/validatePatch';
+import { fixPatch, isPatch } from '@/utils/validatePatch';
+import { loadPatches, clearStorage } from '@/utils/persistence';
 import { moduleSize } from '@/constants';
 import type { AppState, RackUnit, SynthNode, MouseCoords, GridCoords } from '@/types/globals';
 // import type {  MasterOut, Module } from '@/types/generated';
-
-
-// const rawPatches = JSON.parse(localStorage.getItem('patches') || 'null');
-// const patches = validateData(rawPatches);
 
 
 export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore('app', {
@@ -174,8 +171,17 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       }
 
       if (!isPatch(this.patches[id])) {
-        console.error('Invalid patch at index', id);
+        console.error('Invalid patch at index', id, '- attempting repair');
+        try {
+          this.patches[id] = fixPatch(this.patches[id]);
+        } catch {
+          this.patches[id] = basicPatch();
+        }
       }
+
+      // Mark the outgoing patch unloaded before swapping so re-entry on the
+      // same index (e.g. after a repair) doesn't hit the guard at the top.
+      this.patch.loaded = false;
 
       const patch = this.patches[id];
       log({ type:'patch', action:'loading ', data: patch.name });
@@ -213,12 +219,28 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     /**
-     * Insert a new, emptyPatch patch into the workspace.
-     * @this Store The Vue (pinia) store instance.
+     * Insert a new, emptyPatch patch into the workspace and load it.
+     * @this {Store} reference to the pinia store
      */
     addPatch () {
-      this.patchId = this.patches.push(emptyPatch()) - 1;
+      const idx = this.patches.push(emptyPatch()) - 1;
+      this.patch.loaded = false;
+      this.loadPatch(idx);
+    },
+
+    /**
+     * Reset the workspace to a single `Basic` patch + `Vanilla` preset and
+     * wipe any persisted patches from localStorage. Intended for dev use.
+     * @this {Store} reference to the pinia store
+     */
+    clear() {
+      log({ type:'system', action:'clear', data:'resetting patches' });
+      this.patches = [basicPatch()];
+      this.patchId = 0;
       this.presetId = 0;
+      this.registry = {};
+      this.patch = this.patches[0];
+      clearStorage();
     },
 
     /**
@@ -398,7 +420,6 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
 });
 
 
-const localPatches = JSON.parse(localStorage.getItem('patches') || 'null');
-const patches = localPatches || [emptyPatch()];
+const patches = loadPatches();
 
 export const useAppStore = createAppStore({ patches });

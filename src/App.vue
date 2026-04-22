@@ -26,6 +26,7 @@
         </p>
 
         <button @click="debug">debug</button>
+        <button v-if="isDev" @click="clearAll">clear</button>
 
         <MasterOut />
       </aside>
@@ -141,12 +142,14 @@
         connections: computed(() => store.connections),
         activeModule: computed(() => store.activeModule),
         isAuthenticated: computed(() => store.isAuthenticated),
+        isDev: import.meta.env.DEV,
 
         toggleMode: store.toggleMode,
         clearActive: store.clearActive,
         fetchPatches: store.fetchPatches,
         removeModule: store.removeModule,
         savePatch: store.savePatch,
+        clearAll: store.clear,
 
         debug,
       };

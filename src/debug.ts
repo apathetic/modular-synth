@@ -1,8 +1,13 @@
+import { loadPatches } from '@/utils/persistence';
 import { validateData } from '@/utils/validatePatch';
 
 export function debug() {
-  const patches = JSON.parse(localStorage.patches);
+  const patches = loadPatches();
   console.log(patches);
 
-  validateData(patches);
+  try {
+    validateData(patches);
+  } catch (err) {
+    console.warn('[debug] validateData threw:', err);
+  }
 }

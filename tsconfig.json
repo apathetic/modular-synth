@@ -1,5 +1,5 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "./node_modules/@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "target": "ES2022",
     "composite": true,
