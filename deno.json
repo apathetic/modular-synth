@@ -1,6 +1,5 @@
 {
   "imports": {
-    "@oak/oak": "jsr:@oak/oak@^17.0.0",
     "vue": "npm:vue@^3.4",
     "vue-router": "npm:vue-router@^4.2",
     "@/App.vue": "./src/App.vue",
@@ -17,16 +16,10 @@
     "@/types/generated": "./src/types/generated.ts"
   },
   "tasks": {
-    "start": "deno run --allow-net --allow-read --allow-env ./src/main.ts",
-    "build": "pnpm vite build"
+    "build": "pnpm vite build",
+    "deploy": "deno task build && deployctl deploy --project=de45f9f1-c75e-43ba-9957-4d84053c52dd --static=./dist"
   },
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"]
-  },
-  "deploy": {
-    "project": "de45f9f1-c75e-43ba-9957-4d84053c52dd",
-    "exclude": ["**/node_modules"],
-    "include": ["./dist/**", "server.ts"],
-    "entrypoint": "server.ts"
   }
 }
