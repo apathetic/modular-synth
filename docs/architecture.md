@@ -280,7 +280,10 @@ localStorage ──(loadPatches)──►  patches[]  ──(loadPatch)──►
 
 ## See also
 
-* `src/stores/patch/index.ts` — `basicPatch()` seed shape.
+* `src/stores/patch/index.ts` — blank `state()` + `masterout` sentinel.
+* `src/synths/basic.ts` — `basicPatch()` seed shape (fallback when
+  localStorage is empty).
+* `src/synths/dx7.ts` — DX7 algorithm-1 FM example patch.
 * `src/utils/persistence.ts` — read/validate/repair.
 * `src/utils/validatePatch.ts` — Zod type guards and `fixPatch`.
 * `src/audio/registry.ts` — runtime-only audio registry.

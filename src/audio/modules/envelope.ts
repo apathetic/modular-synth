@@ -62,8 +62,8 @@ export class Envelope implements SynthModule {
 
     this.inlets = [
       {
-        label: 'vel',
-        desc: 'Gate — non-zero triggers attack, zero triggers release',
+        label: 'gate',
+        desc: 'on triggers attack, off triggers release',
         data: (v) => this.gate(v as number),
       },
       {

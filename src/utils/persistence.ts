@@ -1,4 +1,4 @@
-import { basicPatch } from '@/stores/patch';
+import { basicPatch } from '@/synths/basic';
 import { isPatch, fixPatch } from '@/utils/validatePatch';
 
 export const STORAGE_KEY = 'synth.patches';

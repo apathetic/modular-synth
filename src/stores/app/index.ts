@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
-import { state as emptyPatch, basicPatch } from '@/stores/patch';
+import { state as emptyPatch } from '@/stores/patch';
+import { basicPatch } from '@/synths/basic';
 
 import { nextTick } from 'vue';
 import { log } from '@/utils/logger';

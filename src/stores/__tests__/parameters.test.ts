@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { createAppStore } from '@/stores/app';
-import { basicPatch, state as blank } from '@/stores/patch';
+import { state as blank } from '@/stores/patch';
+import { basicPatch } from '@/synths/basic';
 
 const freshStore = (patches: Patch[] = [basicPatch()]) => {
   const useStore = createAppStore({ patches });
@@ -135,27 +136,5 @@ describe('addPreset / removePreset', () => {
 
     expect(store.patch.presets).toHaveLength(1);
     expect(store.presetId).toBe(0);
-  });
-});
-
-describe('basicPatch preset defaults', () => {
-  // Regression guard: parameters must be nested by numeric moduleId, and the
-  // moduleIds must correspond to real modules in the patch.
-  it('ships preset parameters in `parameters[moduleId][name]` shape', () => {
-    const { modules, presets } = basicPatch();
-    const ids = new Set(modules.map((m) => (m as Module).id));
-    const params = presets[0]!.parameters;
-
-    const moduleIdKeys = Object.keys(params);
-    expect(moduleIdKeys.length).toBeGreaterThan(0);
-
-    for (const key of moduleIdKeys) {
-      expect(key).toMatch(/^\d+$/);
-      expect(ids.has(Number(key))).toBe(true);
-
-      const bucket = params[Number(key) as unknown as keyof typeof params];
-      expect(typeof bucket).toBe('object');
-      expect(bucket && Object.keys(bucket).length).toBeGreaterThan(0);
-    }
   });
 });

@@ -5,10 +5,11 @@
     </div>
 
     <div class="module-interface">
-      <span class="received" :class="{active: active}"></span>
+      <span class="received" :class="{active: gate}"></span>
 
       <p>note: {{ noteName }}</p>
-      <p>freq: {{ Math.round(freq) }} Hz</p>
+      <p>pitch: {{ Math.round(pitch) }} Hz</p>
+      <p>gate: {{ gate }}</p>
       <p>vel:  {{ velocity }}</p>
       <p>bend: {{ bend }}</p>
       <p>mod:  {{ mod }}</p>
@@ -46,19 +47,20 @@
 
     setup (props, { expose }) {
       const note = ref(0);
-      const freq = ref(440);
+      const pitch = ref(440);
+      const gate = ref(0);
       const velocity = ref(0);
       const mod = ref(0);
       const bend = ref(0);
-      const active = ref(0);
       const noteName = computed(() => noteNames[note.value] || '');
 
 
       const outlets = [
-        { label: 'freq', data: 'freq' }, // "string" of the property to connect
-        { label: 'vel', data: 'velocity' }, // for now. should be "gate" or "trigger"...
-        { label: 'bend', data: 'bend' },
-        { label: 'mod', data: 'mod' }
+        { label: 'pitch', data: 'pitch' },
+        { label: 'gate',  data: 'gate' },     // binary 0|1
+        { label: 'vel',   data: 'velocity' }, // 0–1 float
+        // { label: 'bend',  data: 'bend' },
+        { label: 'mod',   data: 'mod' },
       ];
 
 
@@ -76,25 +78,23 @@
 
 
       /**
-      * [noteOn description]
-      * @param  {number} note     Midi note.
-      * @param  {number} velocity Midi velocity beteen 1 - 127.
-      */
+       * [noteOn description]
+       * @param  {number} note     Midi note.
+       * @param  {number} velocity Midi velocity beteen 1 - 127.
+       */
       function noteOn(n: number, v: number) {
         note.value = n;
+        pitch.value = 440 * (Math.pow(2, ((n - 69) / 12)));
         velocity.value = (v / 127.0);
-        freq.value = 440 * (Math.pow(2, ((n - 69) / 12)));
-        active.value = n;
+        gate.value = 1;
         sync({ note: n, velocity: v });
       }
 
       function noteOff(n: number) {
-        note.value = n;
-
-        if (n === active.value) {
-          active.value = 0;
+        if (n === note.value) {
+          gate.value = 0;
           velocity.value = 0;
-          sync({ note: n, velocity:0 });
+          sync({ note: n, velocity: 0 });
         }
       }
 
@@ -103,7 +103,7 @@
       }
 
       function controller(target, val: number) {
-        mod.value = (val / 127.0); //.toFixed(3);
+        mod.value = (val / 127.0);
       }
 
       onUnmounted(() => {
@@ -122,11 +122,11 @@
       return {
         outlets,
         noteName,
-        freq,
+        pitch,
+        gate,
         velocity,
         bend,
         mod,
-        active
       };
     }
 

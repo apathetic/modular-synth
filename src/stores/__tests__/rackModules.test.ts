@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { createAppStore } from '@/stores/app';
-import { basicPatch } from '@/stores/patch';
+import { basicPatch } from '@/synths/basic';
 import { MASTER_ID } from '@/audio/master';
 
 const freshStore = (patches: Patch[] = [basicPatch()]) => {

@@ -62,7 +62,7 @@ describe('Envelope', () => {
       const env = new Envelope();
 
       expect(env.inlets).toHaveLength(2);
-      expect(env.inlets[0].label).toBe('vel');
+      expect(env.inlets[0].label).toBe('gate');
       expect(typeof env.inlets[0].data).toBe('function');
       expect(env.inlets[1].label).toBe('mod');
 
@@ -167,7 +167,7 @@ describe('Envelope', () => {
       expect(g.linearRampToValueAtTime).toHaveBeenCalledWith(0, 0.3);
     });
 
-    it('is wired as the `vel` inlet callback', () => {
+    it('is wired as the `gate` inlet callback', () => {
       // Regression guard: routing.ts treats `inlet.data` as the data-sink
       // callback, so the gate function must be reachable through that edge.
       const env = new Envelope({ attack: 0.2, release: 0.4 });
