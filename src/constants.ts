@@ -20,6 +20,8 @@ export const cellWidth = 120;
  */
 export const moduleSize: Record<moduleType, Array<number>> = {
   'Analyser':   [6, 1],
+  'Bento':      [4, 1],
+  'Boutique':   [5, 1],
   'Clock':      [2, 1],
   // 'Comb':       [3, 1],
   'Compressor': [3, 1],

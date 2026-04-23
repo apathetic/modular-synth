@@ -25,3 +25,6 @@ export {
   type WaveSlot,
   type BuiltInTableName,
 } from './tables';
+
+// Composed Reaktor-style oscillators (Phase B).
+export * from './composed';

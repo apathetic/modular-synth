@@ -8,7 +8,7 @@ import { Env } from './modules/Env';
 import { LFO } from './modules/LFO';
 import { Mixer } from './modules/Mixer';
 import { NoteIn } from './modules/NoteIn';
-import { OSC } from './modules/OSC';
+import { OSC, Bento, Boutique } from './modules/OSC';
 import { Reverb } from './modules/Reverb';
 import { Filter } from './modules/Filter';
 import { VCA } from './modules/VCA';
@@ -25,6 +25,8 @@ import { VCA } from './modules/VCA';
  */
 export const modules = {
   Analyser,
+  Bento,
+  Boutique,
   Clock,
   Comb,
   Compressor,
