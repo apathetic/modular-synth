@@ -1,4 +1,5 @@
 import { Analyser } from './modules/Analyser';
+import { Clock } from './modules/Clock';
 import { Comb } from './modules/Comb';
 import { Compressor } from './modules/Compressor';
 import { Delay } from './modules/Delay';
@@ -24,6 +25,7 @@ import { VCA } from './modules/VCA';
  */
 export const modules = {
   Analyser,
+  Clock,
   Comb,
   Compressor,
   Delay,
