@@ -1,3 +1,96 @@
+<script lang="ts">
+  import { defineComponent, ref, watch, onMounted, onUnmounted } from 'vue';
+  import { Filter, FILTER_TYPES, type FilterType } from '@/audio/modules/filter';
+
+  /*
+    Thin UI shell around `Filter`. Owns the knob-bound reactive refs and
+    the response-curve canvas; all DSP (nodes, mod path, port wiring)
+    lives in the class.
+  */
+  export default defineComponent({
+    name: 'Filter',
+
+    props: {
+      id: {
+        default: undefined,
+        required: true,
+      },
+    },
+
+    setup(_props, { expose }) {
+      const types = FILTER_TYPES;
+      const type  = ref<FilterType>(types[0]);
+      const freq  = ref(440);
+      const Q     = ref(1);
+      const canvas = ref<HTMLCanvasElement | null>(null);
+
+      const filterModule = new Filter({
+        type:      type.value,
+        frequency: freq.value,
+        Q:         Q.value,
+      });
+
+      // Pre-allocated buffers for `getFrequencyResponse` — reused on
+      // every redraw so we're not churning typed arrays per keystroke.
+      const frequencies   = new Float32Array(100);
+      const magResponse   = new Float32Array(frequencies.length);
+      const phaseResponse = new Float32Array(frequencies.length);
+      for (let i = 0; i < frequencies.length; i++) {
+        frequencies[i] = 20 * Math.pow(2, i / 10); // 20Hz..20kHz, log-spaced
+      }
+
+      function drawFilterCurve() {
+        const el = canvas.value;
+        if (!el) return;
+
+        const ctx = el.getContext('2d');
+        if (!ctx) return;
+
+        ctx.clearRect(0, 0, el.width, el.height);
+        filterModule.getFrequencyResponse(frequencies, magResponse, phaseResponse);
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ccff';
+        ctx.lineWidth   = 2;
+
+        for (let i = 0; i < frequencies.length; i++) {
+          const x = (i / frequencies.length) * el.width;
+          const y = (1 - magResponse[i]) * el.height;
+          if (i === 0) ctx.moveTo(x, y);
+          else         ctx.lineTo(x, y);
+        }
+
+        ctx.stroke();
+      }
+
+      watch(freq, (f) => { filterModule.frequency = f; drawFilterCurve(); });
+      watch(Q,    (q) => { filterModule.Q         = q; drawFilterCurve(); });
+      watch(type, (t) => { filterModule.type      = t; drawFilterCurve(); });
+
+      onMounted(drawFilterCurve);
+      onUnmounted(() => filterModule.destroy());
+
+      // AUDIO
+      expose({
+        inlets:  filterModule.inlets,
+        outlets: filterModule.outlets,
+      });
+
+      // UI
+      return {
+        inlets:  filterModule.inlets,
+        outlets: filterModule.outlets,
+        freq,
+        Q,
+        type,
+        types,
+        canvas,
+      };
+    },
+  });
+</script>
+
+
 <template>
   <div class="filter">
     <div class="module-details">
@@ -18,134 +111,6 @@
     </div>
   </div>
 </template>
-
-
-<script lang="ts">
-  import { defineComponent, ref, watch, onMounted, onUnmounted } from 'vue';
-  import { filter, parameter } from '@/audio';
-
-  export default defineComponent({
-    props: {
-      id: {
-        default: undefined,
-        required: true
-      }
-    },
-
-    setup (props, { expose }) {
-      const types = ['allpass', 'bandpass', 'highpass', 'lowpass', 'peaking'] as const;
-      const type = ref<BiquadFilterType>(types[0]);
-      const freq = ref(440);
-      const Q = ref(1);
-      const canvas = ref<HTMLCanvasElement | null>(null);
-
-      // Create the filter and its modulation
-      const filterNode = filter(type.value, freq.value, Q.value);
-      const mod = parameter(500); // range: 0 - 500 cents (interval of a 5th)
-      mod.output.connect(filterNode.detune);
-
-      // Function to draw the filter curve
-      const drawFilterCurve = () => {
-        if (!canvas.value) return;
-
-        const ctx = canvas.value.getContext('2d');
-        if (!ctx) return;
-
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
-
-        // Generate frequency points (log scale)
-        const frequencies = new Float32Array(100);
-        for (let i = 0; i < frequencies.length; i++) {
-          frequencies[i] = 20 * Math.pow(2, i / 10); // 20Hz to 20kHz
-        }
-
-        // Get frequency response
-        const magResponse = new Float32Array(frequencies.length);
-        const phaseResponse = new Float32Array(frequencies.length);
-        filterNode.getFrequencyResponse(frequencies, magResponse, phaseResponse);
-
-        // Draw the curve
-        ctx.beginPath();
-        ctx.strokeStyle = '#00ccff';
-        ctx.lineWidth = 2;
-
-        for (let i = 0; i < frequencies.length; i++) {
-          const x = (i / frequencies.length) * canvas.value.width;
-          const y = (1 - magResponse[i]) * canvas.value.height;
-
-          if (i === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-
-        ctx.stroke();
-      };
-
-      // Watch for changes and redraw
-      watch([freq, Q, type], () => {
-        drawFilterCurve();
-      });
-
-      // Initial draw
-      onMounted(() => {
-        drawFilterCurve();
-      });
-
-      const inlets = [
-        {
-          label: 'input',
-          desc: 'signal to filter',
-          audio: filterNode
-        },
-        {
-          label: 'freq',
-          desc: 'filter frequency',
-          data: (f: number) => filterNode.frequency.value = f
-        },
-        {
-          label: 'mod',
-          audio: mod.input
-        }
-      ];
-
-      const outlets = [
-        {
-          label: 'output',
-          desc: 'Audio output',
-          audio: filterNode
-        }
-      ];
-
-      watch(freq, (f) => filterNode.frequency.value = f);
-      watch(Q, (q) => filterNode.Q.value = q);
-      watch(type, (t) => filterNode.type = t as BiquadFilterType);
-
-      onUnmounted(() => {
-        mod.destroy();
-      });
-
-      // AUDIO
-      expose({
-        inlets,
-        outlets
-      });
-
-      // UI
-      return {
-        inlets,
-        outlets,
-        freq,
-        Q,
-        type,
-        types,
-        canvas
-      }
-    }
-  });
-</script>
 
 
 <style>

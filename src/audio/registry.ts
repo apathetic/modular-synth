@@ -1,7 +1,7 @@
 import type { SynthNode } from '@/types/globals';
 
 /**
- * Runtime-only registry that maps moduleIds to their the `SynthNode` (the
+ * Runtime-only registry that maps moduleIds to their `SynthNode` (the
  * inlets/outlets backed by `AudioNode`s and data-port callbacks).
  *
  * Kept OUT of the app state on purpose:
