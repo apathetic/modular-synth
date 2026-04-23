@@ -1,16 +1,18 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import * as ValidatePatchModule from '../validatePatch';
-import { PatchSchema, ModuleSchema } from '@/types/generated';
-import type { Patch } from '@/types/generated';
-
-const {
+import {
   validateData,
   fixPatch,
   isPatch,
   isModule,
   isConnection,
   isPreset,
-} = ValidatePatchModule;
+} from '../validatePatch';
+import { PatchSchema, ModuleSchema, MasterOutSchema } from '@/types/generated';
+import type { Patch } from '@/types/generated';
+
+// Minimal preset payload that satisfies PresetSchema — every patch in these
+// tests needs at least one, because PatchSchema requires `presets.nonempty()`.
+const MIN_PRESETS = [{ name: 'default', parameters: {} }];
 
 // Mock console.warn and console.error
 beforeEach(() => {
@@ -31,19 +33,19 @@ describe('isPatch', () => {
       name: 'Test Patch',
       modules: [],
       connections: [],
-      configs: []
+      presets: MIN_PRESETS,
     };
-    expect(isPatch(patch)).toBe('pass');
+    expect(isPatch(patch)).toBe(true);
     expect(console.error).not.toHaveBeenCalled();
   });
 
   it('should return false for invalid patches', () => {
-    expect(isPatch(null)).toBe('fail');
+    expect(isPatch(null)).toBe(false);
     expect(console.error).toHaveBeenCalled();
 
     vi.clearAllMocks();
 
-    expect(isPatch({})).toBe('fail');
+    expect(isPatch({})).toBe(false);
     expect(console.error).toHaveBeenCalled();
   });
 });
@@ -61,14 +63,18 @@ describe('isModule', () => {
     expect(isModule(module)).toBe(true);
   });
 
-  it('should return true for MasterOut module', () => {
+  it('should return false for MasterOut (it has its own schema)', () => {
+    // `isModule` intentionally only accepts user-placed modules — MasterOut
+    // is validated via MasterOutSchema and special-cased by callers like
+    // `fixPatch` via an `id === 0` check.
     const masterOut = {
       id: 0,
       type: 'MasterOut',
       x: 0,
       y: 0
     };
-    expect(isModule(masterOut)).toBe(true);
+    expect(isModule(masterOut)).toBe(false);
+    expect(MasterOutSchema.safeParse(masterOut).success).toBe(true);
   });
 
   it('should return false for null or undefined', () => {
@@ -141,15 +147,17 @@ describe('Zod schemas', () => {
       expect(result.success).toBe(true);
     });
 
-    it('should validate MasterOut', () => {
+    it('should validate MasterOut via MasterOutSchema (not ModuleSchema)', () => {
       const masterOut = {
         id: 0,
         type: 'MasterOut',
         x: 0,
         y: 0
       };
-      const result = ModuleSchema.safeParse(masterOut);
-      expect(result.success).toBe(true);
+      // ModuleSchema excludes MasterOut by design — PatchSchema accepts the
+      // union `ModuleSchema | MasterOutSchema` for the modules[] entries.
+      expect(ModuleSchema.safeParse(masterOut).success).toBe(false);
+      expect(MasterOutSchema.safeParse(masterOut).success).toBe(true);
     });
 
     it('should validate optional width/height', () => {
@@ -189,7 +197,7 @@ describe('Zod schemas', () => {
         name: 'Test Patch',
         modules: [],
         connections: [],
-        configs: []
+        presets: MIN_PRESETS,
       };
       const result = PatchSchema.safeParse(validPatch);
       expect(result.success).toBe(true);
@@ -199,7 +207,7 @@ describe('Zod schemas', () => {
       const invalidPatch = {
         id: 'test-id',
         name: 'Test Patch'
-        // missing i, modules, connections, configs
+        // missing i, modules, connections, presets
       };
       const result = PatchSchema.safeParse(invalidPatch);
       expect(result.success).toBe(false);
@@ -232,21 +240,22 @@ describe('fixPatch', () => {
     expect(result.name).toBeTruthy();
   });
 
-  it('should throw an error if patch cannot be fixed', () => {
-    // Spy on isPatch instead of replacing it
-    const mockIsPatch = vi.spyOn(ValidatePatchModule, 'isPatch')
-      .mockImplementationOnce(() => 'fail' as any);
-
-    const patch: Partial<Patch> = {
+  it('returns a valid patch even for heavily malformed input', () => {
+    // fixPatch backfills every required field from `state()` defaults, so the
+    // result always satisfies PatchSchema. The internal "cannot be fixed"
+    // throw is effectively unreachable with the current defaults.
+    const broken: Partial<Patch> = {
       id: 'test',
-      name: 'Test'
-      // Intentionally missing all other required fields
+      name: 'Test',
+      // Intentionally missing i, modules, connections, presets.
     };
 
-    expect(() => fixPatch(patch)).toThrow('PATCH VALIDATION and subsequent fix failed.');
-
-    // Restore spy
-    mockIsPatch.mockRestore();
+    const result = fixPatch(broken);
+    expect(isPatch(result)).toBe(true);
+    expect(result.id).toBe('test');
+    expect(result.name).toBe('Test');
+    expect(result.modules.length).toBeGreaterThan(0); // MasterOut injected
+    expect(result.presets.length).toBeGreaterThan(0);
   });
 });
 
@@ -264,45 +273,19 @@ describe('validateData', () => {
     expect(() => validateData('not an array')).toThrow('Invalid patches array.');
   });
 
-  it('should validate each patch in the array', () => {
-    // Spy on isPatch instead of replacing it
-    const mockIsPatch = vi.spyOn(ValidatePatchModule, 'isPatch')
-      .mockImplementation(() => 'pass' as any);
-
+  it('returns true when every patch passes schema validation', () => {
     const patches = [
-      { id: 'test1', i: 0, name: 'Test 1', modules: [], connections: [], configs: [] },
-      { id: 'test2', i: 1, name: 'Test 2', modules: [], connections: [], configs: [] }
+      { id: 'test1', i: 0, name: 'Test 1', modules: [], connections: [], presets: MIN_PRESETS },
+      { id: 'test2', i: 1, name: 'Test 2', modules: [], connections: [], presets: MIN_PRESETS },
     ];
-    const result = validateData(patches);
-
-    expect(result).toHaveLength(2);
-    expect(mockIsPatch).toHaveBeenCalledTimes(2);
-
-    // Restore spy
-    mockIsPatch.mockRestore();
+    expect(validateData(patches)).toBe(true);
   });
 
-  it('should fix invalid patches in the array', () => {
-    // Spy on isPatch and fixPatch instead of replacing them
-    const mockIsPatch = vi.spyOn(ValidatePatchModule, 'isPatch')
-      .mockImplementationOnce(() => 'pass' as any)
-      .mockImplementationOnce(() => 'fail' as any);
-
-    const mockFixPatch = vi.spyOn(ValidatePatchModule, 'fixPatch');
-
+  it('returns false when any patch fails schema validation', () => {
     const patches = [
-      { id: 'test1', i: 0, name: 'Test 1', modules: [], connections: [], configs: [] }, // Valid
-      { id: 'test2', name: 'Test 2' } // Invalid, needs fixing
+      { id: 'test1', i: 0, name: 'Test 1', modules: [], connections: [], presets: MIN_PRESETS }, // valid
+      { id: 'test2', name: 'Test 2' }, // invalid — missing required fields
     ];
-
-    validateData(patches);
-
-    // Verify fixPatch was called once for the second patch
-    expect(mockFixPatch).toHaveBeenCalledTimes(1);
-    expect(mockFixPatch).toHaveBeenCalledWith(patches[1]);
-
-    // Restore spies
-    mockIsPatch.mockRestore();
-    mockFixPatch.mockRestore();
+    expect(validateData(patches)).toBe(false);
   });
 });

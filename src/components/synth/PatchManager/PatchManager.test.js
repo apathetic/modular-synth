@@ -18,9 +18,19 @@ vi.mock('@/stores/app', async (importOriginal) => {
 const createTestStore = (initialPatches = [blank()]) => {
   const store = createAppStore({ patches: initialPatches })();
 
+  // Seed `store.patch` from the first entry so the initial render sees a
+  // real patch instead of the empty stub that `state()` seeds in Pinia.
   store.patchId = 0;
+  store.patch = store.patches[0];
+  store.patch.loaded = true;
+
+  // Replace the real (async, audio-graph-wiring) loadPatch with a sync spy
+  // that mirrors the bits the UI cares about: swap `store.patch`, mark it
+  // loaded so the `presets` / `preset` getters surface real preset data.
   store.loadPatch = vi.fn((id) => {
     store.patchId = id;
+    store.patch = store.patches[id];
+    if (store.patch) store.patch.loaded = true;
     store.presetId = 0;
   });
 
@@ -56,13 +66,15 @@ describe('PatchManager.vue', () => {
     it('loads a default patch', () => {
       render(PatchManager);
 
+      // `state()` seeds the default blank patch with name and preset name both
+      // set to '-' — see @/stores/patch.
       const patch = screen.getByTestId('patch');
       const patchInput = within(patch).getByRole('textbox');
-      expect(patchInput.value).to.equal('untitled');
+      expect(patchInput.value).to.equal('-');
 
       const params = screen.getByTestId('params');
       const paramsInput = within(params).getByRole('textbox');
-      expect(paramsInput.value).to.equal('<blank>');
+      expect(paramsInput.value).to.equal('-');
     });
 
     it('can load a patch', () => {
@@ -73,7 +85,10 @@ describe('PatchManager.vue', () => {
       const patch = screen.getByTestId('patch');
       const dropdown = within(patch).getByRole('combobox');
 
-      fireEvent.update(dropdown, { target: { value: 0 } });
+      // `fireEvent.update` takes the new value as its 2nd positional arg
+      // (a string, matching what the DOM would write back). Passing an
+      // options bag silently fails — the select's v-model binds to undefined.
+      fireEvent.update(dropdown, '0');
       expect(mockStore.loadPatch).toHaveBeenCalledTimes(2);
     });
 
@@ -259,9 +274,10 @@ describe('PatchManager.vue', () => {
       const patchInput = within(patch).getByRole('textbox');
       expect(patchInput.value).to.equal('first-patch');
 
-      // Update patch selection - use an actual Number here, not a string
+      // `fireEvent.update(select, value)` takes the new value as a string.
+      // v-model then coerces it back through the `<option :value="i">` map.
       const dropdown = within(patch).getByRole('combobox');
-      fireEvent.update(dropdown, { target: { value: 1 } });
+      await fireEvent.update(dropdown, '1');
 
       // Verify loadPatch was called with the right argument
       expect(loadPatchSpy).toHaveBeenCalledWith(1);

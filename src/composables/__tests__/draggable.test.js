@@ -1,12 +1,8 @@
-
-
-// -------------
-
+import { describe } from 'vitest';
 
 // draggable
-// - connectino (proxy) updates immediately, not on drag end
+// - connection (proxy) updates immediately, not on drag end
 // - drags in Edit
 // - drags in play, but snaps on drag end
-
 describe.skip('Draggable', () => {
 });
