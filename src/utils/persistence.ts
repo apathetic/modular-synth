@@ -1,10 +1,18 @@
 import { basicPatch } from '@/synths/basic';
+import { dx7Patch } from '@/synths/dx7';
 import { isPatch, fixPatch } from '@/utils/validatePatch';
 
 export const STORAGE_KEY = 'synth.patches';
 export const STORAGE_VERSION = 1;
 
 const LEGACY_KEY = 'patches';
+
+/**
+ * Patches seeded into the workspace on first boot (or any time localStorage
+ * is empty/unreadable). DX7 is first so it auto-loads at `patchId: 0`; Basic
+ * stays in the list as a simple fallback the user can switch to.
+ */
+export const defaultPatches = (): Patch[] => [dx7Patch(), basicPatch()];
 
 type StoredEnvelope = {
   version: number;
@@ -55,14 +63,14 @@ const sanitizePatch = (raw: unknown): Patch => {
  */
 export function loadPatches(): Patch[] {
   const raw = readRaw();
-  if (!raw) return [basicPatch()];
+  if (!raw) return defaultPatches();
 
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
   } catch (err) {
     console.warn('[persistence] JSON.parse failed, starting fresh:', err);
-    return [basicPatch()];
+    return defaultPatches();
   }
 
   const rawPatches: unknown[] = isEnvelope(parsed)
@@ -71,10 +79,10 @@ export function loadPatches(): Patch[] {
       ? parsed
       : [];
 
-  if (rawPatches.length === 0) return [basicPatch()];
+  if (rawPatches.length === 0) return defaultPatches();
 
   const patches = rawPatches.map(sanitizePatch);
-  return patches.length > 0 ? patches : [basicPatch()];
+  return patches.length > 0 ? patches : defaultPatches();
 }
 
 /**

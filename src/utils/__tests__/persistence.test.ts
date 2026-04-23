@@ -7,6 +7,7 @@ import {
   clearStorage,
 } from '../persistence';
 import { basicPatch } from '@/synths/basic';
+import { dx7Patch } from '@/synths/dx7';
 
 const LEGACY_KEY = 'patches';
 
@@ -37,28 +38,31 @@ afterEach(() => {
 });
 
 describe('loadPatches', () => {
-  it('returns a single basicPatch when localStorage is empty', () => {
+  it('returns the shipped default patches when localStorage is empty', () => {
     const patches = loadPatches();
-    expect(patches).toHaveLength(1);
-    expect(patches[0]!.name).toBe(basicPatch().name);
+    expect(patches).toHaveLength(2);
+    expect(patches[0]!.name).toBe(dx7Patch().name);
+    expect(patches[1]!.name).toBe(basicPatch().name);
     expect(patches[0]!.loaded).toBe(false);
   });
 
-  it('returns basicPatch when the stored JSON is malformed', () => {
+  it('returns the default patches when the stored JSON is malformed', () => {
     localStorage.setItem(STORAGE_KEY, 'not-json{');
     const patches = loadPatches();
-    expect(patches).toHaveLength(1);
-    expect(patches[0]!.name).toBe(basicPatch().name);
+    expect(patches).toHaveLength(2);
+    expect(patches[0]!.name).toBe(dx7Patch().name);
+    expect(patches[1]!.name).toBe(basicPatch().name);
   });
 
-  it('returns basicPatch when the envelope has an empty patches array', () => {
+  it('returns the default patches when the envelope has an empty patches array', () => {
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({ version: STORAGE_VERSION, patches: [] }),
     );
     const patches = loadPatches();
-    expect(patches).toHaveLength(1);
-    expect(patches[0]!.name).toBe(basicPatch().name);
+    expect(patches).toHaveLength(2);
+    expect(patches[0]!.name).toBe(dx7Patch().name);
+    expect(patches[1]!.name).toBe(basicPatch().name);
   });
 
   it('reads a versioned envelope', () => {
@@ -192,7 +196,7 @@ describe('clearStorage', () => {
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
   });
 
-  it('causes loadPatches to fall back to basicPatch', () => {
+  it('causes loadPatches to fall back to the shipped defaults', () => {
     localStorage.setItem(
       STORAGE_KEY,
       serializePatches([makeValidPatch({ name: 'WillBeCleared' })]),
@@ -200,7 +204,8 @@ describe('clearStorage', () => {
     clearStorage();
 
     const patches = loadPatches();
-    expect(patches).toHaveLength(1);
-    expect(patches[0]!.name).toBe(basicPatch().name);
+    expect(patches).toHaveLength(2);
+    expect(patches[0]!.name).toBe(dx7Patch().name);
+    expect(patches[1]!.name).toBe(basicPatch().name);
   });
 });

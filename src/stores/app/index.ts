@@ -6,7 +6,7 @@ import { nextTick } from 'vue';
 import { log } from '@/utils/logger';
 // import { /* fetch, create, */ save, /* remove */ } from '@/utils/db';
 import { fixPatch, isPatch } from '@/utils/validatePatch';
-import { loadPatches, clearStorage } from '@/utils/persistence';
+import { loadPatches, defaultPatches, clearStorage } from '@/utils/persistence';
 import { registry } from '@/audio/registry';
 import { MASTER_ID } from '@/audio/master';
 import { moduleSize } from '@/constants';
@@ -248,13 +248,14 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     },
 
     /**
-     * Reset the workspace to a single `Basic` patch + `Vanilla` preset and
-     * wipe any persisted patches from localStorage. Intended for dev use.
+     * Reset the workspace to the shipped default patches (DX7 first, Basic
+     * second) and wipe any persisted patches from localStorage. Intended for
+     * dev use.
      * @this {Store} reference to the pinia store
      */
     clear() {
       log({ type:'system', action:'clear', data:'resetting patches' });
-      this.patches = [basicPatch()];
+      this.patches = defaultPatches();
       this.patchId = 0;
       this.presetId = 0;
       registry.clear();

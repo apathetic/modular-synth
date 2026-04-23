@@ -17,6 +17,7 @@
 
       <knob
         param="bpm"
+        variant="skirted"
         :min="20"
         :max="300"
         :default="120"

@@ -26,15 +26,9 @@
 
     setup (props, { emit }) {
       const { param, min, max } = props;
+      const type = 'slider';
       const moduleId = useModuleId();
-
-      const { start, mapped, normalized } = useParameter({
-        moduleId,
-        param,
-        type: 'slider',
-        min,
-        max,
-      });
+      const { start, mapped, normalized } = useParameter({ moduleId, param, type, min, max });
       const amount = ref('');
 
       // for the component
