@@ -1,49 +1,10 @@
-<template>
-  <main @mousedown="clearActive" :class="isEditing ? 'edit-mode': 'play-mode'">
-    <header id="header" :class="[{'loaded': isAuthenticated}, 'pad']">
-
-      <button class="mode" @click="toggleMode">
-        <span class="play">play</span>
-        <span class="edit">edit</span>
-      </button>
-
-      <PatchManager />
-      <Power />
-    </header>
-
-    <section>
-      <Synth :modules="modules" :connections="connections" />
-
-      <aside id="sidebar">
-        <midi></midi>
-
-        <p v-if="activeModule">
-          <strong>Current Module</strong><br>
-          {{ activeModule.type }} (id: {{ activeModule.id }})<br>
-          x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
-          col, row: {{ activeModule.col }}, {{ activeModule.row }}<br>
-          w, h: {{ activeModule.w }},  {{ activeModule.h }}<br>
-        </p>
-
-        <button @click="debug">debug</button>
-        <button v-if="isDev" @click="clearAll">clear</button>
-
-        <MasterOut />
-      </aside>
-    </section>
-
-    <ContextMenu />
-  </main>
-</template>
-
-
 <script lang="ts">
   import { defineComponent, ref, computed } from 'vue';
   import { debug } from './debug';
   import { useAppStore } from '~/stores/app';
   import { auth } from '~/utils/db';
   import { log } from '~/utils/logger';
-  import Auth from '~/components/synth/Auth'; // signIn
+  import Auth from '~/components/synth/Auth';
   import midi from '~/components/synth/Midi.vue';
   import Synth from '~/components/synth/Rack.vue';
   import Power from '~/components/synth/Power.vue';
@@ -156,6 +117,45 @@
     }
   });
 </script>
+
+
+<template>
+  <main @mousedown="clearActive" :class="isEditing ? 'edit-mode': 'play-mode'">
+    <header id="header" :class="[{'loaded': isAuthenticated}, 'pad']">
+
+      <button class="mode" @click="toggleMode">
+        <span class="play">play</span>
+        <span class="edit">edit</span>
+      </button>
+
+      <PatchManager />
+      <Power />
+    </header>
+
+    <section>
+      <Synth :modules="modules" :connections="connections" />
+
+      <aside id="sidebar">
+        <midi></midi>
+
+        <p v-if="activeModule">
+          <strong>Current Module</strong><br>
+          {{ activeModule.type }} (id: {{ activeModule.id }})<br>
+          x, y: {{ activeModule.x }}, {{ activeModule.y }}<br>
+          col, row: {{ activeModule.col }}, {{ activeModule.row }}<br>
+          w, h: {{ activeModule.w }},  {{ activeModule.h }}<br>
+        </p>
+
+        <button @click="debug">debug</button>
+        <button v-if="isDev" @click="clearAll">clear</button>
+
+        <MasterOut />
+      </aside>
+    </section>
+
+    <ContextMenu />
+  </main>
+</template>
 
 
 <style>
