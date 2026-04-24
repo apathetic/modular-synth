@@ -19,7 +19,7 @@
 
 <script lang="ts">
   import { ref } from 'vue';
-  import { auth } from '@/utils/db';
+  import { auth } from '~/utils/db';
 
   export default {
     setup() {

@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
-import { createAppStore } from '@/stores/app';
-import { state as blank } from '@/stores/patch';
-import { basicPatch } from '@/synths/basic';
+import { createAppStore } from '~/stores/app';
+import { state as blank } from '~/stores/patch';
+import { basicPatch } from '~/synths/basic';
 
 const freshStore = (patches: Patch[] = [basicPatch()]) => {
   const useStore = createAppStore({ patches });

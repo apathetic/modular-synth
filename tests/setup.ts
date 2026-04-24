@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 
 // Minimal AudioContext stub. Extend the returned shape whenever a new factory
-// in `@/audio` gets imported from a test path (directly or transitively, as
-// `@/audio/master` does at module load).
+// in `~/audio` gets imported from a test path (directly or transitively, as
+// `~/audio/master` does at module load).
 const makeAudioNode = () => ({
   connect: vi.fn(),
   disconnect: vi.fn(),

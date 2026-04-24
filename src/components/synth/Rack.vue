@@ -1,12 +1,12 @@
 <script lang="ts">
   import { defineComponent, ref, watch, onMounted } from 'vue';
-  import { log } from '@/utils/logger';
-  import { useAppStore } from '@/stores/app';
-  import { useSortable } from '@/composables';
+  import { log } from '~/utils/logger';
+  import { useAppStore } from '~/stores/app';
+  import { useSortable } from '~/composables';
   import Connecting from './Connecting.vue';
   import Connect from './Connection';
   import Unit from './Unit.vue';
-  import type { Module, Connection } from '@/types/generated';
+  import type { Module, Connection } from '~/types/generated';
 
   export default defineComponent({
     name: 'Rack',

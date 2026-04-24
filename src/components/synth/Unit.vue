@@ -1,15 +1,15 @@
 <script lang="ts">
   import { defineComponent, computed, ref, onMounted, onBeforeUnmount, onErrorCaptured } from 'vue';
-  import { rackWidth, rackHeight, moduleSize } from '@/constants';
-  import { useDraggable, provideModuleId } from '@/composables';
-  import { useAppStore } from '@/stores/app';
-  import { registry } from '@/audio/registry';
-  import { MASTER_ID } from '@/audio/master';
-  import { log } from '@/utils/logger';
-  import { modules } from '@/components';
-  import Debugger from '@/components/modules/Debugger.vue';
-  import type { Module } from '@/types/generated';
-  import type { SynthNode } from '@/types/globals';
+  import { rackWidth, rackHeight, moduleSize } from '~/constants';
+  import { useDraggable, provideModuleId } from '~/composables';
+  import { useAppStore } from '~/stores/app';
+  import { registry } from '~/audio/registry';
+  import { MASTER_ID } from '~/audio/master';
+  import { log } from '~/utils/logger';
+  import { modules } from '~/components';
+  import Debugger from '~/components/modules/Debugger.vue';
+  import type { Module } from '~/types/generated';
+  import type { SynthNode } from '~/types/globals';
   import type { PropType } from 'vue'
 
   export default defineComponent({

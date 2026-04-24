@@ -22,7 +22,7 @@
 
 <script lang="ts">
   import { defineComponent, inject, ref, watch, onMounted, onUnmounted } from 'vue';
-  import { Parameter } from '@/audio';
+  import { Parameter } from '~/audio';
 
 
   const FILTERS = {

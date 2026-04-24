@@ -1,6 +1,6 @@
 <script lang="ts">
   import { defineComponent, ref, watch, onUnmounted } from 'vue';
-  import { Bento } from '@/audio/oscillators/composed/bento';
+  import { Bento } from '~/audio/oscillators/composed/bento';
 
   /*
     Thin UI shell around `Bento`. All DSP (sawpulse cores, mod chains, VCA,

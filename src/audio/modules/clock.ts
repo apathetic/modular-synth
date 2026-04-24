@@ -1,4 +1,4 @@
-import type { Inlet, Outlet, SynthModule } from '@/types/audio';
+import type { Inlet, Outlet, SynthModule } from '~/types/audio';
 
 /**
  * Musical division of the underlying beat. Matches Tone.js-style notation

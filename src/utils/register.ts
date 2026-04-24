@@ -1,7 +1,7 @@
-import inlets from '@/components/synth/Inlets.vue';
-import outlets from '@/components/synth/Outlets.vue';
-import * as UI from '@/components/UI';
-// import * as directives from '@/directives';
+import inlets from '~/components/synth/Inlets.vue';
+import outlets from '~/components/synth/Outlets.vue';
+import * as UI from '~/components/UI';
+// import * as directives from '~/directives';
 import type { App } from 'vue';
 
 

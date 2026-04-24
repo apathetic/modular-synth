@@ -13,10 +13,10 @@
 
 <script lang="ts">
   import { defineComponent, ref, watch } from 'vue';
-  import { useConnection } from '@/composables';
-  import { useAppStore } from '@/stores/app';
-  import { cellWidth } from '@/constants';
-  import type { Module } from '@/types/generated';
+  import { useConnection } from '~/composables';
+  import { useAppStore } from '~/stores/app';
+  import { cellWidth } from '~/constants';
+  import type { Module } from '~/types/generated';
 
   export default defineComponent({
     setup () {

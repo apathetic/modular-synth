@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia'
-import { state as emptyPatch } from '@/stores/patch';
-import { basicPatch } from '@/synths/basic';
+import { state as emptyPatch } from '~/stores/patch';
+import { basicPatch } from '~/synths/basic';
 
 import { nextTick } from 'vue';
-import { log } from '@/utils/logger';
-// import { /* fetch, create, */ save, /* remove */ } from '@/utils/db';
-import { fixPatch, isPatch } from '@/utils/validatePatch';
-import { loadPatches, defaultPatches, clearStorage } from '@/utils/persistence';
-import { registry } from '@/audio/registry';
-import { MASTER_ID } from '@/audio/master';
-import { moduleSize } from '@/constants';
-import type { AppState, RackUnit, MouseCoords, GridCoords } from '@/types/globals';
-// import type {  MasterOut, Module } from '@/types/generated';
+import { log } from '~/utils/logger';
+// import { /* fetch, create, */ save, /* remove */ } from '~/utils/db';
+import { fixPatch, isPatch } from '~/utils/validatePatch';
+import { loadPatches, defaultPatches, clearStorage } from '~/utils/persistence';
+import { registry } from '~/audio/registry';
+import { MASTER_ID } from '~/audio/master';
+import { moduleSize } from '~/constants';
+import type { AppState, RackUnit, MouseCoords, GridCoords } from '~/types/globals';
+// import type {  MasterOut, Module } from '~/types/generated';
 
 
 export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore('app', {
@@ -39,7 +39,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
      * @type {Patch}
      *
      * Live `AudioNode`s associated with `patch.modules` live in the
-     * module-level `registry` (`@/audio/registry`) — NOT in Pinia state —
+     * module-level `registry` (`~/audio/registry`) — NOT in Pinia state —
      * because audio handles aren't serializable and don't need reactivity.
      */
     patch: emptyPatch(),

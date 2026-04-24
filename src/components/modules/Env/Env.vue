@@ -21,7 +21,7 @@
 
 <script lang="ts">
   import { defineComponent, ref, watch, onUnmounted } from 'vue';
-  import { Envelope } from '@/audio/modules/envelope';
+  import { Envelope } from '~/audio/modules/envelope';
 
   /*
     Thin UI shell around `Envelope`.

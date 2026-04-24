@@ -1,7 +1,7 @@
 // import { computed } from 'vue';
-import GridList from '@/utils/gridList';
-import { useAppStore } from '@/stores/app';
-import { rackWidth, rackHeight } from '@/constants';
+import GridList from '~/utils/gridList';
+import { useAppStore } from '~/stores/app';
+import { rackWidth, rackHeight } from '~/constants';
 
 
 const LANES = 3;

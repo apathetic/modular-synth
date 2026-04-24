@@ -1,6 +1,6 @@
 <script lang="ts">
   import { defineComponent, inject, ref, watch, onMounted, onUnmounted } from 'vue';
-  import { useAppStore } from '@/stores/app';
+  import { useAppStore } from '~/stores/app';
 
   type Mode = 'FFT' | 'scope';
 

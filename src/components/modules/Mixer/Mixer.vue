@@ -21,7 +21,7 @@
 <script lang="ts">
   // import Knob from './UI/Knob';
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
-  import { Parameter, gain } from '@/audio';
+  import { Parameter, gain } from '~/audio';
 
   export default defineComponent({
     name: 'Mixer',

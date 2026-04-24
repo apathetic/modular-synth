@@ -1,6 +1,6 @@
 import { context, parameter } from '..';
 import type { Parameter } from '..';
-import type { Inlet, Outlet, SynthModule } from '@/types/audio';
+import type { Inlet, Outlet, SynthModule } from '~/types/audio';
 
 /**
  * All filter shapes the underlying BiquadFilterNode supports that we care

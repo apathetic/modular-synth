@@ -30,8 +30,8 @@
 
 
 <script lang="ts">
-  import { modules } from '@/components';
-  import { useAppStore } from '@/stores/app';
+  import { modules } from '~/components';
+  import { useAppStore } from '~/stores/app';
 
   export default {
     data() {

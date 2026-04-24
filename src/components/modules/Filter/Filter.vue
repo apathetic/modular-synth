@@ -1,6 +1,6 @@
 <script lang="ts">
   import { defineComponent, ref, watch, onMounted, onUnmounted } from 'vue';
-  import { Filter, FILTER_TYPES, type FilterType } from '@/audio/modules/filter';
+  import { Filter, FILTER_TYPES, type FilterType } from '~/audio/modules/filter';
 
   /*
     Thin UI shell around `Filter`. Owns the knob-bound reactive refs and

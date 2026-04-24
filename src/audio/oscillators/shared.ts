@@ -1,5 +1,5 @@
 import { context } from '..';
-import type { Inlet, Outlet, SynthModule } from '@/types/audio';
+import type { Inlet, Outlet, SynthModule } from '~/types/audio';
 
 /**
  * Shared scaffolding for the "core" oscillator primitives. These classes are

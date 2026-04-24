@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Parameter, context } from '@/audio';
+import { Parameter, context } from '~/audio';
 
 /*
   Tests the `Parameter` class — the connection-agnostic "automatable value"

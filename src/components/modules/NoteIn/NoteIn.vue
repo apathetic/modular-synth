@@ -24,7 +24,7 @@
 
 <script lang="ts">
   import { defineComponent, computed, ref, onUnmounted } from 'vue';
-  import { useEventBus, useKeyboard } from '@/composables';
+  import { useEventBus, useKeyboard } from '~/composables';
   import sync from './worker';
   // import rollover from './rollover';
 

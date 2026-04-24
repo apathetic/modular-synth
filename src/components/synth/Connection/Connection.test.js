@@ -1,16 +1,16 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import Connection from './Connection.vue'
-import { useAppStore } from '@/stores/app'
-import { Parameter } from '@/audio'
+import { useAppStore } from '~/stores/app'
+import { Parameter } from '~/audio'
 
 // Mock the store
-vi.mock('@/stores/app', () => ({
+vi.mock('~/stores/app', () => ({
   useAppStore: vi.fn()
 }))
 
 // Mock the audio Parameter class
-vi.mock('@/audio', () => ({
+vi.mock('~/audio', () => ({
   Parameter: vi.fn().mockImplementation(() => ({
     set: vi.fn(),
     output: {
@@ -21,7 +21,7 @@ vi.mock('@/audio', () => ({
 }))
 
 // Mock the logger
-vi.mock('@/utils/logger', () => ({
+vi.mock('~/utils/logger', () => ({
   log: vi.fn()
 }))
 

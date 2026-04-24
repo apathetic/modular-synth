@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { dx7Patch } from '@/synths/dx7';
-import { PatchSchema } from '@/types/generated';
-import { isPatch } from '@/utils/validatePatch';
+import { dx7Patch } from '~/synths/dx7';
+import { PatchSchema } from '~/types/generated';
+import { isPatch } from '~/utils/validatePatch';
 
 /*
   dx7Patch sanity checks. The patch is hand-wired — a regression here would

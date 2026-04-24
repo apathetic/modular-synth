@@ -1,5 +1,5 @@
 import { context } from '..';
-import type { Inlet, Outlet, SynthModule } from '@/types/audio';
+import type { Inlet, Outlet, SynthModule } from '~/types/audio';
 
 export type PulseOptions = {
   /** Initial frequency in Hz. Defaults to 440. */

@@ -1,6 +1,6 @@
-import { basicPatch } from '@/synths/basic';
-import { dx7Patch } from '@/synths/dx7';
-import { isPatch, fixPatch } from '@/utils/validatePatch';
+import { basicPatch } from '~/synths/basic';
+import { dx7Patch } from '~/synths/dx7';
+import { isPatch, fixPatch } from '~/utils/validatePatch';
 
 export const STORAGE_KEY = 'synth.patches';
 export const STORAGE_VERSION = 1;

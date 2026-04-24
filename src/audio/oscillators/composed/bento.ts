@@ -1,5 +1,5 @@
 import { context } from '../..';
-import type { Inlet, Outlet, SynthModule } from '@/types/audio';
+import type { Inlet, Outlet, SynthModule } from '~/types/audio';
 import { Saw } from '../saw';
 import { Pulse } from '../pulse';
 

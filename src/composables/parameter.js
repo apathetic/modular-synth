@@ -1,6 +1,6 @@
 import { watchEffect, ref, onUnmounted } from 'vue';
-import { useAppStore } from '@/stores/app';
-import { log } from '@/utils/logger';
+import { useAppStore } from '~/stores/app';
+import { log } from '~/utils/logger';
 
 
 /**

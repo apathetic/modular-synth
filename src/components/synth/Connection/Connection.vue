@@ -51,10 +51,10 @@ THOUGHTS:
 
 <script lang="ts">
   import { defineComponent, computed, ref, onUnmounted } from 'vue';
-  import { useAppStore } from '@/stores/app';
-  import { cellWidth } from '@/constants';
-  import { wire, type WireResult } from '@/audio/routing';
-  import { log } from '@/utils/logger';
+  import { useAppStore } from '~/stores/app';
+  import { cellWidth } from '~/constants';
+  import { wire, type WireResult } from '~/audio/routing';
+  import { log } from '~/utils/logger';
 
   export default defineComponent({
     props: {

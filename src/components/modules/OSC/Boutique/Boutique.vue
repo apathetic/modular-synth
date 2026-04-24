@@ -1,6 +1,6 @@
 <script lang="ts">
   import { defineComponent, ref, watch, onUnmounted } from 'vue';
-  import { Boutique } from '@/audio/oscillators/composed/boutique';
+  import { Boutique } from '~/audio/oscillators/composed/boutique';
 
   /*
     Thin UI shell around `Boutique`. Owns knob-bound reactive refs, routes

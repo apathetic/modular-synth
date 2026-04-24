@@ -21,7 +21,7 @@
 
 <script lang="ts">
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
-  import { gain, filter, delay } from '@/audio';
+  import { gain, filter, delay } from '~/audio';
 
   const params = {
     delay: {

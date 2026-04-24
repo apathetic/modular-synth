@@ -1,10 +1,10 @@
-import { state as blank } from '@/stores/patch';
+import { state as blank } from '~/stores/patch';
 import {
   ModuleSchema,
   ConnectionSchema,
   PresetSchema,
   PatchSchema,
-} from '@/types/generated';
+} from '~/types/generated';
 
 /**
  * Type predicate to check if an object is a valid Module.

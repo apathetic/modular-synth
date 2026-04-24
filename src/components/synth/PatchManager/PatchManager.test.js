@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { render, screen, within, fireEvent, cleanup } from '@testing-library/vue';
 import { setActivePinia, createPinia } from 'pinia';
-import { createAppStore, useAppStore } from '@/stores/app';
+import { createAppStore, useAppStore } from '~/stores/app';
 import PatchManager from './PatchManager.vue';
-import { state as blank } from '@/stores/patch';
+import { state as blank } from '~/stores/patch';
 
 
-vi.mock('@/stores/app', async (importOriginal) => {
+vi.mock('~/stores/app', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,

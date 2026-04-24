@@ -29,15 +29,15 @@
 
 <script lang="ts">
   import { defineComponent, ref, computed, watch, onMounted } from 'vue';
-  import { useAppStore } from '@/stores';
-  import { log } from '@/utils/logger';
-  import { master, MASTER_ID } from '@/audio/master';
+  import { useAppStore } from '~/stores';
+  import { log } from '~/utils/logger';
+  import { master, MASTER_ID } from '~/audio/master';
   import VU from '../UI/VU';
 
 
   /*
     MasterOut is a singleton: its audio graph (gain nodes, destination wiring,
-    `registry.add(0, ...)`) is built once at module load in `@/audio/master`.
+    `registry.add(0, ...)`) is built once at module load in `~/audio/master`.
     This component is a UI shell, rendered exactly once in App.vue's sidebar.
   */
   export default defineComponent({

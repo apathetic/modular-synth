@@ -1,8 +1,8 @@
 import { watch } from 'vue';
 import { createPinia } from 'pinia';
-import { useAppStore } from '@/stores/app';
-import { validateData } from '@/utils/validatePatch';
-import { STORAGE_KEY, serializePatches } from '@/utils/persistence';
+import { useAppStore } from '~/stores/app';
+import { validateData } from '~/utils/validatePatch';
+import { STORAGE_KEY, serializePatches } from '~/utils/persistence';
 import type { App as Application } from 'vue';
 
 

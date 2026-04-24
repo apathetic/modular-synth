@@ -1,5 +1,5 @@
-import { Parameter } from '@/audio';
-import type { SynthNode } from '@/types/globals';
+import { Parameter } from '~/audio';
+import type { SynthNode } from '~/types/globals';
 
 /**
  * One end of a potential connection: a live `SynthNode` plus which of its

@@ -8,7 +8,7 @@
 
 <script lang="ts">
   import { defineComponent, ref, watchEffect } from 'vue';
-  import { useParameter, useModuleId } from '@/composables';
+  import { useParameter, useModuleId } from '~/composables';
 
   export default defineComponent({
     name: 'Slider',

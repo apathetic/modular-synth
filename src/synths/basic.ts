@@ -1,4 +1,4 @@
-import { state } from '@/stores/patch';
+import { state } from '~/stores/patch';
 
 /**
  * Seed patch used when localStorage is empty or reset via the dev Clear button.

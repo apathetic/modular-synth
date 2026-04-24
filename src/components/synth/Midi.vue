@@ -12,7 +12,7 @@
 
 
 <script lang="ts">
-import { useEventBus } from '@/composables';
+import { useEventBus } from '~/composables';
 
 // TODO: just implement UI, here, using midi composable for the logic
 

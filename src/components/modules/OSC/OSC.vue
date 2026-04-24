@@ -23,7 +23,7 @@
 
 <script lang="ts">
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
-  import { Parameter, oscillator, gain } from '@/audio';
+  import { Parameter, oscillator, gain } from '~/audio';
 
   export default defineComponent({
     name: 'OSC',

@@ -18,7 +18,7 @@
 
 <script lang="ts">
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
-  import { gain } from '@/audio';
+  import { gain } from '~/audio';
 
   export default defineComponent({
     name: 'VCA',

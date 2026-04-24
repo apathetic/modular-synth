@@ -1,5 +1,5 @@
-import { loadPatches } from '@/utils/persistence';
-import { validateData } from '@/utils/validatePatch';
+import { loadPatches } from '~/utils/persistence';
+import { validateData } from '~/utils/validatePatch';
 
 export function debug() {
   const patches = loadPatches();

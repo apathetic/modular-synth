@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
-import { useAppStore} from '@/stores/app';
-import type { Connection } from '@/types/generated';
+import { useAppStore} from '~/stores/app';
+import type { Connection } from '~/types/generated';
 
 const emptyConnector = () => ({
   id: undefined,

@@ -1,4 +1,4 @@
-import { state } from '@/stores/patch';
+import { state } from '~/stores/patch';
 
 /**
  * Yamaha DX7 "Algorithm 1" patch — six FM operators arranged in two parallel

@@ -6,8 +6,8 @@ import {
   serializePatches,
   clearStorage,
 } from '../persistence';
-import { basicPatch } from '@/synths/basic';
-import { dx7Patch } from '@/synths/dx7';
+import { basicPatch } from '~/synths/basic';
+import { dx7Patch } from '~/synths/dx7';
 
 const LEGACY_KEY = 'patches';
 

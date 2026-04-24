@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { wire } from '../routing';
 
-vi.mock('@/audio', () => ({
+vi.mock('~/audio', () => ({
   Parameter: vi.fn().mockImplementation(() => ({
     set: vi.fn(),
     output: { connect: vi.fn() },
@@ -9,7 +9,7 @@ vi.mock('@/audio', () => ({
   })),
 }));
 
-import { Parameter } from '@/audio';
+import { Parameter } from '~/audio';
 
 /**
  * Build a minimal `SynthNode` stand-in with arbitrary inlets/outlets. We

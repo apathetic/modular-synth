@@ -55,7 +55,7 @@
 
 <script lang="ts">
   import { defineComponent, ref, watch, onUnmounted } from 'vue';
-  import { Clock, type ClockDivision } from '@/audio/modules/clock';
+  import { Clock, type ClockDivision } from '~/audio/modules/clock';
 
   /*
     Thin UI shell around `Clock`. Owns the refs that back the two data

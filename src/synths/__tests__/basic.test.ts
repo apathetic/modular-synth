@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { basicPatch } from '@/synths/basic';
+import { basicPatch } from '~/synths/basic';
 
 /*
   Guards the preset shape of `basicPatch`: parameters must be nested by

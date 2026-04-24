@@ -13,8 +13,8 @@
 
 <script lang="ts">
   import { defineComponent, computed } from 'vue';
-  import { useAppStore } from '@/stores/app';
-  import { context } from '@/audio';
+  import { useAppStore } from '~/stores/app';
+  import { context } from '~/audio';
 
   export default defineComponent({
     name: 'Power',

@@ -1,5 +1,5 @@
 /**
- * The `SynthModule` contract — what every audio module in `@/audio/modules`
+ * The `SynthModule` contract — what every audio module in `~/audio/modules`
  * implements and what `<Unit>` / `<Connection>` consume.
  *
  * This file is the foundation for a gradual migration of rack-module DSP out

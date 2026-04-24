@@ -18,10 +18,10 @@
 
 <script lang="ts">
   import { defineComponent, ref, watchEffect, onUnmounted } from 'vue';
-  import { useAppStore } from '@/stores/app';
-  import { useModuleId } from '@/composables';
-  // import { useParameter } from '@/composables';
-  import { log } from '@/utils/logger';
+  import { useAppStore } from '~/stores/app';
+  import { useModuleId } from '~/composables';
+  // import { useParameter } from '~/composables';
+  import { log } from '~/utils/logger';
 
   export default defineComponent({
     name: 'Dropdown',

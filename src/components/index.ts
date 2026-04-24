@@ -20,7 +20,7 @@ import { VCA } from './modules/VCA';
  * `<ContextMenu>`iterates its keys to populate the "New Module" list.
  *
  * In the `modules` export:
- *  - MasterOut is intentionally excluded (it's a singleton rendered by App.vue's sidebar — see `@/audio/master`).
+ *  - MasterOut is intentionally excluded (it's a singleton rendered by App.vue's sidebar — see `~/audio/master`).
  *  - Debugger is injected ad-hoc by `<Unit>` and isn't part of the user-facing module catalog.
  */
 export const modules = {

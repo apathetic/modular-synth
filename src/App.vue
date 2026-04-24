@@ -40,16 +40,16 @@
 <script lang="ts">
   import { defineComponent, ref, computed } from 'vue';
   import { debug } from './debug';
-  import { useAppStore } from '@/stores/app';
-  import { auth } from '@/utils/db';
-  import { log } from '@/utils/logger';
-  import Auth from '@/components/synth/Auth'; // signIn
-  import midi from '@/components/synth/Midi.vue';
-  import Synth from '@/components/synth/Rack.vue';
-  import Power from '@/components/synth/Power.vue';
-  import MasterOut from '@/components/synth/MasterOut.vue';
-  import PatchManager from '@/components/synth/PatchManager';
-  import ContextMenu from '@/components/synth/ContextMenu.vue';
+  import { useAppStore } from '~/stores/app';
+  import { auth } from '~/utils/db';
+  import { log } from '~/utils/logger';
+  import Auth from '~/components/synth/Auth'; // signIn
+  import midi from '~/components/synth/Midi.vue';
+  import Synth from '~/components/synth/Rack.vue';
+  import Power from '~/components/synth/Power.vue';
+  import MasterOut from '~/components/synth/MasterOut.vue';
+  import PatchManager from '~/components/synth/PatchManager';
+  import ContextMenu from '~/components/synth/ContextMenu.vue';
 
 
   export default defineComponent({

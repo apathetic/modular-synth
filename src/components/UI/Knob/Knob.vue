@@ -122,7 +122,7 @@ All variants share the same drag-to-change behavior and reactive state.
 
 <script lang="ts">
   import { defineComponent, computed, watchEffect, ref, onMounted } from 'vue';
-  import { useParameter, useModuleId } from '@/composables';
+  import { useParameter, useModuleId } from '~/composables';
   import type { PropType } from 'vue';
 
   type KnobVariant = 'arc' | 'pointer' | 'raised' | 'skirted';

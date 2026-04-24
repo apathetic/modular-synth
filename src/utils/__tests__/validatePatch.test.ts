@@ -7,8 +7,8 @@ import {
   isConnection,
   isPreset,
 } from '../validatePatch';
-import { PatchSchema, ModuleSchema, MasterOutSchema } from '@/types/generated';
-import type { Patch } from '@/types/generated';
+import { PatchSchema, ModuleSchema, MasterOutSchema } from '~/types/generated';
+import type { Patch } from '~/types/generated';
 
 // Minimal preset payload that satisfies PresetSchema — every patch in these
 // tests needs at least one, because PatchSchema requires `presets.nonempty()`.

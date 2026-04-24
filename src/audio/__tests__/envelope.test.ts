@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Envelope } from '@/audio/modules/envelope';
-import { signal, context } from '@/audio';
+import { Envelope } from '~/audio/modules/envelope';
+import { signal, context } from '~/audio';
 
 /*
   Tests the `Envelope` class — the ADSR module extracted from Env.vue as
-  the first SynthModule-shaped class in `@/audio/modules`.
+  the first SynthModule-shaped class in `~/audio/modules`.
 
   These tests exercise the DSP scheduling calls (`cancelScheduledValues`,
   `setValueAtTime`, `linearRampToValueAtTime`) through the AudioContext

@@ -1,5 +1,5 @@
 import { context, signal } from '..';
-import type { Inlet, Outlet, SynthModule } from '@/types/audio';
+import type { Inlet, Outlet, SynthModule } from '~/types/audio';
 
 /**
  * Initial ADSR parameters. All times are in seconds; `sustain` is a 0..1

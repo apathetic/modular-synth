@@ -1,4 +1,4 @@
-import type { SynthNode } from '@/types/globals';
+import type { SynthNode } from '~/types/globals';
 
 /**
  * Runtime-only registry that maps moduleIds to their `SynthNode` (the
