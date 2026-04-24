@@ -3,7 +3,7 @@ import { context } from '@/audio';
 import { createStore } from '@/stores';
 import { registerComponents } from '@/utils/register';
 import Synth from './App.vue';
-import '@/styles/styles.css';
+import '@/app.css';
 import type { App } from 'vue';
 
 const app: App = createApp(Synth);

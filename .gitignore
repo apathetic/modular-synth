@@ -1,6 +1,7 @@
 # misc
 .DS_Store
 tsconfig.tsbuildinfo
+.pnpm-store/
 /node_modules
 /dist
 
