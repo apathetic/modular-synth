@@ -38,17 +38,7 @@
       // const { stopDragging } = useDraggable();
 
 
-      auth.getSession().then(({ data }) => {
-        const { session } = data;
-        // const { user } = session;
-        //   if (!!user) {
-        //     this.fetchPatches();
-        //   }
-        store.session = session;
-      })
-
       auth.onAuthStateChange((_, _session) => {
-        // session.value = _session
         store.fetchPatches();
       });
 

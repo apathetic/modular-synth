@@ -1,8 +1,8 @@
 import type { SynthNode } from '~/types/globals';
 
 /**
- * Runtime-only registry that maps moduleIds to their `SynthNode` (the
- * inlets/outlets backed by `AudioNode`s and data-port callbacks).
+ * Runtime-only registry of all WebAudio components. Each is indexed by a
+ * `moduleId`, which maps to a `SynthNode`.
  *
  * Kept OUT of the app state on purpose:
  *   - `AudioNode` / `AudioContext` handles are not structured-cloneable and

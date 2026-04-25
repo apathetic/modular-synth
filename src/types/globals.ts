@@ -1,53 +1,5 @@
 import type { SynthModule } from './audio';
 
-// type moduleType = 'Analyser' | 'Clock' | 'Compressor' | 'Debugger' | 'Delay' | 'Drive' | 'Env' | 'Filter' | 'LFO' | 'Mixer' | 'Node' | 'NoteIn' | 'OSC' | 'Reverb' | 'VCA' | 'VCF';
-
-// type MasterOut = Pick<Module, 'type'|'id'> {
-//   type: 'MasterOut';
-//   id: 0;
-//   x: 0;
-//   y: 0;
-// };
-
-// type Module = {
-//   id: number;
-//   type: moduleType;
-//   col: number;
-//   row: number;
-//   w?: number;
-//   h?: number;
-//   x: number;
-//   y: number;
-// };
-
-// type Connection = {
-//   id: number;
-//   from: {
-//     id: number;
-//     port: number;
-//   };
-//   to: {
-//     id: number;
-//     port: number;
-//   };
-// };
-//
-// type Config = {
-//   name: string;
-//   parameters: Parameters;
-// };
-//
-// type Patch = {
-//   id: string;
-//   i: PatchKey;
-//   loaded: boolean;
-//   name: string;
-//   modules: Module[];
-//   connections: Connection[];
-//   configs: Config[];
-// };
-
-
 
 export type AppState = {
   power: boolean;
@@ -75,13 +27,9 @@ export type RackUnit = {
 };
 
 /**
- * Registry-facing view of a live rack unit: whatever a module component
- * `expose()`s for routing. Weaker than `SynthModule` on purpose — the
- * registry accepts anything that looks like a port-bearing thing, including
- * legacy Options-API modules that don't yet implement `destroy()`.
- *
- * Once every module is migrated to a `SynthModule`, this alias collapses
- * and consumers can switch to `SynthModule` directly (Phase 4 cleanup).
+ * Registry of a live rack unit: whatever a module component `expose()`s for
+ * routing. Same as SynthModule but without (legacy Options-API) modules that
+ * don't yet implement `destroy()`.
  */
 export type SynthNode = Partial<Pick<SynthModule, 'inlets' | 'outlets'>>;
 
@@ -90,7 +38,6 @@ export type SynthNode = Partial<Pick<SynthModule, 'inlets' | 'outlets'>>;
 export type MouseCoords = {
   x: number;
   y: number;
-  // id:
 };
 
 export type GridCoords = {

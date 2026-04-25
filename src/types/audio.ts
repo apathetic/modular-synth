@@ -5,12 +5,12 @@
  * This file is the foundation for a gradual migration of rack-module DSP out
  * of Vue components (`src/components/modules/*.vue`) and into plain TS
  * classes/factories in `src/audio/modules/`. See `docs/architecture.md` for
- * the bigger picture of the "three parallel graphs".
+ * the bigger picture
  *
  * Design notes
  * ------------
  *
- * Inlets and outlets are intentionally asymmetric on their `data` field:
+ * Inlets and outlets are asymmetric on their `data` field:
  *
  *   - `Inlet.data`  is a **callback** `(value) => void` invoked when a
  *                    connection delivers a value. Owned by the sink.

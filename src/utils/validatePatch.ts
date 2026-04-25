@@ -39,14 +39,7 @@ const isPreset = (preset: unknown): preset is Preset => PresetSchema.safeParse(p
  * @param obj - The object to check
  * @returns A type predicate indicating if the object is a valid Patch
  */
-const isPatch = (patch: unknown): patch is Patch => {
-  const result = PatchSchema.safeParse(patch);
-  if (!result.success) {
-    console.error('Invalid patch:', result.error);
-  }
-  return result.success;
-};
-
+const isPatch = (patch: unknown): patch is Patch => PatchSchema.safeParse(patch).success;
 
 
 
@@ -95,7 +88,7 @@ function fixPatch(patch: Partial<Patch> | null | undefined): Patch {
     console.warn('Patch modules missing/invalid. Fixing...');
     result.modules = DEFAULT.modules;
   } else {
-    // Ensure MasterOut sentinel is present; drop entries that don't validate.
+    // Ensure MasterOut is present; drop entries that don't validate.
     const hasMasterOut = result.modules.some(
       (m): m is MasterOut => !!m && typeof m === 'object' && (m as MasterOut).id === 0
     );
@@ -138,13 +131,12 @@ function fixPatch(patch: Partial<Patch> | null | undefined): Patch {
  * @param patches - The array of patches to validate
  * @returns An array of validated patches
  */
-function validateData(patches: unknown): boolean/* Patch[] */ {
+function validateData(patches: unknown): boolean {
   if (!patches || !Array.isArray(patches) || patches.length === 0) {
     throw new Error('Invalid patches array.');
   }
 
   return patches.every((patch) => isPatch(patch));
-  // return patches.map((patch) => isPatch(patch) ? patch : fixPatch(patch));
 }
 
 export {

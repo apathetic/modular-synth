@@ -37,17 +37,3 @@ export function registerComponents(app: App) {
   //   app.directive(directive.name, directive);
   // });
 }
-
-
-/**
- * Registers ye olde service worker
- */
-export function registerServiceWorker() {
-  // if (process.env.NODE_ENV === 'production') {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js');
-      });
-    }
-  // }
-}

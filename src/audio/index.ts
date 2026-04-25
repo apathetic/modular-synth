@@ -1,20 +1,11 @@
-// namespace µ {
-
 
 /**
  * The application's audio context.
  * @type {AudioContext}
  */
-// export const context: AudioContext = AudioContext && new AudioContext();
 export const context: AudioContext = new AudioContext();
 context.suspend();
 
-/**
- * Store references to all WebAudio components. They are indexed by
- * `id` - the same `id` used to referece the `module` in the $store.
- */
-// type Nodes = {[value: number]: Node};
-// export const registry: Nodes = {};
 
 /**
  *
