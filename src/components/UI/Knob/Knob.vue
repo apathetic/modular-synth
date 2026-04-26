@@ -29,7 +29,7 @@ All variants share the same drag-to-change behavior and reactive state.
   >
     <path :d="track" class="track" fill="none" stroke-width="3" stroke-linecap="round"></path>
     <path :d="arc" class="display" fill="none" stroke-width="3" stroke-linecap="round"></path>
-    <text x="24" y="28" class="value">{{ parseFloat(mapped).toFixed(precision) }}</text>
+    <text x="24" y="28" class="value">{{ displayValue }}</text>
     <text x="24" y="54" class="label">{{ param }}</text>
   </svg>
 
@@ -47,7 +47,7 @@ All variants share the same drag-to-change behavior and reactive state.
       stroke-width="3"
       :transform="`rotate(${angleDeg} 18 18)`"
     />
-    <text x="18" y="42" class="value">{{ parseFloat(mapped).toFixed(precision) }}</text>
+    <text x="18" y="42" class="value">{{ displayValue }}</text>
     <text x="18" y="50" class="label">{{ param }}</text>
   </svg>
 
@@ -75,7 +75,7 @@ All variants share the same drag-to-change behavior and reactive state.
       stroke-width="4"
       :transform="`rotate(${angleDeg} 28 28)`"
     />
-    <text x="28" y="62" class="value">{{ parseFloat(mapped).toFixed(precision) }}</text>
+    <text x="28" y="62" class="value">{{ displayValue }}</text>
     <text x="28" y="72" class="label">{{ param }}</text>
   </svg>
 
@@ -114,7 +114,7 @@ All variants share the same drag-to-change behavior and reactive state.
       stroke-width="5"
       :transform="`rotate(${angleDeg} 40 40)`"
     />
-    <text x="40" y="86" class="value">{{ parseFloat(mapped).toFixed(precision) }}</text>
+    <text x="40" y="86" class="value">{{ displayValue }}</text>
     <text x="40" y="98" class="label">{{ param }}</text>
   </svg>
 </template>
@@ -172,6 +172,10 @@ All variants share the same drag-to-change behavior and reactive state.
         type: String as PropType<KnobVariant>,
         default: 'arc',
       },
+      steps: {
+        type: Array as PropType<string[]>,
+        default: undefined
+      }
     },
 
     emits: ['value'],
@@ -185,6 +189,22 @@ All variants share the same drag-to-change behavior and reactive state.
 
       const { start, mapped, normalized } = useParameter({ moduleId, param, type, min, max, mode });
 
+      const internal = computed(() => {
+        if (props.steps?.length) {
+          const count = props.steps.length;
+          return Math.round(normalized.value * (count - 1)) / (count - 1);
+        }
+        return normalized.value;
+      });
+
+      const displayValue = computed(() => {
+        if (props.steps?.length) {
+          const index = Math.round(internal.value * (props.steps.length - 1));
+          return props.steps[index];
+        }
+        return parseFloat(mapped.value).toFixed(props.precision);
+      });
+
       // for the component
       watchEffect(() => {
         emit('value', mapped.value);
@@ -193,7 +213,7 @@ All variants share the same drag-to-change behavior and reactive state.
       // for the UI
       watchEffect(() => {
         // 30 -> 330. Dials start 30deg in and end 30deg before 360.
-        const rotationValue = normalized.value * 300 + 30;
+        const rotationValue = internal.value * 300 + 30;
         arc.value = describeArc(X, Y, SIZE, 30, rotationValue);
       });
 
@@ -203,7 +223,7 @@ All variants share the same drag-to-change behavior and reactive state.
 
       // Rotation for pointer-style variants. 0 -> -150deg (hard left),
       // 1 -> +150deg (hard right), matching the 300deg sweep of the arc.
-      const angleDeg = computed(() => normalized.value * 300 - 150);
+      const angleDeg = computed(() => internal.value * 300 - 150);
 
       // Faint outer track for the 'raised' variant, drawn once per resize
       // (viewBox is static, so we could memoize but it's cheap).
@@ -224,7 +244,9 @@ All variants share the same drag-to-change behavior and reactive state.
         param,
         track,
         arc,
-        start, mapped,
+        start,
+        displayValue,
+        mapped,
         angleDeg,
         raisedTrack,
         tickCount,

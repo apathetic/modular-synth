@@ -10,3 +10,4 @@
 export { Bento, type BentoOptions } from './bento';
 export { Boutique, type BoutiqueOptions } from './boutique';
 export { DCO, type DCOOptions } from './dco';
+export { Monarch, type MonarchOptions } from './monarch';

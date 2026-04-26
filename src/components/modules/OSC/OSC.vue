@@ -60,7 +60,7 @@
 
       const inlets = [
         {
-          label: 'freq',
+          label: 'pitch',
           desc: 'The frequency of the Oscillator. [a-rate / k-rate]',
           data: setFreq,
         },
@@ -69,11 +69,11 @@
           desc: 'Modulation input, ie. LFO or similar. Depth is controlled via the slider',
           audio: modDepth,
         },
-        {
-          label: 'detune',
-          desc: 'Detune the oscillator frequency, similar to bend',
-          data: setDetune,
-        },
+        // {
+        //   label: 'detune',
+        //   desc: 'Detune the oscillator frequency, similar to bend',
+        //   data: setDetune,
+        // },
         {
           label: 'pulse',
           desc: 'Pulse width modulation. [0 - 1]',
@@ -224,11 +224,11 @@
       /*   letter-spacing: -.09em; */
       /*   text-shadow: 1px 1px rgba(255,255,255, 0.2); */
     }
-
+/*
     text {
       color: #000;
     }
-
+*/
     .knob {
       float: left;
       clear: left;
