@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import { basicPatch } from '~/synths/basic';
+import { simplePatch } from '~/synths/simple';
 
 /*
-  Guards the preset shape of `basicPatch`: parameters must be nested by
+  Guards the preset shape of `simplePatch`: parameters must be nested by
   numeric moduleId, and every keyed moduleId must correspond to a real
   module in the patch. If this test fails, `useParameter` will read/write
   values for phantom modules and saved presets will carry orphaned keys.
 */
 
-describe('basicPatch preset defaults', () => {
+describe('simplePatch preset defaults', () => {
   it('ships preset parameters in `parameters[moduleId][name]` shape', () => {
-    const { modules, presets } = basicPatch();
+    const { modules, presets } = simplePatch();
     const ids = new Set(modules.map((m) => (m as Module).id));
     const params = presets[0]!.parameters;
 

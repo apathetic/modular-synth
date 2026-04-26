@@ -1,4 +1,5 @@
-import { basicPatch } from '~/synths/basic';
+import { emptyPatch } from '~/synths/empty';
+import { simplePatch } from '~/synths/simple';
 import { dx7Patch } from '~/synths/dx7';
 import { isPatch, fixPatch } from '~/utils/validatePatch';
 
@@ -12,7 +13,7 @@ const LEGACY_KEY = 'patches';
  * is empty/unreadable). DX7 is first so it auto-loads at `patchId: 0`; Basic
  * stays in the list as a simple fallback the user can switch to.
  */
-export const defaultPatches = (): Patch[] => [dx7Patch(), basicPatch()];
+export const defaultPatches = (): Patch[] => [simplePatch() /** dx7Patch(),  */];
 
 type StoredEnvelope = {
   version: number;
@@ -52,7 +53,7 @@ const sanitizePatch = (raw: unknown): Patch => {
     return { ...fixed, loaded: false };
   } catch (err) {
     console.warn('[persistence] unrecoverable patch, substituting basic:', err);
-    return basicPatch();
+    return emptyPatch();
   }
 };
 

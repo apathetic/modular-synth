@@ -1,4 +1,4 @@
-import { state } from '~/stores/patch';
+import { emptyPatch } from '~/synths/empty';
 
 /**
  * Seed patch used when localStorage is empty or reset via the dev Clear button.
@@ -9,10 +9,10 @@ import { state } from '~/stores/patch';
  * name — e.g. `parameters[1].freq = 100`. This is the same shape that
  * `useParameter` writes at runtime.
  */
-export const basicPatch = (): Patch => (<Patch>{
-  ...state(),
+export const simplePatch = (): Patch => (<Patch>{
+  ...emptyPatch(),
   i: 10,
-  name: 'Basic',
+  name: 'Simple',
   modules: [
     { id: 0, type: 'MasterOut', x: 1100, y: 441 },
     { id: 1, type: 'OSC',    x: 399, y: 173, col: 0, row: 0, w: 4, h: 1 },
@@ -29,7 +29,7 @@ export const basicPatch = (): Patch => (<Patch>{
     { id: 9, from: { id: 4, port: 0 }, to: { id: 0, port: 0 } }, // VCA out    -> MasterOut L
   ],
   presets: [{
-    name: 'Vanilla',
+    name: 'Blips',
     parameters: {
       1: { mod: 0, freq: 100, PW: 0, detune: -500 },
       5: { attack: 0.01, decay: 0.01, sustain: 0.01, release: 0.01 },

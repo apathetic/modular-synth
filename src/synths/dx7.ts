@@ -1,4 +1,4 @@
-import { state } from '~/stores/patch';
+import { emptyPatch } from '~/synths/empty';
 
 /**
  * Yamaha DX7 "Algorithm 1" patch — six FM operators arranged in two parallel
@@ -114,7 +114,7 @@ export const dx7Patch = (): Patch => {
     ({ attack, decay, sustain, release });
 
   return <Patch>{
-    ...state(),
+    ...emptyPatch(),
     i: 100,
     name: 'DX7',
     modules,

@@ -1,4 +1,4 @@
-import { state as blank } from '~/stores/patch';
+import { emptyPatch } from '~/synths/empty';
 import {
   ModuleSchema,
   ConnectionSchema,
@@ -57,7 +57,7 @@ const isPatch = (patch: unknown): patch is Patch => PatchSchema.safeParse(patch)
  * @returns A valid patch with all required fields
  */
 function fixPatch(patch: Partial<Patch> | null | undefined): Patch {
-  const DEFAULT = blank();
+  const DEFAULT = emptyPatch();
 
   if (!patch || typeof patch !== 'object') {
     console.warn('Patch is not an object. Using default.');

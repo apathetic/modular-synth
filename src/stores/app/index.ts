@@ -1,9 +1,7 @@
 import { defineStore } from 'pinia'
-import { state as emptyPatch } from '~/stores/patch';
-import { basicPatch } from '~/synths/basic';
-
 import { nextTick } from 'vue';
 import { log } from '~/utils/logger';
+import { emptyPatch } from '~/synths/empty';
 // import { /* fetch, create, */ save, /* remove */ } from '~/utils/db';
 import { fixPatch, isPatch } from '~/utils/validatePatch';
 import { loadPatches, defaultPatches, clearStorage } from '~/utils/persistence';
@@ -194,7 +192,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
         try {
           this.patches[id] = fixPatch(this.patches[id]);
         } catch {
-          this.patches[id] = basicPatch();
+          this.patches[id] = emptyPatch();
         }
       }
 
