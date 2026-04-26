@@ -3,13 +3,13 @@
     <svg class="toggle" viewBox="0 0 32 64">
       <!-- Background track -->
       <rect x="8" y="4" width="16" height="56" rx="8" class="track" />
-      
+
       <!-- Switch handle -->
-      <circle 
-        cx="16" 
-        :cy="handleY" 
-        r="10" 
-        class="handle" 
+      <circle
+        cx="16"
+        :cy="handleY"
+        r="10"
+        class="handle"
       />
     </svg>
     <div class="label">{{ param }}</div>
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watchEffect, PropType } from 'vue';
+import { defineComponent, computed, watchEffect } from 'vue';
 import { useParameter, useModuleId } from '~/composables';
 import { useAppStore } from '~/stores/app';
 
@@ -30,7 +30,7 @@ export default defineComponent({
       required: true
     },
     options: {
-      type: Array as PropType<string[]>,
+      type: Array<string>,
       default: () => ['Off', 'On']
     },
     title: {
@@ -44,7 +44,7 @@ export default defineComponent({
     const store = useAppStore();
     const min = 0;
     const max = Math.max(1, props.options.length - 1);
-    
+
     const { mapped } = useParameter({
       moduleId,
       param: props.param,
@@ -61,7 +61,7 @@ export default defineComponent({
 
     const currentOptionLabel = computed(() => props.options[currentIndex.value]);
 
-    // Calculate Y position of handle. 
+    // Calculate Y position of handle.
     // top = 14 (index 0)
     // bottom = 50 (index max)
     const handleY = computed(() => {

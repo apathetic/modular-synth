@@ -30,14 +30,14 @@
     setup (props) {
       const { type, id } = props.module; // note: we destructure here b/c we don't care about reactivity
 
-      if (id === MASTER_ID || type === 'MasterOut') { throw new Error('<Unit> cannot render MasterOut'); }
+      // if (id === MASTER_ID || type === 'MasterOut') { throw new Error('<Unit> cannot render MasterOut'); }
 
       provideModuleId(id);
 
       const { coords, startDragging, isDragging } = useDraggable(props.module);
       const store = useAppStore();
-      const el = ref(undefined); // this'll be a ref to the DOM node
-      const node = ref(null);    // this'll be a ref to the instantiated audio node
+      const el = ref<HTMLElement>(); // this'll be a ref to the DOM node
+      const node = ref<AudioNode>(); // this'll be a ref to the instantiated audio node
       const isActive = computed(() => id == store.activeId);
       const position = computed(() => store.isEditing || isDragging.value ?
         {
@@ -151,7 +151,8 @@
     }
 
     &.active {
-      box-shadow: 0 0 0 2px greenyellow;
+      box-shadow: 0 0 0 1px greenyellow;
+      border: 1px solid greenyellow;
     }
 
     .inlets  { float: left; }

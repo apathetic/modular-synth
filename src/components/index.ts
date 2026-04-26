@@ -25,8 +25,6 @@ import { VCA } from './modules/VCA';
  */
 export const modules = {
   Analyser,
-  Bento,
-  Boutique,
   Clock,
   Comb,
   Compressor,
@@ -37,7 +35,9 @@ export const modules = {
   Mixer,
   NoteIn,
   OSC,
-  Monarch,
+    Bento,
+    Boutique,
+    Monarch,
   Reverb,
   Filter,
   VCA,

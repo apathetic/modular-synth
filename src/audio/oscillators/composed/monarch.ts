@@ -21,11 +21,13 @@ export class Monarch implements SynthModule {
   private mixer: GainNode;
 
   private fmDepth: GainNode;
+  private modDepth: GainNode;
 
   private _waveform: number = 0; // 0: Tri, 1: RevSaw, 2: Saw, 3: Sqr, 4: Wide, 5: Narrow
   private _range: number = 2; // 0: 32', 1: 16', 2: 8' (default), 3: 4', 4: 2', 5: LO
   private _kt: number = 1; // 1: Key Tracking on, 0: off
   private _basePitch: number = 440;
+  private _frequencyKnobHz: number = 440;
   
   // Frequency multiplier based on range (32, 16, 8, 4, 2, LO)
   private readonly RANGE_MULTS = [0.25, 0.5, 1.0, 2.0, 4.0, 0.01];
@@ -72,9 +74,14 @@ export class Monarch implements SynthModule {
     this.fmDepth = context.createGain();
     this.fmDepth.gain.value = fm;
 
+    this.modDepth = context.createGain();
+    this.modDepth.gain.value = 1;
+
     this.fmDepth.connect(this.tri.frequency);
     this.fmDepth.connect(this.saw.frequency);
     this.fmDepth.connect(this.pulse.frequency);
+
+    this.modDepth.connect(this.pulse.width);
 
     this.inlets = [
       {
@@ -86,6 +93,11 @@ export class Monarch implements SynthModule {
         label: 'fm',
         desc:  'Audio-rate frequency modulation.',
         audio: this.fmDepth,
+      },
+      {
+        label: 'mod',
+        desc:  'Pulse width modulation.',
+        audio: this.modDepth,
       },
     ];
 
@@ -137,6 +149,7 @@ export class Monarch implements SynthModule {
     this.pulseGate.disconnect();
     this.mixer.disconnect();
     this.fmDepth.disconnect();
+    this.modDepth.disconnect();
   }
 
   // --- Internal Updates ---
@@ -159,9 +172,10 @@ export class Monarch implements SynthModule {
 
   private updateFrequency(): void {
     const mult = this.RANGE_MULTS[this._range];
-    // If KT is off, we fix the pitch to a base value (e.g. C3 = ~130.81 Hz or middle C 261.63)
-    // Actually, when KT is off in Minimoog, it usually holds the last played note or a fixed frequency
-    const targetHz = (this._kt > 0 ? this._basePitch : 261.63) * mult;
+    
+    // If KT is on, pitch follows the inlet. If KT is off, pitch is set by the Frequency knob.
+    const baseHz = this._kt > 0 ? this._basePitch : this._frequencyKnobHz;
+    const targetHz = baseHz * mult;
     
     const now = context.currentTime;
     const rampEnd = now + 0.01;
@@ -174,6 +188,12 @@ export class Monarch implements SynthModule {
     
     this.pulse.frequency.cancelScheduledValues(now);
     this.pulse.frequency.linearRampToValueAtTime(targetHz, rampEnd);
+  }
+
+  public setFrequency(hz: number): void {
+    if (!Number.isFinite(hz)) return;
+    this._frequencyKnobHz = hz;
+    this.updateFrequency();
   }
 
   public setDetune(cents: number): void {
