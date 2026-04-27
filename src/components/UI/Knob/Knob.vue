@@ -15,7 +15,6 @@ is a "freq" parameter in the parent Component.
 Visual variants (prop `variant`, default `'arc'`):
   - 'arc'      current open-ring arc around the value text.
   - 'pointer'  small flat cap with a single radial indicator.
-  - 'raised'   medium beveled cap with a pointer and faint outer track.
   - 'skirted'  large cap with a skirt shoulder, pointer, and tick ring.
 All variants share the same drag-to-change behavior and reactive state.
 -->
@@ -51,33 +50,6 @@ All variants share the same drag-to-change behavior and reactive state.
     <text x="18" y="50" class="label">{{ param }}</text>
   </svg>
 
-  <!-- raised: medium cap with bevel + faint outer track -->
-  <svg
-    v-else-if="variant === 'raised'"
-    class="knob knob--raised"
-    viewBox="0 0 56 76"
-    @mousedown.stop.prevent="start"
-  >
-    <defs>
-      <radialGradient :id="bevelId" cx="50%" cy="30%" r="70%">
-        <stop offset="0%"   stop-color="#6a6a6a" />
-        <stop offset="60%"  stop-color="#3a3a3a" />
-        <stop offset="100%" stop-color="#1c1c1c" />
-      </radialGradient>
-    </defs>
-
-    <path :d="raisedTrack" class="track" fill="none" stroke-width="2" />
-    <circle cx="28" cy="28" r="22" class="cap-outer" :fill="`url(#${bevelId})`" />
-    <circle cx="28" cy="28" r="18" class="cap-inner" />
-    <line
-      x1="28" y1="28" x2="28" y2="11"
-      class="pointer"
-      stroke-width="4"
-      :transform="`rotate(${angleDeg} 28 28)`"
-    />
-    <text x="28" y="62" class="value">{{ displayValue }}</text>
-    <text x="28" y="72" class="label">{{ param }}</text>
-  </svg>
 
   <!-- skirted: large cap with skirt, pointer, tick ring -->
   <svg
@@ -125,7 +97,7 @@ All variants share the same drag-to-change behavior and reactive state.
   import { useParameter, useModuleId } from '~/composables';
   import type { PropType } from 'vue';
 
-  type KnobVariant = 'arc' | 'pointer' | 'raised' | 'skirted';
+  type KnobVariant = 'arc' | 'pointer' | 'skirted';
 
   const SIZE = 20;
   const X = 24; // half the css knob radius (arc variant)
@@ -181,16 +153,19 @@ All variants share the same drag-to-change behavior and reactive state.
     emits: ['value'],
 
     setup (props, { emit }) {
-      const { param, min, max, mode } = props;
-      const moduleId = useModuleId();
+      const { param, mode } = props;
       const track = ref('');
       const arc = ref('');
       const type = 'knob';
+      const discrete = !!props.steps?.length;
+      const min = discrete ? 0 : props.min;
+      const max = discrete ? props.steps.length - 1 : props.max;
 
-      const { start, mapped, normalized } = useParameter({ moduleId, param, type, min, max, mode });
+      const moduleId = useModuleId();
+      const { start, mapped, normalized } = useParameter({ moduleId, param, type, min, max, mode, discrete });
 
       const internal = computed(() => {
-        if (props.steps?.length) {
+        if (discrete) {
           const count = props.steps.length;
           return Math.round(normalized.value * (count - 1)) / (count - 1);
         }
@@ -198,16 +173,24 @@ All variants share the same drag-to-change behavior and reactive state.
       });
 
       const displayValue = computed(() => {
-        if (props.steps?.length) {
+        if (discrete) {
           const index = Math.round(internal.value * (props.steps.length - 1));
           return props.steps[index];
         }
         return parseFloat(mapped.value).toFixed(props.precision);
       });
 
+      const emittedValue = computed(() => {
+        if (discrete) {
+          const index = Math.round(internal.value * (props.steps.length - 1));
+          return props.steps[index];
+        }
+        return mapped.value;
+      });
+
       // for the component
       watchEffect(() => {
-        emit('value', mapped.value);
+        emit('value', emittedValue.value);
       });
 
       // for the UI
@@ -225,9 +208,7 @@ All variants share the same drag-to-change behavior and reactive state.
       // 1 -> +150deg (hard right), matching the 300deg sweep of the arc.
       const angleDeg = computed(() => internal.value * 300 - 150);
 
-      // Faint outer track for the 'raised' variant, drawn once per resize
-      // (viewBox is static, so we could memoize but it's cheap).
-      const raisedTrack = computed(() => describeArc(28, 28, 24, 30, 330));
+
 
       // 11 ticks equally spaced across the 300deg sweep (every 30deg from
       // -150 to +150). Rendered by the template via v-for.
@@ -236,7 +217,7 @@ All variants share the same drag-to-change behavior and reactive state.
       // Per-instance gradient IDs so multiple Knobs on the same page
       // don't collide on <defs> lookups.
       const uid = Math.random().toString(36).slice(2, 8);
-      const bevelId = `knob-bevel-${uid}`;
+
       const skirtId = `knob-skirt-${uid}`;
       const sheenId = `knob-sheen-${uid}`;
 
@@ -246,11 +227,8 @@ All variants share the same drag-to-change behavior and reactive state.
         arc,
         start,
         displayValue,
-        mapped,
         angleDeg,
-        raisedTrack,
         tickCount,
-        bevelId,
         skirtId,
         sheenId,
       }
@@ -291,18 +269,6 @@ All variants share the same drag-to-change behavior and reactive state.
     .value, .label { font-size: 0.8rem; }
   }
 
-  /* --- raised ------------------------------------------------------ */
-
-  .knob--raised {
-    width: 56px;
-    height: 76px;
-
-    .track     { stroke: var(--color-grey-medium); opacity: 0.6; }
-    .cap-outer { stroke: #0a0a0a; stroke-width: 1; }
-    .cap-inner { fill: #222; }
-    .pointer   { stroke: var(--color-highlight); stroke-linecap: round; }
-    .value, .label { font-size: 0.9rem; }
-  }
 
   /* --- skirted ----------------------------------------------------- */
 

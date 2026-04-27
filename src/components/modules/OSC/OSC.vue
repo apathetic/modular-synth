@@ -1,5 +1,5 @@
 <template>
-  <div class="oscillator">
+  <div class="oscillator basic">
     <div class="module-details">
       <h3>Oscillator</h3>
     </div>
@@ -203,7 +203,7 @@
 
 
 <style>
-  .oscillator {
+  .basic {
     background: linear-gradient(to bottom, #f2efed 0%, #d9d7d5 98%, #959492 100%);
     color: #000;
 

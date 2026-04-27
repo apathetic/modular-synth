@@ -14,13 +14,14 @@ import { log } from '~/utils/logger';
  * @param {number} [props.min=0]
  * @param {number} [props.max=1]
  * @param {string} [props.mode='linear']   'linear' | 'log'
- * @param {number} [props.default]
+ * @param {boolean} [props.discrete=false]
  */
 export function useParameter(props) {
-  const { moduleId, param, type, min, max, mode } = Object.assign({
+  const { moduleId, param, type, min, max, mode, discrete } = Object.assign({
     mode: 'linear',
     min: 0,
     max: 1,
+    discrete: false
   }, props);
 
   const store = useAppStore();
@@ -111,10 +112,11 @@ export function useParameter(props) {
    * @param {number} n The value to map.
    */
   function computeValue(n) {
-    return parseFloat(mode === 'log'
+    const val = parseFloat(mode === 'log'
       ? range * Math.pow(2, n) - range + min
       : n * range + min
     );
+    return discrete ? Math.round(val) : val;
   }
 
   /**

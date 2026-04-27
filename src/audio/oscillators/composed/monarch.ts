@@ -28,9 +28,11 @@ export class Monarch implements SynthModule {
   private _kt: number = 1; // 1: Key Tracking on, 0: off
   private _basePitch: number = 440;
   private _frequencyKnobHz: number = 440;
-  
+
   // Frequency multiplier based on range (32, 16, 8, 4, 2, LO)
   private readonly RANGE_MULTS = [0.25, 0.5, 1.0, 2.0, 4.0, 0.01];
+  private readonly RANGE_STEPS = ["32'", "16'", "8'", "4'", "2'", "LO"];
+  private readonly WAVE_STEPS = ["Tri", "RSaw", "Saw", "Sqr", "Wide", "Narr"];
 
   private _destroyed = false;
 
@@ -51,7 +53,7 @@ export class Monarch implements SynthModule {
     this.triGate = context.createGain();
     this.sawGate = context.createGain();
     this.pulseGate = context.createGain();
-    
+
     // Start with Triangle
     this.triGate.gain.value = 1;
     this.sawGate.gain.value = 0;
@@ -104,18 +106,18 @@ export class Monarch implements SynthModule {
     this.outlets = [
       { label: 'out', audio: this.mixer },
     ];
-    
+
     this.updateFrequency();
   }
 
   // --- Parameter Accessors ---
 
   get fm(): AudioParam { return this.fmDepth.gain; }
-  
+
   // Custom accessors for UI
   get waveform(): number { return this._waveform; }
   set waveform(v: number) { this.setWaveform(v); }
-  
+
   get range(): number { return this._range; }
   set range(v: number) { this.setRange(v); }
 
@@ -165,27 +167,29 @@ export class Monarch implements SynthModule {
     this.updateFrequency();
   }
 
-  private setRange(val: number): void {
-    this._range = Math.max(0, Math.min(5, val));
+  private setRange(val: number | string): void {
+    this._range = (typeof val === 'string')
+      ? this.RANGE_STEPS.indexOf(val)
+      : Math.round(Math.max(0, Math.min(5, val)));
     this.updateFrequency();
   }
 
   private updateFrequency(): void {
     const mult = this.RANGE_MULTS[this._range];
-    
+
     // If KT is on, pitch follows the inlet. If KT is off, pitch is set by the Frequency knob.
     const baseHz = this._kt > 0 ? this._basePitch : this._frequencyKnobHz;
     const targetHz = baseHz * mult;
-    
+
     const now = context.currentTime;
     const rampEnd = now + 0.01;
-    
+
     this.tri.frequency.cancelScheduledValues(now);
     this.tri.frequency.linearRampToValueAtTime(targetHz, rampEnd);
-    
+
     this.saw.frequency.cancelScheduledValues(now);
     this.saw.frequency.linearRampToValueAtTime(targetHz, rampEnd);
-    
+
     this.pulse.frequency.cancelScheduledValues(now);
     this.pulse.frequency.linearRampToValueAtTime(targetHz, rampEnd);
   }
@@ -204,8 +208,11 @@ export class Monarch implements SynthModule {
     this.pulse.detune.linearRampToValueAtTime(cents, rampEnd);
   }
 
-  private setWaveform(val: number): void {
-    const s = Math.max(0, Math.min(5, val));
+  private setWaveform(val: number | string): void {
+    const s = (typeof val === 'string')
+      ? this.WAVE_STEPS.indexOf(val)
+      : Math.round(Math.max(0, Math.min(5, val)));
+
     if (s === this._waveform) return;
     this._waveform = s;
 
@@ -217,7 +224,7 @@ export class Monarch implements SynthModule {
     this.pulseGate.gain.cancelScheduledValues(now);
 
     let triVol = 0, sawVol = 0, pulseVol = 0;
-    
+
     // Reverse Saw (1) just uses Saw for now (a true Reverse Saw requires a different primitive)
     switch(s) {
       case 0: // Triangle
@@ -227,16 +234,16 @@ export class Monarch implements SynthModule {
       case 2: // Saw
         sawVol = 1; break;
       case 3: // Square (Pulse 50%)
-        pulseVol = 1; 
-        this.pulse.width.setValueAtTime(0, now); 
+        pulseVol = 1;
+        this.pulse.width.setValueAtTime(0, now);
         break;
       case 4: // Wide Pulse (e.g. 25%)
-        pulseVol = 1; 
-        this.pulse.width.setValueAtTime(0.5, now); 
+        pulseVol = 1;
+        this.pulse.width.setValueAtTime(0.5, now);
         break;
       case 5: // Narrow Pulse (e.g. ~10%)
-        pulseVol = 1; 
-        this.pulse.width.setValueAtTime(0.8, now); 
+        pulseVol = 1;
+        this.pulse.width.setValueAtTime(0.8, now);
         break;
     }
 
