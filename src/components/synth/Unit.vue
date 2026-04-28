@@ -162,23 +162,22 @@
     }
   }
 
-    .inlets  { float: left; }
-    .outlets { float: right; }
 
-    .inlet {
-      left: -5px;
+  .inlets  { float: left; }
+  .outlets { float: right; }
 
-      &::after { left: 1em; }
+  .inlet {
+    left: -5px;
+    &::after { left: 1em; }
+  }
+
+  .outlet {
+    right: -5px;
+    &::after {
+      right: 1em;
+      text-align: right;
     }
-
-    .outlet {
-      right: -5px;
-
-      &::after {
-        right: 1em;
-        text-align: right;
-      }
-    }
+  }
 
 
 
@@ -187,7 +186,6 @@
     border-bottom: 1px solid #000;
     border-top: 1px solid #999;
     color: #000;
-    /* position: absolute; */
     width: 100%;
 
     h3 {

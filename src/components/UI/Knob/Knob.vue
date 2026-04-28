@@ -20,75 +20,52 @@ All variants share the same drag-to-change behavior and reactive state.
 -->
 
 <template>
-  <!-- arc (default, legacy) -->
-  <svg
-    v-if="variant === 'arc'"
-    class="knob knob--arc"
+  <div
+    class="knob"
+    :class="[`knob--${variant}`, `size-${size}`]"
+    :style="{ 'anchor-name': anchorName }"
     @mousedown.stop.prevent="start"
   >
-    <path :d="track" class="track" fill="none" stroke-width="3" stroke-linecap="round"></path>
-    <path :d="arc" class="display" fill="none" stroke-width="3" stroke-linecap="round"></path>
-    <text x="24" y="28" class="value">{{ displayValue }}</text>
-    <text x="24" y="54" class="label">{{ param }}</text>
-  </svg>
+    <!-- arc (default, legacy) -->
+    <svg v-if="variant === 'arc'" class="knob-svg">
+      <path :d="track" class="track" fill="none" stroke-width="3" stroke-linecap="round"></path>
+      <path :d="arc" class="display" fill="none" stroke-width="3" stroke-linecap="round"></path>
+      <text x="24" y="54" class="label">{{ param }}</text>
+    </svg>
 
-  <!-- pointer: small, flat cap, single indicator line -->
-  <svg
-    v-else-if="variant === 'pointer'"
-    class="knob knob--pointer"
-    viewBox="0 0 36 52"
-    @mousedown.stop.prevent="start"
-  >
-    <circle cx="18" cy="18" r="14" class="cap" />
-    <line
-      x1="18" y1="18" x2="18" y2="6"
-      class="pointer"
-      stroke-width="3"
-      :transform="`rotate(${angleDeg} 18 18)`"
-    />
-    <text x="18" y="42" class="value">{{ displayValue }}</text>
-    <text x="18" y="50" class="label">{{ param }}</text>
-  </svg>
+    <!-- pointer: small, flat cap, single indicator line -->
+    <svg v-else-if="variant === 'pointer'" class="knob-svg" viewBox="0 0 36 52">
+      <circle cx="18" cy="18" r="14" class="cap" />
+      <line x1="18" y1="18" x2="18" y2="6" class="pointer" stroke-width="3" :transform="`rotate(${angleDeg} 18 18)`" />
+      <text x="18" y="50" class="label">{{ param }}</text>
+    </svg>
 
+    <!-- skirted: large cap with skirt, pointer, tick ring -->
+    <svg v-else-if="variant === 'skirted'" class="knob-svg" viewBox="0 0 80 104">
+      <defs>
+        <linearGradient :id="skirtId" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#4a4a4a" />
+          <stop offset="100%" stop-color="#1a1a1a" />
+        </linearGradient>
+        <linearGradient :id="sheenId" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#6a6a6a" />
+          <stop offset="55%"  stop-color="#2d2d2d" />
+          <stop offset="100%" stop-color="#111111" />
+        </linearGradient>
+      </defs>
 
-  <!-- skirted: large cap with skirt, pointer, tick ring -->
-  <svg
-    v-else-if="variant === 'skirted'"
-    class="knob knob--skirted"
-    viewBox="0 0 80 104"
-    @mousedown.stop.prevent="start"
-  >
-    <defs>
-      <linearGradient :id="skirtId" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#4a4a4a" />
-        <stop offset="100%" stop-color="#1a1a1a" />
-      </linearGradient>
-      <linearGradient :id="sheenId" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#6a6a6a" />
-        <stop offset="55%"  stop-color="#2d2d2d" />
-        <stop offset="100%" stop-color="#111111" />
-      </linearGradient>
-    </defs>
+      <line v-for="(_, i) in 11" :key="i" x1="40" y1="4" x2="40" y2="10" class="tick" :transform="`rotate(${i * 30 - 150} 40 40)`" />
 
-    <line
-      v-for="(_, i) in 11"
-      :key="i"
-      x1="40" y1="4" x2="40" y2="10"
-      class="tick"
-      :transform="`rotate(${i * 30 - 150} 40 40)`"
-    />
+      <circle cx="40" cy="40" r="32" class="skirt" :fill="`url(#${skirtId})`" />
+      <circle cx="40" cy="40" r="22" class="cap"   :fill="`url(#${sheenId})`" />
+      <line x1="40" y1="21" x2="40" y2="20" class="pointer" stroke-width="5" :transform="`rotate(${angleDeg} 40 40)`" />
+      <text x="40" y="98" class="label">{{ param }}</text>
+    </svg>
 
-    <circle cx="40" cy="40" r="32" class="skirt" :fill="`url(#${skirtId})`" />
-    <circle cx="40" cy="40" r="22" class="cap"   :fill="`url(#${sheenId})`" />
-    <line
-      x1="40" y1="21" x2="40" y2="20"
-      class="pointer"
-      stroke-width="5"
-      :transform="`rotate(${angleDeg} 40 40)`"
-    />
-    <text x="40" y="86" class="value">{{ displayValue }}</text>
-    <text x="40" y="98" class="label">{{ param }}</text>
-  </svg>
+    <div class="knob-tooltip" :style="{ 'position-anchor': anchorName }">
+      {{ displayValue }}
+    </div>
+  </div>
 </template>
 
 
@@ -147,6 +124,10 @@ All variants share the same drag-to-change behavior and reactive state.
       steps: {
         type: Array as PropType<string[]>,
         default: undefined
+      },
+      size: {
+        type: String as PropType<'small' | 'medium' | 'large'>,
+        default: 'medium'
       }
     },
 
@@ -212,6 +193,7 @@ All variants share the same drag-to-change behavior and reactive state.
       // Per-instance gradient IDs so multiple Knobs on the same page
       // don't collide on <defs> lookups.
       const uid = Math.random().toString(36).slice(2, 8);
+      const anchorName = `--knob-anchor-${uid}`;
       const skirtId = `knob-skirt-${uid}`;
       const sheenId = `knob-sheen-${uid}`;
 
@@ -222,6 +204,8 @@ All variants share the same drag-to-change behavior and reactive state.
         start,
         displayValue,
         angleDeg,
+        anchorName,
+        size: props.size,
         skirtId,
         sheenId,
       }
@@ -233,19 +217,57 @@ All variants share the same drag-to-change behavior and reactive state.
 <style>
   .knob {
     cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+
+    &.size-small { transform: scale(0.8); }
+    &.size-large { transform: scale(1.2); }
+
+    .label {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
 
     text {
       text-anchor: middle;
-      font-size: 1rem;
-      /* fill: #fff; */
     }
+  }
+
+  .knob-svg {
+    overflow: visible;
+  }
+
+  .knob-tooltip {
+    display: none;
+    position: absolute;
+    position-area: top;
+    margin-bottom: 8px;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    z-index: 100;
+    white-space: nowrap;
+    text-transform: none;
+  }
+
+  .knob:hover .knob-tooltip,
+  .knob:active .knob-tooltip {
+    display: block;
   }
 
   /* --- arc (legacy) ------------------------------------------------ */
 
   .knob--arc {
-    width: 48px;
-    height: 64px;
+    .knob-svg {
+      width: 48px;
+      height: 64px;
+    }
 
     .track   { stroke: var(--color-grey-medium); }
     .display { stroke: var(--color-highlight); }
@@ -254,26 +276,27 @@ All variants share the same drag-to-change behavior and reactive state.
   /* --- pointer ----------------------------------------------------- */
 
   .knob--pointer {
-    width: 36px;
-    height: 52px;
+    .knob-svg {
+      width: 36px;
+      height: 52px;
+    }
 
     .cap     { fill: #2a2a2a; stroke: #0a0a0a; stroke-width: 1; }
     .pointer { stroke: var(--color-highlight); stroke-linecap: round; }
-    .value, .label { font-size: 0.8rem; }
   }
-
 
   /* --- skirted ----------------------------------------------------- */
 
   .knob--skirted {
-    width: 80px;
-    height: 104px;
+    .knob-svg {
+      width: 80px;
+      height: 104px;
+      /* filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)); */
+    }
 
     .skirt   { stroke: #0a0a0a; stroke-width: 1; }
     .cap     { stroke: #000; stroke-width: 1; }
     .tick    { stroke: var(--color-grey-medium); stroke-width: 1.5; stroke-linecap: round; }
     .pointer { stroke: var(--color-highlight); stroke-linecap: round; }
-    .value   { font-size: 1rem; }
-    .label   { font-size: 0.8rem; letter-spacing: 0.05em; }
   }
 </style>
