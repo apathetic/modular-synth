@@ -40,6 +40,6 @@ export const moduleSize: Record<moduleType, Array<number>> = {
 
   // 'VCO': [4, 1, 'tall'],
   'OSC': [4, 1], // 'tall'],
-  'Monarch': [4, 1] // 'tall'],
+  'Monarch': [3, 1] // 'tall'],
 
 };

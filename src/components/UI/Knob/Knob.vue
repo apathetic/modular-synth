@@ -71,7 +71,7 @@ All variants share the same drag-to-change behavior and reactive state.
     </defs>
 
     <line
-      v-for="(_, i) in tickCount"
+      v-for="(_, i) in 11"
       :key="i"
       x1="40" y1="4" x2="40" y2="10"
       class="tick"
@@ -81,7 +81,7 @@ All variants share the same drag-to-change behavior and reactive state.
     <circle cx="40" cy="40" r="32" class="skirt" :fill="`url(#${skirtId})`" />
     <circle cx="40" cy="40" r="22" class="cap"   :fill="`url(#${sheenId})`" />
     <line
-      x1="40" y1="40" x2="40" y2="20"
+      x1="40" y1="21" x2="40" y2="20"
       class="pointer"
       stroke-width="5"
       :transform="`rotate(${angleDeg} 40 40)`"
@@ -209,15 +209,9 @@ All variants share the same drag-to-change behavior and reactive state.
       const angleDeg = computed(() => internal.value * 300 - 150);
 
 
-
-      // 11 ticks equally spaced across the 300deg sweep (every 30deg from
-      // -150 to +150). Rendered by the template via v-for.
-      const tickCount = 11;
-
       // Per-instance gradient IDs so multiple Knobs on the same page
       // don't collide on <defs> lookups.
       const uid = Math.random().toString(36).slice(2, 8);
-
       const skirtId = `knob-skirt-${uid}`;
       const sheenId = `knob-sheen-${uid}`;
 
@@ -228,7 +222,6 @@ All variants share the same drag-to-change behavior and reactive state.
         start,
         displayValue,
         angleDeg,
-        tickCount,
         skirtId,
         sheenId,
       }

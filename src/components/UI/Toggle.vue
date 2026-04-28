@@ -112,12 +112,12 @@
 
     &.vertical {
       width: 48px;
-      svg { width: 26px; height: 52px; }
+      svg { width: 18px; height: 36px; }
     }
 
     &.horizontal {
        width: 64px;
-       svg { width: 52px; height: 26px; }
+       svg { width: 36px; height: 18px; }
     }
 
     .track {

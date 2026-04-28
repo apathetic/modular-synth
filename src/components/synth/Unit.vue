@@ -155,6 +155,13 @@
       border: 1px solid greenyellow;
     }
 
+    > div {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
     .inlets  { float: left; }
     .outlets { float: right; }
 
@@ -173,17 +180,14 @@
       }
     }
 
-    > div {
-      height: 100%;
-    }
-  }
+
 
   .module-details {
     background: #777;
     border-bottom: 1px solid #000;
     border-top: 1px solid #999;
     color: #000;
-    position: absolute;
+    /* position: absolute; */
     width: 100%;
 
     h3 {
@@ -194,11 +198,13 @@
   }
 
   .module-interface {
-    overflow: hidden;
-    padding: 36px 24px 18px;
     height: 100%;
-    visibility: hidden;
+    /* padding: 36px 24px 18px; */
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
     transition: visibility 0s;    /* yes you can do this (to delay the toggle of block/none) */
+    visibility: hidden;
   }
 
   .module-connections {

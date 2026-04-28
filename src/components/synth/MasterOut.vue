@@ -1,7 +1,7 @@
 <template>
   <div
     ref="el"
-    class="module"
+    class="XXmodule"
     id="master-out"
     @mouseover="setFocus(0)"
     @mouseout="clearFocus"

@@ -65,15 +65,12 @@
     </div>
 
     <div class="module-interface">
-        <Knob param="frequency" @value="frequency = $event" variant="skirted"   :min="20" :max="12000" :default="440" mode="log" :precision="1"></Knob>
-        <Knob param="fm"        @value="fm = $event"        variant="skirted"   :min="0"  :max="1000"  :default="0" :precision="0"></Knob>
+      <Toggle param="kt" @value="kt = $event" orientation="horizontal" :options="['Off', 'On']" title="Key Tracking: If on, oscillator frequency follows input pitch."></Toggle>
 
-        <Knob param="range"     @value="range = $event"     variant="pointer" :steps="rangeSteps"></Knob>
-        <Knob param="waveform"  @value="waveform = $event"  variant="pointer" :steps="waveSteps"></Knob>
-
-      <div class="toggle-row">
-        <Toggle param="kt" @value="kt = $event" orientation="horizontal" :options="['Off', 'On']" title="Key Tracking: If on, oscillator frequency follows input pitch."></Toggle>
-      </div>
+      <Knob param="frequency" @value="frequency = $event" variant="skirted" :min="20" :max="12000" :default="440" :precision="1" mode="log"></Knob>
+      <Knob param="fm"        @value="fm = $event"        variant="skirted" :min="0"  :max="1000"  :default="0"   :precision="0"></Knob>
+      <Knob param="range"     @value="range = $event"     variant="pointer" :steps="rangeSteps"></Knob>
+      <Knob param="waveform"  @value="waveform = $event"  variant="pointer" :steps="waveSteps"></Knob>
     </div>
 
     <div class="module-connections">
@@ -89,35 +86,18 @@
     background: linear-gradient(to bottom, #727067 0%, #666461 100%);
     text-transform: uppercase;
 
-    /* color: #fff; */
-
     text { /* the svg element */
       fill: #fff;
     }
+
+    .module-interface {
+      & > * { position: absolute; }
+      & > :nth-child(1) { top: 12px; right: 12px; }
+      & > :nth-child(2) { top: 30px; right: 12px; }
+      & > :nth-child(3) { top: 50px; }
+      & > :nth-child(4) { top: 160px; left: 24px; }
+      & > :nth-child(5) { top: 160px; right: 24px; }
+    }
   }
 
-/*
-  .monarch h3 {
-    color: #ccc;
-    font-family: var(--font-primary, sans-serif);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 1rem;
-    margin: 0;
-    padding: 12px;
-    border-bottom: 1px solid #333;
-  }
-  .module-interface {
-    padding: 24px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-
-  .knob-row, .toggle-row {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-  } */
 </style>
