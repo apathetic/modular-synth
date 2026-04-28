@@ -67,8 +67,8 @@
     <div class="module-interface">
       <Toggle param="kt" @value="kt = $event" orientation="horizontal" :options="['Off', 'On']" title="Key Tracking: If on, oscillator frequency follows input pitch."></Toggle>
 
-      <Knob param="frequency" @value="frequency = $event" variant="skirted" :min="20" :max="12000" :default="440" :precision="1" mode="log"></Knob>
-      <Knob param="fm"        @value="fm = $event"        variant="skirted" :min="0"  :max="1000"  :default="0"   :precision="0"></Knob>
+      <Knob param="frequency" @value="frequency = $event" :min="20" :max="12000" :default="440" :precision="1" variant="skirted" mode="log"></Knob>
+      <Knob param="fm"        @value="fm = $event"        :min="0"  :max="1000"  :default="0"   :precision="0" variant="skirted" size="small"></Knob>
       <Knob param="range"     @value="range = $event"     variant="pointer" :steps="rangeSteps"></Knob>
       <Knob param="waveform"  @value="waveform = $event"  variant="pointer" :steps="waveSteps"></Knob>
     </div>
@@ -92,11 +92,11 @@
 
     .module-interface {
       & > * { position: absolute; }
-      & > :nth-child(1) { top: 12px; right: 12px; }
-      & > :nth-child(2) { top: 30px; right: 12px; }
-      & > :nth-child(3) { top: 50px; }
-      & > :nth-child(4) { top: 160px; left: 24px; }
-      & > :nth-child(5) { top: 160px; right: 24px; }
+      & > :nth-child(1) { top: 32px; right: 12px; } /* kt */
+      & > :nth-child(2) { top: 54px; } /* freq */
+      & > :nth-child(3) { top: 84px; right: 24px; } /* fm */
+      & > :nth-child(4) { top: 160px; left: 24px; } /* range */
+      & > :nth-child(5) { top: 160px; right: 24px; } /* waveform */
     }
   }
 
