@@ -1,47 +1,3 @@
-<template>
-  <div class="vca">
-    <div class="module-details">
-      <h3>VCA</h3>
-    </div>
-
-    <div class="module-interface">
-
-        <div class="mute-button">MUTE</div>
-
-        <Knob
-          param="level"
-          variant="pointer"
-          size="large"
-          :min="0"
-          :max="1"
-          :default="0.5"
-        />
-
-      <div class="vca-title">VCA</div>
-
-      <div class="mode-toggles">
-        <div class="toggle-box">LIN</div>
-        <div class="toggle-box">AC</div>
-      </div>
-
-        <Knob
-          param="gain"
-          variant="skirted"
-          size="small"
-          :min="0"
-          :max="1"
-          :default="0"
-        />
-    </div>
-
-    <div class="module-connections">
-      <Inlets  :ports="inlets"  :id="id"></Inlets>
-      <Outlets :ports="outlets" :id="id"></Outlets>
-    </div>
-  </div>
-</template>
-
-
 <script lang="ts">
   import { defineComponent, onUnmounted } from 'vue';
   import { gain } from '~/audio';
@@ -99,17 +55,58 @@
 </script>
 
 
+<template>
+  <div class="vca">
+    <div class="module-details">
+      <h3>VCA</h3>
+    </div>
+
+    <div class="module-interface">
+      <div class="controls">
+        <div class="mute-button">MUTE</div>
+
+        <Knob
+          param="level"
+          variant="pointer"
+          size="large"
+          :min="0"
+          :max="1"
+          :default="0.5"
+        />
+
+        <div class="vca-title">VCA</div>
+
+        <div class="mode-toggles">
+          <div class="toggle-box">LIN</div>
+          <div class="toggle-box">AC</div>
+        </div>
+
+        <Knob
+          param="gain"
+          variant="skirted"
+          size="small"
+          :min="0"
+          :max="1"
+          :default="0"
+        />
+      </div>
+    </div>
+
+    <div class="module-connections">
+      <Inlets  :ports="inlets"  :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
+    </div>
+  </div>
+</template>
+
+
 <style>
   .vca {
+    background: #e0e0e0;
     color: #333;
 
     .module-interface {
-      background: #e0e0e0;
-      display: flex !important;
-      flex-direction: column;
-      align-items: center;
-
-      &::before {
+        &::before {
         content: '';
         position: absolute;
         top: 50%;
@@ -123,6 +120,11 @@
       }
     }
 
+    .controls {
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+    }
 
 
 
@@ -146,15 +148,14 @@
     .mode-toggles {
       display: flex;
       gap: 10px;
-    }
-
-    .toggle-box {
-      border: 1px solid #333;
-      padding: 1px 12px;
-      font-size: 0.65rem;
-      font-weight: bold;
-      background: rgba(255,255,255,0.1);
-    }
+      }
+      .toggle-box {
+        border: 1px solid #333;
+        padding: 1px 12px;
+        font-size: 0.65rem;
+        font-weight: bold;
+        background: rgba(255,255,255,0.1);
+      }
   }
 </style>
 

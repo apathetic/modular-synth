@@ -186,7 +186,7 @@
     button {
       border-radius: 50%;
       background: var(--color-grey-medium);
-      border: 1px solid rgba(black, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.2);
       cursor: pointer;
       display: block;
       font-size: 1em;

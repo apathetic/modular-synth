@@ -183,7 +183,7 @@
   .module-details {
     background: rgb(60,60,60);
     border-bottom: 1px solid #000;
-    border-top: 1px solid #999;
+    border-top: 1px solid #777;
     color: #fff;
     width: 100%;
 
