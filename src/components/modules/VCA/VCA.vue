@@ -101,30 +101,26 @@
 
 <style>
   .vca {
-    background: #e0e0e0;
     color: #333;
-    overflow: hidden;
 
     .module-interface {
-      position: relative;
-      height: 100%;
+      background: #e0e0e0;
       display: flex !important;
       flex-direction: column;
       align-items: center;
 
-
-&::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 140px;
-      height: 140px;
-      background: #4db6ac;
-      border-radius: 50%;
-      z-index: 0;
-    }
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        background: #4db6ac;
+        border-radius: 50%;
+        z-index: 0;
+      }
     }
 
 
