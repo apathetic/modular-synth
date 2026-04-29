@@ -21,7 +21,7 @@
       const mode = ref<Mode>('FFT');
 
       const analyser = context.createAnalyser();
-      analyser.fftSize = 256; // 512;
+      analyser.fftSize = 2048;
       analyser.maxDecibels = -20; // max value to represent; any freq bins with amplitude above this will be 255
       analyser.minDecibels = -90; // min value to represent; any freq bins with amplitude below this will be 0
 
@@ -120,17 +120,49 @@
         }
       }
 
-      /** Vertical bars, one per frequency bin, alpha proportional to amplitude. */
+      /** Logarithmic frequency spectrum using a filled path. */
       function renderFFT() {
         if (!visualizer || !fftBuffer) return;
         const values = fftBuffer;
-        const barWidth = canvasWidth / values.length;
-        let x = 0;
 
-        for (const val of values) {
-          visualizer.fillStyle = `rgba(${highlightRgb}, ${val / 255})`;
-          visualizer.fillRect(x, canvasHeight - val / 2, barWidth, val / 2);
-          x += barWidth + 1;
+        const minFreq = 20;
+        const maxFreq = context.sampleRate / 2;
+        const minLog = Math.log10(minFreq);
+        const maxLog = Math.log10(maxFreq);
+        const logRange = maxLog - minLog;
+
+        visualizer.beginPath();
+        visualizer.lineWidth = 2;
+        visualizer.strokeStyle = highlightColor;
+        visualizer.fillStyle = `rgba(${highlightRgb}, 0.3)`;
+
+        let firstPoint = true;
+        let lastX = 0;
+
+        for (let i = 0; i < values.length; i++) {
+          const freq = (i * context.sampleRate) / analyser.fftSize;
+          if (freq < minFreq) continue;
+          if (freq > maxFreq) break;
+
+          const logFreq = Math.log10(freq);
+          const x = ((logFreq - minLog) / logRange) * canvasWidth;
+          const y = canvasHeight - ((values[i] / 255) * canvasHeight);
+
+          if (firstPoint) {
+            visualizer.moveTo(x, canvasHeight);
+            visualizer.lineTo(x, y);
+            firstPoint = false;
+          } else {
+            visualizer.lineTo(x, y);
+          }
+          lastX = x;
+        }
+
+        if (!firstPoint) {
+          visualizer.lineTo(lastX, canvasHeight);
+          visualizer.closePath();
+          visualizer.fill();
+          visualizer.stroke();
         }
       }
 
