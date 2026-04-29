@@ -97,7 +97,6 @@
       <circle v-else :cx="handlePos" cy="16" r="10" class="handle" />
     </svg>
     <div class="label">{{ param }}</div>
-    <div class="value">{{ currentOptionLabel }}</div>
   </div>
 </template>
 
@@ -133,17 +132,12 @@
       transition: cx 0.15s cubic-bezier(0.4, 0, 0.2, 1), cy 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-  .label {
-    font-size: 0.8rem;
-    margin-top: 4px;
-    color: #fff;
-    text-align: center;
-  }
+    .label {
+      font-size: 0.8rem;
+      margin-top: 4px;
+      color: var(--color-text-light);
+      text-align: center;
+    }
 
-  .value {
-    font-size: 0.7rem;
-    color: var(--color-highlight, #fca311);
-    text-align: center;
-  }
   }
 </style>

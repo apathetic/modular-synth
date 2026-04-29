@@ -228,7 +228,7 @@ All variants share the same drag-to-change behavior and reactive state.
 
     .label {
       text-transform: uppercase;
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       letter-spacing: 0.05em;
     }
 
@@ -243,6 +243,8 @@ All variants share the same drag-to-change behavior and reactive state.
     width: calc(var(--w) * var(--scale));
     height: calc(var(--h) * var(--scale));
     transition: width 0.2s ease, height 0.2s ease;
+
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
   }
 
   .knob-tooltip {
@@ -290,10 +292,6 @@ All variants share the same drag-to-change behavior and reactive state.
   .knob--skirted {
     --w: 80px;
     --h: 80px;
-
-    .knob-svg {
-      filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
-    }
 
     .skirt   { stroke: #0a0a0a; stroke-width: 1; }
     .cap     { stroke: #000; stroke-width: 1; }

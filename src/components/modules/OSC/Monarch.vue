@@ -65,8 +65,9 @@
     </div>
 
     <div class="module-interface">
-      <Toggle param="kt" @value="kt = $event" orientation="horizontal" :options="['Off', 'On']" title="Key Tracking: If on, oscillator frequency follows input pitch."></Toggle>
+      <div class="hero">OSC 1 <button>mod</button></div>
 
+      <Toggle param="kt" @value="kt = $event" orientation="horizontal" :options="['Off', 'On']" title="Key Tracking: If on, oscillator frequency follows input pitch."></Toggle>
       <Knob param="frequency" @value="frequency = $event" :min="20" :max="12000" :default="440" :precision="1" variant="skirted" mode="log"></Knob>
       <Knob param="fm"        @value="fm = $event"        :min="0"  :max="1000"  :default="0"   :precision="0" variant="skirted" size="small"></Knob>
       <Knob param="range"     @value="range = $event"     variant="pointer" :steps="rangeSteps"></Knob>
@@ -83,20 +84,32 @@
 
 <style>
   .monarch {
-    background: linear-gradient(to bottom, #727067 0%, #666461 100%);
+    background: linear-gradient(to bottom, rgb(72, 70, 66) 0%, rgb(66, 64, 60) 98%,  rgb(36, 34, 30) 100%);
     text-transform: uppercase;
 
     text { /* the svg element */
       fill: #fff;
     }
 
+    .hero {
+      display: flex;
+      font-size: 20px;
+      justify-content: space-between; width: 100%;
+      border-top: 2px solid rgba(33,33,33, 0.33);
+      border-bottom: 2px solid rgb(166,166,166);
+      padding: 0.1em 0.25em;
+    }
+
     .module-interface {
+      border: solid rgb(166,166,166);
+      border-width: 0 3px;
+
       & > * { position: absolute; }
-      & > :nth-child(1) { top: 32px; right: 12px; } /* kt */
-      & > :nth-child(2) { top: 54px; } /* freq */
-      & > :nth-child(3) { top: 84px; right: 24px; } /* fm */
-      & > :nth-child(4) { top: 160px; left: 24px; } /* range */
-      & > :nth-child(5) { top: 160px; right: 24px; } /* waveform */
+      & > :nth-child(2) { top: 48px; right: 12px; } /* kt */
+      & > :nth-child(3) { top: 52px; left: 5px; } /* freq */
+      & > :nth-child(4) { top: 84px; right: 24px; } /* fm */
+      & > :nth-child(5) { top: 150px; left: 22px; } /* range */
+      & > :nth-child(6) { top: 150px; right: 22px; } /* waveform */
     }
   }
 

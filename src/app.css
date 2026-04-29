@@ -24,6 +24,8 @@
   --color-hover: #349fdf;
   --color-inactive: #999;
 
+  --color-text-light: rgba(255, 255, 255, 0.8);
+
   /* Surface shared by patterned modules (Filter, SVF, Delay, Comb). */
   --module-surface: #a8a8a8;
 
@@ -60,8 +62,6 @@ html, body {
 main {
   height: 100%;
   color: #fff;
-  /* background-color: #222; */
-  /* background: linear-gradient(to bottom, #2a2a2a 0%, #1a1a1a 100%); */
   font-family: var(--font-primary);
   min-width: 600px;
 }
@@ -150,7 +150,7 @@ section {
 h1 {}
 h2 {}
 h3 {
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-transform: uppercase;
   font-weight: normal;
 }

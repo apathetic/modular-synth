@@ -275,7 +275,7 @@
     }
 
 
-  .play-mode .play { color: #fff; }
+  .play-mode .play { color: var(--color-text-light); }
   .edit-mode .edit { color: #fff; }
 
 </style>

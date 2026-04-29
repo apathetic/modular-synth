@@ -126,7 +126,7 @@
   .module {
     height: var(--cellHeight);
     width: var(--cellWidth);
-    border: 1px solid var(--color-grey-dark);
+    border: 2px solid #222; /* var(--color-grey-dark); */
     border-radius: var(--border-radius);
     position: absolute;
     transition: all var(--transition-time-slow);
@@ -151,8 +151,7 @@
     }
 
     &.active {
-      box-shadow: 0 0 0 1px greenyellow;
-      border: 1px solid greenyellow;
+      border-color: greenyellow;
     }
 
     > div {
@@ -182,23 +181,29 @@
 
 
   .module-details {
-    background: #777;
+    background: rgb(60,60,60);
     border-bottom: 1px solid #000;
     border-top: 1px solid #999;
-    color: #000;
+    color: #fff;
     width: 100%;
 
     h3 {
       font-weight: 700;
-      padding: 0.1em 0.2em;
+      padding: 0.25em 0.5em;
       margin: 0;
+      transition: all var(--transition-time-slow);
     }
   }
 
+  .edit-mode .module-details h3 {
+    font-size: 0.8rem;
+    padding: 0.1em 0.3em;
+  }
+
   .module-interface {
+    border-radius: var(--border-radius);
     height: 100%;
-    /* padding: 36px 24px 18px; */
-    padding: 16px;
+    /* padding: 16px; */
     position: relative;
     overflow: hidden;
     transition: visibility 0s;    /* yes you can do this (to delay the toggle of block/none) */

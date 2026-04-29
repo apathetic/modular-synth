@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const ModuleTypeEnum = z.enum(['Analyser', 'Bento', 'Boutique', 'Clock', 'Compressor', 'Debugger', 'Delay', 'Drive', 'Env', 'Filter', 'LFO', 'Mixer', 'Node', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']);
+export const ModuleTypeEnum = z.enum(['Analyser', 'Bento', 'Boutique', 'Clock', 'Comb', 'Compressor', 'Debugger', 'Delay', 'Drive', 'Env', 'Filter', 'LFO', 'Mixer', 'Monarch', 'Node', 'NoteIn', 'OSC', 'Reverb', 'VCA', 'VCF']);
 
 
 export const MasterOutSchema = z.object({
