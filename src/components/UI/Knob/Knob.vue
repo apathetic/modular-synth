@@ -224,7 +224,7 @@ All variants share the same drag-to-change behavior and reactive state.
     --scale: 1;
 
     &.size-small { --scale: 0.6; }
-    &.size-large { --scale: 1.4; }
+    &.size-large { --scale: 1.8; }
 
     .label {
       text-transform: uppercase;
