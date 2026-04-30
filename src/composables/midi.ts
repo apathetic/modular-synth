@@ -1,77 +1,106 @@
-/*
 import { ref } from 'vue';
-const bus = ref(new Map());
-export default function useEventsBus(){
-	function emit(event, ...args) {
-		bus.value.set(event, args);
-	}
-	return {nemit, bus }
-}
-*/
-/**
- * @see https://github.com/vueuse/vueuse/blob/main/packages/core/useEventBus/index.ts
- */
 
-import { getCurrentScope } from 'vue';
-// import type { EffectScope } from 'vue';
-
-const events = new Map();
-
-export type EventBusListener<T = unknown, P = any> = (event: T, payload?: P) => void;
-export type EventBusEvents<T, P = any> = EventBusListener<T, P>[];
-export type EventBusIdentifier<T = unknown> = EventBusKey<T> | string | number;
-
-export interface EventBusKey<_T> extends Symbol { }
-
-export interface UseEventBusReturn<T, P> {
-  /**
-   * Subscribe to an event. When calling emit, the listeners will execute.
-   * @param listener watch listener.
-   * @returns a stop function to remove the current callback.
-   */
-  on: (listener: EventBusListener<T, P>) => () => void;
-  /**
-   * Emit an event, the corresponding event listeners will execute.
-   * @param event data sent.
-   */
-  emit: (event?: T, payload?: P) => void
-  /**
-   * Remove the corresponding listener.
-   * @param listener watch listener.
-   */
-  off: (listener: EventBusListener<T>) => void
+type MidiActions = {
+  noteOn?: (note: number, velocity: number) => void;
+  noteOff?: (note: number) => void;
+  pitchWheel?: (bend: number) => void;
+  controller?: (target: number, value: number) => void;
 }
 
-export function useEventBus<T = unknown, P = any>(key: EventBusIdentifier<T>): UseEventBusReturn<T, P> {
-  const scope = getCurrentScope();
+const devices = ref<any[]>([]);
+const listeners = new Set<MidiActions>();
+let midiAccess: any = null;
+let midiIn: any = null;
 
-  function on(listener: EventBusListener<T, P>) {
-    const listeners = events.get(key) || [];
-    const _off = () => off(listener);
 
-    listeners.push(listener);
-    events.set(key, listeners);
-    // scope?.cleanups?.push(_off);
-    return _off;
-  }
+function addDevice(port: any) {
+  devices.value.push({
+    _uid: port.id,
+    name: port.name,
+    state: port.state,
+    connection: port.connection
+  });
+}
 
-  function off(listener: EventBusListener<T>): void {
-    const listeners = events.get(key);
-    if (!listeners) {
-      return;
+function onStateChange(e: any) {
+  const port = e.port;
+  const found = !!devices.value.find((d) => d._uid === port.id);
+
+  if (port.type === 'input') {
+    if (port.state === 'disconnected' && found) {
+      devices.value = devices.value.filter(d => d._uid !== port.id);
+    } else if (port.state === 'connected' && !found) {
+      addDevice(port);
     }
-
-    const index = listeners.indexOf(listener);
-    if (index > -1)
-      listeners.splice(index, 1)
-    if (!listeners.length)
-      events.delete(key)
   }
-
-  function emit(event?: T, payload?: P) {
-    events.get(key)?.forEach((v: any) => v(event, payload));
-  }
-
-  return { on, off, emit }
 }
 
+function selectDevice(id: string) {
+  if (!midiAccess) return;
+  const selected = midiAccess.inputs.get(id);
+
+  if (midiIn) {
+    midiIn.close();
+  }
+
+  midiIn = selected;
+  if (midiIn) {
+    midiIn.onmidimessage = onMIDIMessage;
+  }
+}
+
+function onMIDIMessage({ data }: any) {
+  const cmd = data[0] >> 4;
+  const channel = data[0] & 0xf;
+  const note = data[1];
+  const velocity = data[2];
+
+  if (channel === 9) return;
+
+  if (cmd === 8 || (cmd === 9 && velocity === 0)) {
+    listeners.forEach(l => l.noteOff?.(note));
+  } else if (cmd === 9) {
+    listeners.forEach(l => l.noteOn?.(note, velocity));
+  } else if (cmd === 11) {
+    listeners.forEach(l => l.controller?.(note, velocity));
+  } else if (cmd === 14) {
+    listeners.forEach(l => l.pitchWheel?.(((velocity * 128.0 + note) - 8192) / 8192.0));
+  }
+}
+
+function initMidi() {
+  if (midiAccess) return;
+
+  if (navigator.requestMIDIAccess) {
+    navigator.requestMIDIAccess({ sysex: false }).then(
+      (midi) => {
+        midiAccess = midi;
+        midi.onstatechange = onStateChange;
+        midi.inputs.forEach((port: any) => addDevice(port));
+      },
+      (error) => console.log('Error accessing MIDI', error)
+    );
+  } else {
+    console.log('No access to MIDI devices: browser does not support WebMIDI API.');
+  }
+}
+
+export function useMidi(callbacks?: MidiActions) {
+  initMidi();
+
+  if (callbacks) {
+    listeners.add(callbacks);
+  }
+
+  function unsubscribe() {
+    if (callbacks) {
+      listeners.delete(callbacks);
+    }
+  }
+
+  return {
+    devices,
+    selectDevice,
+    unsubscribe
+  };
+}

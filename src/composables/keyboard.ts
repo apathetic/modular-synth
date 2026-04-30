@@ -12,6 +12,7 @@ interface UseKeyboardProps {
 export function useKeyboard({ noteOn, noteOff }: UseKeyboardProps) {
 
   function keydown(evt: KeyboardEvent) {
+    if (evt.repeat) return;
     switch (evt.code) {
       case 'KeyA':
         noteOn(63, 127);
