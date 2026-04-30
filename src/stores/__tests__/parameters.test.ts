@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { createAppStore } from '~/stores/app';
-import { state as blank } from '~/stores/patch';
-import { basicPatch } from '~/synths/basic';
+import { emptyPatch } from '~/synths/empty';
+import { simplePatch } from '~/synths/simple';
 
-const freshStore = (patches: Patch[] = [basicPatch()]) => {
+const freshStore = (patches: Patch[] = [simplePatch()]) => {
   const useStore = createAppStore({ patches });
   const store = useStore();
   // `loadPatch` is async (awaits nextTick) and flips `loaded=true`. We short-
@@ -46,7 +46,7 @@ describe('setParameter', () => {
   });
 
   it('creates the module bucket on first write', () => {
-    const store = freshStore([blank()]);
+    const store = freshStore([emptyPatch()]);
     expect(store.patch.presets[0]!.parameters[7]).toBeUndefined();
 
     store.setParameter({ moduleId: 7, param: 'foo', value: 42 });
@@ -91,7 +91,7 @@ describe('removeParameter', () => {
   });
 
   it('drops the module bucket when its last leaf is removed', () => {
-    const store = freshStore([blank()]);
+    const store = freshStore([emptyPatch()]);
     store.setParameter({ moduleId: 9, param: 'only', value: 1 });
     expect(store.patch.presets[0]!.parameters[9]).toEqual({ only: 1 });
 
@@ -121,7 +121,7 @@ describe('addPreset / removePreset', () => {
   });
 
   it('removePreset refuses to delete the last preset', () => {
-    const store = freshStore([blank()]);
+    const store = freshStore([emptyPatch()]);
 
     store.removePreset(0);
     expect(store.patch.presets).toHaveLength(1);

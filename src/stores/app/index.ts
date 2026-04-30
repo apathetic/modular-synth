@@ -146,7 +146,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     //  USER
     // -----------------------------------------------
 
-    isAuthenticated (state): boolean {
+    isAuthenticated (_state): boolean {
       // return !!state.session;
       return true;
     },
@@ -224,7 +224,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     savePatch() {
       // Validate the patch before saving
       // const patch = validatePatch(this.patch);
-      const patch: Patch = isPatch(this.patch) ? this.patch : fixPatch(this.patch);
+      // const patch: Patch = isPatch(this.patch) ? this.patch : fixPatch(this.patch);
 
       // save({ ...patch /*, id: patch.uuid */ })
       //   .then(() => {

@@ -3,7 +3,7 @@ import { render, screen, within, fireEvent, cleanup } from '@testing-library/vue
 import { setActivePinia, createPinia } from 'pinia';
 import { createAppStore, useAppStore } from '~/stores/app';
 import PatchManager from './PatchManager.vue';
-import { state as blank } from '~/stores/patch';
+import { emptyPatch } from '~/synths/empty';
 
 
 vi.mock('~/stores/app', async (importOriginal) => {
@@ -15,7 +15,7 @@ vi.mock('~/stores/app', async (importOriginal) => {
 });
 
 
-const createTestStore = (initialPatches = [blank()]) => {
+const createTestStore = (initialPatches = [emptyPatch()]) => {
   const store = createAppStore({ patches: initialPatches })();
 
   // Seed `store.patch` from the first entry so the initial render sees a
@@ -66,7 +66,7 @@ describe('PatchManager.vue', () => {
     it('loads a default patch', () => {
       render(PatchManager);
 
-      // `state()` seeds the default blank patch with name and preset name both
+      // `state()` seeds the default emptyPatch patch with name and preset name both
       // set to '-' — see @/stores/patch.
       const patch = screen.getByTestId('patch');
       const patchInput = within(patch).getByRole('textbox');
@@ -118,7 +118,7 @@ describe('PatchManager.vue', () => {
 
     it('in edit mode, can remove a patch', () => {
       // Setup test with 2 patches and editing enabled
-      mockStore.patches = [blank(), blank()];
+      mockStore.patches = [emptyPatch(), emptyPatch()];
       mockStore.isEditing = true;
 
       render(PatchManager);
@@ -147,7 +147,7 @@ describe('PatchManager.vue', () => {
 
     it('in edit mode, can edit the patch name and parameters name', () => {
       mockStore = createTestStore([{
-        ...blank(),
+        ...emptyPatch(),
         name: 'original',
         presets: [{ name: 'original-preset', parameters: {} }]
       }]);
@@ -262,8 +262,8 @@ describe('PatchManager.vue', () => {
 
     it('updates display when new patch is selected', async () => {
       mockStore.patches = [
-        { ...blank(), name: 'first-patch', presets: [{ name: 'setting1' }] },
-        { ...blank(), name: 'second-patch', presets: [{ name: 'setting2' }] }
+        { ...emptyPatch(), name: 'first-patch', presets: [{ name: 'setting1' }] },
+        { ...emptyPatch(), name: 'second-patch', presets: [{ name: 'setting2' }] }
       ];
       const loadPatchSpy = vi.spyOn(mockStore, 'loadPatch');
 

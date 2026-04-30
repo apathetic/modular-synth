@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "ts": "vue-tsc --build",
     "test:e2e": "cypress open --component",
-    "test:unit": "vitest --globals --environment jsdom --root src/",
+    "test:watch": "vitest --globals --environment jsdom --root src/",
+    "test": "vitest run --globals --environment jsdom --root src/",
     "lint": "oxlint --fix"
   },
   "dependencies": {

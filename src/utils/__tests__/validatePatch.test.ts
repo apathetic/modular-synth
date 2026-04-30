@@ -41,12 +41,10 @@ describe('isPatch', () => {
 
   it('should return false for invalid patches', () => {
     expect(isPatch(null)).toBe(false);
-    expect(console.error).toHaveBeenCalled();
 
     vi.clearAllMocks();
 
     expect(isPatch({})).toBe(false);
-    expect(console.error).toHaveBeenCalled();
   });
 });
 

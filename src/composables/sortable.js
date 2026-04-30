@@ -14,7 +14,7 @@ let positionHighlight;
 export function useSortable() {
   let maxGridCols;
   let widestItem;
-  let tallestItem;
+  // let tallestItem;
   let previousDragPosition;
   const store = useAppStore();
   // const activeModule = computed(() => store.activeModule);
@@ -43,7 +43,7 @@ export function useSortable() {
 
   function resetSorting() {
     widestItem = Math.max.apply(null, gridlist.items.map((item) => item.w));
-    tallestItem = Math.max.apply(null, gridlist.items.map((item) => item.h));
+    // tallestItem = Math.max.apply(null, gridlist.items.map((item) => item.h));
     applyPositionToItems();
   }
 
@@ -101,8 +101,6 @@ export function useSortable() {
     });
 
     handle.style.width = (gridlist.grid.length + widestItem) * rackWidth;
-
-    tallestItem++;  // so that linter doesn't complain of unused variable
   }
 
 
@@ -118,7 +116,6 @@ export function useSortable() {
   }
 
   function snapItemPositionToGrid(position) {
-
     // var position = {
     //   x: el.offsetLeft,
     //   y: el.offsetTop

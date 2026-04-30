@@ -10,7 +10,7 @@
       <p>note: {{ noteName }}</p>
       <p>pitch: {{ Math.round(pitch) }} Hz</p>
       <p>gate: {{ gate }}</p>
-      <p>vel:  {{ velocity }}</p>
+      <p>vel:  {{ +velocity.toFixed(3) }}</p>
       <p>bend: {{ bend }}</p>
       <p>mod:  {{ mod }}</p>
     </div>

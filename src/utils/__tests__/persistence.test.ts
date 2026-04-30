@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { simplePatch } from '~/synths/simple';
 import {
   STORAGE_KEY,
   STORAGE_VERSION,
@@ -6,8 +7,6 @@ import {
   serializePatches,
   clearStorage,
 } from '../persistence';
-import { basicPatch } from '~/synths/basic';
-import { dx7Patch } from '~/synths/dx7';
 
 const LEGACY_KEY = 'patches';
 
@@ -40,18 +39,16 @@ afterEach(() => {
 describe('loadPatches', () => {
   it('returns the shipped default patches when localStorage is empty', () => {
     const patches = loadPatches();
-    expect(patches).toHaveLength(2);
-    expect(patches[0]!.name).toBe(dx7Patch().name);
-    expect(patches[1]!.name).toBe(basicPatch().name);
+    expect(patches).toHaveLength(1);
+    expect(patches[0]!.name).toBe(simplePatch().name);
     expect(patches[0]!.loaded).toBe(false);
   });
 
   it('returns the default patches when the stored JSON is malformed', () => {
     localStorage.setItem(STORAGE_KEY, 'not-json{');
     const patches = loadPatches();
-    expect(patches).toHaveLength(2);
-    expect(patches[0]!.name).toBe(dx7Patch().name);
-    expect(patches[1]!.name).toBe(basicPatch().name);
+    expect(patches).toHaveLength(1);
+    expect(patches[0]!.name).toBe(simplePatch().name);
   });
 
   it('returns the default patches when the envelope has an empty patches array', () => {
@@ -60,9 +57,8 @@ describe('loadPatches', () => {
       JSON.stringify({ version: STORAGE_VERSION, patches: [] }),
     );
     const patches = loadPatches();
-    expect(patches).toHaveLength(2);
-    expect(patches[0]!.name).toBe(dx7Patch().name);
-    expect(patches[1]!.name).toBe(basicPatch().name);
+    expect(patches).toHaveLength(1);
+    expect(patches[0]!.name).toBe(simplePatch().name);
   });
 
   it('reads a versioned envelope', () => {
@@ -204,8 +200,7 @@ describe('clearStorage', () => {
     clearStorage();
 
     const patches = loadPatches();
-    expect(patches).toHaveLength(2);
-    expect(patches[0]!.name).toBe(dx7Patch().name);
-    expect(patches[1]!.name).toBe(basicPatch().name);
+    expect(patches).toHaveLength(1);
+    expect(patches[0]!.name).toBe(simplePatch().name);
   });
 });

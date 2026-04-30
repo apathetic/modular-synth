@@ -10,7 +10,7 @@ async function refreshClients() {
   try {
     const allClients = await self.clients.matchAll();
 
-    // 1. Rebuild our local clients map from the source of truth
+    // Rebuild `clients` rom the source of truth
     clients.clear();
     for (const client of allClients) {
       clients.set(client.id, client);
@@ -20,7 +20,7 @@ async function refreshClients() {
       }
     }
 
-    // 2. Clean up ghost tabs (i.e. closed) from our voices map
+    // Clean up ghost tabs (i.e. closed) from our voices map
     for (const id of voices.keys()) {
       if (!clients.has(id)) { // if id no longer exists in `clients`
         voices.delete(id);    // remove it from `voices`
@@ -31,7 +31,7 @@ async function refreshClients() {
   }
 }
 
-function handleNoteOn(note, velocity, sourceId) {
+function handleNoteOn(note, velocity, _sourceId) {
   // Deduplicate: all tabs listen to the same MIDI device and send the same
   // noteOn events. If a tab is already playing this note, ignore it.
   for (const currentNote of voices.values()) {
@@ -81,7 +81,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting());
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', () => {
   // Pass through fetch
 });
 

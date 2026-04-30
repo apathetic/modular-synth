@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { createAppStore } from '~/stores/app';
-import { basicPatch } from '~/synths/basic';
+import { simplePatch } from '~/synths/simple';
 import { MASTER_ID } from '~/audio/master';
 
-const freshStore = (patches: Patch[] = [basicPatch()]) => {
+const freshStore = (patches: Patch[] = [simplePatch()]) => {
   const useStore = createAppStore({ patches });
   const store = useStore();
   store.patch = store.patches[0]!;
