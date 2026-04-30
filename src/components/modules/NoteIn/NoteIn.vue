@@ -25,7 +25,7 @@
 <script lang="ts">
   import { defineComponent, computed, ref, onUnmounted } from 'vue';
   import { useEventBus, useKeyboard } from '~/composables';
-  import sync from './worker';
+  import dispatchToWorker, { onWorkerMessage } from '~/utils/worker';
   // import rollover from './rollover';
 
   const noteNames: string[] = [];
@@ -83,20 +83,27 @@
        * @param  {number} velocity Midi velocity beteen 1 - 127.
        */
       function noteOn(n: number, v: number) {
-        note.value = n;
-        pitch.value = 440 * (Math.pow(2, ((n - 69) / 12)));
-        velocity.value = (v / 127.0);
-        gate.value = 1;
-        sync({ note: n, velocity: v });
+        console.log("dispatching noteOn", n); dispatchToWorker({ type: 'noteOn', note: n, velocity: v });
       }
 
       function noteOff(n: number) {
-        if (n === note.value) {
-          gate.value = 0;
-          velocity.value = 0;
-          sync({ note: n, velocity: 0 });
-        }
+        dispatchToWorker({ type: 'noteOff', note: n });
       }
+
+      // Handle messages from the Service Worker assigning notes to this tab
+      onWorkerMessage((data) => {
+        if (data.type === 'playNote') {
+          note.value = data.note;
+          pitch.value = 440 * (Math.pow(2, ((data.note - 69) / 12)));
+          velocity.value = (data.velocity / 127.0);
+          gate.value = 1;
+        } else if (data.type === 'stopNote') {
+          if (note.value === data.note) {
+            gate.value = 0;
+            velocity.value = 0;
+          }
+        }
+      });
 
       function pitchWheel(b: number) {
         bend.value = +b.toFixed(3);
