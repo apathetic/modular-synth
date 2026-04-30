@@ -12,9 +12,10 @@
 
 
 <script lang="ts">
-  import { defineComponent, computed } from 'vue';
+  import { defineComponent, computed, onUnmounted } from 'vue';
   import { useAppStore } from '~/stores/app';
   import { context } from '~/audio';
+  import { dispatchToWorker, onWorkerMessage } from '~/utils/worker';
 
   export default defineComponent({
     name: 'Power',
@@ -23,19 +24,31 @@
       const power = computed(() => store.power);
 
       function togglePower() {
-        store.power = !store.power;
-
-        if (store.power) {
-          context.resume();
-        } else {
-          context.suspend();
-        }
+        dispatchToWorker({ type: 'setPower', value: !store.power });
       }
+
+      const unsubscribe = onWorkerMessage((data) => {
+        if (data.type === 'powerChanged') {
+          store.power = data.value;
+
+          if (store.power) {
+            context.resume();
+          } else {
+            context.suspend();
+          }
+        }
+      });
+
+      onUnmounted(() => {
+        unsubscribe();
+      });
 
       window.addEventListener('keydown', (e) => {
         switch (e.key) {
           case 'Escape':
             // store.power = false;
+            // or
+            // dispatchToWorker({ type: 'setPower', value: false });
             break;
         }
       });

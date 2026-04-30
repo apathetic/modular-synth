@@ -201,7 +201,7 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
       this.patch.loaded = false;
 
       const patch = this.patches[id];
-      log({ type:'patch', action:'loading ', data: patch.name });
+      log({ type:'patch', action:'loading', data: `"${patch.name}"` });
 
       patch.loaded = false;
 

@@ -1,75 +1,53 @@
-const clients = new Map(); // keeps track of available tabs. It's much faster than clients.matchAll()
-const voices = new Map(); // keeps track of notes and which client is playing them
-let isRefreshing = false;
-let lastRefreshTime = 0;
+const voices = new Map(); // id -> { client, note }. keeps track of notes and which tab is playing them
+let isPoweredOn = false;
 
 
-async function refreshClients() {
-  if (isRefreshing) return;
-  isRefreshing = true;
-  try {
-    const allClients = await self.clients.matchAll();
+function handleNoteOn(note, velocity) {
+  let availableVoice = null;
 
-    // Rebuild `clients` rom the source of truth
-    clients.clear();
-    for (const client of allClients) {
-      clients.set(client.id, client);
+  for (const state of voices.values()) {
+    // Deduplicate: if any tab is already playing this note, ignore the request
+    if (state.note === note) return;
 
-      if (!voices.has(client.id)) {  // if id wasn't registered in `voices`
-        voices.set(client.id, null); // add it, and mark as available (null)
-      }
-    }
-
-    // Clean up ghost tabs (i.e. closed) from our voices map
-    for (const id of voices.keys()) {
-      if (!clients.has(id)) { // if id no longer exists in `clients`
-        voices.delete(id);    // remove it from `voices`
-      }
-    }
-  } finally {
-    isRefreshing = false;
-  }
-}
-
-function handleNoteOn(note, velocity, _sourceId) {
-  // Deduplicate: all tabs listen to the same MIDI device and send the same
-  // noteOn events. If a tab is already playing this note, ignore it.
-  for (const currentNote of voices.values()) {
-    if (currentNote === note) return;
-  }
-
-  // find an available voice (tab)
-  let availableClientId = null;
-  for (const [id, currentNote] of voices.entries()) {
-    if (currentNote === null) {
-      availableClientId = id;
-      break;
+    // Find the first available voice (tab)
+    if (!availableVoice && state.note === null) {
+      availableVoice = state;
     }
   }
 
-  // If no voices are available, we drop the note completely (no voice stealing)
-  if (availableClientId) {
-    voices.set(availableClientId, note);
-    const targetClient = clients.get(availableClientId);
-    if (targetClient) {
-      targetClient.postMessage({ type: 'playNote', note, velocity });
-    }
+  if (availableVoice) {
+    availableVoice.note = note;
+    availableVoice.client.postMessage({ type: 'playNote', note, velocity });
   }
 }
 
 function handleNoteOff(note) {
-  // Stop all clients playing this note
-  for (const [id, currentNote] of voices.entries()) {
-    if (currentNote === note) {
-      voices.set(id, null); // free up the voice
-      const targetClient = clients.get(id);
-      if (targetClient) {
-        targetClient.postMessage({ type: 'stopNote', note });
-      }
+  for (const state of voices.values()) {
+    if (state.note === note) {
+      state.note = null;
+      state.client.postMessage({ type: 'stopNote', note });
     }
   }
 }
 
+async function handleSetPower(value) {
+  isPoweredOn = value;
+
+  // Broadcast to all currently registered tabs immediately
+  for (const { client } of voices.values()) {
+    client.postMessage({ type: 'powerChanged', value: isPoweredOn });
+  }
+
+  // Then do a hard sync in the background to catch any missed or uncontrolled tabs
+  const allClients = await self.clients.matchAll({ includeUncontrolled: true });
+  for (const client of allClients) {
+    if (!voices.has(client.id)) {
+      voices.set(client.id, { client, note: null });
+      // Sync the power state for this newly discovered tab
+      client.postMessage({ type: 'powerChanged', value: isPoweredOn });
+    }
+  }
+}
 
 self.addEventListener('activate', (event) => {
   console.log('SW activated');
@@ -89,22 +67,16 @@ self.addEventListener('message', async (event) => {
   const { data, source } = event;
   if (!data || !source) return;
 
-  // if the client (i.e. tab) is not registered, register it
-  if (!clients.has(source.id)) {
-    clients.set(source.id, source);
-    voices.set(source.id, null);
-  }
-
-  // Debounce'd check for dead tabs (tabs that were closed, but still in `clients`)
-  const now = Date.now();
-  if (now - lastRefreshTime > 5000 && !isRefreshing) {
-    lastRefreshTime = now;
-    refreshClients();
-  }
-
   if (data.type === 'noteOn') {
-    handleNoteOn(data.note, data.velocity, source.id);
+    handleNoteOn(data.note, data.velocity);
   } else if (data.type === 'noteOff') {
     handleNoteOff(data.note);
+  } else if (data.type === 'setPower') {
+    await handleSetPower(data.value);
+  } else if (data.type === 'register') {
+    voices.set(source.id, { client: source, note: null });
+    source.postMessage({ type: 'powerChanged', value: isPoweredOn }); // sync power immediately
+  } else if (data.type === 'unregister') {
+    voices.delete(source.id);
   }
 });

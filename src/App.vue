@@ -27,11 +27,8 @@
     },
 
     setup() {
-      log({ type:'system', action: 'setup', data:'Synth' });
-
       const store = useAppStore();
       const sorting = ref(false);
-
 
       // maybe we want these for a "reset everything" escape hatch:
       // const { resetConnector } = useConnection();
@@ -41,7 +38,6 @@
       auth.onAuthStateChange((_, _session) => {
         store.fetchPatches();
       });
-
 
       window.addEventListener('keydown', (e) => {
         switch (e.key) {
@@ -85,6 +81,7 @@
         }
       });
 
+      log({ type:'system', action: 'setup', data:'Synth' });
 
       return {
         modules: computed(() => store.rackModules),

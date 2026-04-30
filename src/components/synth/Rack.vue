@@ -33,9 +33,6 @@
       const store = useAppStore();
       const grid = ref(null); // template $ref
 
-      log({ type:'system', action: 'setup', data:'Rack' });
-
-
       /*
       const width = computed(() => {
         // const canvasWidth = store.bounds + 124 + 40; // .. + module width + 40
@@ -83,6 +80,9 @@
           // store.scrollWidth = e.target.scrollLeft
         }
       }
+
+      log({ type:'system', action: 'setup', data:'Rack' });
+
 
       return {
         grid,

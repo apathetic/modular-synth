@@ -1,33 +1,42 @@
-let messageHandler: ((data: any) => void) | null = null;
+import { log } from '~/utils/logger';
+
+const messageHandlers = new Set<(data: any) => void>();
 
 export function onWorkerMessage(handler: (data: any) => void) {
-  messageHandler = handler;
+  messageHandlers.add(handler);
+  return () => messageHandlers.delete(handler);
 }
 
 export function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js', { scope: '/' })
-        .then(reg => console.log('SW registered!', reg))
-        .catch(err => console.error('SW registration failed!', err));
+        .then(() => log({ type:'system', action:'setup', data:'SW' })) //   console.log('SW registered!', reg))
+        .catch((err) => log({ type:'system', action:'error', data:err }));
     });
 
     navigator.serviceWorker.addEventListener('message', (event) => {
-      if (messageHandler) {
-        messageHandler(event.data);
-      }
+      messageHandlers.forEach(handler => handler(event.data));
+    });
+
+    // Handle tab lifecycle events for Service Worker tracking
+    window.addEventListener('pageshow', () => {
+      dispatchToWorker({ type: 'register' });
+    });
+
+    window.addEventListener('pagehide', () => {
+      dispatchToWorker({ type: 'unregister' });
     });
   }
 }
 
-export default function dispatchToWorker(payload: any) {
-  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage(payload);
-  } else if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then((registration) => {
-      if (registration.active) {
-        registration.active.postMessage(payload);
-      }
-    });
+export function dispatchToWorker(payload: any) {
+  const sw = navigator.serviceWorker;
+  if (!sw) return;
+
+  if (sw.controller) {
+    sw.controller.postMessage(payload);
+  } else {
+    sw.ready.then((reg) => reg.active?.postMessage(payload));
   }
 }

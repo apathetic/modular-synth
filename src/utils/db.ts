@@ -14,7 +14,7 @@ type AuthStateChangeCallback = (event: string, session: Session) => void;
 type Unsubscribe = () => void;
 
 const notImplemented = (fn: string) => {
-  console.warn(`[db] ${fn}() called but no backend is configured.`);
+  console.warn('');//`[db] ${fn}() called but no backend is configured.`);
 };
 
 export const auth = {

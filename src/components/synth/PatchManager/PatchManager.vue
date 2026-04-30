@@ -34,7 +34,6 @@
 
   export default defineComponent({
     setup () {
-      log({ type:'system', action: 'setup', data: 'PatchManager' });
       const store = useAppStore();
       const patchRef = ref(null);
       const presetRef = ref(null);
@@ -96,10 +95,11 @@
       }
 
 
+      log({ type:'system', action: 'setup', data: 'PatchManager' });
+
       // patches must be loaded via `loadPatch` in order for the modules,
       // connections, and parameters to be correctly instantiated
       store.loadPatch(0);
-
 
       return {
         editing,

@@ -25,7 +25,7 @@
 <script lang="ts">
   import { defineComponent, computed, ref, onUnmounted } from 'vue';
   import { useMidi, useKeyboard } from '~/composables';
-  import dispatchToWorker, { onWorkerMessage } from '~/utils/worker';
+  import { dispatchToWorker, onWorkerMessage } from '~/utils/worker';
 
   const noteNames: string[] = [];
   const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -99,7 +99,7 @@
       }
 
       // Handle messages from the Service Worker assigning notes to this tab
-      onWorkerMessage((data) => {
+      const unsubscribeWorker = onWorkerMessage((data) => {
         if (data.type === 'playNote') {
           playNote(data.note, data.velocity);
         } else if (data.type === 'stopNote') {
@@ -118,6 +118,7 @@
       onUnmounted(() => {
         midi.unsubscribe();
         unsubcribeKeys();
+        unsubscribeWorker();
       });
 
       // DATA / AUDIO
