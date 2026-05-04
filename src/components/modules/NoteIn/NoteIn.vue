@@ -31,8 +31,15 @@
     },
 
     setup (props, { expose }) {
+      const store = useAppStore();
+      const midi = useMidi({ noteOn, noteOff, pitchWheel, controller });
+      const unsubcribeKeys = useKeyboard({ noteOn, noteOff });
+
       const note = ref(0);
-      const pitch = ref(440);
+      const pitch = computed(() => {
+        const bentNote = note.value + (bend.value * 2);
+        return 440 * Math.pow(2, (bentNote - 69) / 12);
+      });
       const gate = ref(0);
       const velocity = ref(0);
       const mod = ref(0);
@@ -45,9 +52,6 @@
       const legato = ref(false);
       const prio = ref('LAST');
 
-      const store = useAppStore();
-      const midi = useMidi({ noteOn, noteOff, pitchWheel, controller });
-      const unsubcribeKeys = useKeyboard({ noteOn, noteOff });
 
       const outlets = [
         { label: 'pitch', data: 'pitch' },
@@ -97,7 +101,6 @@
 
       function playNote(n: number, v: number) {
         note.value = n;
-        pitch.value = 440 * (Math.pow(2, ((n - 69) / 12)));
         velocity.value = (v / 127.0);
         gate.value = 1;
       }
