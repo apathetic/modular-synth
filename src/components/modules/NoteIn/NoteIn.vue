@@ -1,6 +1,7 @@
 <script lang="ts">
   import { defineComponent, computed, ref, onUnmounted } from 'vue';
   import { useMidi, useKeyboard } from '~/composables';
+  import { useAppStore } from '~/stores/app';
   import { dispatchToWorker, onWorkerMessage } from '~/utils/worker';
   import { Knob, Dropdown, Slider } from '~/components/UI';
 
@@ -44,6 +45,7 @@
       const legato = ref(false);
       const prio = ref('LAST');
 
+      const store = useAppStore();
       const midi = useMidi({ noteOn, noteOff, pitchWheel, controller });
       const unsubcribeKeys = useKeyboard({ noteOn, noteOff });
 
@@ -54,6 +56,22 @@
         { label: 'bend',  data: 'bend' },
         { label: 'mod',   data: 'mod' },
       ];
+
+
+      const snapOnRelease = (param: string) => {
+        window.addEventListener('mouseup', () => {
+          store.setParameter({ moduleId: props.id, param, value: 0 });
+        }, { once: true });
+      };
+
+      // Handle messages from the Service Worker assigning notes to this tab
+      const unsubscribeWorker = onWorkerMessage((data) => {
+        if (data.type === 'playNote') {
+          playNote(data.note, data.velocity);
+        } else if (data.type === 'stopNote') {
+          stopNote(data.note);
+        }
+      });
 
 
       /**
@@ -91,15 +109,6 @@
         }
       }
 
-      // Handle messages from the Service Worker assigning notes to this tab
-      const unsubscribeWorker = onWorkerMessage((data) => {
-        if (data.type === 'playNote') {
-          playNote(data.note, data.velocity);
-        } else if (data.type === 'stopNote') {
-          stopNote(data.note);
-        }
-      });
-
       function pitchWheel(b: number) {
         bend.value = b;
       }
@@ -132,6 +141,7 @@
         glide,
         legato,
         prio,
+        snapOnRelease,
       };
     }
 
@@ -161,7 +171,7 @@
 
       <div class="channel">CH. <span>1</span></div>
 
-      <div class="pb">
+      <div class="pb" @mousedown.capture="snapOnRelease('bend')">
         <Slider
           label="PB"
           param="bend"
@@ -172,7 +182,7 @@
         />
       </div>
 
-      <div class="mw">
+      <div class="mw" @mousedown.capture="snapOnRelease('mod')">
         <Slider
           label="MW"
           param="mod"

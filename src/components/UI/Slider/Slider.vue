@@ -29,7 +29,6 @@
       const type = 'slider';
       const moduleId = useModuleId();
       const { start, mapped, normalized } = useParameter({ moduleId, param, type, min, max });
-      // const amount = ref('');
 
       // for the component
       watchEffect(() => {
