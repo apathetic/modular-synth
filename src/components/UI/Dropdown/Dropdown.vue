@@ -1,18 +1,21 @@
 <template>
-  <ul
-    class="dropdown"
-    :class="active ? 'active' : ''"
-    @mousedown.stop="open"
-  >
-    <li
-      v-for="(option, index) in options"
-      :class="index == selected ? 'active' : ''"
-      :key="index"
-      @mouseup="select(index)"
+  <div class="dropdown">
+    <label v-if="label" class="label">{{ label }}</label>
+    <ul
+      class="dropdown-list"
+      :class="active ? 'active' : ''"
+      @mousedown.stop="open"
     >
-      {{ option }}
-    </li>
-  </ul>
+      <li
+        v-for="(option, index) in options"
+        :class="index == selected ? 'active' : ''"
+        :key="index"
+        @mouseup="select(index)"
+      >
+        {{ option }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 
@@ -34,13 +37,17 @@
       options: {
         type: Array,
         required: true
+      },
+      label: {
+        type: String,
+        default: ''
       }
     },
 
     emits: ['value'],
 
     setup(props, { emit }) {
-      const { param, options } = props;
+      const { param, options, label } = props;
       const active = ref(false);
       const selected = ref(1);
       const type = 'Dropdown';
@@ -89,6 +96,7 @@
         selected,
         active,
         options,
+        label,
       }
     }
   });
@@ -97,8 +105,22 @@
 
 <style>
   .dropdown {
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* .dropdown-label {
+    font-size: 0.7rem;
+    color: #888;
+  } */
+
+  .dropdown-list {
     list-style: none;
-    width: 7em;
+    line-height: 1rem;
+    padding: 0.5em;
+    width: 5em;
     z-index: 100;
 
     &:not(.active) li {

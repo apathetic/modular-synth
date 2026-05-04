@@ -8,7 +8,7 @@
 
 	/* note: this should match constants.js: */
   --rackHeight: 240px;
-  --rackWidth: 60px;
+  --rackWidth: 64px;
   --cellHeight: 90px;
   --cellWidth: 120px;
 
@@ -207,14 +207,18 @@ button {
 
 .dropdown,
 .select {
-  background: rgba(85, 85, 85, 0.85); /* $color-grey-medium */
-  color: #fff;
-  border-bottom: 1px solid #777; /* $color-grey; */
-  border-right: 1px solid var(--color-grey-medium);
-  border-left: 1px solid var(--color-grey-medium);
   font-family: var(--font-secondary);
   font-weight: 300;
   line-height: 2em;
+}
+
+/* TODO MOVE TO PATCH MANAGER */
+.select { /* dropdown-list */
+  color: #fff;
+  background: rgba(85, 85, 85, 0.85); /* $color-grey-medium */
+  border-bottom: 1px solid #777; /* $color-grey; */
+  border-right: 1px solid var(--color-grey-medium);
+  border-left: 1px solid var(--color-grey-medium);
   padding: 0em 0.5em;
 }
 

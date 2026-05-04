@@ -211,7 +211,7 @@
       <button class="btn-legato" :class="{ active: legato }" @click="legato = !legato">LEGATO</button>
 
       <div class="prio-group">
-        PRIO <Dropdown param="prio" :options="['LAST', 'HI', 'LO']" @value="prio = $event" />
+        <Dropdown label="PRIO" param="prio" :options="['LAST', 'HI', 'LO']" @value="prio = $event" />
       </div>
 
       <!-- <div class="range-group">
@@ -308,23 +308,24 @@
       &.active { background: #555; color: #fff; }
     }
 
+    .dropdown-list {
+      color: #fff;
+      background: rgba(85, 85, 85, 0.85); /* $color-grey-medium */
+    }
+
+
     .prio-group {
       position: absolute;
       top: 115px;
       right: 10px;
-      font-size: 0.7rem;
-      color: #888;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
+/*
       .dropdown {
         background: transparent;
         border: none;
         padding: 0;
         font-size: 0.7rem;
         color: var(--color-highlight);
-      }
+      } */
     }
 
     .range-group {

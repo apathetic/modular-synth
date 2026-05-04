@@ -9,7 +9,7 @@
 // -----------------------------------------------
 
 export const rackHeight = 240;
-export const rackWidth = 60;
+export const rackWidth = 64; // per unit
 export const cellHeight = 90;
 export const cellWidth = 120;
 
