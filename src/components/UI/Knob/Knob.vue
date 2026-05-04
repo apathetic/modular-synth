@@ -206,7 +206,7 @@ All variants share the same drag-to-change behavior and reactive state.
       <line x1="40" y1="21" x2="40" y2="20" class="pointer" stroke-width="5" :transform="`rotate(${angleDeg} 40 40)`" />
     </svg>
 
-    <div class="label">{{ param }}</div>
+    <label class="label">{{ param }}</label>
 
     <div class="knob-tooltip" :style="{ 'position-anchor': anchorName }">
       {{ displayValue }}
@@ -226,11 +226,6 @@ All variants share the same drag-to-change behavior and reactive state.
     &.size-small { --scale: 0.6; }
     &.size-large { --scale: 1.8; }
 
-    .label {
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.05em;
-    }
 
     text {
       text-anchor: middle;

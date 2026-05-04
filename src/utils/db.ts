@@ -13,7 +13,7 @@ type AuthResponse = { error: Error | null };
 type AuthStateChangeCallback = (event: string, session: Session) => void;
 type Unsubscribe = () => void;
 
-const notImplemented = (fn: string) => {
+const notImplemented = (/* fn: string */) => {
   console.warn('');//`[db] ${fn}() called but no backend is configured.`);
 };
 

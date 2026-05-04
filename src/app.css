@@ -160,7 +160,6 @@ h4 {
   font-weight: normal;
 }
 
-
 /* --------------------------------
   Buttons
 --------------------------------- */
@@ -218,6 +217,17 @@ button {
   line-height: 2em;
   padding: 0em 0.5em;
 }
+
+.label {
+  display: block;
+  font-size: 0.8rem;
+  /* color: #888; */
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  /* pointer-events: none; */
+  font-family: var(--font-secondary);
+}
+
 
 select {
   border: 0;

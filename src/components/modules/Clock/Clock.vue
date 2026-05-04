@@ -1,58 +1,3 @@
-<template>
-  <div class="clock">
-    <div class="module-details">
-      <h3>Clock</h3>
-    </div>
-
-    <div class="module-interface">
-      <button class="transport" type="button" @click="toggleRun">
-        {{ running ? '\u25A0' : '\u25B6' }}
-      </button>
-
-      <Dropdown
-        param="division"
-        :options="divisions"
-        @value="division = $event">
-      </Dropdown>
-
-      <knob
-        param="bpm"
-        variant="skirted"
-        :min="20"
-        :max="300"
-        :default="120"
-        :precision="1"
-        @value="bpm = $event">
-      </knob>
-
-      <knob
-        param="reset"
-        :min="0"
-        :max="128"
-        :default="64"
-        :precision="0"
-        @value="resetEvery = $event">
-      </knob>
-
-      <knob
-        param="shuffle"
-        :min="0"
-        :max="0.5"
-        :default="0"
-        :precision="2"
-        @value="shuffle = $event">
-      </knob>
-
-      <button class="reset" type="button" @click="manualReset">reset</button>
-    </div>
-
-    <div class="module-connections">
-      <Outlets :ports="outlets" :id="id"></Outlets>
-    </div>
-  </div>
-</template>
-
-
 <script lang="ts">
   import { defineComponent, ref, watch, onUnmounted } from 'vue';
   import { Clock, type ClockDivision } from '~/audio/modules/clock';
@@ -150,6 +95,62 @@
 </script>
 
 
+<template>
+  <div class="clock">
+    <div class="module-details">
+      <h3>Clock</h3>
+    </div>
+
+    <div class="module-interface">
+      <div class="name-bar">CLOCK <button>mod</button></div>
+      <button class="transport" type="button" @click="toggleRun">
+        {{ running ? '◼' : '▶' }}
+      </button>
+
+      <Dropdown
+        param="division"
+        :options="divisions"
+        @value="division = $event">
+      </Dropdown>
+
+      <knob
+        param="bpm"
+        variant="skirted"
+        :min="20"
+        :max="300"
+        :default="120"
+        :precision="1"
+        @value="bpm = $event">
+      </knob>
+
+      <knob
+        param="reset"
+        :min="0"
+        :max="128"
+        :default="64"
+        :precision="0"
+        @value="resetEvery = $event">
+      </knob>
+
+      <knob
+        param="shuffle"
+        :min="0"
+        :max="0.5"
+        :default="0"
+        :precision="2"
+        @value="shuffle = $event">
+      </knob>
+
+      <button class="reset" type="button" @click="manualReset">reset</button>
+    </div>
+
+    <div class="module-connections">
+      <Outlets :ports="outlets" :id="id"></Outlets>
+    </div>
+  </div>
+</template>
+
+
 <style>
   .clock {
     background: linear-gradient(to bottom, #2f2e2b 0%, #262522 98%, #1a1917 100%);
@@ -162,10 +163,18 @@
     button.transport,
     button.reset {
       background: transparent;
-      border: 1px solid var(--color-grey-medium);
-      color: inherit;
+      font-size: 5rem;
+      /* border: 0; */
+      color: var(--color-highlight);
+
       cursor: pointer;
-      padding: 0.25em 0.5em;
+      padding: 0.25rem;
+
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      line-height: 60px;
+
     }
   }
 </style>

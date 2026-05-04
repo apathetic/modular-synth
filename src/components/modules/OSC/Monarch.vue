@@ -65,7 +65,7 @@
     </div>
 
     <div class="module-interface">
-      <div class="hero">OSC 1 <button>mod</button></div>
+      <div class="name-bar">OSC 1 <button>mod</button></div>
 
       <Toggle param="kt" @value="kt = $event" orientation="horizontal" :options="['Off', 'On']" title="Key Tracking: If on, oscillator frequency follows input pitch."></Toggle>
       <Knob param="frequency" @value="frequency = $event" :min="20" :max="12000" :default="440" :precision="1" variant="skirted" mode="log"></Knob>
@@ -91,15 +91,6 @@
       fill: #fff;
     }
 
-    .hero {
-      display: flex;
-      font-size: 20px;
-      justify-content: space-between; width: 100%;
-      border-top: 2px solid rgba(33,33,33, 0.33);
-      border-bottom: 2px solid rgb(166,166,166);
-      padding: 0.1em 0.25em;
-    }
-
     .module-interface {
       border: solid rgb(166,166,166);
       border-width: 0 3px;
@@ -110,6 +101,11 @@
       & > :nth-child(4) { top: 84px; right: 24px; } /* fm */
       & > :nth-child(5) { top: 150px; left: 22px; } /* range */
       & > :nth-child(6) { top: 150px; right: 22px; } /* waveform */
+    }
+
+    .name-bar {
+      font-size: 18px;
+      text-transform: uppercase;
     }
   }
 
