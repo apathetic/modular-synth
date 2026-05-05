@@ -1,6 +1,15 @@
 <script lang="ts">
   import { defineComponent, ref, watch, onUnmounted, computed } from 'vue';
+  import { useAppStore } from '~/stores/app';
   import { Clock, type ClockDivision } from '~/audio/modules/clock';
+
+  function useStoreParam<T>(moduleId: number, name: string, fallback: T) {
+    const store = useAppStore();
+    return computed<T>({
+      get: () => (store.getParameter(moduleId, name) as T) ?? fallback,
+      set: (value) => store.setParameter({ moduleId, param: name, value: value as any })
+    });
+  }
 
   /*
     Thin UI shell around `Clock`. Owns the refs that back the two data
@@ -23,12 +32,15 @@
       const divisionTicks = computed(() => parseInt(division.value, 10));
       const divisionLabel = computed(() => ({ '4n':'4th', '8n':'8th', '16n':'16th', '32n':'32nd' }[division.value]));
 
+      const moduleId = _props.id as unknown as number;
+
       const gate       = ref<0 | 1>(0);
       const reset      = ref<0 | 1>(0);
       const running    = ref(false);
-      const bpm        = ref(120);
-      const division   = ref<ClockDivision>('16n');
-      const shuffle    = ref(0);
+
+      const bpm        = useStoreParam<number>(moduleId, 'bpm', 120);
+      const division   = useStoreParam<ClockDivision>(moduleId, 'division', '16n');
+      const shuffle    = useStoreParam<number>(moduleId, 'shuffle', 0);
       const resetEvery = ref(64);
       const tickCount  = ref(0);
 
@@ -53,6 +65,7 @@
         { label: 'reset', data: 'reset' },
       ];
 
+      // UI changes: update clock
       watch(bpm,        (v) => { clock.bpm        = v; });
       watch(division,   (v) => { clock.division   = v; });
       watch(shuffle,    (v) => { clock.shuffle    = v; });
