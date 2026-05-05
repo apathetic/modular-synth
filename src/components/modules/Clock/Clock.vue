@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { defineComponent, ref, watch, onUnmounted } from 'vue';
+  import { defineComponent, ref, watch, onUnmounted, computed } from 'vue';
   import { Clock, type ClockDivision } from '~/audio/modules/clock';
 
   /*
@@ -20,39 +20,51 @@
 
     setup(_props, { expose }) {
       const divisions: ClockDivision[] = ['4n', '8n', '16n', '32n'];
+      const divisionTicks = computed(() => parseInt(division.value, 10));
+      const divisionLabel = computed(() => ({ '4n':'4th', '8n':'8th', '16n':'16th', '32n':'32nd' }[division.value]));
 
-      // --- reactive state backing the data outlets and UI ---
-      const gate      = ref<0 | 1>(0);
-      const reset     = ref<0 | 1>(0);
-      const running   = ref(false);
-
+      const gate       = ref<0 | 1>(0);
+      const reset      = ref<0 | 1>(0);
+      const running    = ref(false);
       const bpm        = ref(120);
       const division   = ref<ClockDivision>('16n');
       const shuffle    = ref(0);
       const resetEvery = ref(64);
+      const tickCount  = ref(0);
 
       const clock = new Clock({
         bpm:        bpm.value,
         division:   division.value,
         shuffle:    shuffle.value,
         resetEvery: resetEvery.value,
-        onGate: (v) => { gate.value = v; },
+        onGate: (v) => {
+          gate.value = v;
+          if (v === 1) tickCount.value++;
+        },
         onReset: () => {
-          // Brief 1->0 pulse so $watch subscribers see a real transition.
           reset.value = 1;
+          tickCount.value = 0;
           setTimeout(() => { reset.value = 0; }, 5);
         },
       });
+
+      const outlets = [
+        { label: 'gate',  data: 'gate'  },
+        { label: 'reset', data: 'reset' },
+      ];
 
       watch(bpm,        (v) => { clock.bpm        = v; });
       watch(division,   (v) => { clock.division   = v; });
       watch(shuffle,    (v) => { clock.shuffle    = v; });
       watch(resetEvery, (v) => { clock.resetEvery = v; });
 
-      const outlets = [
-        { label: 'gate',  data: 'gate'  },
-        { label: 'reset', data: 'reset' },
-      ];
+      onUnmounted(() => clock.destroy());
+
+      expose({
+        outlets,
+      });
+
+
 
       function toggleRun() {
         if (running.value) {
@@ -68,11 +80,41 @@
         clock.reset();
       }
 
-      onUnmounted(() => clock.destroy());
+      function cycleDivision() {
+        const idx = divisions.indexOf(division.value);
+        division.value = divisions[(idx + 1) % divisions.length];
+      }
 
-      expose({
-        outlets,
-      });
+      function registerDrag(onMove: (e: PointerEvent) => void) {
+        const onUp = () => {
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+        };
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+      }
+
+      function onBpmDrag(e: PointerEvent) {
+        const startY = e.clientY;
+        const startBpm = bpm.value;
+
+        registerDrag((me: PointerEvent) => {
+          const delta = startY - me.clientY;
+          const step = me.shiftKey ? 0.1 : 1;
+          bpm.value = Math.max(20, Math.min(300, Math.round((startBpm + delta * step) * 10) / 10));
+        });
+      }
+
+      function onShuffleDrag(e: PointerEvent) {
+        const startY = e.clientY;
+        const startShuffle = shuffle.value;
+
+        registerDrag((me: PointerEvent) => {
+          const delta = startY - me.clientY;
+          const step = me.shiftKey ? 0.001 : 0.01;
+          shuffle.value = Math.max(0, Math.min(0.5, startShuffle + delta * step));
+        });
+      }
 
       return {
         outlets,
@@ -81,14 +123,21 @@
         gate,
         reset,
         running,
+        tickCount,
 
         bpm,
         division,
         shuffle,
         resetEvery,
 
+        divisionTicks,
+        divisionLabel,
+
         toggleRun,
         manualReset,
+        cycleDivision,
+        onBpmDrag,
+        onShuffleDrag,
       };
     },
   });
@@ -103,45 +152,41 @@
 
     <div class="module-interface">
       <div class="name-bar">CLOCK <button>mod</button></div>
-      <button class="transport" type="button" @click="toggleRun">
-        {{ running ? '◼' : '▶' }}
+
+      <button class="transport" type="button" @pointerdown.stop.prevent="toggleRun">
+        <svg v-if="running" viewBox="0 0 100 100">
+          <rect x="15" y="15" width="70" height="70" fill="currentColor" />
+        </svg>
+        <svg v-else viewBox="0 0 100 100">
+          <polygon points="10,0 100,50 10,100" fill="currentColor" />
+        </svg>
       </button>
 
-      <Dropdown
-        param="division"
-        :options="divisions"
-        @value="division = $event">
-      </Dropdown>
+      <div class="bpm" @pointerdown.stop.prevent="onBpmDrag">
+        <label class="label">BPM</label>
+        <div class="value">{{ bpm.toFixed(1) }}</div>
+      </div>
 
-      <knob
-        param="bpm"
-        variant="skirted"
-        :min="20"
-        :max="300"
-        :default="120"
-        :precision="1"
-        @value="bpm = $event">
-      </knob>
+      <div class="shuffle" @pointerdown.stop.prevent="onShuffleDrag">
+        <label class="label">SHUFFLE</label>
+        <div class="value">{{ Math.round(shuffle * 100) }}%</div>
+      </div>
 
-      <knob
-        param="reset"
-        :min="0"
-        :max="128"
-        :default="64"
-        :precision="0"
-        @value="resetEvery = $event">
-      </knob>
-
-      <knob
-        param="shuffle"
-        :min="0"
-        :max="0.5"
-        :default="0"
-        :precision="2"
-        @value="shuffle = $event">
-      </knob>
-
-      <button class="reset" type="button" @click="manualReset">reset</button>
+      <div class="gate">
+        <label class="label">GATE</label>
+        <div class="ring" @pointerdown.stop.prevent="cycleDivision">
+          <svg viewBox="0 0 100 100">
+            <circle
+              v-for="i in divisionTicks"
+              :key="i"
+              cx="50" cy="4" r="3"
+              :transform="`rotate(${(i - 1) * (360 / divisionTicks)} 50 50)`"
+              :fill="(tickCount % divisionTicks) === (i - 1) ? 'var(--color-highlight)' : 'rgba(0, 229, 255, 0.2)'"
+            />
+          </svg>
+          <div class="ring-text">{{ divisionLabel }}</div>
+        </div>
+      </div>
     </div>
 
     <div class="module-connections">
@@ -156,25 +201,80 @@
     background: linear-gradient(to bottom, #2f2e2b 0%, #262522 98%, #1a1917 100%);
     color: #fff;
 
-    .knob {
-      fill: #fff;
+    button.transport {
+      position: absolute;
+      top: 48px;
+      left: 2px;
+      width: 48px;
+      height: 48px;
+      background: transparent;
+      border: none;
+      color: var(--color-highlight);
+      cursor: pointer;
+      padding: 0;
     }
 
-    button.transport,
-    button.reset {
-      background: transparent;
-      font-size: 5rem;
-      /* border: 0; */
-      color: var(--color-highlight);
+    button.transport svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
 
-      cursor: pointer;
-      padding: 0.25rem;
+    .bpm {
+      position: absolute;
+      top: 120px;
+      left: 5px;
+    }
 
-      width: 60px;
-      height: 60px;
+    .shuffle {
+      position: absolute;
+      top: 170px;
+      left: 5px;
+    }
+
+    .gate {
+      position: absolute;
+      top: 60px;
+      right: 10px;
       text-align: center;
-      line-height: 60px;
+    }
 
+    .bpm, .shuffle, .gate {
+      user-select: none;
+    }
+
+    .bpm .value, .shuffle .value {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--color-highlight);
+      cursor: ns-resize;
+      line-height: 1;
+      /* letter-spacing: -0.02em; */
+    }
+
+    .ring {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+    }
+
+    .ring svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .ring-text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-highlight);
     }
   }
 </style>

@@ -246,9 +246,10 @@
     }
 
     span {
-      font: 2.8em / 0.7em 'Anton';
+      font-family: Impact, Haettenschweiler, 'Franklin Gothic Bold', sans-serif;
+      font-size: 2.8em;
       height: 100%;
-      letter-spacing: 0.05em;
+      line-height: 0.7em;
       opacity: 0.15;
       overflow: hidden;
       position: absolute;

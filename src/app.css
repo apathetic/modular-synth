@@ -7,7 +7,7 @@
   --transition-time-slow: 0.4s;
 
 	/* note: this should match constants.js: */
-  --rackHeight: 240px;
+  --rackHeight: 250px;
   --rackWidth: 64px;
   --cellHeight: 90px;
   --cellWidth: 120px;
@@ -33,8 +33,12 @@
 
 	/* -------------------------------------- */
 
-  --font-primary: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+  /* --font-primary: 'Futura', 'Trebuchet MS', Arial, sans-serif; */
+  --font-primary: "Noto Sans", sans-serif;
   --font-secondary: 'Nunito Sans', sans-serif;
+
+
+
   --duration: 0.2s;
 }
 
@@ -63,6 +67,11 @@ main {
   height: 100%;
   color: #fff;
   font-family: var(--font-primary);
+
+  font-optical-sizing: auto;
+  font-variation-settings: "wdth" 80;
+
+
   min-width: 600px;
 }
 
@@ -145,6 +154,8 @@ section {
 .h5, h5 {
   margin-bottom: 0.5em;
   font-family: var(--font-secondary);
+  /* font-weight: 100; */
+  /* font-variation-settings: "wdth" 62.5; */
 }
 
 h1 {}

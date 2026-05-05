@@ -205,6 +205,8 @@
     border-top: 2px solid rgba(33,33,33, 0.33);
     border-bottom: 2px solid rgb(166,166,166);
     display: flex;
+    font-size: 1.8rem;
+    font-variation-settings: "wdth" 62.5;
     justify-content: space-between;
     width: 100%;
     padding: 0.1em 0.25em;

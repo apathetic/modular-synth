@@ -69,7 +69,7 @@
       animation: pulse 1s infinite alternate;
     }
   }
-
+/*
   .ring {
     border: .2em solid var(--color-grey);
     border-radius: 50%;
@@ -79,7 +79,7 @@
 
     .ring.active {
       border-color: var(--color-green);
-    }
+    } */
 
 
 

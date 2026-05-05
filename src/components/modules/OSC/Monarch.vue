@@ -103,10 +103,9 @@
       & > :nth-child(6) { top: 150px; right: 22px; } /* waveform */
     }
 
-    .name-bar {
+    /* .name-bar {
       font-size: 18px;
-      text-transform: uppercase;
-    }
+    } */
   }
 
 </style>
