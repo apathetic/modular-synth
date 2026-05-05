@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { simplePatch } from '~/synths/simple';
+import { organBlasterPatch } from '~/synths/organBlaster';
 import {
   STORAGE_KEY,
   STORAGE_VERSION,
@@ -39,15 +40,16 @@ afterEach(() => {
 describe('loadPatches', () => {
   it('returns the shipped default patches when localStorage is empty', () => {
     const patches = loadPatches();
-    expect(patches).toHaveLength(1);
+    expect(patches).toHaveLength(2);
     expect(patches[0]!.name).toBe(simplePatch().name);
+    expect(patches[1]!.name).toBe(organBlasterPatch().name);
     expect(patches[0]!.loaded).toBe(false);
   });
 
   it('returns the default patches when the stored JSON is malformed', () => {
     localStorage.setItem(STORAGE_KEY, 'not-json{');
     const patches = loadPatches();
-    expect(patches).toHaveLength(1);
+    expect(patches).toHaveLength(2);
     expect(patches[0]!.name).toBe(simplePatch().name);
   });
 
@@ -57,7 +59,7 @@ describe('loadPatches', () => {
       JSON.stringify({ version: STORAGE_VERSION, patches: [] }),
     );
     const patches = loadPatches();
-    expect(patches).toHaveLength(1);
+    expect(patches).toHaveLength(2);
     expect(patches[0]!.name).toBe(simplePatch().name);
   });
 
@@ -200,7 +202,7 @@ describe('clearStorage', () => {
     clearStorage();
 
     const patches = loadPatches();
-    expect(patches).toHaveLength(1);
+    expect(patches).toHaveLength(2);
     expect(patches[0]!.name).toBe(simplePatch().name);
   });
 });

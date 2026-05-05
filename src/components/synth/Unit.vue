@@ -229,14 +229,15 @@
     height: 0;
 
     span {
-      margin: 8px 0;
-      display: block;
-      width: 3px;
-      height: 12px;
       background: #eee;
       cursor: pointer;
-      text-transform: uppercase;
+      display: block;
       font-size: 0.75em;
+      font-family: var(--font-secondary);
+      width: 3px;
+      height: 12px;
+      margin: 8px 0;
+      text-transform: uppercase;
 
       &:hover {
         background: orange;
