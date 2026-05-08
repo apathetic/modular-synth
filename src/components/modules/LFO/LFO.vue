@@ -42,7 +42,7 @@
       watch(waveform, (v) => { lfo.waveform = v; });
 
       const waveforms: LFOWaveform[] = ['sine', 'triangle', 'shark', 'saw', 'square', 'random'];
-      
+
       const cycleWaveform = () => {
         const idx = waveforms.indexOf(waveform.value);
         waveform.value = waveforms[(idx + 1) % waveforms.length];
@@ -74,37 +74,25 @@
 </script>
 
 <template>
-  <div class="oscillator lfo-module">
+  <div class="lfo">
     <div class="module-details">
       <h3>LFO</h3>
     </div>
 
     <div class="module-interface">
-      <div class="name-bar">LFO</div>
+      <button @mousedown.stop.prevent="resetPhase" class="reset" title="Reset Phase">
+        <svg viewBox="0 0 100 100" width="16" height="16">
+          <path d="M 20 20 V 80 M 35 20 L 80 50 L 35 80 Z" fill="currentColor" />
+        </svg>
+      </button>
 
-      <!-- Controls Row -->
-      <div class="transport-controls">
-        <button @click="resetPhase" class="btn-reset" title="Reset Phase">
-          <svg viewBox="0 0 100 100" width="16" height="16">
-            <path d="M 20 20 V 80 M 35 20 L 80 50 L 35 80 Z" fill="currentColor" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Knobs -->
-      <Knob class="knob-rate" param="rate" @value="rate = $event" :min="0.05" :max="50" :default="2" :precision="2" mode="log" variant="arc" size="large"></Knob>
-      <Knob class="knob-phase" param="phase" @value="phase = $event" :min="0" :max="360" :default="0" :precision="0" variant="skirted" size="small"></Knob>
+      <Knob class="knob-rate"  param="rate"  @value="rate = $event"  :min="0.05" :max="50" :default="2" :precision="2" mode="log" variant="arc" size="large"></Knob>
+      <!-- <Knob class="knob-phase" param="phase" @value="phase = $event" :min="0" :max="360" :default="0" :precision="0" variant="skirted" size="small"></Knob> -->
       <Knob class="knob-shape" param="shape" @value="shape = $event" :min="-100" :max="100" :default="0" :precision="0" variant="skirted" size="small"></Knob>
-
-      <div class="labels">
-        <span class="lbl-rate">{{ rate }}Hz</span>
-        <span class="lbl-phase">PHASE</span>
-        <span class="lbl-shape">SHAPE</span>
-      </div>
 
       <div class="text-lfo">LFO</div>
 
-      <button class="waveform-display" @click="cycleWaveform" title="Cycle Waveform">
+      <button class="waveform-display" @mousedown.stop.prevent="cycleWaveform" title="Cycle Waveform">
         <svg viewBox="0 0 100 100" width="36" height="36" class="wave-icon">
           <path v-if="waveform === 'sine'" d="M 0 50 Q 25 -10 50 50 T 100 50" fill="none" stroke="currentColor" stroke-width="8"/>
           <path v-if="waveform === 'triangle'" d="M 0 50 L 25 10 L 75 90 L 100 50" fill="none" stroke="currentColor" stroke-width="8"/>
@@ -114,8 +102,6 @@
           <path v-if="waveform === 'random'" d="M 0 50 H 20 V 20 H 40 V 80 H 60 V 40 H 80 V 70 H 100" fill="none" stroke="currentColor" stroke-width="8"/>
         </svg>
       </button>
-
-      <div class="led-indicator"></div>
     </div>
 
     <div class="module-connections">
@@ -126,110 +112,66 @@
 </template>
 
 <style>
-  .lfo-module {
-    background: linear-gradient(to bottom, #eeeeee 0%, #d8d8d8 98%, #b0b0b0 100%);
-    color: #333;
-    width: 100%;
-    height: 100%;
-    position: relative;
-
+  .lfo {
     .module-interface {
-      border: solid rgb(166,166,166);
-      border-width: 0 3px;
-      height: 100%;
-      position: relative;
+      background: linear-gradient(to bottom, #eeeeee 0%, #d8d8d8 98%, #b0b0b0 100%);
+      color: #333;
+      border-radius: var(--border-radius);
     }
 
-    .name-bar {
-      font-size: 11px;
-      color: #666;
-      padding: 4px 8px;
-    }
-
-    .transport-controls {
+    .reset {
       position: absolute;
-      top: 24px;
-      left: 60px;
-    }
+      top: 0px;
+      left: 2px;
 
-    .btn-reset {
       background: none;
       border: none;
       color: #333;
       cursor: pointer;
       padding: 4px;
     }
-    .btn-reset:hover {
+    .reset:hover {
       color: #000;
     }
 
-    .knob-rate { position: absolute; top: 40px; left: 16px; }
+    .knob-rate { position: absolute; top: 20px; left: 8px; }
     .knob-phase { position: absolute; top: 44px; right: 24px; }
-    .knob-shape { position: absolute; top: 140px; left: 24px; }
+    .knob-shape { position: absolute; top: 148px; left: 8px; }
 
-    .labels {
+    .knob-rate::after {
+      bottom: 14px;
+      color: var(--color-highlight);
+      content: 'Hz';
+      left: 50%;
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-
-      span {
-        position: absolute;
-        font-size: 10px;
-        text-align: center;
-        width: 40px;
-        transform: translateX(-50%);
-        color: #555;
-      }
-
-      .lbl-rate { top: 95px; left: 45px; color: #4faeb2; }
-      .lbl-phase { top: 95px; left: 140px; }
-      .lbl-shape { top: 195px; left: 42px; }
+      transform: translateX(-50%);
     }
 
     .text-lfo {
-      position: absolute;
-      top: 105px;
-      left: 20px;
       font-size: 38px;
       font-style: italic;
       font-weight: 200;
-      color: #555;
+      left: 30px;
       letter-spacing: 2px;
+      position: absolute;
+      top: 88px;
     }
 
     .waveform-display {
-      position: absolute;
-      top: 135px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
+      align-items: center;
+      background: none;
       border-radius: 50%;
       border: 2px solid #ef7b5a;
-      background: none;
+      color: #ef7b5a;
       cursor: pointer;
       display: flex;
-      align-items: center;
+      height: 50px;
       justify-content: center;
-      color: #ef7b5a;
       padding: 0;
-    }
-    
-    .waveform-display:hover {
-      background: rgba(239, 123, 90, 0.1);
-    }
-
-    .led-indicator {
       position: absolute;
-      top: 110px;
-      right: 32px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background-color: #ef7b5a;
-      box-shadow: 0 0 4px #ef7b5a;
+      right: 8px;
+      top: 148px;
+      width: 50px;
     }
   }
 </style>

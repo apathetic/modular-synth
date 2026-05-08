@@ -170,7 +170,6 @@ All variants share the same drag-to-change behavior and reactive state.
 </script>
 
 
-
 <template>
   <div
     class="knob"
@@ -179,7 +178,7 @@ All variants share the same drag-to-change behavior and reactive state.
   >
     <!-- arc (default, legacy) -->
     <svg v-if="variant === 'arc'" class="knob-svg" viewBox="0 0 48 48">
-      <path :d="track" class="track" fill="none" stroke-width="5" stroke-linecap="round"></path>
+      <path :d="track" class="track" fill="none" stroke-width="3" stroke-linecap="round"></path>
       <path :d="arc" class="display" fill="none" stroke-width="3" stroke-linecap="round"></path>
       <text x="24" y="29" class="value">{{ displayValue }}</text>
     </svg>
@@ -246,11 +245,18 @@ All variants share the same drag-to-change behavior and reactive state.
   /* --- arc (legacy) ------------------------------------------------ */
 
   .knob--arc {
-    --w: 48px;
-    --h: 48px;
+    --w: 54px;
+    --h: 54px;
+    --scale: 1.0;
 
-    .track   { stroke: var(--color-grey-medium); }
-    .display { stroke: var(--color-highlight); }
+    &.size-small { --scale: 0.9; }
+    &.size-large { --scale: 1.4; }
+
+    .knob-svg { filter: none; }
+    .label    { display: none; }
+    .track    { stroke: var(--color-grey-medium); }
+    .display  { stroke: var(--color-highlight); }
+    .value    { fill: var(--color-highlight); }
   }
 
   /* --- pointer ----------------------------------------------------- */

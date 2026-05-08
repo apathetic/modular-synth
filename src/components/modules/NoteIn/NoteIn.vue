@@ -265,7 +265,7 @@
       padding: 2px 6px;
       font-size: 0.7rem;
       color: #888;
-      &.active { background: #555; color: var(--color-highlight); }
+      &.active { background: var(--color-highlight); color: black; }
     }
 
 

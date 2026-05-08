@@ -72,6 +72,7 @@
           :min="0"
           :max="1"
           :default="0.5"
+          :precision="2"
         />
 
         <div class="vca-title">VCA</div>
@@ -88,6 +89,7 @@
           :min="0"
           :max="1"
           :default="0"
+          :precision="2"
         />
       </div>
     </div>
