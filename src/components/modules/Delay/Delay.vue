@@ -61,6 +61,7 @@
     setup (props, { expose }) {
       const input = gain();
       const output = gain();
+      const dummyMod = gain();
       const dryNode = gain(params.dry.default);
       const wetNode = gain(params.wet.default);
       const filterNode = filter('lowpass', params.filter.default);
@@ -75,8 +76,8 @@
         },
         {
           label: 'mod',
-          desc: 'Modulation input for delay time',
-          audio: null
+          desc: 'Reserved for future assignable modulation',
+          audio: dummyMod
         }
       ];
       const outlets = [

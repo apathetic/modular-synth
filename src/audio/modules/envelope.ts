@@ -49,6 +49,7 @@ export class Envelope implements SynthModule {
   release = 0.2;
 
   private adsr: GainNode;
+  private dummyMod: GainNode;
 
   constructor(config: ADSRConfig = {}) {
     if (config.attack  !== undefined) this.attack  = config.attack;
@@ -56,8 +57,11 @@ export class Envelope implements SynthModule {
     if (config.sustain !== undefined) this.sustain = config.sustain;
     if (config.release !== undefined) this.release = config.release;
 
+    this.dummyMod = context.createGain();
+
     this.adsr = context.createGain();
     this.adsr.gain.value = 0;
+    
     signal(1).connect(this.adsr);
 
     this.inlets = [
@@ -68,7 +72,8 @@ export class Envelope implements SynthModule {
       },
       {
         label: 'mod',
-        desc: 'Reserved for modulation input',
+        desc: 'Reserved for future assignable modulation',
+        audio: this.dummyMod.gain
       },
     ];
 
@@ -111,6 +116,7 @@ export class Envelope implements SynthModule {
 
   destroy(): void {
     signal(1).disconnect(this.adsr);
+    this.dummyMod.disconnect();
     this.adsr.disconnect();
   }
 }
