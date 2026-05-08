@@ -150,11 +150,11 @@
     .text-lfo {
       font-size: 38px;
       font-style: italic;
-      font-weight: 200;
+      font-weight: 100;
       left: 30px;
       letter-spacing: 2px;
       position: absolute;
-      top: 88px;
+      top: 94px;
     }
 
     .waveform-display {

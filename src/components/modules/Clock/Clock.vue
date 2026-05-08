@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { defineComponent, ref, watch, onUnmounted, computed } from 'vue';
+  import { defineComponent, ref, watch, onMounted, onUnmounted, computed } from 'vue';
   import { useAppStore } from '~/stores/app';
   import { Clock, type ClockDivision } from '~/audio/modules/clock';
 
@@ -71,7 +71,25 @@
       watch(shuffle,    (v) => { clock.shuffle    = v; });
       watch(resetEvery, (v) => { clock.resetEvery = v; });
 
-      onUnmounted(() => clock.destroy());
+      function handleKeydown(e: KeyboardEvent) {
+        if (e.code === 'Space') {
+          // const target = e.target as HTMLElement;
+          // if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) {
+          //   return;
+          // }
+          e.preventDefault();
+          toggleRun();
+        }
+      }
+
+      onMounted(() => {
+        window.addEventListener('keydown', handleKeydown);
+      });
+
+      onUnmounted(() => {
+        window.removeEventListener('keydown', handleKeydown);
+        clock.destroy();
+      });
 
       expose({
         outlets,
@@ -166,11 +184,8 @@
     <div class="module-interface">
       <div class="name-bar">CLOCK <button>mod</button></div>
 
-      <button class="transport" type="button" @pointerdown.stop.prevent="toggleRun">
-        <svg v-if="running" viewBox="0 0 100 100">
-          <rect x="15" y="15" width="70" height="70" fill="currentColor" />
-        </svg>
-        <svg v-else viewBox="0 0 100 100">
+      <button class="transport" type="button" :class="{ running }" @pointerdown.stop.prevent="toggleRun">
+        <svg viewBox="0 0 100 100">
           <polygon points="10,0 100,50 10,100" fill="currentColor" />
         </svg>
       </button>
@@ -222,9 +237,13 @@
       height: 48px;
       background: transparent;
       border: none;
-      color: var(--color-highlight);
+      color: rgba(255, 255, 255, 0.2);
       cursor: pointer;
       padding: 0;
+    }
+
+    button.transport.running {
+      color: var(--color-highlight);
     }
 
     button.transport svg {
