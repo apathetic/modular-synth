@@ -92,7 +92,7 @@
       </div>
 
       <!-- Knobs -->
-      <Knob class="knob-rate" param="rate" @value="rate = $event" :min="0.05" :max="50" :default="2" :precision="2" mode="log" variant="skirted" size="large"></Knob>
+      <Knob class="knob-rate" param="rate" @value="rate = $event" :min="0.05" :max="50" :default="2" :precision="2" mode="log" variant="arc" size="large"></Knob>
       <Knob class="knob-phase" param="phase" @value="phase = $event" :min="0" :max="360" :default="0" :precision="0" variant="skirted" size="small"></Knob>
       <Knob class="knob-shape" param="shape" @value="shape = $event" :min="-100" :max="100" :default="0" :precision="0" variant="skirted" size="small"></Knob>
 

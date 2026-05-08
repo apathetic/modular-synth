@@ -85,6 +85,7 @@ All variants share the same drag-to-change behavior and reactive state.
 
     setup (props, { emit }) {
       const { param, mode } = props;
+      const isDragging = ref(false);
       const track = ref('');
       const arc = ref('');
       const type = 'knob';
@@ -94,6 +95,13 @@ All variants share the same drag-to-change behavior and reactive state.
 
       const moduleId = useModuleId();
       const { start, mapped, normalized } = useParameter({ moduleId, param, type, min, max, mode, discrete });
+
+
+      function handleStart(e: MouseEvent) {
+        isDragging.value = true;
+        start(e);
+        window.addEventListener('mouseup', () => { isDragging.value = false; }, { once: true });
+      }
 
       const internal = computed(() => {
         if (discrete) {
@@ -135,15 +143,13 @@ All variants share the same drag-to-change behavior and reactive state.
         track.value = describeArc(X, Y, SIZE, 30, 330); // draw track
       });
 
-      // Rotation for pointer-style variants. 0 -> -150deg (hard left),
-      // 1 -> +150deg (hard right), matching the 300deg sweep of the arc.
+      // Rotation values: 0 -> -150deg (hard left), 1 -> +150deg (hard right)
       const angleDeg = computed(() => internal.value * 300 - 150);
 
 
       // Per-instance gradient IDs so multiple Knobs on the same page
       // don't collide on <defs> lookups.
       const uid = Math.random().toString(36).slice(2, 8);
-      const anchorName = `--knob-anchor-${uid}`;
       const skirtId = `knob-skirt-${uid}`;
       const sheenId = `knob-sheen-${uid}`;
 
@@ -151,13 +157,13 @@ All variants share the same drag-to-change behavior and reactive state.
         param,
         track,
         arc,
-        start,
+        handleStart,
         displayValue,
         angleDeg,
-        anchorName,
         size: props.size,
         skirtId,
         sheenId,
+        isDragging,
       }
     }
   });
@@ -169,8 +175,7 @@ All variants share the same drag-to-change behavior and reactive state.
   <div
     class="knob"
     :class="[`knob--${variant}`, `size-${size}`]"
-    :style="{ 'anchor-name': anchorName }"
-    @mousedown.stop.prevent="start"
+    @mousedown.stop.prevent="handleStart"
   >
     <!-- arc (default, legacy) -->
     <svg v-if="variant === 'arc'" class="knob-svg" viewBox="0 0 48 48">
@@ -206,11 +211,7 @@ All variants share the same drag-to-change behavior and reactive state.
       <line x1="40" y1="21" x2="40" y2="20" class="pointer" stroke-width="5" :transform="`rotate(${angleDeg} 40 40)`" />
     </svg>
 
-    <label class="label">{{ param }}</label>
-
-    <div class="knob-tooltip" :style="{ 'position-anchor': anchorName }">
-      {{ displayValue }}
-    </div>
+    <label class="label">{{ isDragging ? displayValue : param }}</label>
   </div>
 </template>
 
@@ -242,25 +243,6 @@ All variants share the same drag-to-change behavior and reactive state.
     filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
   }
 
-  .knob-tooltip {
-    display: none;
-    position: absolute;
-    position-area: top;
-    background: rgba(0, 0, 0, 0.85);
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    pointer-events: none;
-    z-index: 100;
-    white-space: nowrap;
-  }
-
-  .knob:hover .knob-tooltip,
-  .knob:active .knob-tooltip {
-    display: block;
-  }
-
   /* --- arc (legacy) ------------------------------------------------ */
 
   .knob--arc {
@@ -269,7 +251,6 @@ All variants share the same drag-to-change behavior and reactive state.
 
     .track   { stroke: var(--color-grey-medium); }
     .display { stroke: var(--color-highlight); }
-    .knob-tooltip { display: none !important; }
   }
 
   /* --- pointer ----------------------------------------------------- */

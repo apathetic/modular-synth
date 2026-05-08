@@ -46,7 +46,7 @@ export class LFO implements SynthModule {
   private _rate: number;
   private _waveform: LFOWaveform;
   private _shape: number;
-  
+
   private activeNode: OscillatorNode | AudioBufferSourceNode | null = null;
   private ampNode: GainNode;
   private rateParam: ConstantSourceNode;
@@ -145,7 +145,7 @@ export class LFO implements SynthModule {
 
   destroy(): void {
     this.stop();
-    try { this.rateParam.stop(); } catch (e) { /* ignore */ }
+    try { this.rateParam.stop(); } catch (e) { /* ignore */console.log(e); }
     this.rateParam.disconnect();
     this.modDepth.disconnect();
     this.ampNode.disconnect();
@@ -153,13 +153,13 @@ export class LFO implements SynthModule {
 
   private rebuildNode(time?: number): void {
     if (!this._started) return;
-    
+
     const t = time ?? context.currentTime;
 
     if (this.activeNode) {
       // AudioBufferSourceNode and OscillatorNode can only be stopped once
-      try { this.activeNode.stop(t); } catch (e) { /* ignore */ }
-      
+      try { this.activeNode.stop(t); } catch (e) { /* ignore */console.log(e); }
+
       // Disconnect so it can be garbage collected
       // We wrap in timeout or just disconnect immediately. It might cause a small click
       // but it's an LFO, so it's less noticeable.
@@ -177,7 +177,7 @@ export class LFO implements SynthModule {
       this.activeNode = src;
     } else {
       const src = context.createOscillator();
-      
+
       if (this._waveform === 'shark') {
         src.setPeriodicWave(getSharkWave());
       } else {
