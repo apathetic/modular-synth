@@ -11,9 +11,12 @@ const devices = ref<any[]>([]);
 const listeners = new Set<MidiActions>();
 let midiAccess: any = null;
 let midiIn: any = null;
+let isInitializing = false;
 
 
 function addDevice(port: any) {
+  if (devices.value.find((d) => d._uid === port.id)) return;
+
   devices.value.push({
     _uid: port.id,
     name: port.name,
@@ -24,12 +27,10 @@ function addDevice(port: any) {
 
 function onStateChange(e: any) {
   const port = e.port;
-  const found = !!devices.value.find((d) => d._uid === port.id);
-
   if (port.type === 'input') {
-    if (port.state === 'disconnected' && found) {
+    if (port.state === 'disconnected') {
       devices.value = devices.value.filter(d => d._uid !== port.id);
-    } else if (port.state === 'connected' && !found) {
+    } else if (port.state === 'connected') {
       addDevice(port);
     }
   }
@@ -69,7 +70,8 @@ function onMIDIMessage({ data }: any) {
 }
 
 function initMidi() {
-  if (midiAccess) return;
+  if (midiAccess || isInitializing) return;
+  isInitializing = true;
 
   if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess({ sysex: false }).then(
