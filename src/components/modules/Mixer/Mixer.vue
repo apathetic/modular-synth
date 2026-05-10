@@ -1,23 +1,3 @@
-<template>
-  <div class="mixer">
-    <div class="module-details">
-      <h3>Mixer</h3>
-    </div>
-
-    <div class="module-interface">
-      <knob param="one"   @value="one = $event"   :min="0" :max="100"></knob>
-      <knob param="two"   @value="two = $event"   :min="0" :max="100"></knob>
-      <knob param="three" @value="three = $event" :min="0" :max="100"></knob>
-      <knob param="four"  @value="four = $event"  :min="0" :max="100"></knob>
-    </div>
-
-    <div class="module-connections">
-      <Inlets  :ports="inlets"  :id="id"></Inlets>
-      <Outlets :ports="outlets" :id="id"></Outlets>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
   // import Knob from './UI/Knob';
   import { defineComponent, inject, ref, watch, onUnmounted } from 'vue';
@@ -93,6 +73,28 @@
     }
   });
 </script>
+
+
+<template>
+  <div class="mixer">
+    <div class="module-details">
+      <h3>Mixer</h3>
+    </div>
+
+    <div class="module-interface">
+      <Knob param="one"   @value="one = $event"   :min="0" :max="100" size="small"></knob>
+      <knob param="two"   @value="two = $event"   :min="0" :max="100"></knob>
+      <knob param="three" @value="three = $event" :min="0" :max="100"></knob>
+      <knob param="four"  @value="four = $event"  :min="0" :max="100"></knob>
+    </div>
+
+    <div class="module-connections">
+      <Inlets  :ports="inlets"  :id="id"></Inlets>
+      <Outlets :ports="outlets" :id="id"></Outlets>
+    </div>
+  </div>
+</template>
+
 
 <style>
   .mixer {

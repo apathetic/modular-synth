@@ -135,11 +135,12 @@
 
 <style>
   .vca {
-    background: #e0e0e0;
-    color: #333;
-
     .module-interface {
-        &::before {
+      background: linear-gradient(to bottom, #eeeeee 0%, #d8d8d8 98%, #b0b0b0 100%);
+      border-radius: var(--border-radius);
+      color: #333;
+
+      &::before {
         content: '';
         position: absolute;
         top: 50%;
@@ -158,8 +159,6 @@
       flex-direction: column;
       align-items: center;
     }
-
-
 
     .mute {
       align-self: flex-start;

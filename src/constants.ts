@@ -31,7 +31,7 @@ export const moduleSize: Record<moduleType, Array<number>> = {
   'Env':        [3, 1],
   'Filter':     [3, 1],
   'LFO':        [2, 1],
-  'Mixer':      [4, 1], // tall
+  'Mixer':      [2, 1], // tall
   'Node':       [4, 1],
   'NoteIn':     [2, 1],
   'Reverb':     [3, 1],

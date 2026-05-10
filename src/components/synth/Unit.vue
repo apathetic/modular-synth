@@ -4,7 +4,6 @@
   import { useDraggable, provideModuleId } from '~/composables';
   import { useAppStore } from '~/stores/app';
   import { registry } from '~/audio/registry';
-  import { MASTER_ID } from '~/audio/master';
   import { log } from '~/utils/logger';
   import { modules } from '~/components';
   import Debugger from '~/components/modules/Debugger.vue';
@@ -29,8 +28,6 @@
 
     setup (props) {
       const { type, id } = props.module; // note: we destructure here b/c we don't care about reactivity
-
-      // if (id === MASTER_ID || type === 'MasterOut') { throw new Error('<Unit> cannot render MasterOut'); }
 
       provideModuleId(id);
 
@@ -94,13 +91,14 @@
   });
 </script>
 
+
 <template>
   <div
     class="module"
     ref="el"
     :class="[width, tall, { dragging: isDragging }, { active: isActive }]"
     :style="position"
-    @mousedown.stop="(e) => startDragging(e, el)"
+    @mousedown.stop="(e) => startDragging(e, el!)"
   >
     <component
       ref="node"
@@ -111,13 +109,6 @@
 </template>
 
 
-<!--
-  Unit owns the `.module` wrapper chrome used by every rack module. Styles
-  are intentionally NOT scoped: the nested `.module-details` /
-  `.module-interface` / `.module-connections` markup is emitted by each
-  module component (OSC, VCA, Filter, ...) and needs to inherit these
-  rules without a data-v-* attribute collision.
--->
 <style>
   /* --------------------------------
     Module
@@ -160,7 +151,6 @@
       flex-direction: column;
     }
   }
-
 
   .inlets  { float: left; }
   .outlets { float: right; }

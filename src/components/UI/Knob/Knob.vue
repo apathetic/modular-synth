@@ -249,7 +249,7 @@ All variants share the same drag-to-change behavior and reactive state.
     --h: 54px;
     --scale: 1.0;
 
-    &.size-small { --scale: 0.9; }
+    &.size-small { --scale: 0.8; }
     &.size-large { --scale: 1.4; }
 
     .knob-svg { filter: none; }
