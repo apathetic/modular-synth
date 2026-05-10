@@ -3,7 +3,7 @@
   import { useMidi, useKeyboard } from '~/composables';
   import { useAppStore } from '~/stores/app';
   import { dispatchToWorker, onWorkerMessage } from '~/utils/worker';
-  import { Knob, Dropdown, Slider } from '~/components/UI';
+  import { Knob, Slider, Button } from '~/components/UI';
 
   const noteNames: string[] = [];
   const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -20,8 +20,8 @@
     name: 'NoteIn',
     components: {
       Knob,
-      Dropdown,
       Slider,
+      Button,
     },
     props: {
       id: {
@@ -50,8 +50,8 @@
       const muted = ref(false);
       const glide = ref(0);
       const legato = ref(false);
-      const prio = ref('LAST');
-
+      const priority = ref('LAST');
+      const priorityOptions = ['LAST', 'HI', 'LO'];
 
       const outlets = [
         { label: 'pitch', data: 'pitch' },
@@ -61,6 +61,10 @@
         { label: 'mod',   data: 'mod' },
       ];
 
+      const cyclePriority = () => {
+        const index = priorityOptions.indexOf(priority.value);
+        priority.value = priorityOptions[(index + 1) % priorityOptions.length];
+      };
 
       const snapOnRelease = (param: string) => {
         window.addEventListener('mouseup', () => {
@@ -143,7 +147,8 @@
         muted,
         glide,
         legato,
-        prio,
+        priority,
+        cyclePriority,
         snapOnRelease,
       };
     }
@@ -160,7 +165,7 @@
 
     <div class="module-interface">
       <div class="name-bar">
-        <button class="mute" :class="{ active: muted }" @click="muted = !muted">MUTE</button>
+        <Button class="mute" :active="muted" @mousedown.stop="muted = !muted">MUTE</Button>
 
 
         <p>
@@ -196,22 +201,23 @@
         />
       </div>
 
-      <div class="knob-group glide">
-        <Knob
-          param="glide"
-          :min="0"
-          :max="1"
-          :default="0"
-          variant="pointer"
-          size="small"
-          @value="glide = $event"
-        />
-      </div>
+      <Knob
+        class="glide"
+        param="glide"
+        :min="0"
+        :max="1"
+        :precision="2"
+        :default="0"
+        variant="pointer"
+        size="small"
+        @value="glide = $event"
+      />
 
-      <button class="btn-legato" :class="{ active: legato }" @click="legato = !legato">LEGATO</button>
+      <Button class="legato" :active="legato" @mousedown.stop="legato = !legato">LEGATO</Button>
 
-      <div class="prio-group">
-        <Dropdown label="PRIO" param="prio" :options="['LAST', 'HI', 'LO']" @value="prio = $event" />
+      <div class="priority">
+        <span class="label">PRIORITY</span>
+        <button @mousedown.stop="cyclePriority">{{ priority }}</button>
       </div>
 
       <!-- <div class="range-group">
@@ -249,83 +255,54 @@
 
     .channel {
       position: absolute;
-      top: 36px;
+      top: 48px;
       left: 10px;
-      /* font-size: 0.8rem; */
-      /* color: #888; */
       span { color: var(--color-highlight); }
     }
 
-    .mute {
-      /* position: absolute; */
-      /* top: 8px; */
-      /* right: 10px; */
-      background: #3a3a3a;
-      border: 1px solid #444;
-      padding: 2px 6px;
-      font-size: 0.7rem;
-      color: #888;
-      &.active { background: var(--color-highlight); color: black; }
-    }
-
-
-      .pb {
-        left: 10px;
-        position: absolute;
-        bottom: 12px;
-      }
-      .mw {
-        left: 40px;
-        position: absolute;
-        bottom: 12px;
-      }
 
 
 
-    .knob-group.glide {
+    .pb {
+      left: 10px;
       position: absolute;
-      top: 40px;
-      right: 15px;
-      text-align: center;
-
-      .knob-label {
-        font-size: 0.65rem;
-        color: #888;
-        margin-top: -2px;
-      }
+      bottom: 12px;
     }
 
-    .btn-legato {
+    .mw {
+      left: 40px;
+      position: absolute;
+      bottom: 12px;
+    }
+
+    .glide {
+      position: absolute;
+      top: 48px;
+      right: 16px;
+      text-align: center;
+    }
+
+    .legato {
       position: absolute;
       top: 92px;
       right: 10px;
-      width: 50px;
-      background: #3a3a3a;
-      border: 1px solid #444;
-      padding: 2px 0;
-      font-size: 0.7rem;
-      color: #888;
-      &.active { background: #555; color: #fff; }
-    }
-
-    .dropdown-list {
-      color: #fff;
-      background: rgba(85, 85, 85, 0.85); /* $color-grey-medium */
     }
 
 
-    .prio-group {
+    .priority {
       position: absolute;
-      top: 115px;
+      top: 180px;
       right: 10px;
-/*
-      .dropdown {
-        background: transparent;
-        border: none;
-        padding: 0;
-        font-size: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      button {
         color: var(--color-highlight);
-      } */
+        font-size: 0.8rem;
+        font-family: inherit;
+        width: 100%;
+      }
     }
 
     .range-group {
