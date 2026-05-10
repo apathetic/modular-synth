@@ -9,9 +9,9 @@ type MidiActions = {
 
 const devices = ref<any[]>([]);
 const listeners = new Set<MidiActions>();
+let isInitializing = false;
 let midiAccess: any = null;
 let midiIn: any = null;
-let isInitializing = false;
 
 
 function addDevice(port: any) {

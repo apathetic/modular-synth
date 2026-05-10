@@ -1,5 +1,5 @@
 export * from './Dropdown';
-export * from './Knob';
+export { Knob} from './Knob';
 export * from './Slider';
 export { default as VU } from './VU';
 export { default as Toggle } from './Toggle.vue';

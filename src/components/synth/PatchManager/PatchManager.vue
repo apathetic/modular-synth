@@ -189,26 +189,24 @@
       border: 1px solid rgba(0, 0, 0, 0.2);
       cursor: pointer;
       display: block;
-      font-size: 1em;
+      font-size: 1.2em;
       font-family: inherit;
-      height: 2em; /* 1.2em; */
+      height: 28px;
       line-height: 0;
       opacity: 0;
       position: absolute;
       top: 0;
       transform: scale(0);
-      transition: all var(--transition-time-slow);
-      width: 2em; /* 1.2em; */
+      transition: all var(--transition-time);
+      width: 28px;
       z-index: 1;
 
       &.add {
-        /* top: -4px; */
-        right: 0.2em;
+        right: 2px;
       }
 
       &.remove {
-        /* bottom: -4px; */
-        right: 2.4em;
+        right: 32px;
       }
 
       &:hover {

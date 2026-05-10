@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { defineComponent, computed, ref, onUnmounted } from 'vue';
+  import { defineComponent, computed, ref, onUnmounted, watch } from 'vue';
   import { useMidi, useKeyboard } from '~/composables';
   import { useAppStore } from '~/stores/app';
   import { dispatchToWorker, onWorkerMessage } from '~/utils/worker';
-  import { Knob, Slider, Button } from '~/components/UI';
 
   const noteNames: string[] = [];
   const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -18,11 +17,7 @@
 
   export default defineComponent({
     name: 'NoteIn',
-    components: {
-      Knob,
-      Slider,
-      Button,
-    },
+
     props: {
       id: {
         type: Number,
@@ -35,23 +30,34 @@
       const midi = useMidi({ noteOn, noteOff, pitchWheel, controller });
       const unsubcribeKeys = useKeyboard({ noteOn, noteOff });
 
-      const note = ref(0);
-      const pitch = computed(() => {
-        const bentNote = note.value + (bend.value * 2);
-        return 440 * Math.pow(2, (bentNote - 69) / 12);
-      });
-      const gate = ref(0);
-      const velocity = ref(0);
-      const mod = ref(0);
-      const bend = ref(0);
-      const noteName = computed(() => noteNames[note.value] || '');
-
       // UI state
       const muted = ref(false);
       const glide = ref(0);
       const legato = ref(false);
       const priority = ref('LAST');
       const priorityOptions = ['LAST', 'HI', 'LO'];
+      const note = ref(0);
+      const gate = ref(0);
+      const velocity = ref(0);
+
+      const pitch = computed(() => {
+        const bentNote = note.value + (bend.value * 2);
+        return 440 * Math.pow(2, (bentNote - 69) / 12);
+      });
+
+      // We use store-backed values so MIDI and UI stay in sync
+      const mod = computed({
+        get: () => store.getParameter(props.id, 'mod') ?? 0,
+        set: (v) => store.setParameter({ moduleId: props.id, param: 'mod', value: v })
+      });
+
+      const bend = computed({
+        get: () => store.getParameter(props.id, 'bend') ?? 0,
+        set: (v) => store.setParameter({ moduleId: props.id, param: 'bend', value: v })
+      });
+
+      const noteName = computed(() => noteNames[note.value] || '');
+
 
       const outlets = [
         { label: 'pitch', data: 'pitch' },
@@ -80,6 +86,7 @@
           stopNote(data.note);
         }
       });
+
 
 
       /**

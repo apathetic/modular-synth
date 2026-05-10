@@ -192,7 +192,8 @@
   .mode {
     align-items: center;
     background: var(--color-grey-dark);
-    border: 1px solid #333;
+    border: 1px solid var(--color-grey-dark);
+    border-radius: var(--border-radius);
     box-shadow: inset 0 0.2em 0.6em rgba(0, 0, 0, 0.3);
     color: var(--color-inactive);
     display: flex;
