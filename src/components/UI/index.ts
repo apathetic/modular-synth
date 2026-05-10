@@ -3,4 +3,4 @@ export * from './Knob';
 export * from './Slider';
 export { default as VU } from './VU';
 export { default as Toggle } from './Toggle.vue';
-export { default as Button } from './Button.vue';
+export { Button} from './Button';

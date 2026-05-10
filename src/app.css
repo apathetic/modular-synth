@@ -22,7 +22,7 @@
 
   --color-highlight: #54bfff;
   --color-hover: #349fdf;
-  --color-inactive: #999;
+  --color-inactive: rgba(119, 119, 119, 0.7);
 
   --color-text-light: rgba(255, 255, 255, 0.8);
 
@@ -179,10 +179,10 @@ button {
   appearance: none;
   background: none;
   border: none;
-  border-radius: 3px;
-  color: white;
+  /* border-radius: 3px; */
+  /* color: white; */
   cursor: pointer;
-  display: inline-block;
+  /* display: inline-block; */
   outline: none;
 }
 

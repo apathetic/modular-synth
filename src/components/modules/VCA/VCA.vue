@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { defineComponent, onUnmounted } from 'vue';
+  import { defineComponent, onUnmounted, ref, watch } from 'vue';
   import { gain } from '~/audio';
 
   export default defineComponent({
@@ -14,6 +14,10 @@
 
     setup (props, { expose }) {
       const vca = gain(0);
+      const level = ref(0.5);
+      const muted = ref(false);
+      const isLinear = ref(true);
+      const isAC = ref(false);
 
       const inlets = [
         {
@@ -34,8 +38,12 @@
         }
       ];
 
+      watch([level, muted], () => {
+        vca.gain.value = muted.value ? 0 : level.value;
+      });
+
       onUnmounted(() => {
-        // this.inlets[0].audio.disconnect(); // this is done in Connection
+        vca.disconnect();
       });
 
       // AUDIO
@@ -46,9 +54,12 @@
 
       // UI
       return {
-        // id: props.id,
         inlets,
-        outlets
+        outlets,
+        level,
+        muted,
+        isLinear,
+        isAC
       };
     }
   });
@@ -63,7 +74,13 @@
 
     <div class="module-interface">
       <div class="controls">
-        <div class="mute-button">MUTE</div>
+        <Button
+          class="mute"
+          :active="muted"
+          @mousedown.stop="muted = !muted"
+        >
+          MUTE
+        </Button>
 
         <Knob
           param="level"
@@ -73,13 +90,27 @@
           :max="1"
           :default="0.5"
           :precision="2"
+          @value="level = $event"
         />
 
         <div class="vca-title">VCA</div>
 
         <div class="mode-toggles">
-          <div class="toggle-box">LIN</div>
-          <div class="toggle-box">AC</div>
+          <Button
+            class="toggle-box"
+            :active="isLinear"
+            @mousedown.stop="isLinear = !isLinear"
+          >
+            LIN
+          </Button>
+
+          <Button
+            class="toggle-box"
+            :active="isAC"
+            @mousedown.stop="isAC = !isAC"
+          >
+            AC
+          </Button>
         </div>
 
         <Knob
@@ -130,12 +161,9 @@
 
 
 
-    .mute-button {
-      background: #bdbdbd;
-      padding: 2px 8px;
-      font-size: 0.65rem;
-      border-radius: 2px;
-      color: #f5f5f5;
+    .mute {
+      align-self: flex-start;
+      margin: 8px 8px 0;
     }
 
 
@@ -144,20 +172,22 @@
     .vca-title {
       font-size: 3rem;
       font-weight: 100;
+      font-variation-settings: "wdth" 100;
       opacity: 0.8;
     }
 
     .mode-toggles {
       display: flex;
       gap: 10px;
-      }
-      .toggle-box {
-        border: 1px solid #333;
-        padding: 1px 12px;
-        font-size: 0.65rem;
-        font-weight: bold;
-        background: rgba(255,255,255,0.1);
-      }
+    }
+
+    .toggle-box {
+      border: 1px solid currentColor;
+
+      &:not(.active) { background: none; }
+
+      /* background: none; */
+      /* &.active { color: var(--color-highlight); } */
+    }
   }
 </style>
-

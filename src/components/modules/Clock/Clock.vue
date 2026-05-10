@@ -237,7 +237,9 @@
       height: 48px;
       background: transparent;
       border: none;
-      color: rgba(255, 255, 255, 0.2);
+      /* color: rgba(255, 255, 255, 0.2);
+      */
+      color: var(--color-inactive);
       cursor: pointer;
       padding: 0;
     }
