@@ -3,7 +3,6 @@
   import { useAppStore } from '~/stores/app';
   import { MASTER_ID } from '~/audio/master';
   import { gain, filter, delay } from '~/audio';
-  import { Knob, Button, Toggle } from '~/components/UI';
 
   const divisions = [
     { label: '1', factor: 4 },
@@ -24,7 +23,6 @@
 
   export default defineComponent({
     name: 'Delay',
-    components: { Knob, Button, Toggle },
     props: {
       id: {
         default: undefined,
@@ -39,6 +37,7 @@
       const inR = gain();
       const outL = gain();
       const outR = gain();
+      const dummyMod = gain();
 
       const dryL = gain(0.5);
       const dryR = gain(0.5);
@@ -77,6 +76,10 @@
       feedbackR.connect(delayL); // ping-pong cross feed
       lpfR.connect(wetR);
 
+      // Modulation
+      dummyMod.connect(delayL.delayTime);
+      dummyMod.connect(delayR.delayTime);
+
       // Outputs
       dryL.connect(outL);
       wetL.connect(outL);
@@ -89,8 +92,7 @@
       const isSync = useStoreParam(moduleId, 'isSync', 0); // 0 or 1
       const syncSource = useStoreParam(moduleId, 'syncSource', 0); // 0: INT, 1: EXT
 
-      const wet = useStoreParam(moduleId, 'wet', 0.5);
-      const dry = useStoreParam(moduleId, 'dry', 0.5);
+      const mix = useStoreParam(moduleId, 'mix', 0.5);
       const feedback = useStoreParam(moduleId, 'feedback', 0.45);
       const hpfFreq = useStoreParam(moduleId, 'hpf', 20);
       const lpfFreq = useStoreParam(moduleId, 'lpf', 20000);
@@ -118,7 +120,8 @@
       const inlets = [
         { label: 'In L', audio: inL },
         { label: 'In R', audio: inR },
-        { label: 'Gate', data: handleGate }
+        { label: 'Gate', data: handleGate },
+        { label: 'Mod', audio: dummyMod, desc: 'Reserved for future assignable modulation' }
       ];
 
       const outlets = [
@@ -153,10 +156,17 @@
         delayR.delayTime.linearRampToValueAtTime(v, t);
       }, { immediate: true });
 
-      watch(wet, (v) => { wetL.gain.value = v; wetR.gain.value = v; }, { immediate: true });
-      watch(dry, (v) => { dryL.gain.value = v; dryR.gain.value = v; }, { immediate: true });
+      watch(mix, (v) => {
+        // Equal power crossfade
+        const w = Math.sin(v * 0.5 * Math.PI);
+        const d = Math.cos(v * 0.5 * Math.PI);
+        wetL.gain.value = w;
+        wetR.gain.value = w;
+        dryL.gain.value = d;
+        dryR.gain.value = d;
+      }, { immediate: true });
+
       watch(feedback, (v) => { feedbackL.gain.value = v; feedbackR.gain.value = v; }, { immediate: true });
-      
       watch(hpfFreq, (v) => { hpfL.frequency.value = v; hpfR.frequency.value = v; }, { immediate: true });
       watch(lpfFreq, (v) => { lpfL.frequency.value = v; lpfR.frequency.value = v; }, { immediate: true });
 
@@ -170,7 +180,7 @@
       return {
         inlets, outlets,
         timeMs, divisionIdx, isSync, syncSource,
-        wet, dry, feedback, hpfFreq, lpfFreq,
+        mix, feedback, hpfFreq, lpfFreq,
         divisions,
         toggleSync
       };
@@ -178,36 +188,39 @@
   });
 </script>
 
+
 <template>
   <div class="delay">
     <div class="module-details">
-      <h3>Delay</h3>
+      <h3>Pong Delay</h3>
     </div>
 
     <div class="module-interface">
+      <div class="name-bar">DELAY <button>mod</button></div>
+
       <div class="time-section">
         <div class="time-header">
           <Button class="sync-btn" @mousedown.stop="toggleSync">
             {{ isSync === 1 ? 'SYNC' : 'MS' }}
           </Button>
           <Toggle
-            v-if="isSync === 1"
+            v-if="isSync !== 1000"
             param="syncSource"
             :options="['INT', 'EXT']"
             title="Sync Source"
             @value="syncSource = $event"
           />
         </div>
-        
-        <Knob v-if="isSync === 0" param="timeMs" @value="timeMs = $event" :min="20" :max="5000" />
+
+        <Knob v-if="isSync !== 0.00001" param="timeMs" @value="timeMs = $event" :min="20" :max="5000" />
         <Knob v-else param="divisionIdx" @value="divisionIdx = $event" variant="pointer" :steps="divisions.map(d => d.label)" />
       </div>
 
-      <Knob param="feedback" @value="feedback = $event" :min="0" :max="0.9" :precision="2" />
-      <Knob param="hpf" @value="hpfFreq = $event" :min="20" :max="20000" mode="log" />
-      <Knob param="lpf" @value="lpfFreq = $event" :min="20" :max="20000" mode="log" />
-      <Knob param="wet" @value="wet = $event" :min="0" :max="1" :precision="2" />
-      <Knob param="dry" @value="dry = $event" :min="0" :max="1" :precision="2" />
+      <Knob param="feedback" @value="feedback = $event" :min="0" :max="0.9" :precision="2" class="feedback" variant="skirted" size="medium"></Knob>
+      <Knob param="hpf" @value="hpfFreq = $event" :min="20" :max="20000" mode="log" class="hpf" variant="pointer" />
+      <Knob param="lpf" @value="lpfFreq = $event" :min="20" :max="20000" mode="log"class="lpf" variant="pointer" />
+
+      <Slider param="mix" @value="mix = $event" :min="0" :max="1" class="mix" />
     </div>
 
     <div class="module-connections">
@@ -219,57 +232,45 @@
 
 <style>
   .delay {
-    --grey: var(--module-surface);
-    --purple: #c35896;
-
-    background:
-      linear-gradient(187deg,                  var(--purple) 0%,  var(--purple) 22%, transparent 22%) no-repeat,
-      linear-gradient(192deg, transparent 22%, var(--purple) 22%, var(--purple) 26%, transparent 26%) no-repeat,
-      linear-gradient(196deg, transparent 22%, var(--purple) 22%, var(--purple) 25%, transparent 25%) no-repeat,
-      linear-gradient(199deg, transparent 22%, var(--purple) 22%, var(--purple) 24%, transparent 24%) no-repeat,
-      linear-gradient(201deg, var(--grey) 22%, var(--purple) 22%, var(--purple) 23%, var(--grey) 23%);
-
-    background-position: 0 0, 0 5px, 100% 16px, 100% 38px, 100% 50px;
-    background-size: 100%, 110%, 120%, 120%, 130%;
+    .name-bar {
+      color: rgb(140, 125, 149);
+    }
 
     .module-interface {
+      background: linear-gradient(to bottom, #efe5d3 0%, #c8bea9 98%, #8e8672 100%);
+      color: black; /*  var(--color-grey-dark); */
+
       & > * { position: absolute; }
-      
-      .time-section { 
-        top: 20px; 
-        left: 20px; 
-        width: 60px; 
-        position: absolute; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 4px; 
+
+      .time-section {
+        top: 20px;
+        left: 20px;
+        width: 60px;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
       }
-      
-      .time-header { 
-        display: flex; 
-        gap: 4px; 
-        align-items: center; 
-        width: 100%; 
-        justify-content: center; 
+
+      .time-header {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
       }
-      
-      .sync-btn { 
-        font-size: 10px; 
-        padding: 4px 6px; 
+
+      .sync-btn {
+        font-size: 10px;
+        padding: 4px 6px;
         width: auto;
       }
 
-      /* feedback */
-      & > :nth-child(2) { top: 20px; left: 110px; }
-      /* hpf */
-      & > :nth-child(3) { top: 120px; left: 20px; }
-      /* lpf */
-      & > :nth-child(4) { top: 120px; left: 110px; }
-      /* wet */
-      & > :nth-child(5) { top: 120px; left: 200px; }
-      /* dry */
-      & > :nth-child(6) { top: 20px; left: 200px; }
+      .feedback { top: 80px; left: 40px; }
+      .hpf { top: 168px; left: 12px; }
+      .lpf { top: 168px; right: 40px; }
+      .mix { top: 80px; right: 20px; }
     }
   }
 </style>

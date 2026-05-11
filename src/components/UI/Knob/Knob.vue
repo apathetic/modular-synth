@@ -223,10 +223,6 @@ All variants share the same drag-to-change behavior and reactive state.
     position: relative;
     --scale: 1;
 
-    &.size-small { --scale: 0.6; }
-    &.size-large { --scale: 1.8; }
-
-
     text {
       text-anchor: middle;
     }
@@ -265,6 +261,9 @@ All variants share the same drag-to-change behavior and reactive state.
     --w: 40px;
     --h: 40px;
 
+    &.size-small { --scale: 0.6; }
+    &.size-large { --scale: 1.8; }
+
     .cap     { fill: #2a2a2a; stroke: #0a0a0a; stroke-width: 1; }
     .pointer { stroke: var(--color-highlight); stroke-linecap: round; }
   }
@@ -274,6 +273,9 @@ All variants share the same drag-to-change behavior and reactive state.
   .knob--skirted {
     --w: 80px;
     --h: 80px;
+
+    &.size-small { --scale: 0.6; }
+    &.size-large { --scale: 1.25; }
 
     .skirt   { stroke: #0a0a0a; stroke-width: 1; }
     .cap     { stroke: #000; stroke-width: 1; }

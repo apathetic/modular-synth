@@ -26,7 +26,7 @@ export const moduleSize: Record<moduleType, Array<number>> = {
   // 'Comb':       [3, 1],
   'Compressor': [3, 1],
   'Debugger':   [1, 1],
-  'Delay':      [4, 1],
+  'Delay':      [3, 1],
   'Drive':      [2, 1],
   'Env':        [3, 1],
   'Filter':     [3, 1],
