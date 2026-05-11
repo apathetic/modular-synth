@@ -30,6 +30,7 @@
         { label: 'in-2', audio: gain2 },
         { label: 'in-3', audio: gain3 },
         { label: 'in 4', audio: gain4 },
+        { label: 'mod',  data: 'mod' },
       ];
 
       const outlets = [
@@ -82,10 +83,10 @@
     </div>
 
     <div class="module-interface">
-      <Knob param="one"   @value="one = $event"   :min="0" :max="100" size="small"></knob>
-      <knob param="two"   @value="two = $event"   :min="0" :max="100"></knob>
-      <knob param="three" @value="three = $event" :min="0" :max="100"></knob>
-      <knob param="four"  @value="four = $event"  :min="0" :max="100"></knob>
+      <Knob param="one"   @value="one = $event"   :min="0" :max="100" variant="pointer"></knob>
+      <Knob param="two"   @value="two = $event"   :min="0" :max="100" variant="pointer"></knob>
+      <Knob param="three" @value="three = $event" :min="0" :max="100" variant="pointer"></knob>
+      <Knob param="four"  @value="four = $event"  :min="0" :max="100" variant="pointer"></knob>
     </div>
 
     <div class="module-connections">
@@ -107,10 +108,10 @@
       transform: scale(1.2);
       fill: #fff;
 
-      &:nth-child(1) { top: 44%; }
-      &:nth-child(2) { left: 40%; }
-      &:nth-child(3) { top: 44%; right: 10%; }
-      &:nth-child(4) { bottom: 3%; left: 40%; }
+      &:nth-child(1) { top: 20px; left: 10px; }
+      &:nth-child(2) { top: 50px; right: 12px; }
+      &:nth-child(3) { top: 112px; left: 10px; }
+      &:nth-child(4) { top: 154px; right: 12px; }
     }
   }
 </style>
