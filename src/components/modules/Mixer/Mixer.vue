@@ -108,10 +108,34 @@
       transform: scale(1.2);
       fill: #fff;
 
-      &:nth-child(1) { top: 20px; left: 10px; }
-      &:nth-child(2) { top: 50px; right: 12px; }
+      &:nth-child(1) { top: 12px; left: 10px; }
+      &:nth-child(2) { top: 62px; right: 12px; }
       &:nth-child(3) { top: 112px; left: 10px; }
-      &:nth-child(4) { top: 154px; right: 12px; }
+      &:nth-child(4) { top: 162px; right: 12px; }
+
+
+
+      &:nth-child(3)::after,
+      &:nth-child(2)::after,
+      &:nth-child(1)::after {
+            content: '';
+            position: absolute;
+            top: 46px;
+            width: 100px;
+            height: 1px;
+            background: #ffffff55;
+      }
+      &:nth-child(1)::after,
+      &:nth-child(3)::after {
+            left: -4px;
+            transform: rotate(-20deg);
+      }
+      &:nth-child(2)::after {
+            transform: rotate(20deg);
+            right: -4px;
+      }
+
+
     }
   }
 </style>

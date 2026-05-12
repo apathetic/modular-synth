@@ -94,7 +94,7 @@
     .slider-track {
       background: #333;
       height: 48px;
-      width: 12px;
+      width: 24px;
       cursor: ns-resize;
       overflow: hidden;
       position: relative;
@@ -128,7 +128,7 @@
     &.large {
       .slider-track {
         height: 120px;
-        width: 24px;
+        /* width: 24px; */
       }
     }
 

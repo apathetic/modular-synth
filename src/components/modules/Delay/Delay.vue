@@ -66,14 +66,12 @@
       delayL.connect(hpfL);
       hpfL.connect(lpfL);
       lpfL.connect(feedbackL);
-      feedbackL.connect(delayR); // ping-pong cross feed
       lpfL.connect(wetL);
 
       // Right Path
       delayR.connect(hpfR);
       hpfR.connect(lpfR);
       lpfR.connect(feedbackR);
-      feedbackR.connect(delayL); // ping-pong cross feed
       lpfR.connect(wetR);
 
       // Modulation
@@ -91,6 +89,7 @@
       const divisionIdx = useStoreParam(moduleId, 'divisionIdx', 2); // default 1/4
       const isSync = useStoreParam(moduleId, 'isSync', 0); // 0 or 1
       const syncSource = useStoreParam(moduleId, 'syncSource', 0); // 0: INT, 1: EXT
+      const isPong = useStoreParam(moduleId, 'isPong', 1); // 0 or 1
 
       const mix = useStoreParam(moduleId, 'mix', 0.5);
       const feedback = useStoreParam(moduleId, 'feedback', 0.45);
@@ -156,6 +155,19 @@
         delayR.delayTime.linearRampToValueAtTime(v, t);
       }, { immediate: true });
 
+      watch(isPong, (v) => {
+        try { feedbackL.disconnect(); } catch (e) {}
+        try { feedbackR.disconnect(); } catch (e) {}
+
+        if (v === 1) {
+          feedbackL.connect(delayR);
+          feedbackR.connect(delayL);
+        } else {
+          feedbackL.connect(delayL);
+          feedbackR.connect(delayR);
+        }
+      }, { immediate: true });
+
       watch(mix, (v) => {
         // Equal power crossfade
         const w = Math.sin(v * 0.5 * Math.PI);
@@ -170,19 +182,53 @@
       watch(hpfFreq, (v) => { hpfL.frequency.value = v; hpfR.frequency.value = v; }, { immediate: true });
       watch(lpfFreq, (v) => { lpfL.frequency.value = v; lpfR.frequency.value = v; }, { immediate: true });
 
-      // UI Actions
-      const toggleSync = () => {
-        isSync.value = isSync.value === 1 ? 0 : 1;
-      };
+
+      // TODO DRY this up w/ numberic input in Clock
+      function registerDrag(onMove: (e: PointerEvent) => void) {
+        const onUp = () => {
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+        };
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+      }
+
+      function onTimeDrag(e: PointerEvent) {
+        const startY = e.clientY;
+
+        if (isSync.value === 0) {
+          const startMs = timeMs.value;
+          registerDrag((me: PointerEvent) => {
+            const delta = startY - me.clientY;
+            const step = me.shiftKey ? 1 : 10;
+            timeMs.value = Math.max(20, Math.min(5000, Math.round(startMs + delta * step)));
+          });
+        } else {
+          const startIdx = divisionIdx.value;
+          registerDrag((me: PointerEvent) => {
+            const delta = startY - me.clientY;
+            const shift = Math.floor(delta / 20); // 1 tick per 20px
+            divisionIdx.value = Math.max(0, Math.min(divisions.length - 1, startIdx + shift));
+          });
+        }
+      }
 
       expose({ inlets, outlets });
 
       return {
-        inlets, outlets,
-        timeMs, divisionIdx, isSync, syncSource,
-        mix, feedback, hpfFreq, lpfFreq,
+        inlets,
+        outlets,
+        timeMs,
+        divisionIdx,
+        isSync,
+        syncSource,
+        isPong,
+        mix,
+        feedback,
+        hpfFreq,
+        lpfFreq,
         divisions,
-        toggleSync
+        onTimeDrag
       };
     }
   });
@@ -198,29 +244,29 @@
     <div class="module-interface">
       <div class="name-bar">DELAY <button>mod</button></div>
 
-      <div class="time-section">
-        <div class="time-header">
-          <Button class="sync-btn" @mousedown.stop="toggleSync">
-            {{ isSync === 1 ? 'SYNC' : 'MS' }}
-          </Button>
-          <Toggle
-            v-if="isSync !== 1000"
-            param="syncSource"
-            :options="['INT', 'EXT']"
-            title="Sync Source"
-            @value="syncSource = $event"
-          />
-        </div>
+      <Button class="pong" :active="isPong === 1" @mousedown.stop="isPong = isPong === 1 ? 0 : 1">
+        PONG
+      </Button>
+      <Button class="ms-th" :active="isSync === 1" @mousedown.stop="isSync = isSync === 1 ? 0 : 1">
+        {{ isSync === 1 ? 'th' : 'ms' }}
+      </Button>
 
-        <Knob v-if="isSync !== 0.00001" param="timeMs" @value="timeMs = $event" :min="20" :max="5000" />
-        <Knob v-else param="divisionIdx" @value="divisionIdx = $event" variant="pointer" :steps="divisions.map(d => d.label)" />
+      <div class="time" @pointerdown.stop.prevent="onTimeDrag">
+        <div class="value" v-if="isSync === 0">{{ Math.round(timeMs) }}</div>
+        <div class="value" v-else>{{ divisions[divisionIdx].label }}</div>
       </div>
+
+      <div class="sync" v-if="isSync === 1">
+        <span class="label">SYNC</span>
+        <button @mousedown.stop="syncSource = syncSource === 1 ? 0 : 1">{{ syncSource === 0 ? 'INT' : 'EXT' }}</button>
+      </div>
+
 
       <Knob param="feedback" @value="feedback = $event" :min="0" :max="0.9" :precision="2" class="feedback" variant="skirted" size="medium"></Knob>
       <Knob param="hpf" @value="hpfFreq = $event" :min="20" :max="20000" mode="log" class="hpf" variant="pointer" />
       <Knob param="lpf" @value="lpfFreq = $event" :min="20" :max="20000" mode="log"class="lpf" variant="pointer" />
 
-      <Slider param="mix" @value="mix = $event" :min="0" :max="1" class="mix" />
+      <Slider param="mix" label="MIX" variant="large thin" @value="mix = $event" :min="0" :max="1" class="mix" />
     </div>
 
     <div class="module-connections">
@@ -238,39 +284,52 @@
 
     .module-interface {
       background: linear-gradient(to bottom, #efe5d3 0%, #c8bea9 98%, #8e8672 100%);
-      color: black; /*  var(--color-grey-dark); */
+      color: rgb(140, 125, 149);
+
+      .label { color: black; }
 
       & > * { position: absolute; }
 
-      .time-section {
-        top: 20px;
+      .time {
+        text-align: center;
+        user-select: none;
+        top: 64px;
         left: 20px;
-        width: 60px;
-        position: absolute;
+        width: 64px;
+      }
+      .time .value {
+        font-size: 2.5rem;
+        cursor: ns-resize;
+        text-align: right;
+        line-height: 1;
+      }
+
+      .pong { top: 40px; left: 10px; }
+      .ms-th { top: 65px; right: 60px;     background: none;
+    font-size: 1.2rem;
+    font-weight: 300;
+    border: 1px solid currentColor;}
+
+      /* TODO DRY up with "priority button in note IN  */
+      .sync {
+        top: 65px;
+        right: 32px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
+
+        button {
+          color: var(--color-highlight);
+          font-size: 0.8rem;
+          font-family: inherit;
+          width: 100%;
+        }
       }
 
-      .time-header {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        width: 100%;
-        justify-content: center;
-      }
-
-      .sync-btn {
-        font-size: 10px;
-        padding: 4px 6px;
-        width: auto;
-      }
-
-      .feedback { top: 80px; left: 40px; }
+      .feedback { top: 96px; left: 40px; }
       .hpf { top: 168px; left: 12px; }
       .lpf { top: 168px; right: 40px; }
-      .mix { top: 80px; right: 20px; }
+      .mix { top: 84px; right: 14px; }
     }
   }
 </style>
