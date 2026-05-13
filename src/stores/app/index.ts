@@ -437,7 +437,12 @@ export const createAppStore = ({ patches }: { patches: Patch[] }) => defineStore
     setParameter(data: { moduleId: number; param: string; value: ParameterValue }) {
       const preset = this.patch.presets[this.presetId];
       const bucket = preset.parameters[data.moduleId] ?? (preset.parameters[data.moduleId] = {});
-      bucket[data.param] = data.value;
+
+      let val = data.value;
+      if (typeof val === 'number') {
+        val = Math.round(val * 1000) / 1000; // 3 decimals max
+      }
+      bucket[data.param] = val;
     },
 
     /**

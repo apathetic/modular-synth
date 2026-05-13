@@ -261,7 +261,7 @@ All variants share the same drag-to-change behavior and reactive state.
     --w: 40px;
     --h: 40px;
 
-    &.size-small { --scale: 0.6; }
+    &.size-small { --scale: 0.75; }
     &.size-large { --scale: 1.8; }
 
     .cap     { fill: #2a2a2a; stroke: #0a0a0a; stroke-width: 1; }

@@ -28,10 +28,10 @@ export const moduleSize: Record<moduleType, Array<number>> = {
   'Debugger':   [1, 1],
   'Delay':      [3, 1],
   'Drive':      [2, 1],
-  'Env':        [3, 1],
+  'Env':        [2, 1],
   'Filter':     [3, 1],
   'LFO':        [2, 1],
-  'Mixer':      [2, 1], // tall
+  'Mixer':      [2, 1],
   'Node':       [4, 1],
   'NoteIn':     [2, 1],
   'Reverb':     [3, 1],
