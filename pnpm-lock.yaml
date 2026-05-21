@@ -35,7 +35,7 @@ devDependencies:
     specifier: ^0.7.0
     version: 0.7.0(typescript@5.6.3)(vue@3.5.13)
   cypress:
-    specifier: ^13.16.0
+    specifier: ^13.16.1
     version: 13.16.1
   jsdom:
     specifier: ^25.0.1
@@ -2214,13 +2214,13 @@ packages:
       config-chain: 1.1.13
       editorconfig: 1.0.4
       glob: 10.4.5
-      js-cookie: 3.0.5
+      js-cookie: 3.0.7
       nopt: 7.2.1
     dev: true
 
-  /js-cookie@3.0.5:
-    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
-    engines: {node: '>=14'}
+  /js-cookie@3.0.7:
+    resolution: {integrity: sha512-z/wZZgDrkNV1eA0ULjM/F9/50Ya8fbzgKneSpoPsXSGd0KnpdtHfOZWK+GcwLk+EZbS4F9RBhU+K2RgzuDaItw==}
+    engines: {node: '>=20'}
     dev: true
 
   /js-tokens@4.0.0:
